@@ -1,0 +1,25 @@
+{
+  "ll1": {
+    "start": "start",
+    "rules": [
+      "start := list(statements, 'comma') -> Program(statements=$0) | ε",
+      "statements := expr | assignstatement",
+      "assignstatement := 'identifier' + 'eq' + expr -> Assign( var=$0, val=$2 )"
+    ]
+  },
+  "expr": {
+    "binding_power": [
+      {"associativity": "left", "tokens": ["add", "sub"]},
+      {"associativity": "left", "tokens": ["mul", "div"]},
+      {"associativity": "unary", "tokens": ["sub"]}
+    ],
+    "rules": [
+      "expr := expr + 'add'+ expr -> Add( lhs=$0, rhs=$2 )",
+      "expr := expr + 'mul' + expr -> Multiply( lhs=$0, rhs=$2 )",
+      "expr := expr + 'sub'+ expr -> Subtract( lhs=$0, rhs=$2 )",
+      "expr := expr + 'div' + expr -> Divide( lhs=$0, rhs=$2 )",
+      "expr := 'sub'+ expr -> Uminus( arg=$1 )",
+      "expr := 'a' | 'b'"
+    ]
+  }
+}

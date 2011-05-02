@@ -1,0 +1,43 @@
+{
+  "ll1": {
+    "start": "program",
+    "rules": [
+      "program := list(statement) -> Program( statements=$0 ) | ε",
+      "statement := funcdef | classdef | simple_statement",
+      "funcdef := 'function' + 'identifier' + 'lparen' + list(param, 'comma') + 'rparen' + 'lbrace' + list(statement) + 'rbrace' -> FuncDef( name=$1, params=$3, body=$6 )",
+      "param := 'identifier' -> param( name=$0 )",
+      "classdef := 'class' + 'identifier' + 'lbrace' + list(class_statement) + 'rbrace' -> class( name=$1, statements=$3 )",
+      "class_statement := 'private' + class_atom -> PrivateMember( body=$1 )",
+      "class_statement := 'public' + class_atom -> PublicMember( body=$1 )",
+      "class_atom := funcdef | 'identifier' + 'semicolon' -> ClassDecl( name=$0 )",
+      "simple_statement := import | for | if | terminated_expr",
+      "import := 'import' + 'identifier' + 'semicolon' -> Import( name=$1 )",
+      "for := 'for' + 'lparen' + expr + 'semicolon' + expr + 'semicolon' + expr + 'rparen' + 'lbrace' + list(statement) + 'rbrace' -> for( init=$2, cond=$4, incr=$6, body=$9 )",
+      "if := 'if' + 'lparen' + expr + 'rparen' + if_body -> If( cond=$2, body=$4 )",
+      "if_body := 'lbrace' + list(statement) + 'rbrace' -> $1",
+      "terminated_expr := expr + 'semicolon' -> $0",
+      "token := 'semicolon' | 'minus' | 'multiply' | 'divide' | 'greater_than' | 'less_than' | 'greater_than_equal' | 'less_than_equal' | 'do' | 'while' | 'function' | 'equals' | 'string'"
+    ]
+  },
+  "expr": {
+    "binding_power": [
+      {"associativity": "right", "tokens": ["eq"]},
+      {"associativity": "left", "tokens": ["add", "sub"]},
+      {"associativity": "left", "tokens": ["mul", "div"]},
+      {"associativity": "unary", "tokens": ["sub"]}
+    ],
+    "rules": [
+      "expr := expr + 'union'+ expr -> Union( lhs=$0, rhs=$2 )",
+      "expr := expr + 'multiply' + expr -> Multiply( lhs=$0, rhs=$2 )",
+      "expr := expr + 'divide' + expr -> Divide( lhs=$0, rhs=$2 )",
+      "expr := expr + 'add' + expr -> Add( lhs=$0, rhs=$2 )",
+      "expr := expr + 'subtract' + expr -> Subtract( lhs=$0, rhs=$2 )",
+      "expr := 'subtract' + expr -> UMinus( arg=$0 )",
+      "expr := 'lsquare' + list(expr, 'comma') + 'rsquare' -> ListDecl( items=$1 )",
+      "expr := 'lbrace' + list(expr, 'comma') + 'rbrace' -> SetDecl( items=$1 )",
+      "expr := 'identifier' + ^'lparen' + list(expr, 'comma') + 'rparen' -> FuncCall( name=$0, parameters=$2 )",
+      "expr := 'lparen' + expr + 'rparen' -> $1",
+      "expr := 'identifier' | 'octal_number' | 'hexadecimal_number' | 'decimal_number' | 'binary_number'"
+    ]
+  }
+}

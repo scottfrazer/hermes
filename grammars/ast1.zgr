@@ -1,0 +1,32 @@
+{
+  "ll1": {
+    "start": "start",
+    "rules": [
+      "start := list(statement, 'comma') -> Program(statements=$0) | ε",
+      "statement := expr | assignstatement | forstatement",
+      "assignstatement := 'identifier' + 'eq' + assignstatementsub -> Assign( var=$0, val=$2 )",
+      "assignstatementsub := assignstatement | expr -> $0",
+      "complexexpression := expr | assignstatement",
+      "forstatement := 'for' + 'lparen' + fordeclstatement + 'semi' + forcondstatement + 'semi' + foriterstatement + 'rparen' + 'lbrace' + forbody + 'rbrace' -> For( decl=$2, cond=$4, iter=$6, body=$9 )",
+      "fordeclstatement := complexexpression | ε",
+      "forcondstatement := expr | ε",
+      "foriterstatement := complexexpression | ε",
+      "forbody := statement + 'semi' + forbody | ε"
+    ]
+  },
+  "expr": {
+    "binding_power": [
+      {"associativity": "left", "tokens": ["add", "sub"]},
+      {"associativity": "left", "tokens": ["mul", "div"]},
+      {"associativity": "unary", "tokens": ["sub"]}
+    ],
+    "rules": [
+      "expr := expr + 'add'+ expr -> Add( lhs=$0, rhs=$2 )",
+      "expr := expr + 'mul' + expr -> Multiply( lhs=$0, rhs=$2 )",
+      "expr := expr + 'sub'+ expr -> Subtract( lhs=$0, rhs=$2 )",
+      "expr := expr + 'div' + expr -> Divide( lhs=$0, rhs=$2 )",
+      "expr := 'sub'+ expr -> UMinus( arg=$1 )",
+      "expr := 'n' | 's'"
+    ]
+  }
+}

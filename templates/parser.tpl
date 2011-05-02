@@ -1,0 +1,455 @@
+import sys
+
+{% from hermes.Grammar import AstTranslation, AstSpecification %}
+{% from hermes.Macro import SeparatedListMacro, NonterminalListMacro %}
+
+def parse( iterator, entry ):
+  p = Parser()
+  return p.parse(iterator, entry)
+class Terminal:
+  def __init__(self, id):
+    self.id=id
+    self.str=Parser.terminal_str[id]
+  def getId(self):
+    return self.id
+  def toAst(self):
+    return self
+  def __str__(self):
+    return self.str
+class NonTerminal():
+  def __init__(self, id, string):
+    self.id = id
+    self.string = string
+    self.list = False
+  def __str__(self):
+    return self.string
+class AstTransform:
+  pass
+class AstTransformSubstitution(AstTransform):
+  def __init__( self, idx ):
+    self.idx = idx
+  def __repr__( self ):
+    return '$' + str(self.idx)
+class AstTransformNodeCreator(AstTransform):
+  def __init__( self, name, parameters ):
+    self.name = name
+    self.parameters = parameters
+  def __repr__( self ):
+    return self.name + '( ' + ', '.join(['%s=$%s' % (k,str(v)) for k,v in self.parameters.items()]) + ' )' 
+class ParseTree():
+  def __init__(self, nonterminal):
+    self.children = []
+    self.nonterminal = nonterminal
+    self.astTransform = None
+    self.isExpr = False
+    self.list = False
+  def add( self, tree ):
+    self.children.append( tree )
+  def toAst( self ):
+    if self.list:
+      if len(self.children) == 0:
+        return []
+      offset = 1 if not isinstance(self.children[0], ParseTree) else 0
+      r = [self.children[offset].toAst()]
+      r.extend(self.children[offset+1].toAst())
+      return r
+    if self.isExpr:
+      if isinstance(self.astTransform, AstTransformSubstitution):
+        return self.children[self.astTransform.idx].toAst()
+      elif isinstance(self.astTransform, AstTransformNodeCreator):
+        parameters = {name: self.nonterminal.toAst() if idx==0 else self.children[idx-1].toAst() for name, idx in self.astTransform.parameters.items()}
+        return Ast(self.astTransform.name, parameters)
+    else:
+      if isinstance(self.astTransform, AstTransformSubstitution):
+        return self.children[self.astTransform.idx].toAst()
+      elif isinstance(self.astTransform, AstTransformNodeCreator):
+        parameters = {name: self.children[idx].toAst() for name, idx in self.astTransform.parameters.items()}
+        return Ast(self.astTransform.name, parameters)
+      elif len(self.children):
+        return self.children[0].toAst()
+      else:
+        return None
+  def __str__( self ):
+    children = []
+    for child in self.children:
+      if isinstance(child, list):
+        children.append('[' + ', '.join([str(a) for a in child]) + ']')
+      else:
+        children.append(str(child))
+    return '(' + str(self.nonterminal) + ': ' + ', '.join(children) + ')'
+
+class Ast():
+  def __init__(self, name, attributes):
+    self.name = name
+    self.attributes = attributes
+  def getAttr(self, attr):
+    return self.attributes[attr]
+  def __str__(self):
+    return '(%s: %s)' % (self.name, ', '.join('%s=%s'%(str(k), '[' + ', '.join([str(x) for x in v]) + ']' if isinstance(v, list) else str(v) ) for k,v in self.attributes.items()))
+
+class SyntaxError:
+  def __init__(self, message):
+    self.message = message
+  def __str__(self):
+    return self.message
+
+class TokenRecorder:
+  def __init__(self):
+    self.stack = []
+    self.awake = False
+  def wake(self):
+    self.awake = True
+    self.stack = []
+    return self
+  def sleep(self):
+    self.awake = False
+    return self
+  def record(self, s):
+    self.stack.append(s)
+    return self
+  def tokens(self):
+    return self.stack
+
+class Parser:
+
+  #__slots__ = ("iterator", "sym", "language", "entry_points")
+
+  def __init__(self):
+    self.iterator = None
+    self.sym = None
+    self.recorder = TokenRecorder()
+    self.syntax_error = None
+    self.entry_points = {
+      {% for s,f in entry_points.items() %}
+      '{{s}}': self.{{f}},
+      {% endfor %}
+    }
+
+  {% for i,var in init['terminal_var'].items() %}
+  {{var}} = {{i}}
+  {% endfor %}
+
+  terminal_str = {
+  {% for i,string in init['terminal_str'].items() %}
+    {{i}}: {{string}},
+  {% endfor %}
+  }
+
+  nonterminal_str = {
+  {% for i,string in init['nonterminal_str'].items() %}
+    {{i}}: '{{string}}',
+  {% endfor %}
+  }
+  
+  str_terminal = {
+  {% for i,string in init['terminal_str'].items() %}
+    {{string}}: {{i}},
+  {% endfor %}
+  }
+
+  str_nonterminal = {
+  {% for i,string in init['nonterminal_str'].items() %}
+    '{{string}}': {{i}},
+  {% endfor %}
+  }
+
+  terminal_count = {{init['terminal_count']}}
+  nonterminal_count = {{init['nonterminal_count']}}
+  parse_table = [
+    {{init['parse_table']}}
+  ]
+
+  bp = {
+    {% for i,b in init['binding_power'].items() %}
+    {{i}}: {{b}},
+    {% endfor %}
+  }
+
+  def terminal(self, str):
+    return self.str_terminal[str]
+  
+  def isTerminal(self, id):
+    return {{init['terminal_start']}} <= id <= {{init['terminal_end']}}
+
+  def isNonTerminal(self, id):
+    return {{init['nonterminal_start']}} <= id <= {{init['nonterminal_end']}}
+
+  def rewind(self, recorder):
+    global tokens
+    tokens = recorder.tokens().append(tokens)
+
+  def binding_power(self, sym):
+    try:
+      return self.bp[sym.getId()]
+    except KeyError:
+      return 0
+    except AttributeError:
+      return 0
+
+  def getAtomString(self, id):
+    if self.isTerminal(id):
+      return self.terminal_str[id]
+    elif self.isNonTerminal(id):
+      return self.nonterminal_str[id]
+    return ''
+
+  def getsym(self):
+    try:
+      return next( self.iterator )
+    except StopIteration:
+      return None
+
+  def parse(self, iterator, entry):
+    self.iterator = iter(iterator)
+    self.sym = self.getsym()
+    tree = self.entry_points[entry]()
+    if self.sym != None:
+      self.syntax_error = SyntaxError('Syntax Error: Finished parsing without consuming all tokens.')
+    self.iterator = None
+    self.sym = None
+    return tree
+
+  def next(self):
+    self.sym = self.getsym()
+
+    if self.sym is not None and not self.isTerminal(self.sym.getId()):
+      self.syntax_error = SyntaxError('Invalid symbol ID: %d (%s)'%(self.sym.getId(), self.sym))
+      self.sym = None
+
+    if self.recorder.awake and self.sym is not None:
+      self.recorder.record(self.sym)
+
+    return self.sym
+
+  def expect(self, s):
+    if self.sym and s == self.sym.getId():
+      symbol = self.sym
+      self.sym = self.next()
+      return symbol
+    else:
+      self.syntax_error = SyntaxError('Unexpected symbol.  Expected %s, got %s.' %(self.terminal_str[s], self.sym if self.sym else 'None'))
+      return self.syntax_error
+
+  def rule(self, n):
+    if self.sym == None: return -1
+    return self.parse_table[n - {{init['nonterminal_start']}}][self.sym.getId()]
+
+  {% for n in nt %}
+  def {{n['func_name']}}(self):
+    rule = self.rule({{n['id']}})
+    tree = ParseTree( NonTerminal({{n['id']}}, self.getAtomString({{n['id']}})) )
+    tree.list = {%if n['nt_obj'].macro%}True{%else%}False{%endif%}
+
+    {% if n['empty'] and len(n['follow']) %}
+      {% for f in n['follow']%}
+    if self.sym != None and ({{' or '.join(['self.sym.getId() == ' + str(a.id) for a in n['follow']])}}):
+      return tree
+      {% endfor %}
+    {% endif %}
+
+    if self.sym == None{% for e in n['escape_terminals'] %} or self.sym.getId() == self.{{e}}{%endfor%}:
+    {% if n['empty'] %}
+      return tree
+    {% else %}
+      return SyntaxError('Unexpected end of file')
+    {% endif %}
+  
+    {% for rule in n['rules'] %}
+
+      {% if rule['idx'] == 0 %}
+    if rule == {{rule['id']}}:
+      {% else %}
+    elif rule == {{rule['id']}}:
+      {% endif %}
+      {% if isinstance(rule['obj'].ast, AstTranslation) %}
+      tree.astTransform = AstTransformSubstitution({{rule['obj'].ast.idx}})
+      {% elif isinstance(rule['obj'].ast, AstSpecification) %}
+      tree.astTransform = AstTransformNodeCreator('{{rule['obj'].ast.name}}', {{rule['obj'].ast.parameters}})
+      {% else %}
+      tree.astTransform = AstTransformSubstitution(0)
+      {% endif %}
+      {% for atom in rule['atoms'] %}
+
+        {% if atom['type'] == 'terminal' %}
+      tree.add( self.expect(self.{{atom['terminal_var_name']}}) )
+        {% endif %}
+
+        {% if atom['type'] == 'nonterminal' %}
+      tree.add( self.{{atom['nonterminal_func_name']}}() )
+        {% endif %}
+
+      {% endfor %}
+
+      if self.syntax_error:
+        return False
+      return tree
+
+    {% endfor %}
+
+    {% if n['lambda_path'] %}
+    else:
+      if not self.recorder.awake:
+        self.recorder.wake()
+      self.recorder.record(self.sym)
+      {% if isinstance(n['lambda_path'].ast, AstTranslation) %}
+      tree.astTransform = AstTransformSubstitution({{n['lambda_path'].ast.idx}})
+      {% elif isinstance(n['lambda_path'].ast, AstSpecification) %}
+      tree.astTransform = AstTransformNodeCreator('{{n['lambda_path'].ast.name}}', {{n['lambda_path'].ast.parameters}})
+      {% else %}
+      tree.astTransform = AstTransformSubstitution(0)
+      {% endif %}
+      {% for atom in n['lambda_path_atoms'] %}
+
+      {% if atom['type'] == 'terminal' %}
+      tree.add( self.expect(self.{{atom['terminal_var_name']}}) )
+      {% endif %}
+
+      {% if atom['type'] == 'nonterminal' %}
+      tree.add( self.{{atom['nonterminal_func_name']}}() )
+      {% endif %}
+
+      {% endfor %}
+      if self.syntax_error:
+        if self.recorder.awake:
+          self.recorder.sleep()
+          self.rewind(self.recorder)
+        return False
+      return tree
+    {% endif %}
+
+    {% if not n['empty'] %}
+    return SyntaxError('unexpected symbol')
+    {% else %}
+    return tree
+    {% endif %}
+
+  {% endfor %}
+
+  def _EXPR( self, rbp = 0 ):
+    t = self.sym
+    left = self.nud()
+    while rbp < self.binding_power(self.sym):
+      left = self.led(left)
+    left.isExpr = True
+    return left
+
+  def nud(self):
+    {% for sym, actions in nudled['nud'].items() %}
+    if self.sym.getId() == {{sym}}:
+      tree = ParseTree( NonTerminal({{sym}}, self.getAtomString({{sym}})) )
+      {% for action in actions %}
+        {% if action['type'] == 'symbol' %}
+      return self.expect({{action['sym']}})
+
+        {% elif action['type'] == 'infix' %}
+      # infix noop
+
+        {% elif action['type'] == 'prefix' %}
+      self.expect(self.sym)
+      tree.astTransform = AstTransformNodeCreator('', {})
+      tree.add( EXPR({{action['binding_power']}}) )
+
+        {% elif action['type'] == 'list' %}
+      ls = []
+      tree.list = True
+      tree.add( self.expect({{action['open_sym']}}) )
+      if self.sym.getId() != {{action['close_sym']}}:
+        while 1:
+          ls.append( self.{{action['nonterminal_func']}}() )
+          if self.sym.getId() != {{action['separator']}}:
+            break
+          self.expect({{action['separator']}})
+      tree.add( ls )
+      tree.add( self.expect({{action['close_sym']}}) )
+
+        {% elif action['type'] == 'nonterminal' %}
+      
+      tree.add({{action['nonterminal_func']}})
+
+        {% endif %}
+
+      {% if isinstance(action['rule'].ast, AstSpecification) %}
+      tree.astTransform = AstTransformNodeCreator('{{action['rule'].ast.name}}', {{action['rule'].ast.parameters}})
+      {% elif isinstance(action['rule'].ast, AstTranslation) %}
+      tree.astTransform = AstTransformSubstitution({{action['rule'].ast.idx}})
+      {% endif %}
+
+      if self.syntax_error: return self.syntax_error
+      return tree
+      {% endfor %}
+    {% endfor %}
+
+    {% if len(nudled['nud']) == 0 %}
+    pass
+    {% endif %}
+
+  def led(self, left):
+    {% for sym, actions in nudled['led'].items() %}
+    if self.sym.getId() == {{sym}}:
+      tree = ParseTree( NonTerminal({{sym}}, self.getAtomString({{sym}})) )
+      {% for action in actions %}
+        {% if action['type'] == 'symbol' %}
+      return self.expect({{action['sym']}})
+
+        {% elif action['type'] == 'infix' %}
+      self.expect(self.sym.getId())
+      tree.add( left )
+      tree.add( self._EXPR({{action['binding_power']}}) )
+
+        {% elif action['type'] == 'prefix' %}
+      # prefix noop
+
+        {% elif action['type'] == 'list' %}
+      ls = []
+      tree.list = True
+      tree.add( self.expect({{action['open_sym']}}) )
+      if self.sym.getId() != {{action['close_sym']}}:
+        while 1:
+          ls.append( self.{{action['nonterminal_func']}}() )
+          if self.sym.getId() != {{action['separator']}}:
+            break
+          self.expect({{action['separator']}})
+      tree.add( ls )
+      tree.add( self.expect({{action['close_sym']}}) )
+
+        {% elif action['type'] == 'nonterminal' %}
+      
+      tree.add({{action['nonterminal_func']}})
+        {% endif %}
+
+      {% if isinstance(action['rule'].ast, AstSpecification) %}
+      tree.astTransform = AstTransformNodeCreator('{{action['rule'].ast.name}}', {{action['rule'].ast.parameters}})
+      {% elif isinstance(action['rule'].ast, AstTranslation) %}
+      tree.astTransform = AstTransformSubstitution({{action['rule'].ast.idx}})
+      {% endif %}
+
+      if self.syntax_error: return self.syntax_error
+      return tree
+      {% endfor %}
+    {% endfor %}
+
+    {% if len(nudled['led']) == 0 %}
+    pass
+    {% endif %}
+
+{% if len(tokens) %}
+if __name__ == '__main__':
+  p = Parser()
+
+  try:
+    tokens = [
+      {% for t in tokens %}
+      Terminal( p.{{t}} ),
+      {% endfor %}
+    ]
+  except AttributeError as e:
+    print(e)
+    sys.exit(0)
+  parsetree = p.parse( tokens, '{{entry}}' )
+  if p.syntax_error:
+    print(p.syntax_error)
+  elif not parsetree or len(sys.argv) <= 1 or (len(sys.argv) > 1 and sys.argv[1] == 'parsetree'):
+    print(parsetree)
+  elif len(sys.argv) > 1 and sys.argv[1] == 'ast':
+    print(parsetree.toAst())
+{% endif %}

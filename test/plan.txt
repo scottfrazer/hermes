@@ -1,0 +1,28 @@
+ab.zgr
+------
+in  ->  a,a,b,b,semi
+out ->  (start: (sub: a, (sub: a, (sub: ), b), b), semi)
+
+in  ->  a,b,semi
+out ->  (start: (sub: a, (sub: ), b), semi)
+
+in  ->  semi
+out ->  (start: (sub: ), semi)
+
+expr.zgr
+--------
+in  ->  a,comma,b,comma,number,add,number
+out ->  (start: (tmp0: (sub: (item: a)), (tmp1: comma, (sub: (item: b)), (tmp1: comma, (sub: (add: number, number)), (tmp1: )))))
+
+list.zgr
+--------
+in  ->  lparen,a,b,rparen
+out ->  (start: lparen, (tmp0: (item: a), (tmp0: (item: b), (tmp0: ))), rparen)
+
+pl0.zgr
+-------
+in  ->  const,ident,equal,number,comma,ident,equal,number,var,ident,comma,ident,semi,call,ident,dot
+out ->  (program: (block: (block_const: const, (ident: ident), equal, (number: number), (block_const1: comma, (ident: ident), equal, (number: number))), (block_var: var, (ident: ident), (block_var1: comma, (ident: ident)), semi), (block_proc: ), (statement: call, (ident: ident))), dot)
+
+in  ->  var,ident,semi,ident,assign,number,dot
+out ->  (program: (block: (block_const: ), (block_var: var, (ident: ident), (block_var1: ), semi), (block_proc: ), (statement: (ident: ident), assign, (expression: (unary_add_op: ), (term: (factor: (number: number)), (term_sub1: )), (expression_sub1: )))), dot)

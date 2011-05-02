@@ -1,0 +1,10 @@
+1.0 Priorities
+
+2) Better unit test coverage
+3) Rename ParserGenerator to Main
+4) Lexer *bindings*
+    a) --lexer=<module>, --source=<file>
+5) Be case-sensitive when representing morphemes, but internally, treat them as case-insensitive (like mysql).
+6) Add 'parse' command to simply print the tree
+    a) --token-file option too
+    b) --type=[ast|parsetree]

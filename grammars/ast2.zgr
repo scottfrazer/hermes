@@ -1,0 +1,29 @@
+{
+  "ll1": {
+    "start": "start",
+    "rules": [
+      "start := list(statement, 'semi') -> Program(statements=$0) | ε",
+      "statement := expr | for",
+      "for := 'for' + 'lparen' + forsub + 'semi' + forsub + 'semi' + forsub + 'rparen' + 'lbrace' + forbody + 'rbrace' -> For( decl=$2, cond=$4, iter=$6, body=$9 )",
+      "forsub := expr | ε",
+      "forbody := statement + 'semi' + forbody | ε"
+    ]
+  },
+  "expr": {
+    "binding_power": [
+      {"associativity": "right", "tokens": ["eq"]},
+      {"associativity": "left", "tokens": ["add", "sub"]},
+      {"associativity": "left", "tokens": ["mul", "div"]},
+      {"associativity": "unary", "tokens": ["sub"]}
+    ],
+    "rules": [
+      "expr := expr + 'eq'+ expr -> Assign( lhs=$0, rhs=$2 )",
+      "expr := expr + 'add'+ expr -> Add( lhs=$0, rhs=$2 )",
+      "expr := expr + 'mul' + expr -> Multiply( lhs=$0, rhs=$2 )",
+      "expr := expr + 'sub'+ expr -> Subtract( lhs=$0, rhs=$2 )",
+      "expr := expr + 'div' + expr -> Divide( lhs=$0, rhs=$2 )",
+      "expr := 'sub'+ expr -> UMinus( arg=$1 )",
+      "expr := 'n' | 's' | 'identifier'"
+    ]
+  }
+}
