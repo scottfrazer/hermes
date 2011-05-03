@@ -1,10 +1,13 @@
 1.0 Priorities
 
-2) Better unit test coverage
-3) Rename ParserGenerator to Main
-4) Lexer *bindings*
-    a) --lexer=<module>, --source=<file>
-5) Be case-sensitive when representing morphemes, but internally, treat them as case-insensitive (like mysql).
-6) Add 'parse' command to simply print the tree
-    a) --token-file option too
-    b) --type=[ast|parsetree]
+1) Better unit test coverage
+2) Fix the grammars in the 'bugs' directory
+3) Make python parser raise exception rather than return exception
+4) Fix bug with not being able to run the 'generate' or 'parse' commands without being in the project root (can't find the template file)
+5) Run all the examples in the documentation, make sure output is exactly right.
+6) Change display of analyze command:
+    a) Make terminals and nonterminals print out in the case they are in the grammar file
+    b) Remove ε from terminal list if not used in grammar
+7) Fix error in generated parser if a specified token does not exist.  Current message is a bit cryptic.
+8) Remove the first and follow sets for list macros.
+9) In j.zgr, if no tokens are given, we don't get an empty parse tree as we'd expect

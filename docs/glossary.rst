@@ -16,7 +16,7 @@ Glossary
     Special Terminal
         A special terminal is one that represents something else.  These are denoted with greek letters.  There are three special terminals:
 
-        ε (U+03B5) - Refers to the empty string.  If there's a rule ``<nonterminal> := &epsilon;``, the nonterminal could reduce to nothing
+        ε (U+03B5) - Refers to the empty string.  If there's a rule ``<nonterminal> := ε``, the nonterminal could reduce to nothing
 
         λ (U+03BB) - Represents an expression (via the built-in expression parser)
 

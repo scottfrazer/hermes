@@ -10,7 +10,7 @@ Hermes Documentation Contents
     index
 
 .. toctree::
-    :maxdepth: 3
+    :maxdepth: 4
 
     intro/index
     documentation/index
