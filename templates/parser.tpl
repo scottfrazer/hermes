@@ -338,8 +338,13 @@ class Parser:
     if self.sym.getId() == {{sym}}:
       tree = ParseTree( NonTerminal({{sym}}, self.getAtomString({{sym}})) )
       {% for action in actions %}
+
         {% if action['type'] == 'symbol' %}
+          {% if len(actions) == 1 %}
       return self.expect({{action['sym']}})
+          {% else %}
+      tree.add( self.expect({{action['sym']}}) )
+          {% endif %}
 
         {% elif action['type'] == 'infix' %}
       # infix noop
@@ -347,7 +352,7 @@ class Parser:
         {% elif action['type'] == 'prefix' %}
       self.expect(self.sym)
       tree.astTransform = AstTransformNodeCreator('', {})
-      tree.add( EXPR({{action['binding_power']}}) )
+      tree.add( self._EXPR({{action['binding_power']}}) )
 
         {% elif action['type'] == 'list' %}
       ls = []
@@ -364,7 +369,7 @@ class Parser:
 
         {% elif action['type'] == 'nonterminal' %}
       
-      tree.add({{action['nonterminal_func']}})
+      tree.add(self.{{action['nonterminal_func']}}())
 
         {% endif %}
 
@@ -374,9 +379,10 @@ class Parser:
       tree.astTransform = AstTransformSubstitution({{action['rule'].ast.idx}})
       {% endif %}
 
+      
+      {% endfor %}
       if self.syntax_error: return self.syntax_error
       return tree
-      {% endfor %}
     {% endfor %}
 
     {% if len(nudled['nud']) == 0 %}
