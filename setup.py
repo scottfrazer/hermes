@@ -1,3 +1,6 @@
+import distribute_setup
+distribute_setup.use_setuptools()
+
 import os
 from setuptools import setup, find_packages
 
@@ -12,7 +15,12 @@ setup(
     author='Scott Frazer',
     author_email='scott.d.frazer@gmail.com',
     packages=['hermes'],
-    package_dir={'hermes': 'hermes'},
+    package_dir={
+        'hermes': 'hermes',
+    },
+    install_requires=[
+        "moody-templates>=0.9"
+    ],
     entry_points={
       'console_scripts': [
             'hermes = hermes.Main:Cli'
