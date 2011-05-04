@@ -11,3 +11,6 @@
 7) Fix error in generated parser if a specified token does not exist.  Current message is a bit cryptic.
 8) Remove the first and follow sets for list macros.
 9) In j.zgr, if no tokens are given, we don't get an empty parse tree as we'd expect
+10) rename tmpx to _genx
+11) in analyze, display all items in order of their ids, ascending.
+12) Change 'tokens' in binding_power to 'terminals'

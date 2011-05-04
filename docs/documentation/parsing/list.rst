@@ -8,10 +8,28 @@ The syntax of the list macro is ``list(<nonterminal>, <terminal>?)`` Where the f
 Macro Expansion
 ---------------
 
-Describe how the list macro expands
+The list macro is expanded into grammar rules.  ``list(<nonterminal>)`` is replaced by a new nonterminal ``_gen[0-9]+``.  For example, if we have a grammar with two rules: ``S := list(N)`` and ``N := 't'``, this would be expanded to:
+
+.. code-block:: pascal
+
+    S := _gen0
+    _gen0 := N + _gen0 | ε
+    N := 't'
+
+Whereas, if we have the same rule but with a terminal as the separator: ``S := list(N, 'x')`` and ``N := 't'``, this would be expanded to:
+
+.. code-block:: pascal
+
+    S := _gen0
+    _gen0 := N + _gen1 | ε
+    _gen1 := 'x' + N + _gen1 | ε
+
+It's important to note that the macro is not entirely identical to the rules it generates.  In terms of straight LL(1) Parsing, they're equivelant.  However, this macro translates to a list primitive for the abstract syntax tree.  More information on that in the section on abstract syntax trees.
 
 Example 1: Simple List
 ----------------------
+
+This is an example of a simple list of the nonterminal T which can be an 'x' or 'y' terminal.
 
 .. code-block:: javascript
 
@@ -25,6 +43,8 @@ Example 1: Simple List
       }
     }
 
+The analysis reveals the expansion of the list macro in the normalized grammar:
+
 .. code-block:: bash
 
     $ hermes analyze simple_list.zgr
@@ -32,32 +52,35 @@ Example 1: Simple List
     'y', 'x', 'σ', 'ε'
 
      -- Non-Terminals --
-    s, t, tmp0
+    s, t, _gen0
 
      -- Normalized Grammar -- 
-    tmp0 := T tmp0
-    tmp0 := ε
-    S := tmp0
+    _gen0 := T _gen0
+    _gen0 := ε
+    S := _gen0
     T := 'x'
     T := 'y'
 
      -- First sets --
     T = {'x', 'y'}
-    tmp0 = {'x', ε, 'y'}
+    _gen0 = {'x', ε, 'y'}
     S = {'x', 'y'}
 
      -- Follow sets --
-    tmp0 = {σ}
+    _gen0 = {σ}
     S = {σ}
     T = {'x', 'y', σ}
 
     Grammar is LL(1)!
 
+Finally, we can see the parse trees that result from a series of x and y terminals:
+
 .. code-block:: bash
 
-    $ hermes parse ~/j.zgr --tokens=x,y,x,y
-    (s: (tmp0: (t: x), (tmp0: (t: y), (tmp0: (t: x), (tmp0: (t: y), (tmp0: ))))))
+    $ hermes parse simple_list.zgr --tokens=x,y,x,y
+    (s: (_gen0: (T: x), (_gen0: (T: y), (_gen0: (T: x), (_gen0: (T: y), (_gen0: ))))))
     $ hermes parse simple_list.zgr --tokens=x,y,x,y,x,x,x
-    (s: (tmp0: (t: x), (tmp0: (t: y), (tmp0: (t: x), (tmp0: (t: y), (tmp0: (t: x), (tmp0: (t: x), (tmp0: (t: x), (tmp0: )))))))))
-    $ hermes parse ~/j.zgr --tokens=x
-    (s: (tmp0: (t: x), (tmp0: )))
+    (s: (_gen0: (T: x), (_gen0: (T: y), (_gen0: (T: x), (_gen0: (T: y), (_gen0: (T: x), (_gen0: (T: x), (_gen0: (T: x), (_gen0: )))))))))
+    $ hermes parse simple_list.zgr --tokens=x
+    (s: (_gen0: (T: x), (_gen0: )))
+
