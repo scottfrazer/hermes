@@ -12,12 +12,12 @@ out ->  (start: (sub: ), semi)
 expr.zgr
 --------
 in  ->  a,comma,b,comma,number,add,number
-out ->  (start: (tmp0: (sub: (item: a)), (tmp1: comma, (sub: (item: b)), (tmp1: comma, (sub: (add: number, number)), (tmp1: )))))
+out ->  (start: (_gen0: (sub: (item: a)), (_gen1: comma, (sub: (item: b)), (_gen1: comma, (sub: (add: number, number)), (_gen1: )))))
 
 list.zgr
 --------
 in  ->  lparen,a,b,rparen
-out ->  (start: lparen, (tmp0: (item: a), (tmp0: (item: b), (tmp0: ))), rparen)
+out ->  (start: lparen, (_gen0: (item: a), (_gen0: (item: b), (_gen0: ))), rparen)
 
 pl0.zgr
 -------

@@ -10,8 +10,8 @@ class AstTest(GrammarTest):
   def test_firstSets(self):
     self.assertFirst({
       'expr': {'a', 'b', 'sub', 'λ'},
-      'tmp1': {'comma', 'ε'},
-      'tmp0': {'ε', 'identifier', 'a', 'b', 'sub', 'λ'},
+      '_gen1': {'comma', 'ε'},
+      '_gen0': {'ε', 'identifier', 'a', 'b', 'sub', 'λ'},
       'assignstatement': {'identifier'},
       'start': {'ε', 'identifier', 'a', 'b', 'sub', 'λ'},
       'statements': {'identifier', 'a', 'b', 'sub', 'λ'},
@@ -20,8 +20,8 @@ class AstTest(GrammarTest):
   def test_followSets(self):
     self.assertFollow({
       'expr': {'comma', 'σ', 'div', 'mul', 'add', 'sub'},
-      'tmp1': {'σ'},
-      'tmp0': {'σ'},
+      '_gen1': {'σ'},
+      '_gen0': {'σ'},
       'assignstatement': {'comma', 'σ'},
       'start': {'σ'},
       'statements': {'comma', 'σ'},
@@ -32,7 +32,7 @@ class AstTest(GrammarTest):
 
   def test_codeGeneration(self):
     self.runWithTokens(['a','add','b','comma','identifier','eq','a','sub','b','mul','a']) \
-        .assertParseTree('(start: (tmp0: (statements: (add: a, b)), (tmp1: comma, (statements: (assignstatement: identifier, eq, (sub: a, (mul: b, a)))), (tmp1: ))))') \
+        .assertParseTree('(start: (_gen0: (statements: (add: a, b)), (_gen1: comma, (statements: (assignstatement: identifier, eq, (sub: a, (mul: b, a)))), (_gen1: ))))') \
         .assertAst('(Program: statements=[(Add: rhs=b, lhs=a), (Assign: var=identifier, val=(Subtract: rhs=(Multiply: rhs=a, lhs=b), lhs=a))])')
 
 if __name__ == '__main__':
