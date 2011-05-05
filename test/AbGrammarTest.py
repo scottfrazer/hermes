@@ -41,8 +41,5 @@ class AbGrammarTest(GrammarTest):
   def test_codeGeneration5(self):
     self.runWithTokens( [] ).assertParseTree( '' )
 
-  def test_codeGeneration6(self):
-    self.runWithTokens( [14] ).assertParseTree( 'Parser instance has no attribute \'TERMINAL_14\'' )
-
 if __name__ == '__main__':
   unittest.main()

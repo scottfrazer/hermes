@@ -36,7 +36,7 @@ class GrammarTest(unittest.TestCase):
     return self
 
   def runWithTokens(self, tokens):
-    tokens = ['TERMINAL_' + str(t).upper() for t in tokens]
+    tokens = [str(t) for t in tokens]
     resources = Resources(self.grammar, tokens )
     template = PythonTemplate(resources)
     code = template.render()

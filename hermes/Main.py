@@ -60,12 +60,22 @@ def Cli():
     print(e)
     sys.exit(-1)
 
+  terminals = []
+  if result.tokens:
+    terminals = result.tokens.lower().split(',')
+    error = False
+    for terminal in terminals:
+      if terminal not in G.terminals:
+        sys.stderr.write("Error: Token '%s' not recognized\n" %(terminal))
+        error = True
+    if error:
+      sys.exit(-1)
+
   if result.action == 'analyze':
     analyzer = GrammarAnalyzer(G)
     analyzer.analyze()
 
   if result.action == 'generate':
-    terminals = list(map(lambda x: 'TERMINAL_'+x, result.tokens.upper().split(','))) if result.tokens else []
     resources = Resources(G, terminals )
     template = PythonTemplate(resources)
 
@@ -86,9 +96,6 @@ def Cli():
 
   if result.action == 'parse':
     f = '__z_code_compile__.py'
-    terminals = list(map(lambda x: 'TERMINAL_'+x, result.tokens.upper().split(','))) if result.tokens else []
-    if len(terminals) == 0:
-      sys.stderr.write("Warning: No tokens specified! (use --tokens)")
 
     resources = Resources(G, terminals )
     template = PythonTemplate(resources)
