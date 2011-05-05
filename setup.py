@@ -13,6 +13,7 @@ setup(
     author_email='scott.d.frazer@gmail.com',
     packages=['hermes'],
     package_dir={'hermes': 'hermes'},
+    package_data={'hermes': ['templates/*.tpl']},
     entry_points={
       'console_scripts': [
             'hermes = hermes.Main:Cli'

@@ -1,5 +1,6 @@
 from os import path
 import re
+from pkg_resources import resource_filename
 from types import *
 from hermes.Morpheme import Terminal, NonTerminal, EmptyString
 from hermes.Macro import ExprListMacro, NonterminalListMacro, SeparatedListMacro
@@ -25,7 +26,8 @@ class PythonTemplate(Template):
       'init': self.resources.getDeclarations(),
       'nudled': self.resources.getNudLed()
     }
-    loader = moody.make_loader('templates')
+    templates_dir = resource_filename(__name__, 'templates')
+    loader = moody.make_loader(templates_dir)
     code = loader.render( self.template, rules=x['rules'], expr_rules=x['expr_rules'], tokens=x['tokens'], entry=x['entry'], nt=x['parser'], init=x['init'], entry_points=x['entry_points'], nudled=x['nudled'])
     linereduce = re.compile('^[ \t]*$', re.M)
     code = linereduce.sub('', code)
