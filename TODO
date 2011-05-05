@@ -1,6 +1,9 @@
-1.0 Priorities
+1.0 Dev Priorities
 
 1) Better unit test coverage
+  a) Test mixfix expressions
+  b) Test for expression grammar conflicts
+  c) Test that grammar file case sensitivity works.
 2) Fix the grammars in the 'bugs' directory
 3) Make python parser raise exception rather than return exception
 4) Fix bug with not being able to run the 'generate' or 'parse' commands without being in the project root (can't find the template file)
