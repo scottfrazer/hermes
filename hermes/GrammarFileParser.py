@@ -86,7 +86,7 @@ class GrammarFileParser:
     if start:
       start_nt = self.factory.nonterminals[start.lower()]
     elif 'll1' in contents and 'start' in contents['ll1']:
-      start_nt = self.factory.nonterminals[contents['ll1']['start']]
+      start_nt = self.factory.nonterminals[contents['ll1']['start'].lower()]
     return self.factory.buildGrammar( start_nt )
   
   def parseRule( self, string, addFunc ):
