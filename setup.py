@@ -1,3 +1,6 @@
+import distribute_setup
+distribute_setup.use_setuptools()
+
 import os
 from setuptools import setup, find_packages
 
@@ -14,6 +17,9 @@ setup(
     packages=['hermes'],
     package_dir={'hermes': 'hermes'},
     package_data={'hermes': ['templates/*.tpl']},
+    install_requires=[
+        "moody-templates>=0.9"
+    ],
     entry_points={
       'console_scripts': [
             'hermes = hermes.Main:Cli'
