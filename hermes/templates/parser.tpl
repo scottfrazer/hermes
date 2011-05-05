@@ -87,7 +87,7 @@ class Ast():
   def __str__(self):
     return '(%s: %s)' % (self.name, ', '.join('%s=%s'%(str(k), '[' + ', '.join([str(x) for x in v]) + ']' if isinstance(v, list) else str(v) ) for k,v in self.attributes.items()))
 
-class SyntaxError:
+class SyntaxError(Exception):
   def __init__(self, message):
     self.message = message
   def __str__(self):
