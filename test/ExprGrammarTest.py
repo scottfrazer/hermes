@@ -11,10 +11,10 @@ class ExprGrammarTest(GrammarTest):
     self.assertFirst({
       'start': {'lparen', 'lbrace', 'subtract', 'lsquare', 'b', 'identifier', 'a', 'number', 'λ'},
       'sub': {'lparen', 'lbrace', 'subtract', 'lsquare', 'identifier', 'b', 'number', 'a', 'λ'},
-      'tmp0': {'lbrace', 'lsquare', 'b', 'identifier', 'number', 'subtract', 'lparen', 'ε', 'a', 'λ'},
-      'tmp1': {'comma', 'ε'},
-      'tmp2': {'lbrace', 'lsquare', 'subtract', 'identifier', 'number', 'ε', 'lparen', 'λ'},
-      'tmp3': {'comma', 'ε'},
+      '_gen0': {'lbrace', 'lsquare', 'b', 'identifier', 'number', 'subtract', 'lparen', 'ε', 'a', 'λ'},
+      '_gen1': {'comma', 'ε'},
+      '_gen2': {'lbrace', 'lsquare', 'subtract', 'identifier', 'number', 'ε', 'lparen', 'λ'},
+      '_gen3': {'comma', 'ε'},
       'item': {'b', 'a'},
       'expr': {'lbrace', 'lsquare', 'identifier', 'subtract', 'lparen', 'number', 'λ'},
     })
@@ -25,8 +25,8 @@ class ExprGrammarTest(GrammarTest):
       'sub': set(['comma', 'σ']),
       'item': set(['σ', 'comma']),
       'expr': set(['divide', 'rparen', 'subtract', 'σ', 'comma', 'add', 'multiply']),
-      'tmp0': set(['σ']),
-      'tmp1': set(['σ'])
+      '_gen0': set(['σ']),
+      '_gen1': set(['σ'])
     })
 
   def test_conflicts(self):
@@ -35,7 +35,7 @@ class ExprGrammarTest(GrammarTest):
   def test_codeGeneration(self):
     self.loadGrammarFile('grammars/expr.zgr', 'START') \
         .runWithTokens(['a','comma','b','comma','number','add','number']) \
-        .assertParseTree("(start: (tmp0: (sub: (item: a)), (tmp1: comma, (sub: (item: b)), (tmp1: comma, (sub: (add: number, number)), (tmp1: )))))")
+        .assertParseTree("(start: (_gen0: (sub: (item: a)), (_gen1: comma, (sub: (item: b)), (_gen1: comma, (sub: (add: number, number)), (_gen1: )))))")
 
 if __name__ == '__main__':
   unittest.main()

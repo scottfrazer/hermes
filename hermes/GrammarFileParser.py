@@ -15,7 +15,7 @@ from hermes.Factory import Factory
 
 class LL1MacroExpander:
   def __init__(self, registry):
-    self.prefix = 'tmp'
+    self.prefix = '_gen'
     self.id = 0
     self.list_cache = {}
     self.registry = registry
