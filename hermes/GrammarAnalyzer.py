@@ -11,8 +11,11 @@ class GrammarAnalyzer:
     print(', '.join([str(e) for e in sorted(self.grammar.nonterminals.values(), key=lambda x: x.id)]) + "\n")
     print(" -- Normalized Grammar -- ")
     print("\n".join([ str(r) for r in sorted(self.grammar.normalized(), key=lambda x: x.id)]) + "\n")
-    print(" -- Expression Grammar -- ")
-    print("\n".join([ str(r) for r in sorted(self.grammar.exprRules, key=lambda x: x.id)]) + "\n")
+    
+    if len(self.grammar.exprRules):
+      print(" -- Expression Grammar -- ")
+      print("\n".join([ str(r) for r in sorted(self.grammar.exprRules, key=lambda x: x.id)]) + "\n")
+
     print(" -- First sets --")
     for N in sorted(self.grammar.first.keys(), key=lambda x: x.id):
       if not isinstance(N, NonTerminal):

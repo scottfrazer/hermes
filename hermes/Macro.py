@@ -1,7 +1,7 @@
 from hermes.Morpheme import Morpheme
 
 class Macro(Morpheme):
-  pass
+  id = -1
 
 class ListMacro(Macro):
   pass
