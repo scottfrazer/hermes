@@ -36,7 +36,7 @@ class AbGrammarTest(GrammarTest):
     self.runWithTokens( ['semi'] ).assertParseTree( '(start: (sub: ), semi)' )
 
   def test_codeGeneration4(self):
-    self.runWithTokens( ['a'] ).assertParseTree( 'Unexpected symbol.  Expected semi, got None.' )
+    self.runWithTokens( ['a'] ).assertParseTree( 'Unexpected symbol.  Expected b, got None.' )
 
   def test_codeGeneration5(self):
     self.runWithTokens( [] ).assertParseTree( '' )

@@ -118,7 +118,6 @@ class Parser:
     self.iterator = None
     self.sym = None
     self.recorder = TokenRecorder()
-    self.syntax_error = None
     self.entry_points = {
       {% for s,f in entry_points.items() %}
       '{{s}}': self.{{f}},
@@ -204,7 +203,7 @@ class Parser:
     self.sym = self.getsym()
     tree = self.entry_points[entry]()
     if self.sym != None:
-      self.syntax_error = SyntaxError('Syntax Error: Finished parsing without consuming all tokens.')
+      raise SyntaxError('Syntax Error: Finished parsing without consuming all tokens.')
     self.iterator = None
     self.sym = None
     return tree
@@ -213,8 +212,8 @@ class Parser:
     self.sym = self.getsym()
 
     if self.sym is not None and not self.isTerminal(self.sym.getId()):
-      self.syntax_error = SyntaxError('Invalid symbol ID: %d (%s)'%(self.sym.getId(), self.sym))
       self.sym = None
+      raise SyntaxError('Invalid symbol ID: %d (%s)'%(self.sym.getId(), self.sym))
 
     if self.recorder.awake and self.sym is not None:
       self.recorder.record(self.sym)
@@ -227,8 +226,7 @@ class Parser:
       self.sym = self.next()
       return symbol
     else:
-      self.syntax_error = SyntaxError('Unexpected symbol.  Expected %s, got %s.' %(self.terminal_str[s], self.sym if self.sym else 'None'))
-      return self.syntax_error
+      raise SyntaxError('Unexpected symbol.  Expected %s, got %s.' %(self.terminal_str[s], self.sym if self.sym else 'None'))
 
   def rule(self, n):
     if self.sym == None: return -1
@@ -280,40 +278,38 @@ class Parser:
 
       {% endfor %}
 
-      if self.syntax_error:
-        return False
       return tree
 
     {% endfor %}
 
     {% if n['lambda_path'] %}
     else:
-      if not self.recorder.awake:
-        self.recorder.wake()
-      self.recorder.record(self.sym)
-      {% if isinstance(n['lambda_path'].ast, AstTranslation) %}
-      tree.astTransform = AstTransformSubstitution({{n['lambda_path'].ast.idx}})
-      {% elif isinstance(n['lambda_path'].ast, AstSpecification) %}
-      tree.astTransform = AstTransformNodeCreator('{{n['lambda_path'].ast.name}}', {{n['lambda_path'].ast.parameters}})
-      {% else %}
-      tree.astTransform = AstTransformSubstitution(0)
-      {% endif %}
-      {% for atom in n['lambda_path_atoms'] %}
+      try:
+        if not self.recorder.awake:
+          self.recorder.wake()
+        self.recorder.record(self.sym)
+        {% if isinstance(n['lambda_path'].ast, AstTranslation) %}
+        tree.astTransform = AstTransformSubstitution({{n['lambda_path'].ast.idx}})
+        {% elif isinstance(n['lambda_path'].ast, AstSpecification) %}
+        tree.astTransform = AstTransformNodeCreator('{{n['lambda_path'].ast.name}}', {{n['lambda_path'].ast.parameters}})
+        {% else %}
+        tree.astTransform = AstTransformSubstitution(0)
+        {% endif %}
+        {% for atom in n['lambda_path_atoms'] %}
 
-      {% if atom['type'] == 'terminal' %}
-      tree.add( self.expect(self.{{atom['terminal_var_name']}}) )
-      {% endif %}
+        {% if atom['type'] == 'terminal' %}
+        tree.add( self.expect(self.{{atom['terminal_var_name']}}) )
+        {% endif %}
 
-      {% if atom['type'] == 'nonterminal' %}
-      tree.add( self.{{atom['nonterminal_func_name']}}() )
-      {% endif %}
-
+        {% if atom['type'] == 'nonterminal' %}
+        tree.add( self.{{atom['nonterminal_func_name']}}() )
+        {% endif %}
       {% endfor %}
-      if self.syntax_error:
+      except SyntaxError as e:
         if self.recorder.awake:
           self.recorder.sleep()
           self.rewind(self.recorder)
-        return False
+        raise e
       return tree
     {% endif %}
 
@@ -379,9 +375,7 @@ class Parser:
       tree.astTransform = AstTransformSubstitution({{action['rule'].ast.idx}})
       {% endif %}
 
-      
       {% endfor %}
-      if self.syntax_error: return self.syntax_error
       return tree
     {% endfor %}
 
@@ -429,7 +423,6 @@ class Parser:
       tree.astTransform = AstTransformSubstitution({{action['rule'].ast.idx}})
       {% endif %}
 
-      if self.syntax_error: return self.syntax_error
       return tree
       {% endfor %}
     {% endfor %}
@@ -451,11 +444,12 @@ if __name__ == '__main__':
   except AttributeError as e:
     print(e)
     sys.exit(0)
-  parsetree = p.parse( tokens, '{{entry}}' )
-  if p.syntax_error:
-    print(p.syntax_error)
-  elif not parsetree or len(sys.argv) <= 1 or (len(sys.argv) > 1 and sys.argv[1] == 'parsetree'):
-    print(parsetree)
-  elif len(sys.argv) > 1 and sys.argv[1] == 'ast':
-    print(parsetree.toAst())
+  try:
+    parsetree = p.parse( tokens, '{{entry}}' )
+    if not parsetree or len(sys.argv) <= 1 or (len(sys.argv) > 1 and sys.argv[1] == 'parsetree'):
+      print(parsetree)
+    elif len(sys.argv) > 1 and sys.argv[1] == 'ast':
+      print(parsetree.toAst())
+  except SyntaxError as e:
+    print(e)
 {% endif %}
