@@ -1,24 +1,28 @@
 import json
-from hermes.Morpheme import Terminal, EndOfStream, EmptyString
+from hermes.Morpheme import NonTerminal
 
 class GrammarAnalyzer:
   def __init__(self, grammar):
     self.grammar = grammar
   def analyze( self, format='human' ):
     print(" -- Terminals --")
-    print(', '.join(["'" + str(e) + "'" for e in self.grammar.terminals]) + "\n")
+    print(', '.join([str(e) for e in sorted(self.grammar.terminals.values(), key=lambda x: x.id)]) + "\n")
     print(" -- Non-Terminals --")
-    print(', '.join([str(e) for e in self.grammar.nonterminals]) + "\n")
+    print(', '.join([str(e) for e in sorted(self.grammar.nonterminals.values(), key=lambda x: x.id)]) + "\n")
     print(" -- Normalized Grammar -- ")
-    print(self.grammar.__str__(True))
-    print("\n -- First sets --")
-    for N, t in self.grammar.first.items():
-      if type(N) is Terminal or type(N) is EmptyString or type(N) is EndOfStream:
+    print("\n".join([ str(r) for r in sorted(self.grammar.normalized(), key=lambda x: x.id)]) + "\n")
+    print(" -- Expression Grammar -- ")
+    print("\n".join([ str(r) for r in sorted(self.grammar.exprRules, key=lambda x: x.id)]) + "\n")
+    print(" -- First sets --")
+    for N in sorted(self.grammar.first.keys(), key=lambda x: x.id):
+      if not isinstance(N, NonTerminal):
         continue
-      print("%s = {%s}" % (N, ', '.join([str(e) for e in t])))
+      print("%s = {%s}" % (N, ', '.join([str(e) for e in self.grammar.first[N]])))
     print("\n -- Follow sets --")
-    for N, t in self.grammar.follow.items():
-      print("%s = {%s}" % (N, ', '.join([str(e) for e in t])))
+    for N in sorted(self.grammar.follow.keys(), key=lambda x: x.id):
+      if not isinstance(N, NonTerminal):
+        continue
+      print("%s = {%s}" % (N, ', '.join([str(e) for e in self.grammar.follow[N]])))
     if ( len(self.grammar.conflicts) ):
       print("\n -- Grammar conflicts detected.  Grammar is not LL(1) --")
       for conflict in self.grammar.conflicts:
