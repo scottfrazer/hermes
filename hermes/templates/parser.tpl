@@ -438,12 +438,13 @@ if __name__ == '__main__':
   try:
     tokens = [
       {% for t in tokens %}
-      Terminal( p.{{t}} ),
+      Terminal( p.TERMINAL_{{t.upper()}} ),
       {% endfor %}
     ]
   except AttributeError as e:
-    print(e)
-    sys.exit(0)
+    sys.stderr.write( str(e) + "\n" )
+    sys.exit(-1)
+
   try:
     parsetree = p.parse( tokens, '{{entry}}' )
     if not parsetree or len(sys.argv) <= 1 or (len(sys.argv) > 1 and sys.argv[1] == 'parsetree'):
