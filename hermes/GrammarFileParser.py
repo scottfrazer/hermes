@@ -124,7 +124,7 @@ class GrammarFileParser:
       return AstTranslation( int(ast.replace('$', '')) )
   
   def strToMorpheme(self, string):
-    if string[0] == 'ε':
+    if string[0] == 'ε' or string == '_empty':
       return self.factory.ε
 
     if string[:4].lower() == 'list':

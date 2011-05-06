@@ -9,16 +9,14 @@ from hermes.Grammar import Grammar
 from hermes.GrammarCodeGenerator import GrammarCodeGenerator, Resources, PythonTemplate
 
 class GrammarTest(unittest.TestCase):
-  def loadGrammarFile( self, filename, start ):
+  def loadGrammarFile( self, filename, start = None ):
     fp = GrammarFileParser()
     self.grammar = fp.parse( open(filename) , start )
-    self.start = self.grammar.nonterminals[start.lower()]
     return self
   
-  def loadGrammarStr( self, string, start ):
+  def loadGrammarStr( self, string, start = None ):
     fp = GrammarFileParser()
     self.grammar = fp.parse( io.StringIO(string) , start )
-    self.start = self.grammar.nonterminals[start.lower()]
     return self
   
   def assertFirst( self, first ):
