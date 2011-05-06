@@ -39,7 +39,7 @@ class AbGrammarTest(GrammarTest):
     self.runWithTokens( ['a'] ).assertParseTree( 'Unexpected symbol.  Expected b, got None.' )
 
   def test_codeGeneration5(self):
-    self.runWithTokens( [] ).assertParseTree( '' )
+    self.runWithTokens( [] ).assertParseTree( 'Error: unexpected end of file' )
 
 if __name__ == '__main__':
   unittest.main()

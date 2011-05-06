@@ -249,7 +249,7 @@ class Parser:
     {% if n['empty'] %}
       return tree
     {% else %}
-      return SyntaxError('Unexpected end of file')
+      raise SyntaxError('Error: unexpected end of file')
     {% endif %}
   
     {% for rule in n['rules'] %}
@@ -314,7 +314,7 @@ class Parser:
     {% endif %}
 
     {% if not n['empty'] %}
-    return SyntaxError('unexpected symbol')
+    raise SyntaxError('Error: Unexpected symbol')
     {% else %}
     return tree
     {% endif %}
@@ -431,7 +431,7 @@ class Parser:
     pass
     {% endif %}
 
-{% if len(tokens) %}
+{% if add_main %}
 if __name__ == '__main__':
   p = Parser()
 

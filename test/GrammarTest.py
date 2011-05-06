@@ -37,7 +37,7 @@ class GrammarTest(unittest.TestCase):
 
   def runWithTokens(self, tokens):
     tokens = [str(t) for t in tokens]
-    resources = Resources(self.grammar, tokens )
+    resources = Resources(self.grammar, tokens, True )
     template = PythonTemplate(resources)
     code = template.render()
     filename = sha224( str(random()).encode('ascii') ).hexdigest()[:25] + '.py'

@@ -37,5 +37,9 @@ class ListMacroTest(GrammarTest):
         .runWithTokens( ['function','identifier','lparen','param1','comma','param2','rparen','lbrace','a','b','a','b','rbrace','class','identifier','lbrace','private','x','public','y','rbrace'] ) \
         .assertParseTree( '(start: (_gen0: (statement: (funcdef: function, identifier, lparen, (_gen1: (param: param1), (_gen2: comma, (param: param2), (_gen2: ))), rparen, lbrace, (_gen0: (statement: a), (_gen0: (statement: b), (_gen0: (statement: a), (_gen0: (statement: b), (_gen0: ))))), rbrace)), (_gen0: (statement: (classdef: class, identifier, lbrace, (_gen3: (class_statement: private, (class_atom: x)), (_gen3: (class_statement: public, (class_atom: y)), (_gen3: ))), rbrace)), (_gen0: ))))' )
 
+  def test_codeGeneration3(self):
+    self.loadGrammarFile('grammars/list3.zgr', 'S') \
+        .runWithTokens( [] ) \
+        .assertParseTree('(s: )')
 if __name__ == '__main__':
   unittest.main()

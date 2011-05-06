@@ -40,11 +40,16 @@ def Cli():
   parser.add_argument('-l', '--language',
               required = False,
               default='python',
-              help = 'Language to generate the parser in.  Accepts C or Python (default).')
+              help = 'Language to generate the parser in.  Currently not in use. Only generates Python')
 
   parser.add_argument('-t', '--tokens',
               required = False,
-              help = 'If this is specified, a main() function will be generated in the source code that is set to parse these tokens.')
+              help = 'If used with the parse command, this is the token list.  If used with the generate command and -m, these tokens are put in the main() function of the generated parser.')
+
+  parser.add_argument('-m', '--add-main',
+              required = False,
+              action = 'store_true',
+              help = 'If this is specified, a main() function will be generated in the source code.  The tokens will be set to the -t option.')
 
   result = parser.parse_args()
 
@@ -76,7 +81,7 @@ def Cli():
     analyzer.analyze()
 
   if result.action == 'generate':
-    resources = Resources(G, terminals )
+    resources = Resources(G, terminals, result.add_main )
     template = PythonTemplate(resources)
 
     if result.directory:
@@ -97,7 +102,7 @@ def Cli():
   if result.action == 'parse':
     f = '__z_code_compile__.py'
 
-    resources = Resources(G, terminals )
+    resources = Resources(G, terminals, True )
     template = PythonTemplate(resources)
     code = template.render()
 

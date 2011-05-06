@@ -183,7 +183,6 @@ class Grammar:
   
   def _pfirst( self, P ):
     r = set()
-
     for m in P.morphemes:
       if isinstance(m, NonterminalListMacro) or isinstance(m, SeparatedListMacro):
         m = m.start_nt
@@ -195,7 +194,7 @@ class Grammar:
     return r
   
   def _ntrules( self, n ):
-    return [rule for rule in self.rules if str(rule.nonterminal) == str(n)]
+    return [rule for rule in self.normalized() if str(rule.nonterminal) == str(n)]
   
   def _compute_parse_table( self ):
     terminals = self._strip_abstract_terminals( self.terminals.copy() )

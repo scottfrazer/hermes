@@ -24,11 +24,12 @@ class PythonTemplate(Template):
       'entry_points': self.resources.getEntryPoints(),
       'parser': self.resources.getParser(),
       'init': self.resources.getDeclarations(),
-      'nudled': self.resources.getNudLed()
+      'nudled': self.resources.getNudLed(),
+      'add_main': self.resources.add_main
     }
     templates_dir = resource_filename(__name__, 'templates')
     loader = moody.make_loader(templates_dir)
-    code = loader.render( self.template, rules=x['rules'], expr_rules=x['expr_rules'], tokens=x['tokens'], entry=x['entry'], nt=x['parser'], init=x['init'], entry_points=x['entry_points'], nudled=x['nudled'])
+    code = loader.render( self.template, add_main=x['add_main'], rules=x['rules'], expr_rules=x['expr_rules'], tokens=x['tokens'], entry=x['entry'], nt=x['parser'], init=x['init'], entry_points=x['entry_points'], nudled=x['nudled'])
     linereduce = re.compile('^[ \t]*$', re.M)
     code = linereduce.sub('', code)
     code = re.sub('\n+', '\n', code)
@@ -47,8 +48,9 @@ class CHeaderTemplate(Template):
     self.resources = resources
 
 class Resources:
-  def __init__(self, grammar, tokens = []):
+  def __init__(self, grammar, tokens = [], add_main = False):
     self.grammar = grammar
+    self.add_main = add_main
     self.tokens = tokens
   
   def getEntry(self):
@@ -82,6 +84,7 @@ class Resources:
           'obj': rule,
           'atoms': []
         }
+
         if len(rule.production.morphemes) == 1 and rule.production.morphemes[0] == self.grammar.ε:
           tpl_nt['empty'] = True
           continue
