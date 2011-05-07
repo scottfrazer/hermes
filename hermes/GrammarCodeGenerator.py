@@ -159,7 +159,6 @@ class Resources:
         led[atoms[1].id].append({
           'binding_power': bindingPower,
           'type': 'infix',
-          'rule_id': R.id,
           'rule': R
         })
         if isinstance(R.ast, AstSpecification):
@@ -187,7 +186,6 @@ class Resources:
         nud[atoms[0].id].append({
           'binding_power': bindingPower,
           'type': 'prefix',
-          'rule_id': R.id,
           'rule': R
         })
         continue
@@ -197,7 +195,6 @@ class Resources:
         nud[atoms[0].id].append({
           'type': 'symbol',
           'sym': atoms[0].id,
-          'rule_id': R.id,
           'rule': R
         })
         continue
@@ -215,7 +212,6 @@ class Resources:
                 'close_sym': atoms[i+2].id,
                 'separator': atoms[i+1].separator.id,
                 'nonterminal_func': '_' + str(atoms[i+1].nonterminal).upper(),
-                'rule_id': R.id,
                 'rule': R
               })
               i += 2
@@ -223,14 +219,12 @@ class Resources:
               tmp[atoms[idx].id].append({
                 'type': 'symbol',
                 'sym': atom.id,
-                'rule_id': R.id,
                 'rule': R
               })
           elif isinstance(atom, NonTerminal):
             tmp[atoms[idx].id].append({
                 'type': 'nonterminal',
                 'nonterminal_func': '_' + str(atom).upper(),
-                'rule_id': R.id,
                 'rule': R
               })
         # </ATOMS>

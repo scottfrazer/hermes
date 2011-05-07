@@ -111,9 +111,6 @@ class TokenRecorder:
     return self.stack
 
 class Parser:
-
-  #__slots__ = ("iterator", "sym", "language", "entry_points")
-
   def __init__(self):
     self.iterator = None
     self.sym = None
