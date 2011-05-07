@@ -4,8 +4,7 @@ from hermes.Morpheme import EndOfStream
 from hermes.Morpheme import NonTerminal
 from hermes.Morpheme import Expression
 from hermes.Morpheme import Morpheme
-from hermes.Conflict import FirstFirstConflict
-from hermes.Conflict import FirstFollowConflict, ListFirstFollowConflict
+from hermes.Conflict import FirstFirstConflict, FirstFollowConflict, ListFirstFollowConflict, NudConflict, LedConflict
 from hermes.Macro import ListMacro, LL1ListMacro, ExprListMacro, SeparatedListMacro, NonterminalListMacro
 
 class Production:
@@ -67,6 +66,14 @@ class AstTranslation:
     self.idx = idx
   def __repr__( self ):
     return '$'+str(self.idx)
+
+class ExprRule:
+  def __init__(self, type, atoms, rule):
+    self.type = type
+    self.atoms = atoms
+    self.rule = rule
+  def __str__(self):
+    return "(ExprRule: '%s', [%s], (Rule: %s))" % (self.type, ', '.join([str(x) for x in self.atoms]), str(self.rule))
 
 class Grammar:
 
@@ -215,7 +222,6 @@ class Grammar:
     return tab
   
   def _compute_conflicts( self ):
-    self.conflicts = []
     for s,N in self.nonterminals.items():
       if self.ε in self.first[N] and len(self.first[N].intersection(self.follow[N])):
         self.conflicts.append( FirstFollowConflict( N, self.first[N], self.follow[N] ) )
@@ -236,7 +242,70 @@ class Grammar:
         if self.first[macro.nonterminal].intersection(self.follow[macro]) != set():
           self.conflicts.append( ListFirstFollowConflict(macro, self.first[macro.nonterminal], self.follow[macro]) )
     return self.conflicts
-  # Getters/Setters: setGrammar, setExprGrammar, getTerminals, getNonterminals, getRules, getStart
+  
+  def _compute_expr_conflicts( self ):
+    self.nud = nud = {}
+    self.led = led = {}
+    morphemes = set(self.terminals.values()).union(set(self.nonterminals.values()))
+    for m in morphemes:
+      nud[m] = []
+      led[m] = []
+    for e in self.exprRules:
+      if self.isInfixRule(e):
+        led[e.production.morphemes[1]].append(ExprRule('infix', [], e))
+      elif self.isPrefixRule(e):
+        nud[e.production.morphemes[0]].append(ExprRule('prefix', [], e))
+      elif self.isPrimitiveExprRule(e):
+        nud[e.production.morphemes[0]].append(ExprRule('symbol', [], e))
+      else:
+        if e.root == 0:
+          a = e.production.morphemes
+          nud[a[0]].append(ExprRule(self._r2d2(a), a, e))
+        elif e.root == 1:
+          a = e.production.morphemes[0]
+          nud[a].append(ExprRule(self._r2d2(a), [a], e))
+        else:
+          raise Exception('not supported, yet.')
+        b = e.production.morphemes[1:]
+        if e.root == 1: # TODO: root can only be idx 0 or 1, fix that later!
+          led[b[0]].append(ExprRule(self._r2d2(b), b, e))
+    for terminal, rules in nud.items():
+      rules = self._unique(rules, lambda x, y: (x.type==y.type and x.type=='symbol'))
+      # TODO: use with --debug
+      #if len(rules):
+      #  print('nud', terminal, ', '.join([str(x) for x in rules]))
+      if len(rules) > 1:
+        self.conflicts.append(NudConflict(terminal, [r.rule for r in rules]))
+    for terminal, rules in led.items():
+      rules = self._unique(rules, lambda x, y: (x.type==y.type and x.type=='symbol'))
+      # TODO: use with --debug 
+      #if len(rules):
+      #  print('led', terminal, ', '.join([str(x) for x in rules]))
+      if len(rules) > 1:
+        self.conflicts.append(LedConflict(terminal, [r.rule for r in rules]))
+  
+  def _unique(self, l, f):
+    r = []
+    for x in l:
+      d = False
+      for y in r:
+        if f(x, y):
+          d = True
+      if not d:
+        r.append(x)
+    return r
+  
+  # Beep-boop
+  def _r2d2(self, a):
+    if isinstance(a, Terminal):
+      return 'symbol'
+    elif isinstance(a, NonTerminal):
+      return 'nonterminal'
+    elif isinstance(a, ExprListMacro):
+      return 'list'
+    elif isinstance(a, list):
+      return 'mixfix'
+    return None
   
   def _sort_dict(self, a):
     return [a[key] for key in sorted(a.keys())]
@@ -255,11 +324,13 @@ class Grammar:
     self.macros = macros
     self.rules = rules
     self.start = start
+    self.conflicts = []
     self.exprRules = exprRules
     self.exprPrecedence = exprPrecedence
     self._compute_first()
     self._compute_follow()
     self._compute_conflicts()
+    self._compute_expr_conflicts()
   
   # Query methods
   def isSimpleTerminal( self, t ):
@@ -274,7 +345,21 @@ class Grammar:
   def isNonTerminal( self, n ):
     return type(n) is NonTerminal
   
-
+  def isInfixRule( self, rule ):
+    atoms = rule.production.morphemes
+    return len(atoms) == 3 and \
+       rule.nonterminal.string.upper() == 'EXPR' and \
+       atoms[0] == rule.nonterminal and isinstance(atoms[1], Terminal) and atoms[2] == rule.nonterminal
+ 
+  def isPrefixRule( self, rule ):
+    atoms = rule.production.morphemes
+    return len(atoms) == 2 and \
+       rule.nonterminal.string.upper() == 'EXPR' and \
+       atoms[1] == rule.nonterminal and isinstance(atoms[0], Terminal)
+  
+  def isPrimitiveExprRule( self, rule ):
+    return len(rule.production.morphemes) == 1
+  
   # TODO: remove _getAtomVarName
   def _getAtomVarName( self, atom ):
     if isinstance(atom, Terminal):
