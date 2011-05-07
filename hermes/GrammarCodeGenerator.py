@@ -261,13 +261,13 @@ class Resources:
     terminal_str = {}
     terminal_var = {}
     for s,t in terminals.items():
-      terminal_str[t.id] =  str(t).lower()
+      terminal_str[t.id] =  t.string
       terminal_var[t.id] = 'TERMINAL_' + str(t).strip("'").upper()
 
     nonterminal_str = {}
     nonterminal_var = {}
     for s,n in self.grammar.nonterminals.items():
-      nonterminal_str[n.id] =  str(n).lower()
+      nonterminal_str[n.id] =  n.string
       nonterminal_var[n.id] = 'NONTERMINAL_' + str(n).upper()
 
     precedence= {}

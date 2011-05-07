@@ -49,9 +49,9 @@ class GrammarTest(unittest.TestCase):
     return self
   
   def assertParseTree( self, parsetree ):
-    self.assertEqual( self.parsetree, parsetree, "Expecting parse trees to be equal")
+    self.assertEqual( self.parsetree.lower(), parsetree.lower(), "Expecting parse trees to be equal")
     return self
   
   def assertAst( self, ast ):
-    self.assertEqual( self.ast, ast, "Expecting ASTs to be equal")
+    self.assertEqual( self.ast.lower(), ast.lower(), "Expecting ASTs to be equal")
     return self

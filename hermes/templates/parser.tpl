@@ -130,7 +130,7 @@ class Parser:
 
   terminal_str = {
   {% for i,string in init['terminal_str'].items() %}
-    {{i}}: {{string}},
+    {{i}}: '{{string}}',
   {% endfor %}
   }
 
@@ -142,13 +142,13 @@ class Parser:
   
   str_terminal = {
   {% for i,string in init['terminal_str'].items() %}
-    {{string}}: {{i}},
+    '{{string.lower()}}': {{i}},
   {% endfor %}
   }
 
   str_nonterminal = {
   {% for i,string in init['nonterminal_str'].items() %}
-    '{{string}}': {{i}},
+    '{{string.lower()}}': {{i}},
   {% endfor %}
   }
 
