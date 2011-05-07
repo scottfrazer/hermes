@@ -23,8 +23,8 @@ The grammar below describes a grammar that can correctly parse ``a + b * c`` as 
       },
       "expr": {
         "binding_power": [
-          {"associativity": "left", "tokens": ["add", "subtract"]},
-          {"associativity": "left", "tokens": ["multiply", "divide"]}
+          {"associativity": "left", "terminals": ["add", "subtract"]},
+          {"associativity": "left", "terminals": ["multiply", "divide"]}
         ],
         "rules": [
             "_expr := _expr + 'add' + _expr",
@@ -70,8 +70,8 @@ Expanding on the grammar to parse operators with precedence, let's add parenthes
       },
       "expr": {
         "binding_power": [
-          {"associativity": "left", "tokens": ["add", "subtract"]},
-          {"associativity": "left", "tokens": ["multiply", "divide"]}
+          {"associativity": "left", "terminals": ["add", "subtract"]},
+          {"associativity": "left", "terminals": ["multiply", "divide"]}
         ],
         "rules": [
             "_expr := _expr + 'add' + _expr",

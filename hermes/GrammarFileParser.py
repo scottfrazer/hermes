@@ -80,7 +80,7 @@ class GrammarFileParser:
           self.parseRule(rule, self.factory.addExpressionRule)
       if 'binding_power' in contents['expr']:
         for binding_power in contents['expr']['binding_power']:
-          for token in binding_power['tokens']:
+          for token in binding_power['terminals']:
             terminal = self.factory.addTerminal( token.replace("'", "") )
             self.factory.addOperatorPrecedence( terminal, binding_power['associativity'].lower() )
     if start:

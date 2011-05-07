@@ -9,9 +9,9 @@
   },
   "expr": {
     "binding_power": [
-      {"associativity": "left", "tokens": ["add", "subtract"]},
-      {"associativity": "left", "tokens": ["multiply", "divide"]},
-      {"associativity": "unary", "tokens": ["sub"]}
+      {"associativity": "left", "terminals": ["add", "subtract"]},
+      {"associativity": "left", "terminals": ["multiply", "divide"]},
+      {"associativity": "unary", "terminals": ["sub"]}
     ],
     "rules": [
       "expr := expr + 'multiply' + expr",

@@ -11,10 +11,10 @@
   },
   "expr": {
     "binding_power": [
-      {"associativity": "right", "tokens": ["eq"]},
-      {"associativity": "left", "tokens": ["add", "sub"]},
-      {"associativity": "left", "tokens": ["mul", "div"]},
-      {"associativity": "unary", "tokens": ["sub"]}
+      {"associativity": "right", "terminals": ["eq"]},
+      {"associativity": "left", "terminals": ["add", "sub"]},
+      {"associativity": "left", "terminals": ["mul", "div"]},
+      {"associativity": "unary", "terminals": ["sub"]}
     ],
     "rules": [
       "expr := expr + 'eq'+ expr -> Assign( lhs=$0, rhs=$2 )",

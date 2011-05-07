@@ -9,9 +9,9 @@
   },
   "expr": {
     "binding_power": [
-      {"associativity": "left", "tokens": ["add", "sub"]},
-      {"associativity": "left", "tokens": ["mul", "div"]},
-      {"associativity": "unary", "tokens": ["sub"]}
+      {"associativity": "left", "terminals": ["add", "sub"]},
+      {"associativity": "left", "terminals": ["mul", "div"]},
+      {"associativity": "unary", "terminals": ["sub"]}
     ],
     "rules": [
       "expr := expr + 'add'+ expr -> Add( lhs=$0, rhs=$2 )",
