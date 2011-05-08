@@ -52,6 +52,70 @@ class Resources:
     self.grammar = grammar
     self.add_main = add_main
     self.tokens = tokens
+
+  def getbp( self, terminal, assoc = ['left', 'right']):
+    bp = self.grammar.exprPrecedence[terminal]
+    for (power, a) in bp:
+      if a.lower() == 'left' and 'left' in assoc:
+        return power
+      if a.lower() == 'right' and 'right' in assoc:
+        return power - 1
+      if a.lower() == 'unary' and 'unary' in assoc:
+        return power
+    return -1
+  
+  def ruletotpl( self, expr_rule ):
+    rule = expr_rule.rule
+    atoms = rule.production.morphemes[rule.root:]
+    tpl = []
+    if expr_rule.type == 'infix':
+      tpl.append({
+        'type': 'infix',
+        'binding_power': self.getbp(atoms[1]),
+        'rule': rule
+      })
+    elif expr_rule.type == 'prefix':
+      tpl.append({
+        'type': 'prefix',
+        'binding_power': self.getbp(atoms[0], ['unary']),
+        'rule': rule
+      })
+    elif expr_rule.type == 'symbol':
+      tpl.append({
+        'type': 'symbol',
+        'sym': rule.production.morphemes[0].id,
+        'rule': rule
+      })
+    elif expr_rule.type == 'mixfix':
+      i = 0
+      while i < len(atoms):
+        atom = atoms[i]
+        if isinstance(atom, Terminal):
+          if i < len(atoms) - 2 and isinstance(atoms[i+1], ExprListMacro) and isinstance(atoms[i+2], Terminal):
+            tpl.append({
+              'type': 'list',
+              'open_sym': atoms[i].id,
+              'close_sym': atoms[i+2].id,
+              'separator': atoms[i+1].separator.id,
+              'nonterminal_func': '_' + str(atoms[i+1].nonterminal).upper(),
+              'rule': rule
+            })
+            i += 3
+            continue
+          else:
+            tpl.append({
+              'type': 'symbol',
+              'sym': atom.id,
+              'rule': rule
+            })
+        elif isinstance(atom, NonTerminal):
+          tpl.append({
+              'type': 'nonterminal',
+              'nonterminal_func': '_' + str(atom).upper(),
+              'rule': rule
+            })
+        i += 1
+    return tpl
   
   def getEntry(self):
     return str(self.grammar.start).lower()
@@ -130,122 +194,17 @@ class Resources:
     return list(tpl.values())
   
   def getNudLed(self):
-    tab = self.grammar._compute_parse_table()
     nud = {}
     led = {}
 
-    for i in range(len(self.grammar.terminals)):
-      nud[i] = []
-      led[i] = []
+    for terminal, rule in self.grammar.nud.items():
+      nud[terminal.id] = self.ruletotpl(rule)
+    for terminal, rule in self.grammar.led.items():
+      led[terminal.id] = self.ruletotpl(rule)
 
-    # <RULES>
-    for R in self.grammar.exprRules:
-
-      atoms = R.production.morphemes
-
-      # Infix operator rule: EXPR := EXPR 'OP' EXPR
-      if len(atoms) == 3 and \
-         type(atoms[0]) is NonTerminal and atoms[0].string.upper() == 'EXPR' and \
-         type(atoms[1]) is Terminal and \
-         type(atoms[2]) is NonTerminal and atoms[2].string.upper() == 'EXPR':
-        bp = self.grammar.exprPrecedence[atoms[1]]
-        for b in bp:
-          if b[1].upper() == 'LEFT':
-            bindingPower = b[0]
-            break
-          if b[1].upper() == 'RIGHT':
-            bindingPower = b[0]-1
-            break
-        led[atoms[1].id].append({
-          'binding_power': bindingPower,
-          'type': 'infix',
-          'rule': R
-        })
-        if isinstance(R.ast, AstSpecification):
-          for k,v in R.ast.parameters.items():
-            if v == 0:
-              R.ast.parameters[k] = 1
-            if v == 1:
-              R.ast.parameters[k] = 0
-        if isinstance(R.ast, AstTranslation):
-          if R.ast.idx == 0:
-            R.ast.idx = 1
-          if R.ast.idx == 1:
-            R.ast.idx = 0
-        continue
-
-      # Prefix rule: EXPR := 'OP' EXPR
-      elif len(atoms) == 2 and \
-           type(atoms[0]) is Terminal and \
-           type(atoms[1]) is NonTerminal and atoms[1].string.upper() == 'EXPR':
-        bp = self.grammar.exprPrecedence[atoms[0]]
-        for b in bp:
-          if b[1].upper() == 'UNARY':
-            bindingPower = b[0]
-            break
-        nud[atoms[0].id].append({
-          'binding_power': bindingPower,
-          'type': 'prefix',
-          'rule': R
-        })
-        continue
-
-      # Primative rule: EXPR := 'XYZ'
-      elif len(atoms) == 1:
-        nud[atoms[0].id].append({
-          'type': 'symbol',
-          'sym': atoms[0].id,
-          'rule': R
-        })
-        continue
-
-      # <MIXFIX>
-      else:
-        # NOTE: Only supporting root node at index 0 or 1 at the moment.
-        for i, atom in enumerate(atoms):
-          (tmp, idx) = (nud, 0) if (i == 0 and R.root == 1) or R.root == 0 else (led, 1)
-          if isinstance(atom, Terminal):
-            if i < len(atoms) - 2 and isinstance(atoms[i+1], ExprListMacro) and isinstance(atoms[i+2], Terminal):
-              tmp[atoms[idx].id].append({
-                'type': 'list',
-                'open_sym': atoms[i].id,
-                'close_sym': atoms[i+2].id,
-                'separator': atoms[i+1].separator.id,
-                'nonterminal_func': '_' + str(atoms[i+1].nonterminal).upper(),
-                'rule': R
-              })
-              i += 2
-            else:
-              tmp[atoms[idx].id].append({
-                'type': 'symbol',
-                'sym': atom.id,
-                'rule': R
-              })
-          elif isinstance(atom, NonTerminal):
-            tmp[atoms[idx].id].append({
-                'type': 'nonterminal',
-                'nonterminal_func': '_' + str(atom).upper(),
-                'rule': R
-              })
-        # </ATOMS>
-        if isinstance(R.ast, AstSpecification):
-          for k,v in R.ast.parameters.items():
-            if R.root == 1 and v == 0:
-              R.ast.parameters[k] = 1
-            if R.root == 1 and v == 1:
-              R.ast.parameters[k] = 0
-        if isinstance(R.ast, AstTranslation):
-          if R.root == 1 and R.ast.idx == 0:
-            R.ast.idx = 1
-          if R.root == 1 and R.ast.idx == 1:
-            R.ast.idx = 0
-      # </MIXFIX>
-    # </RULES>
-
-    # Whoaaaa, python-fu
     return {
-      'led': {k:v for k,v in led.items() if len(v)}, 
-      'nud': {k:v for k,v in nud.items() if len(v)}
+      'led': led, 
+      'nud': nud
     }
   
   def getDeclarations(self):
@@ -305,10 +264,10 @@ class GrammarCodeGenerator:
     self.directory = directory
   
   def generate( self ):
-    try:
+    #try:
       fp = open( path.join( self.directory, self.template.destination ), 'w' )
       fp.write( self.template.render() )
       fp.close()
       return True
-    except:
-      return False
+    #except:
+    #  return False

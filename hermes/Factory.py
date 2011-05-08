@@ -104,8 +104,6 @@ class Factory:
 
   def addExpressionRule( self, lhs, rhs, rhsRootIndex=0, ast=None ):
     r = Rule( lhs, rhs, self.Ec, rhsRootIndex, ast )
-    if rhsRootIndex != 0:
-      self.addOperatorPrecedence( rhs.morphemes[rhsRootIndex], 'LEFT' )
     self.exprRules.append(r)
     self.Ec += 1
     self.terminals['λ'] = self.λ

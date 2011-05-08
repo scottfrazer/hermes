@@ -2,8 +2,8 @@
   "ll1": {
     "start": "start",
     "rules": [
-      "start := list(sub, 'comma')",
-      "sub := item | expr",
+      "start := list(sub, 'comma') -> Statements( list=$0 )",
+      "sub := item -> Item( name=$0 ) | expr",
       "item := 'b' | 'a'"
     ]
   },
@@ -11,18 +11,19 @@
     "binding_power": [
       {"associativity": "left", "terminals": ["add", "subtract"]},
       {"associativity": "left", "terminals": ["multiply", "divide"]},
-      {"associativity": "unary", "terminals": ["sub"]}
+      {"associativity": "unary", "terminals": ["subtract"]},
+      {"associativity": "left", "terminals": ["lparen"]}
     ],
     "rules": [
-      "expr := expr + 'multiply' + expr",
-      "expr := expr + 'divide' + expr",
-      "expr := expr + 'add' + expr",
-      "expr := expr + 'subtract' + expr",
-      "expr := 'subtract' + expr",
-      "expr := 'lsquare' + list(expr, 'comma') + 'rsquare'",
-      "expr := 'lbrace' + list(expr, 'comma') + 'rbrace'",
-      "expr := 'identifier' + ^'lparen' + list(expr, 'comma') + 'rparen'",
-      "expr := 'lparen' + expr + 'rparen'",
+      "expr := 'identifier' + ^'lparen' + list(expr, 'comma') + 'rparen' -> FuncCall( name=$0, params=$2 )",
+      "expr := expr + 'multiply' + expr -> Mul( l=$0, r=$2 )",
+      "expr := expr + 'divide' + expr -> Div( l=$0, r=$2 )",
+      "expr := expr + 'add' + expr -> Add( l=$0, r=$2 )",
+      "expr := expr + 'subtract' + expr -> Sub( l=$0, r=$2 )",
+      "expr := 'subtract' + expr -> UMinus( arg=$1 )",
+      "expr := 'lsquare' + list(expr, 'comma') + 'rsquare' -> ListDecl( items=$1 )",
+      "expr := 'lbrace' + list(expr, 'comma') + 'rbrace' -> SetDecl( items=$1 )",
+      "expr := 'lparen' + expr + 'rparen' -> $1",
       "expr := 'identifier' | 'number'"
     ]
   }

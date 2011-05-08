@@ -32,7 +32,7 @@ class AstTest(GrammarTest):
 
   def test_codeGeneration(self):
     self.runWithTokens(['a','add','b','comma','identifier','eq','a','sub','b','mul','a']) \
-        .assertParseTree('(start: (_gen0: (statements: (add: a, b)), (_gen1: comma, (statements: (assignstatement: identifier, eq, (sub: a, (mul: b, a)))), (_gen1: ))))') \
+        .assertParseTree('(start: (_gen0: (statements: (expr: a, add, b)), (_gen1: comma, (statements: (assignstatement: identifier, eq, (expr: a, sub, (expr: b, mul, a)))), (_gen1: ))))') \
         .assertAst('(Program: statements=[(Add: rhs=b, lhs=a), (Assign: var=identifier, val=(Subtract: rhs=(Multiply: rhs=a, lhs=b), lhs=a))])')
 
 if __name__ == '__main__':

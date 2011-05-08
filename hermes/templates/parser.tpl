@@ -57,7 +57,7 @@ class ParseTree():
       if isinstance(self.astTransform, AstTransformSubstitution):
         return self.children[self.astTransform.idx].toAst()
       elif isinstance(self.astTransform, AstTransformNodeCreator):
-        parameters = {name: self.nonterminal.toAst() if idx==0 else self.children[idx-1].toAst() for name, idx in self.astTransform.parameters.items()}
+        parameters = {name: self.children[idx].toAst() if isinstance(self.children[idx], ParseTree) else self.children[idx] for name, idx in self.astTransform.parameters.items()}
         return Ast(self.astTransform.name, parameters)
     else:
       if isinstance(self.astTransform, AstTransformSubstitution):
@@ -327,29 +327,26 @@ class Parser:
     return left
 
   def nud(self):
+    tree = ParseTree( NonTerminal(self.str_nonterminal['expr'], 'expr') )
     {% for sym, actions in nudled['nud'].items() %}
     if self.sym.getId() == {{sym}}:
-      tree = ParseTree( NonTerminal({{sym}}, self.getAtomString({{sym}})) )
       {% for action in actions %}
 
-        {% if action['type'] == 'symbol' %}
-          {% if len(actions) == 1 %}
+        {% if action['type'] == 'symbol' and len(actions) == 1 %}
       return self.expect({{action['sym']}})
-          {% else %}
+
+        {% elif action['type'] == 'symbol' %}
       tree.add( self.expect({{action['sym']}}) )
-          {% endif %}
 
         {% elif action['type'] == 'infix' %}
-      # infix noop
+      pass # infix noop
 
         {% elif action['type'] == 'prefix' %}
-      self.expect(self.sym)
-      tree.astTransform = AstTransformNodeCreator('', {})
+      tree.add( self.expect(self.sym) )
       tree.add( self._EXPR({{action['binding_power']}}) )
 
         {% elif action['type'] == 'list' %}
       ls = []
-      tree.list = True
       tree.add( self.expect({{action['open_sym']}}) )
       if self.sym.getId() != {{action['close_sym']}}:
         while 1:
@@ -366,11 +363,11 @@ class Parser:
 
         {% endif %}
 
-      {% if isinstance(action['rule'].ast, AstSpecification) %}
+        {% if isinstance(action['rule'].ast, AstSpecification) %}
       tree.astTransform = AstTransformNodeCreator('{{action['rule'].ast.name}}', {{action['rule'].ast.parameters}})
-      {% elif isinstance(action['rule'].ast, AstTranslation) %}
+        {% elif isinstance(action['rule'].ast, AstTranslation) %}
       tree.astTransform = AstTransformSubstitution({{action['rule'].ast.idx}})
-      {% endif %}
+        {% endif %}
 
       {% endfor %}
       return tree
@@ -381,24 +378,23 @@ class Parser:
     {% endif %}
 
   def led(self, left):
+    tree = ParseTree( NonTerminal(self.str_nonterminal['expr'], 'expr') )
     {% for sym, actions in nudled['led'].items() %}
     if self.sym.getId() == {{sym}}:
-      tree = ParseTree( NonTerminal({{sym}}, self.getAtomString({{sym}})) )
+      if left:
+        tree.add( left )
       {% for action in actions %}
-        {% if action['type'] == 'symbol' %}
+        {% if action['type'] == 'symbol' and len(actions) == 1 %}
       return self.expect({{action['sym']}})
-
+        {% elif action['type'] == 'symbol' %}
+      tree.add( self.expect({{action['sym']}}) )
         {% elif action['type'] == 'infix' %}
-      self.expect(self.sym.getId())
-      tree.add( left )
+      tree.add( self.expect(self.sym.getId()) )
       tree.add( self._EXPR({{action['binding_power']}}) )
-
         {% elif action['type'] == 'prefix' %}
-      # prefix noop
-
+      pass # prefix noop
         {% elif action['type'] == 'list' %}
       ls = []
-      tree.list = True
       tree.add( self.expect({{action['open_sym']}}) )
       if self.sym.getId() != {{action['close_sym']}}:
         while 1:
@@ -408,20 +404,18 @@ class Parser:
           self.expect({{action['separator']}})
       tree.add( ls )
       tree.add( self.expect({{action['close_sym']}}) )
-
         {% elif action['type'] == 'nonterminal' %}
-      
       tree.add({{action['nonterminal_func']}})
         {% endif %}
 
-      {% if isinstance(action['rule'].ast, AstSpecification) %}
+        {% if isinstance(action['rule'].ast, AstSpecification) %}
       tree.astTransform = AstTransformNodeCreator('{{action['rule'].ast.name}}', {{action['rule'].ast.parameters}})
-      {% elif isinstance(action['rule'].ast, AstTranslation) %}
+        {% elif isinstance(action['rule'].ast, AstTranslation) %}
       tree.astTransform = AstTransformSubstitution({{action['rule'].ast.idx}})
-      {% endif %}
+        {% endif %}
 
-      return tree
       {% endfor %}
+      return tree
     {% endfor %}
 
     {% if len(nudled['led']) == 0 %}

@@ -33,9 +33,16 @@ class ExprGrammarTest(GrammarTest):
     self.assertEqual(0, len(self.grammar.conflicts), "Expected zero conflicts")
 
   def test_codeGeneration(self):
-    self.loadGrammarFile('grammars/expr.zgr', 'START') \
+    self.loadGrammarFile('grammars/expr.zgr', 'start') \
         .runWithTokens(['a','comma','b','comma','number','add','number']) \
-        .assertParseTree("(start: (_gen0: (sub: (item: a)), (_gen1: comma, (sub: (item: b)), (_gen1: comma, (sub: (add: number, number)), (_gen1: )))))")
+        .assertParseTree("(start: (_gen0: (sub: (item: a)), (_gen1: comma, (sub: (item: b)), (_gen1: comma, (sub: (expr: number, add, number)), (_gen1: )))))") \
+        .assertAst('(Statements: list=[(Item: name=a), (Item: name=b), (Add: r=number, l=number)])')
+
+  def test_codeGeneration2(self):
+    self.loadGrammarFile('grammars/expr.zgr', 'start') \
+        .runWithTokens(['a','comma','b','comma','lparen','lparen','number','multiply','identifier','lparen','number','add','number','rparen','rparen','rparen']) \
+        .assertParseTree('(start: (_gen0: (sub: (item: a)), (_gen1: comma, (sub: (item: b)), (_gen1: comma, (sub: (expr: lparen, (expr: lparen, (expr: number, multiply, (expr: identifier, lparen, [(expr: number, add, number)], rparen)), rparen), rparen)), (_gen1: )))))') \
+        .assertAst('(Statements: list=[(Item: name=a), (Item: name=b), (Mul: r=(FuncCall: params=[(expr: number, add, number)], name=identifier), l=number)])')
 
 if __name__ == '__main__':
   unittest.main()

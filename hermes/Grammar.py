@@ -244,8 +244,8 @@ class Grammar:
     return self.conflicts
   
   def _compute_expr_conflicts( self ):
-    self.nud = nud = {}
-    self.led = led = {}
+    nud = {}
+    led = {}
     morphemes = set(self.terminals.values()).union(set(self.nonterminals.values()))
     for m in morphemes:
       nud[m] = []
@@ -269,6 +269,19 @@ class Grammar:
         b = e.production.morphemes[1:]
         if e.root == 1: # TODO: root can only be idx 0 or 1, fix that later!
           led[b[0]].append(ExprRule(self._r2d2(b), b, e))
+    
+    self.nud = {}
+    self.led = {}
+    for t, r in nud.items():
+      u = self._unique(r, lambda x, y: (x.type==y.type and x.type=='symbol'))
+      if len(u) > 0:
+        self.nud[t] = u[0]
+
+    for t, r in led.items():
+      u = self._unique(r, lambda x, y: (x.type==y.type and x.type=='symbol'))
+      if len(u) > 0:
+        self.led[t] = u[0]
+
     for terminal, rules in nud.items():
       rules = self._unique(rules, lambda x, y: (x.type==y.type and x.type=='symbol'))
       # TODO: use with --debug
