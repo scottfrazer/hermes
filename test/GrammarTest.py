@@ -1,5 +1,4 @@
-import unittest, os, sys, io
-import subprocess
+import unittest, os, sys, io, subprocess, json
 from hashlib import sha224
 from random import random
 sys.path.append('..')
@@ -13,7 +12,10 @@ class GrammarTest(unittest.TestCase):
     fp = GrammarFileParser()
     self.grammar = fp.parse( open(filename) , start )
     return self
-  
+
+  def loadGrammarJson( self, j, start = None ):
+    return self.loadGrammarStr(json.dumps(j))
+
   def loadGrammarStr( self, string, start = None ):
     fp = GrammarFileParser()
     self.grammar = fp.parse( io.StringIO(string) , start )
