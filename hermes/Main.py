@@ -51,6 +51,11 @@ def Cli():
               action = 'store_true',
               help = 'If this is specified, a main() function will be generated in the source code.  The tokens will be set to the -t option.')
 
+  parser.add_argument('-a', '--ast',
+              required = False,
+              action = 'store_true',
+              help = 'When used with the parse sub-command, the parse tree will be converted to an AST and printed out.')
+
   result = parser.parse_args()
 
   if not os.path.isfile( result.grammar[0] ):
@@ -111,7 +116,7 @@ def Cli():
     fp.close()
 
     import subprocess
-    output = subprocess.check_output(['python', f])
+    output = subprocess.check_output(['python', f, 'ast' if result.ast else 'parsetree'])
     output_str = output.decode('utf-8')
     if os.path.isfile(f):
       os.remove(f)
