@@ -3,7 +3,7 @@
     "start": "start",
     "rules": [
       "start := list(sub, 'comma') -> Statements( list=$0 )",
-      "sub := item -> Item( name=$0 ) | expr",
+      "sub := item -> Item( name=$0 ) | _expr",
       "item := 'b' | 'a'"
     ]
   },
@@ -15,16 +15,16 @@
       {"associativity": "left", "terminals": ["lparen"]}
     ],
     "rules": [
-      "expr := 'identifier' + ^'lparen' + list(expr, 'comma') + 'rparen' -> FuncCall( name=$0, params=$2 )",
-      "expr := expr + 'multiply' + expr -> Mul( l=$0, r=$2 )",
-      "expr := expr + 'divide' + expr -> Div( l=$0, r=$2 )",
-      "expr := expr + 'add' + expr -> Add( l=$0, r=$2 )",
-      "expr := expr + 'subtract' + expr -> Sub( l=$0, r=$2 )",
-      "expr := 'subtract' + expr -> UMinus( arg=$1 )",
-      "expr := 'lsquare' + list(expr, 'comma') + 'rsquare' -> ListDecl( items=$1 )",
-      "expr := 'lbrace' + list(expr, 'comma') + 'rbrace' -> SetDecl( items=$1 )",
-      "expr := 'lparen' + expr + 'rparen' -> $1",
-      "expr := 'identifier' | 'number'"
+      "_expr := 'identifier' + ^'lparen' + list(_expr, 'comma') + 'rparen' -> FuncCall( name=$0, params=$2 )",
+      "_expr := _expr + 'multiply' + _expr -> Mul( l=$0, r=$2 )",
+      "_expr := _expr + 'divide' + _expr -> Div( l=$0, r=$2 )",
+      "_expr := _expr + 'add' + _expr -> Add( l=$0, r=$2 )",
+      "_expr := _expr + 'subtract' + _expr -> Sub( l=$0, r=$2 )",
+      "_expr := 'subtract' + _expr -> UMinus( arg=$1 )",
+      "_expr := 'lsquare' + list(_expr, 'comma') + 'rsquare' -> ListDecl( items=$1 )",
+      "_expr := 'lbrace' + list(_expr, 'comma') + 'rbrace' -> SetDecl( items=$1 )",
+      "_expr := 'lparen' + _expr + 'rparen' -> $1",
+      "_expr := 'identifier' | 'number'"
     ]
   }
 }

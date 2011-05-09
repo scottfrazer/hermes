@@ -3,8 +3,8 @@
     "start": "start",
     "rules": [
       "start := list(statements, 'comma') -> Program(statements=$0) | ε",
-      "statements := expr | assignstatement",
-      "assignstatement := 'identifier' + 'eq' + expr -> Assign( var=$0, val=$2 )"
+      "statements := _expr | assignstatement",
+      "assignstatement := 'identifier' + 'eq' + _expr -> Assign( var=$0, val=$2 )"
     ]
   },
   "expr": {
@@ -14,12 +14,12 @@
       {"associativity": "unary", "terminals": ["sub"]}
     ],
     "rules": [
-      "expr := expr + 'add'+ expr -> Add( lhs=$0, rhs=$2 )",
-      "expr := expr + 'mul' + expr -> Multiply( lhs=$0, rhs=$2 )",
-      "expr := expr + 'sub'+ expr -> Subtract( lhs=$0, rhs=$2 )",
-      "expr := expr + 'div' + expr -> Divide( lhs=$0, rhs=$2 )",
-      "expr := 'sub'+ expr -> Uminus( arg=$1 )",
-      "expr := 'a' | 'b'"
+      "_expr := _expr + 'add'+ _expr -> Add( lhs=$0, rhs=$2 )",
+      "_expr := _expr + 'mul' + _expr -> Multiply( lhs=$0, rhs=$2 )",
+      "_expr := _expr + 'sub'+ _expr -> Subtract( lhs=$0, rhs=$2 )",
+      "_expr := _expr + 'div' + _expr -> Divide( lhs=$0, rhs=$2 )",
+      "_expr := 'sub'+ _expr -> Uminus( arg=$1 )",
+      "_expr := 'a' | 'b'"
     ]
   }
 }

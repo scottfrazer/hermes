@@ -24,7 +24,7 @@ class ConflictGrammarTest(GrammarTest):
     self.assertEqual(1, len(self.grammar.conflicts), "Expecting one conflict")
     self.assertEqual(FirstFollowConflict, type(self.grammar.conflicts[0]))
   
-  def test_conflicts(self):
+  def test_conflicts2(self):
     self.loadGrammarFile('grammars/expr1.zgr')
     self.assertEqual(1, len(self.grammar.conflicts), "Expecting one conflict")
     self.assertEqual(NudConflict, type(self.grammar.conflicts[0]))
