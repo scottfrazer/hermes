@@ -3,7 +3,7 @@
     "start": "start",
     "rules": [
       "start := list(sub, 'comma')",
-      "sub := item | expr",
+      "sub := item | _expr",
       "item := 'b' | 'a'"
     ]
   },
@@ -14,16 +14,16 @@
       {"associativity": "unary", "terminals": ["sub"]}
     ],
     "rules": [
-      "expr := expr + 'multiply' + expr",
-      "expr := expr + 'divide' + expr",
-      "expr := expr + 'add' + expr",
-      "expr := expr + 'subtract' + expr",
-      "expr := 'subtract' + expr",
-      "expr := 'lsquare' + list(expr, 'comma') + 'rsquare'",
-      "expr := 'lbrace' + list(expr, 'comma') + 'rbrace'",
-      "expr := 'identifier' + 'lparen' + list(expr, 'comma') + 'rparen'",
-      "expr := 'lparen' + expr + 'rparen'",
-      "expr := 'identifier' | 'number'"
+      "_expr := _expr + 'multiply' + _expr",
+      "_expr := _expr + 'divide' + _expr",
+      "_expr := _expr + 'add' + _expr",
+      "_expr := _expr + 'subtract' + _expr",
+      "_expr := 'subtract' + _expr",
+      "_expr := 'lsquare' + list(_expr, 'comma') + 'rsquare'",
+      "_expr := 'lbrace' + list(_expr, 'comma') + 'rbrace'",
+      "_expr := 'identifier' + 'lparen' + list(_expr, 'comma') + 'rparen'",
+      "_expr := 'lparen' + _expr + 'rparen'",
+      "_expr := 'identifier' | 'number'"
     ]
   }
 }

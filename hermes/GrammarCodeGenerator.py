@@ -125,7 +125,7 @@ class Resources:
     tpl = {}
     for N in self.grammar.nonterminals.values():
       # EXPR is parsed via Pratt Parser
-      if str(N) == 'EXPR':
+      if str(N).lower() == '_expr':
         continue
       tpl[N.id] = {
         'nt_obj': N,

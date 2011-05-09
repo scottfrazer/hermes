@@ -31,13 +31,10 @@ class LL1MacroExpander:
     nt0 = self.registry.addNonTerminal( self.makeTmpNonTerminal() )
 
     if not separator:
-      # CLASS_STATEMENTS := CLASS_STATEMENT + CLASS_STATEMENTS
       rules.append( self.registry.addMacroGeneratedRule( nt0, Production( [nonterminal, nt0] )) )
       rules.append( self.registry.addMacroGeneratedRule( nt0, Production( [self.registry.addEmptyString()] ) ) )
 
     else:
-      # EXPR_LIST := EXPR + EXPR_LIST_SUB
-      # EXPR_LIST_SUB := 'COMMA' + EXPR + EXPR_LIST_SUB
       nt1 = self.registry.addNonTerminal( self.makeTmpNonTerminal() )
       rules.append( self.registry.addMacroGeneratedRule( nt0, Production( [nonterminal, nt1] )) )
       rules.append( self.registry.addMacroGeneratedRule( nt0, Production( [self.registry.addEmptyString()] )) )
@@ -141,7 +138,7 @@ class GrammarFileParser:
         raise Exception('Nonterminal needs to be specified as first argument in \'list\' macro')
 
       (start, rules) = self.ll1MacroExpander.list( nonterminal, separator )
-      context = 'expr' if str(nonterminal).lower() == 'expr' else 'll1'
+      context = 'expr' if str(nonterminal).lower() == '_expr' else 'll1'
       return self.factory.addListMacro( nonterminal, separator, start, rules, context )
 
     elif string[0] == "'" or (string[0] == '^' and string[1] == "'"): # Terminal

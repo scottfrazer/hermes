@@ -86,7 +86,7 @@ class Grammar:
   def _compute_first( self ):
     self.first = dict()
     for s,N in self.nonterminals.items():
-      if s.upper() == 'EXPR':
+      if s.lower() == '_expr':
         self.first[N] = {self.λ}
       else:
         self.first[N] = set()
@@ -94,7 +94,7 @@ class Grammar:
       self.first[N] = {N}
     for M in self.macros:
       if isinstance(M, NonterminalListMacro) or isinstance(M, SeparatedListMacro):
-        if str(M.start_nt).upper() == 'EXPR':
+        if str(M.start_nt).lower() == '_expr':
           self.first[M] = {self.λ}
         else:
           self.first[M] = set()
@@ -115,7 +115,7 @@ class Grammar:
           progress = True
           self.first[R.nonterminal] = self.first[R.nonterminal].union({morpheme})
 
-        elif type(morpheme) is NonTerminal and morpheme.string.upper() == 'EXPR' and self.λ not in self.first[R.nonterminal]:
+        elif type(morpheme) is NonTerminal and morpheme.string.lower() == '_expr' and self.λ not in self.first[R.nonterminal]:
           progress = True
           self.first[R.nonterminal] = self.first[R.nonterminal].union({self.λ})
 
@@ -361,13 +361,13 @@ class Grammar:
   def isInfixRule( self, rule ):
     atoms = rule.production.morphemes
     return len(atoms) == 3 and \
-       rule.nonterminal.string.upper() == 'EXPR' and \
+       rule.nonterminal.string.lower() == '_expr' and \
        atoms[0] == rule.nonterminal and isinstance(atoms[1], Terminal) and atoms[2] == rule.nonterminal
  
   def isPrefixRule( self, rule ):
     atoms = rule.production.morphemes
     return len(atoms) == 2 and \
-       rule.nonterminal.string.upper() == 'EXPR' and \
+       rule.nonterminal.string.lower() == '_expr' and \
        atoms[1] == rule.nonterminal and isinstance(atoms[0], Terminal)
   
   def isPrimitiveExprRule( self, rule ):

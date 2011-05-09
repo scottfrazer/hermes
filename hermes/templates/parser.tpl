@@ -318,7 +318,7 @@ class Parser:
 
   {% endfor %}
 
-  def _EXPR( self, rbp = 0 ):
+  def __EXPR( self, rbp = 0 ):
     t = self.sym
     left = self.nud()
     while rbp < self.binding_power(self.sym):
@@ -327,7 +327,7 @@ class Parser:
     return left
 
   def nud(self):
-    tree = ParseTree( NonTerminal(self.str_nonterminal['expr'], 'expr') )
+    tree = ParseTree( NonTerminal(self.str_nonterminal['_expr'], '_expr') )
     {% for sym, actions in nudled['nud'].items() %}
     if self.sym.getId() == {{sym}}:
       {% for action in actions %}
@@ -343,7 +343,7 @@ class Parser:
 
         {% elif action['type'] == 'prefix' %}
       tree.add( self.expect(self.sym) )
-      tree.add( self._EXPR({{action['binding_power']}}) )
+      tree.add( self.__EXPR({{action['binding_power']}}) )
 
         {% elif action['type'] == 'list' %}
       ls = []
@@ -378,7 +378,7 @@ class Parser:
     {% endif %}
 
   def led(self, left):
-    tree = ParseTree( NonTerminal(self.str_nonterminal['expr'], 'expr') )
+    tree = ParseTree( NonTerminal(self.str_nonterminal['_expr'], '_expr') )
     {% for sym, actions in nudled['led'].items() %}
     if self.sym.getId() == {{sym}}:
       if left:
@@ -390,7 +390,7 @@ class Parser:
       tree.add( self.expect({{action['sym']}}) )
         {% elif action['type'] == 'infix' %}
       tree.add( self.expect(self.sym.getId()) )
-      tree.add( self._EXPR({{action['binding_power']}}) )
+      tree.add( self.__EXPR({{action['binding_power']}}) )
         {% elif action['type'] == 'prefix' %}
       pass # prefix noop
         {% elif action['type'] == 'list' %}

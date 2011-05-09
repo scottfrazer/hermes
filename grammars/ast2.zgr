@@ -3,9 +3,9 @@
     "start": "start",
     "rules": [
       "start := list(statement, 'semi') -> Program(statements=$0) | ε",
-      "statement := expr | for",
+      "statement := _expr | for",
       "for := 'for' + 'lparen' + forsub + 'semi' + forsub + 'semi' + forsub + 'rparen' + 'lbrace' + forbody + 'rbrace' -> For( decl=$2, cond=$4, iter=$6, body=$9 )",
-      "forsub := expr | ε",
+      "forsub := _expr | ε",
       "forbody := statement + 'semi' + forbody | ε"
     ]
   },
@@ -17,13 +17,13 @@
       {"associativity": "unary", "terminals": ["sub"]}
     ],
     "rules": [
-      "expr := expr + 'eq'+ expr -> Assign( lhs=$0, rhs=$2 )",
-      "expr := expr + 'add'+ expr -> Add( lhs=$0, rhs=$2 )",
-      "expr := expr + 'mul' + expr -> Multiply( lhs=$0, rhs=$2 )",
-      "expr := expr + 'sub'+ expr -> Subtract( lhs=$0, rhs=$2 )",
-      "expr := expr + 'div' + expr -> Divide( lhs=$0, rhs=$2 )",
-      "expr := 'sub'+ expr -> UMinus( arg=$1 )",
-      "expr := 'n' | 's' | 'identifier'"
+      "_expr := _expr + 'eq'+ _expr -> Assign( lhs=$0, rhs=$2 )",
+      "_expr := _expr + 'add'+ _expr -> Add( lhs=$0, rhs=$2 )",
+      "_expr := _expr + 'mul' + _expr -> Multiply( lhs=$0, rhs=$2 )",
+      "_expr := _expr + 'sub'+ _expr -> Subtract( lhs=$0, rhs=$2 )",
+      "_expr := _expr + 'div' + _expr -> Divide( lhs=$0, rhs=$2 )",
+      "_expr := 'sub'+ _expr -> UMinus( arg=$1 )",
+      "_expr := 'n' | 's' | 'identifier'"
     ]
   }
 }

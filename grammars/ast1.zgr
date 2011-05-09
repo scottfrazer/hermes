@@ -3,13 +3,13 @@
     "start": "start",
     "rules": [
       "start := list(statement, 'comma') -> Program(statements=$0) | ε",
-      "statement := expr | assignstatement | forstatement",
+      "statement := _expr | assignstatement | forstatement",
       "assignstatement := 'identifier' + 'eq' + assignstatementsub -> Assign( var=$0, val=$2 )",
-      "assignstatementsub := assignstatement | expr -> $0",
-      "complexexpression := expr | assignstatement",
+      "assignstatementsub := assignstatement | _expr -> $0",
+      "complexexpression := _expr | assignstatement",
       "forstatement := 'for' + 'lparen' + fordeclstatement + 'semi' + forcondstatement + 'semi' + foriterstatement + 'rparen' + 'lbrace' + forbody + 'rbrace' -> For( decl=$2, cond=$4, iter=$6, body=$9 )",
       "fordeclstatement := complexexpression | ε",
-      "forcondstatement := expr | ε",
+      "forcondstatement := _expr | ε",
       "foriterstatement := complexexpression | ε",
       "forbody := statement + 'semi' + forbody | ε"
     ]
@@ -21,12 +21,12 @@
       {"associativity": "unary", "terminals": ["sub"]}
     ],
     "rules": [
-      "expr := expr + 'add'+ expr -> Add( lhs=$0, rhs=$2 )",
-      "expr := expr + 'mul' + expr -> Multiply( lhs=$0, rhs=$2 )",
-      "expr := expr + 'sub'+ expr -> Subtract( lhs=$0, rhs=$2 )",
-      "expr := expr + 'div' + expr -> Divide( lhs=$0, rhs=$2 )",
-      "expr := 'sub'+ expr -> UMinus( arg=$1 )",
-      "expr := 'n' | 's'"
+      "_expr := _expr + 'add'+ _expr -> Add( lhs=$0, rhs=$2 )",
+      "_expr := _expr + 'mul' + _expr -> Multiply( lhs=$0, rhs=$2 )",
+      "_expr := _expr + 'sub'+ _expr -> Subtract( lhs=$0, rhs=$2 )",
+      "_expr := _expr + 'div' + _expr -> Divide( lhs=$0, rhs=$2 )",
+      "_expr := 'sub'+ _expr -> UMinus( arg=$1 )",
+      "_expr := 'n' | 's'"
     ]
   }
 }
