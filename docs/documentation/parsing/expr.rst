@@ -48,10 +48,10 @@ Rule Form                                 Notes
 =======================================   =======================================================================
 ``_expr := _expr + <terminal> + _expr``   Infix operator notation.  Must have an entry in the ``"binding_power"`` 
                                           section with left or right associativity to resolve ambiguitities.  
-                                          The resulting parse tree is (<terminal>: _expr, _expr).
+                                          The resulting parse tree is (_expr: _expr, <terminal> + _expr).
 ``_expr := <terminal> + _expr``           Unary operator notation.  Must have an entry in the ``"binding_power"``
                                           section with unary associativity.  The resulting parse tree is
-                                          (<terminal>: _expr).
+                                          (_expr: <terminal> + _expr).
 =======================================   =======================================================================
 
 Example 1: Mathematical Statements

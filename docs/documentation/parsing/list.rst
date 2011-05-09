@@ -24,7 +24,7 @@ Whereas, if we have the same rule but with a terminal as the separator: ``S := l
     _gen0 := N + _gen1 | ε
     _gen1 := 'x' + N + _gen1 | ε
 
-It's important to note that the macro is not entirely identical to the rules it generates.  In terms of straight LL(1) Parsing, they're equivelant.  However, this macro translates to a list primitive for the abstract syntax tree.  More information on that in the section on abstract syntax trees.
+It's important to note that the macro is not entirely identical to the rules it generates.  In terms of straight LL(1) Parsing, they're equivalent.  However, this macro translates to a list primitive for the abstract syntax tree.  More information on that in the section on abstract syntax trees.
 
 Example 1: Simple List
 ----------------------
@@ -37,7 +37,7 @@ This is an example of a simple list of the nonterminal T which can be an 'x' or 
       "ll1": {
         "start": "s",
         "rules": [
-          "S := list(T)",
+          "S := list(T) -> MyList( items=$0 )",
           "T := 'x' | 'y'"
         ]
       }
@@ -83,4 +83,11 @@ Finally, we can see the parse trees that result from a series of x and y termina
     (s: (_gen0: (T: x), (_gen0: (T: y), (_gen0: (T: x), (_gen0: (T: y), (_gen0: (T: x), (_gen0: (T: x), (_gen0: (T: x), (_gen0: )))))))))
     $ hermes parse simple_list.zgr --tokens=x
     (s: (_gen0: (T: x), (_gen0: )))
+
+We also defined an abstract syntax tree (AST) transformation for this parse tree.  If we attach the --ast flag, we can get the string representation of the resulting abstract syntax tree.  Notice how the list macro translated to a list primitive in the AST.
+
+.. code-block:: bash
+
+    $ hermes parse simple_list.zgr --tokens=x,y,x,x,y,y --ast
+    (MyList: items=[x, y, x, x, y, y])
 
