@@ -18,9 +18,23 @@ class LL1MacroExpander:
     self.prefix = '_gen'
     self.id = 0
     self.list_cache = {}
+    self.tlist_cache = {}
     self.registry = registry
   
   # TODO: this macro assumes that the first argument is a nonterminal and second is a terminal.  Make this more general case
+  def tlist( self, nonterminal, terminator ):
+    rules = []
+
+    key = tuple([str(nonterminal).lower(), str(terminator).lower()])
+    if key in self.tlist_cache:
+      return (self.tlist_cache[key][0].nonterminal, self.tlist_cache[key])
+    
+    nt0 = self.registry.addNonTerminal( self.makeTmpNonTerminal() )
+    rules.append( self.registry.addMacroGeneratedRule( nt0, Production( [nonterminal, terminator, nt0] )) )
+    rules.append( self.registry.addMacroGeneratedRule( nt0, Production( [self.registry.addEmptyString()] )) )
+    self.tlist_cache[key] = rules
+    return (rules[0].nonterminal, rules)
+  
   def list( self, nonterminal, separator ):
     rules = []
 
@@ -124,7 +138,23 @@ class GrammarFileParser:
     if string[0] == 'ε' or string == '_empty':
       return self.factory.ε
 
-    if string[:4].lower() == 'list':
+    if string[:5].lower() == 'tlist':
+      (nonterminal, terminator) = self.pad(2, string[6:-1].split(','))
+
+      if terminator:
+        terminator = self.factory.addTerminal(terminator.replace("'", ''))
+      else:
+        raise Exception('Terminal needs to specified as second argument to \'tlist\' macro')
+
+      if nonterminal:
+        nonterminal = self.factory.addNonTerminal(nonterminal)
+      else:
+        raise Exception('Nonterminal needs to be specified as first argument in \'tlist\' macro')
+
+      (start, rules) = self.ll1MacroExpander.tlist( nonterminal, terminator )
+      return self.factory.addTerminatedListMacro( nonterminal, terminator, start, rules )
+
+    elif string[:4].lower() == 'list':
       (nonterminal, separator) = self.pad(2, string[5:-1].split(','))
 
       if separator:
@@ -139,7 +169,11 @@ class GrammarFileParser:
 
       (start, rules) = self.ll1MacroExpander.list( nonterminal, separator )
       context = 'expr' if str(nonterminal).lower() == '_expr' else 'll1'
-      return self.factory.addListMacro( nonterminal, separator, start, rules, context )
+
+      if separator:
+        return self.factory.addSeparatedListMacro( nonterminal, separator, start, rules, context )
+      else:
+        return self.factory.addNonterminalListMacro( nonterminal, start, rules )
 
     elif string[0] == "'" or (string[0] == '^' and string[1] == "'"): # Terminal
       return self.factory.addTerminal( string.replace("'", "").replace('^', ''), string[0] == '^' )

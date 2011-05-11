@@ -24,7 +24,7 @@ class Rule:
     morphemes = []
     rules = []
     for m in self.production.morphemes:
-      if isinstance(m, SeparatedListMacro) or isinstance(m, NonterminalListMacro):
+      if isinstance(m, LL1ListMacro):
         rules.extend(m.rules)
         morphemes.append(m.start_nt)
       else:
@@ -93,7 +93,7 @@ class Grammar:
     for s,N in self.terminals.items():
       self.first[N] = {N}
     for M in self.macros:
-      if isinstance(M, NonterminalListMacro) or isinstance(M, SeparatedListMacro):
+      if isinstance(M, LL1ListMacro):
         if str(M.start_nt).lower() == '_expr':
           self.first[M] = {self.λ}
         else:
@@ -111,18 +111,22 @@ class Grammar:
       for R in rules:
         morpheme = R.production.morphemes[0]
 
-        if (type(morpheme) is Terminal or type(morpheme) is EmptyString) and morpheme not in self.first[R.nonterminal]:
+        if (type(morpheme) is Terminal or type(morpheme) is EmptyString) and \
+           morpheme not in self.first[R.nonterminal]:
           progress = True
           self.first[R.nonterminal] = self.first[R.nonterminal].union({morpheme})
 
-        elif type(morpheme) is NonTerminal and morpheme.string.lower() == '_expr' and self.λ not in self.first[R.nonterminal]:
+        elif type(morpheme) is NonTerminal and \
+             morpheme.string.lower() == '_expr' and \
+             self.λ not in self.first[R.nonterminal]:
           progress = True
           self.first[R.nonterminal] = self.first[R.nonterminal].union({self.λ})
 
-        elif isinstance(morpheme, NonTerminal) or isinstance(morpheme, NonterminalListMacro) or isinstance(morpheme, SeparatedListMacro):
+        elif isinstance(morpheme, NonTerminal) or \
+             isinstance(morpheme, LL1ListMacro):
           for x in range(len(R.production.morphemes)):
             M = R.production.morphemes[x]
-            if isinstance(M, NonterminalListMacro) or isinstance(M, SeparatedListMacro):
+            if isinstance(M, LL1ListMacro):
               sub = self.first[M.start_nt]
             else:
               sub = self.first[M]

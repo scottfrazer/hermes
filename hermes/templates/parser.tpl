@@ -1,7 +1,7 @@
 import sys
 
 {% from hermes.Grammar import AstTranslation, AstSpecification %}
-{% from hermes.Macro import SeparatedListMacro, NonterminalListMacro %}
+{% from hermes.Macro import SeparatedListMacro, NonterminalListMacro, TerminatedListMacro %}
 
 def parse( iterator, entry ):
   p = Parser()
@@ -46,14 +46,20 @@ class ParseTree():
   def add( self, tree ):
     self.children.append( tree )
   def toAst( self ):
-    if self.list:
+    if self.list == 'list':
       if len(self.children) == 0:
         return []
       offset = 1 if not isinstance(self.children[0], ParseTree) else 0
       r = [self.children[offset].toAst()]
       r.extend(self.children[offset+1].toAst())
       return r
-    if self.isExpr:
+    elif self.list == 'tlist':
+      if len(self.children) == 0:
+        return []
+      r = [self.children[0].toAst()]
+      r.extend(self.children[2].toAst())
+      return r
+    elif self.isExpr:
       if isinstance(self.astTransform, AstTransformSubstitution):
         return self.children[self.astTransform.idx].toAst()
       elif isinstance(self.astTransform, AstTransformNodeCreator):
@@ -233,7 +239,13 @@ class Parser:
   def {{n['func_name']}}(self):
     rule = self.rule({{n['id']}})
     tree = ParseTree( NonTerminal({{n['id']}}, self.getAtomString({{n['id']}})) )
-    tree.list = {%if n['nt_obj'].macro%}True{%else%}False{%endif%}
+    {% if isinstance(n['nt_obj'].macro, SeparatedListMacro) or isinstance(n['nt_obj'].macro, NonterminalListMacro) %}
+    tree.list = 'list'
+    {% elif isinstance(n['nt_obj'].macro, TerminatedListMacro) %}
+    tree.list = 'tlist'
+    {% else %}
+    tree.list = False
+    {% endif %}
 
     {% if n['empty'] and len(n['follow']) %}
       {% for f in n['follow']%}
@@ -405,7 +417,11 @@ class Parser:
       tree.add( ls )
       tree.add( self.expect({{action['close_sym']}}) )
         {% elif action['type'] == 'nonterminal' %}
-      tree.add({{action['nonterminal_func']}})
+          {% if action['nonterminal_func'] == '__EXPR' %}
+      tree.add(self.{{action['nonterminal_func']}}({{action['binding_power']}}))
+          {% else %}
+      tree.add(self.{{action['nonterminal_func']}}())
+          {% endif %}
         {% endif %}
 
         {% if isinstance(action['rule'].ast, AstSpecification) %}

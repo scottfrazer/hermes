@@ -1,0 +1,33 @@
+{
+  "ll1": {
+    "start": "forstmt",
+    "rules": [
+      "forstmt := 'for' + 'lparen' + _expr + 'semi' + _expr + 'semi' + _expr + 'rparen' + forbody -> For( init=$2, cond=$4, iter=$6, body=$8)",
+      "forbody := term_stmt | 'lbrace' + stmts + 'rbrace' -> $1",
+      "term_stmt := stmt + 'semi'",
+      "stmt := _expr | 'statement'",
+      "stmts := tlist(stmt, 'semi') | ε -> $0"
+    ]
+  },
+  "expr": {
+    "binding_power": [
+        {"associativity": "left", "terminals": ["comma"]},
+        {"associativity": "right", "terminals": ["eq"]},
+        {"associativity": "left", "terminals": ["lt", "gt"]},
+        {"associativity": "left", "terminals": ["add", "sub"]},
+        {"associativity": "left", "terminals": ["mul", "div"]},
+        {"associativity": "unary", "terminals": ["sub"]}
+    ],
+    "rules": [
+      "_expr := _expr + 'add' + _expr -> Add( left=$0, right=$2)",
+      "_expr := _expr + 'sub' + _expr -> Sub( left=$0, right=$2)",
+      "_expr := _expr + 'lt' + _expr -> LessThan( left=$0, right=$2)",
+      "_expr := _expr + 'gt' + _expr -> GreaterThan( left=$0, right=$2)",
+      "_expr := _expr + 'mul' + _expr -> Mul( left=$0, right=$2)",
+      "_expr := _expr + 'div' + _expr -> Div( left=$0, right=$2)",
+      "_expr := _expr + 'eq' + _expr -> Assign( var=$0, value=$2)",
+      "_expr := _expr + 'comma' + _expr -> Comma( left=$0, right=$2)",
+      "_expr := 'identifier' | 'num'"
+    ]
+  }
+}

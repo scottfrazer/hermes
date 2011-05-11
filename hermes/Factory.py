@@ -6,7 +6,7 @@ from hermes.Morpheme import EndOfStream
 from hermes.Morpheme import Expression
 from hermes.Grammar import Rule, MacroGeneratedRule
 from hermes.Grammar import Production
-from hermes.Macro import ExprListMacro, SeparatedListMacro, NonterminalListMacro
+from hermes.Macro import ExprListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro
 
 class Factory:
 
@@ -108,22 +108,31 @@ class Factory:
     self.Ec += 1
     self.terminals['λ'] = self.λ
     return r
+
+  def addTerminatedListMacro( self, nonterminal, terminator, start, rules ):
+    idx = tuple(['ll1', 'tlist', nonterminal, terminator])
+    obj = TerminatedListMacro( nonterminal, terminator, start, rules)
+    return self.addMacro(idx, obj, rules)
   
-  def addListMacro( self, nonterminal, separator, start, rules, context ):
+  def addSeparatedListMacro( self, nonterminal, separator, start, rules, context ):
+    idx = tuple([context, 'list', nonterminal, separator])
     if context == 'expr':
-      idx = tuple([context, nonterminal, separator])
       obj = ExprListMacro( nonterminal, separator )
     else:
-      if separator:
-        idx = tuple([context, nonterminal, separator])
-        obj = SeparatedListMacro( nonterminal, separator, start, rules)
-      else:
-        idx = tuple([context, nonterminal])
-        obj = NonterminalListMacro( nonterminal, start, rules)
+      obj = SeparatedListMacro( nonterminal, separator, start, rules)
+    return self.addMacro(idx, obj, rules)
+  
+  # TODO: expression list macro requires a separator.  Have error message or don't require it.
+  def addNonterminalListMacro( self, nonterminal, start, rules ):
+    idx = tuple(['ll1', 'list', nonterminal])
+    obj = NonterminalListMacro( nonterminal, start, rules)
+    return self.addMacro(idx, obj, rules)
+  
+  def addMacro( self, idx, macro, rules ):
     try:
       m = self.macros[idx]
     except KeyError:
-      m = self.macros[idx] = obj
+      m = self.macros[idx] = macro
       for r in rules:
-        r.nonterminal.macro = obj
+        r.nonterminal.macro = macro
     return m

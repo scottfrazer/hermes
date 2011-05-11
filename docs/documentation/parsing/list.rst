@@ -3,20 +3,19 @@ The List Macro
 
 Some tasks are quite common when writing grammar rules.  One of these tasks is generating lists of nonterminals.  A program is a list of statements, a hashmap is a list of key/value pairs, etc.  Hermes introduces the concept of grammar macros that expand to normal grammar rules for this common task.
 
-The syntax of the list macro is ``list(<nonterminal>, <terminal>?)`` Where the first parameter describes the nonterminal that in which zero or more will be matched.  the optional second parameter is the separator between the nonterminals.  For example, creating a list of expressions separated by commas?
+The syntax of a macro is ``macro(parameters)`` where macro can be either ``list`` or ``tlist``.  the ``list`` macro represents a series of nonterminals that may have a separator in between them (like comma separated lists).  the ``tlist`` macro represents a terminated list.  For example, in C, statements always end with semi-colons which could be expressed as ``tlist(statement, 'semicolon')``.
 
 Macro Expansion
 ---------------
 
-The list macro is expanded into grammar rules.  ``list(<nonterminal>)`` is replaced by a new nonterminal ``_gen[0-9]+``.  For example, if we have a grammar with two rules: ``S := list(N)`` and ``N := 't'``, this would be expanded to:
+Macros are expanded into one or more grammar rules.  The macro is replaced by a newly generated nonterminal in the form of  ``_gen[0-9]+``.  For example, if we have a grammar with two rules: ``S := list(N)``, this would be expanded to:
 
 .. code-block:: pascal
 
     S := _gen0
     _gen0 := N + _gen0 | ε
-    N := 't'
 
-Whereas, if we have the same rule but with a terminal as the separator: ``S := list(N, 'x')`` and ``N := 't'``, this would be expanded to:
+If we have the same rule but with a terminal as the separator: ``S := list(N, 'x')``, this would be expanded to:
 
 .. code-block:: pascal
 
@@ -25,6 +24,13 @@ Whereas, if we have the same rule but with a terminal as the separator: ``S := l
     _gen1 := 'x' + N + _gen1 | ε
 
 It's important to note that the macro is not entirely identical to the rules it generates.  In terms of straight LL(1) Parsing, they're equivalent.  However, this macro translates to a list primitive for the abstract syntax tree.  More information on that in the section on abstract syntax trees.
+
+The only other macro left is the terminated list macro which has the form ``tlist(<nonterminal>, <terminator>)``.  A rule of the form ``S := tlist(N, 't')`` would expand to:
+
+.. code-block:: pascal
+
+    S := _gen0
+    _gen0 := N + 't' + _gen0 | ε
 
 Example 1: Simple List
 ----------------------

@@ -54,6 +54,8 @@ class Resources:
     self.tokens = tokens
 
   def getbp( self, terminal, assoc = ['left', 'right']):
+    if terminal not in self.grammar.exprPrecedence:
+      return -1
     bp = self.grammar.exprPrecedence[terminal]
     for (power, a) in bp:
       if a.lower() == 'left' and 'left' in assoc:
@@ -112,6 +114,7 @@ class Resources:
           tpl.append({
               'type': 'nonterminal',
               'nonterminal_func': '_' + str(atom).upper(),
+              'binding_power': self.getbp(atom),
               'rule': rule
             })
         i += 1

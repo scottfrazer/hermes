@@ -64,11 +64,11 @@ def Cli():
 
   fp = GrammarFileParser()
 
-  try:
-    G = fp.parse( open(result.grammar[0]), result.start )
-  except Exception as e:
-    print(e)
-    sys.exit(-1)
+  #try:
+  G = fp.parse( open(result.grammar[0]), result.start )
+  #except Exception as e:
+  #  print(e)
+  #  sys.exit(-1)
 
   terminals = []
   if result.tokens:

@@ -7,5 +7,4 @@ The definitive guide to using Hermes to generate parsers!
    :maxdepth: 2
     
    parsing/index
-   ast/index
    parser_api/index
