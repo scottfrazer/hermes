@@ -3,36 +3,51 @@ from hashlib import sha224
 from random import random
 sys.path.append('..')
 
-from hermes.GrammarFileParser import GrammarFileParser
+from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory, HermesParser
 from hermes.Grammar import Grammar
 from hermes.GrammarCodeGenerator import GrammarCodeGenerator, Resources, PythonTemplate
+from hermes.Macro import LL1ListMacro
+from hermes.Morpheme import Terminal, NonTerminal
 
 class GrammarTest(unittest.TestCase):
   def loadGrammarFile( self, filename, start = None ):
-    fp = GrammarFileParser()
-    self.grammar = fp.parse( open(filename) , start )
-    return self
+    return self.loadGrammar( open(filename), start )
 
   def loadGrammarJson( self, j, start = None ):
-    return self.loadGrammarStr(json.dumps(j))
+    return self.loadGrammar( io.StringIO(json.dumps(j)), start )
 
   def loadGrammarStr( self, string, start = None ):
-    fp = GrammarFileParser()
-    self.grammar = fp.parse( io.StringIO(string) , start )
+    return self.loadGrammar( io.StringIO(string), start )
+  
+  def loadGrammar( self, file_obj, start = None ):
+    factory = HermesParserFactory()
+    fp = GrammarFileParser( factory.create() )
+    self.grammar = fp.parse( file_obj, start )
+    #self.assertGrammarIntegrity()
     return self
   
+  def assertGrammarIntegrity(self):
+    for rule in self.grammar.rules:
+      for morpheme in rule.production.morphemes:
+        if isinstance(morpheme, NonTerminal):
+          self.assertTrue(morpheme not in self.grammar.nonterminals, "Nonterminal %s not in nonterminal list" % (morpheme) )
+        if isinstance(morpheme, Terminal):
+          self.assertTrue(morpheme not in self.grammar.terminals, "Terminal %s not in terminal list" % (morpheme) )
+        if isinstance(morpheme, LL1ListMacro):
+          self.assertTrue(morpheme not in self.grammar.terminals, "Macro %s not in terminal list" % (morpheme) )
+
   def assertFirst( self, first ):
     for nonterminal, firstSet in first.items():
-      s1 = {self.grammar.terminals[e] for e in firstSet}
-      s2 = self.grammar.first[self.grammar.nonterminals[nonterminal]]
-      self.assertEqual(s1, s2, "Expecting first sets to be equal.  (expected: %s) (actual: %s)"%(', '.join([str(e) for e in s1]), ', '.join([str(e) for e in s2])))
+      s1 = {self.grammar.getTerminal(e) for e in firstSet}
+      s2 = self.grammar.first(self.grammar.getNonTerminal(nonterminal))
+      self.assertEqual(s1, s2, "Incorrect follow set for nonterminal %s  (expected: %s) (actual: %s)"%(nonterminal, ', '.join([str(e) for e in s1]), ', '.join([str(e) for e in s2])))
     return self
 
   def assertFollow( self, follow ):
     for nonterminal, followSet in follow.items():
-      s1 = {self.grammar.terminals[e] for e in followSet}
-      s2 = self.grammar.follow[self.grammar.nonterminals[nonterminal]]
-      self.assertEqual(s1, s2, "Expecting follow sets to be equal.  (expected: %s) (actual: %s)"%(', '.join([str(e) for e in s1]), ', '.join([str(e) for e in s2])))
+      s1 = {self.grammar.getTerminal(e) for e in followSet}
+      s2 = self.grammar.follow(self.grammar.getNonTerminal(nonterminal))
+      self.assertEqual(s1, s2, "Incorrect follow set for nonterminal %s  (expected: %s) (actual: %s)"%(nonterminal, ', '.join([str(e) for e in s1]), ', '.join([str(e) for e in s2])))
     return self
 
   def runWithTokens(self, tokens):

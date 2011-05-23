@@ -1,33 +1,113 @@
 {
   "ll1": {
-    "start": "forstmt",
+    "start": "program",
     "rules": [
-      "forstmt := 'for' + 'lparen' + _expr + 'semi' + _expr + 'semi' + _expr + 'rparen' + forbody -> For( init=$2, cond=$4, iter=$6, body=$8)",
-      "forbody := term_stmt | 'lbrace' + stmts + 'rbrace' -> $1",
-      "term_stmt := stmt + 'semi'",
-      "stmt := _expr | 'statement'",
-      "stmts := tlist(stmt, 'semi') | ε -> $0"
+      "program := list(statement) -> Program( statements=$0 )",
+      "statement := '__funcdef' + funcdef | '__declaration' + declaration",
+      "funcdef := type + 'identifier' + 'lparen' + list(func_param, 'comma') + 'rparen' + 'lbrace' + list(func_stmt) + 'rbrace'",
+      "decl := decl_specs + list(init_decl, 'comma')",
+      "decl_specs := storage_class_spec + decl_specs_sub + type_spec + decl_specs_optional + type_qualifier + decl_specs_sub",
+      "type_spec := struct_or_union_spec | enum_spec | typedef_name",
+      "struct_or_union_spec := struct_or_union + identifier_optional + 'lbrace' + list(struct_decl) + 'rbrace'",
+      "struct_decl := list(spec_qualifiers) + list(struct_declarator) + 'semi'",
+      "struct_declarator := '__struct_declarator_1' + declarator | '__struct_declarator_2' + declarator_optional + 'colon' + _expr",
+      "spec_qualifier := type_spec | type_qualifier",
+      "enum_spec := 'enum' + identifier_optional + 'lbrace' + list(enumerator) + 'rbrace'",
+      "enumerator := _expr",
+
+      "declarator := pointer_optional + direct_declarator",
+      "direct_declarator := 'identifier' | 'lparen' + declarator + 'rparen' | direct_declarator + 'lsquare' + 'rsquare'",
+      "pointer := list(pointer_sub)",
+      "pointer_sub := 'mul' + list(type_qualifier)",
+
+      "storage_class_spec := 'auto' | 'register' | 'static' | 'extern' | 'typedef'",
+      "type_spec := 'void' | 'char' | 'short' | 'int' | 'long' | 'float' | 'double' | 'signed' | 'unsigned'",
+      "struct_or_union := 'struct' | 'union'",
+      "type_qualifier := 'const' | 'volatile'",
+
+      "declarator_optional := declarator | ε",
+      "identifier_optional := 'identifier' | ε",
+      "decl_specs_optional := decl_specs | ε",
+      "pointer_optional := pointer | ε",
+
+      "literal := 'string' | 'number'",
+      "func_stmt := for_stmt | while_stmt | do_while_stmt | return_stmt | if_stmt | terminated_expr",
+      "func_param := type + 'identifier'",
+      "terminated_expr := _expr + 'semi' -> $0",
+      "if_stmt := 'if' + 'lparen' + _expr + 'rparen' + control_body + list(else_if_stmt) + else_stmt -> If( cond=$2, body=$4, elseif=$5, else=$6 )",
+      "control_body := func_stmt | 'lbrace' + list(func_stmt) + 'rbrace' -> $1",
+      "else_if_stmt := 'else_if' + 'lparen' + _expr + 'rparen' + control_body -> ElseIf( cond=$2, body=$4 )",
+      "else_stmt := 'else' + control_body -> Else( body=$1 )",
+      "while_stmt := 'while' + 'lparen' + _expr + 'rparen' + control_body -> While( cond=$2, body=$4 )",
+      "for_stmt := 'for' + 'lparen' + _expr + 'semi' + _expr + 'semi' + _expr + 'rparen' + control_body -> For( init=$2, cond=$4, iter=$6, body=$8)",
+      "do_while_stmt := 'do' + control_body + 'while' + 'lparen' + _expr + 'rparen' + 'semi' -> DoWhile( cond=$4, body=$1 )",
+      "initializer := 'assign' + _expr",
+      "etc0 := 'addeq' | 'muleq' | 'modeq' | 'subeq' | 'diveq' | 'mod' | 'elipsis' | 'pound' | 'poundpound'",
+      "etc1 := 'auto' | 'bool' | 'break' | 'case' | 'char' | 'complex' | 'const' | 'continue' | 'default' | 'do' | 'double' | 'else' | 'enum' | 'extern' | 'float' | 'for' | 'goto' | 'if' | 'imaginary' | 'inline' | 'int' | 'long' | 'register' | 'restrict' | 'return' | 'short' | 'signed' | 'sizeof' | 'static' | 'struct' | 'switch' | 'typedef' | 'union' | 'unsigned' | 'void' | 'volatile' | 'while'"
     ]
   },
-  "expr": {
-    "binding_power": [
-        {"associativity": "left", "terminals": ["comma"]},
-        {"associativity": "right", "terminals": ["eq"]},
-        {"associativity": "left", "terminals": ["lt", "gt"]},
-        {"associativity": "left", "terminals": ["add", "sub"]},
-        {"associativity": "left", "terminals": ["mul", "div"]},
-        {"associativity": "unary", "terminals": ["sub"]}
-    ],
-    "rules": [
-      "_expr := _expr + 'add' + _expr -> Add( left=$0, right=$2)",
-      "_expr := _expr + 'sub' + _expr -> Sub( left=$0, right=$2)",
-      "_expr := _expr + 'lt' + _expr -> LessThan( left=$0, right=$2)",
-      "_expr := _expr + 'gt' + _expr -> GreaterThan( left=$0, right=$2)",
-      "_expr := _expr + 'mul' + _expr -> Mul( left=$0, right=$2)",
-      "_expr := _expr + 'div' + _expr -> Div( left=$0, right=$2)",
-      "_expr := _expr + 'eq' + _expr -> Assign( var=$0, value=$2)",
-      "_expr := _expr + 'comma' + _expr -> Comma( left=$0, right=$2)",
-      "_expr := 'identifier' | 'num'"
-    ]
-  }
+  "expr": [
+    {
+      "nonterminal": "_expr",
+      "binding_power": [
+          {"associativity": "left", "terminals": ["comma"]},
+          {"associativity": "right", "terminals": ["assign", "addeq", "subeq", "muleq", "diveq", "modeq", "oreq", "andeq", "xoreq", "lshifteq", "rshifteq"]},
+          {"associativity": "right", "terminals": ["questionmark"]},
+          {"associativity": "left", "terminals": ["or"]},
+          {"associativity": "left", "terminals": ["and"]},
+          {"associativity": "left", "terminals": ["bitand"]},
+          {"associativity": "left", "terminals": ["bitxor"]},
+          {"associativity": "left", "terminals": ["bitor"]},
+          {"associativity": "right", "terminals": ["eq", "neq"]},
+          {"associativity": "left", "terminals": ["lt", "gt", "gteq", "lteq"]},
+          {"associativity": "left", "terminals": ["lshift", "rshift"]},
+          {"associativity": "left", "terminals": ["add", "sub"]},
+          {"associativity": "left", "terminals": ["mul", "div", "mod"]},
+          {"associativity": "unary", "terminals": ["sub", "incr", "decr", "mul", "bitand", "not", "bitnot"]},
+          {"associativity": "left", "terminals": ["lparen", "lsquare", "dot", "arrow", "incr", "decr"]}
+      ],
+      "rules": [
+        "_expr := 'identifier' + ^'lparen' + list(_expr, 'comma') + 'rparen' -> FuncCall( name=$0, params=$2 )",
+        "_expr := 'identifier' + ^'lsquare' + list(_expr, 'comma') + 'rsquare' -> ArrayIndex( name=$0, params=$2 )",
+        "_expr := _expr + ^'dot' + _expr -> MemberSelect( object=$0, member=$2 )",
+        "_expr := _expr + ^'arrow' + _expr -> DerefMemberSelect( object=$0, member=$2 )",
+        "_expr := _expr + ^'decr' -> PostDecr( var=$0 )",
+        "_expr := _expr + ^'incr' -> PostIncr( var=$0 )",
+        "_expr := 'decr' + _expr -> PreDecr( var=$1 )",
+        "_expr := 'incr' + _expr -> PreIncr( var=$1 )",
+        "_expr := 'bitand' + _expr -> AddressOf( var=$1 )",
+        "_expr := 'mul' + _expr -> Dereference( var=$1 )",
+        "_expr := _expr + 'add' + _expr -> Add( left=$0, right=$2 )",
+        "_expr := _expr + 'sub' + _expr -> Sub( left=$0, right=$2 )",
+        "_expr := _expr + 'lt' + _expr -> LessThan( left=$0, right=$2 )",
+        "_expr := _expr + 'gt' + _expr -> GreaterThan( left=$0, right=$2 )",
+        "_expr := _expr + 'lteq' + _expr -> LessThanEq( left=$0, right=$2 )",
+        "_expr := _expr + 'gteq' + _expr -> GreaterThanEq( left=$0, right=$2 )",
+        "_expr := _expr + 'mul' + _expr -> Mul( left=$0, right=$2 )",
+        "_expr := _expr + 'div' + _expr -> Div( left=$0, right=$2 )",
+        "_expr := _expr + 'mod' + _expr -> Mod( left=$0, right=$2 )",
+        "_expr := _expr + 'eq' + _expr -> Equals( left=$0, right=$2 )",
+        "_expr := _expr + 'assign' + _expr -> Assign( var=$0, value=$2 )",
+        "_expr := _expr + 'comma' + _expr -> Comma( left=$0, right=$2 )",
+        "_expr := _expr + 'lshift' + _expr -> LeftShift( left=$0, right=$2 )",
+        "_expr := _expr + 'rshift' + _expr -> RightShift( left=$0, right=$2 )",
+        "_expr := _expr + 'bitand' + _expr -> BitAND( left=$0, right=$2 )",
+        "_expr := _expr + 'bitor' + _expr -> BitOR( left=$0, right=$2 )",
+        "_expr := _expr + 'bitxor' + _expr -> BitXOR( left=$0, right=$2 )",
+        "_expr := _expr + 'addeq' + _expr -> AddAssign( left=$0, right=$2 )",
+        "_expr := _expr + 'subeq' + _expr -> SubtractAssign( left=$0, right=$2 )",
+        "_expr := _expr + 'muleq' + _expr -> MultiplyAssign( left=$0, right=$2 )",
+        "_expr := _expr + 'diveq' + _expr -> DivideAssign( left=$0, right=$2 )",
+        "_expr := _expr + 'modeq' + _expr -> ModAssign( left=$0, right=$2 )",
+        "_expr := _expr + 'andeq' + _expr -> ANDAssign( left=$0, right=$2 )",
+        "_expr := _expr + 'oreq' + _expr -> ORAssign( left=$0, right=$2 )",
+        "_expr := _expr + 'xoreq' + _expr -> XORAssign( left=$0, right=$2 )",
+        "_expr := _expr + 'lshifteq' + _expr -> LeftShiftAssign( left=$0, right=$2 )",
+        "_expr := _expr + 'rshifteq' + _expr -> RightShiftAssign( left=$0, right=$2 )",
+        "_expr := _expr + ^'questionmark' + _expr + 'colon' + _expr -> TernaryOperator( cond=$0, true=$2, false=$4 )",
+        "_expr := 'identifier' | 'num'",
+        "_expr := 'lparen' + _expr + 'rparen'"
+      ]
+    }
+  ]
 }

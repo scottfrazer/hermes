@@ -46,7 +46,7 @@ class ParseTree():
   def add( self, tree ):
     self.children.append( tree )
   def toAst( self ):
-    if self.list == 'list':
+    if self.list == 'slist' or self.list == 'nlist':
       if len(self.children) == 0:
         return []
       offset = 1 if not isinstance(self.children[0], ParseTree) else 0
@@ -63,7 +63,14 @@ class ParseTree():
       if isinstance(self.astTransform, AstTransformSubstitution):
         return self.children[self.astTransform.idx].toAst()
       elif isinstance(self.astTransform, AstTransformNodeCreator):
-        parameters = {name: self.children[idx].toAst() if isinstance(self.children[idx], ParseTree) else self.children[idx] for name, idx in self.astTransform.parameters.items()}
+        parameters = {}
+        for name, idx in self.astTransform.parameters.items():
+          if isinstance(self.children[idx], ParseTree):
+            parameters[name] = self.children[idx].toAst()
+          elif isinstance(self.children[idx], list):
+            parameters[name] = [x.toAst() for x in self.children[idx]]
+          else:
+            parameters[name] = self.children[idx]
         return Ast(self.astTransform.name, parameters)
     else:
       if isinstance(self.astTransform, AstTransformSubstitution):
@@ -161,12 +168,6 @@ class Parser:
     {{init['parse_table']}}
   ]
 
-  bp = {
-    {% for i,b in init['binding_power'].items() %}
-    {{i}}: {{b}},
-    {% endfor %}
-  }
-
   def terminal(self, str):
     return self.str_terminal[str]
   
@@ -180,9 +181,9 @@ class Parser:
     global tokens
     tokens = recorder.tokens().append(tokens)
 
-  def binding_power(self, sym):
+  def binding_power(self, sym, bp):
     try:
-      return self.bp[sym.getId()]
+      return bp[sym.getId()]
     except KeyError:
       return 0
     except AttributeError:
@@ -239,8 +240,10 @@ class Parser:
   def {{n['func_name']}}(self):
     rule = self.rule({{n['id']}})
     tree = ParseTree( NonTerminal({{n['id']}}, self.getAtomString({{n['id']}})) )
-    {% if isinstance(n['nt_obj'].macro, SeparatedListMacro) or isinstance(n['nt_obj'].macro, NonterminalListMacro) %}
-    tree.list = 'list'
+    {% if isinstance(n['nt_obj'].macro, SeparatedListMacro) %}
+    tree.list = 'slist'
+    {% elif isinstance(n['nt_obj'].macro, NonterminalListMacro) %}
+    tree.list = 'nlist'
     {% elif isinstance(n['nt_obj'].macro, TerminatedListMacro) %}
     tree.list = 'tlist'
     {% else %}
@@ -330,17 +333,23 @@ class Parser:
 
   {% endfor %}
 
-  def __EXPR( self, rbp = 0 ):
+  {% for index, exprParser in enumerate(nudled) %}
+  bp{{index}} = {
+    {% for nonterminal_id, binding_power in exprParser['precedence'].items() %}
+    {{nonterminal_id}}: {{binding_power}},
+    {% endfor %}
+  }
+  def _{{exprParser['nonterminal'].upper()}}( self, rbp = 0 ):
     t = self.sym
     left = self.nud()
-    while rbp < self.binding_power(self.sym):
+    while rbp < self.binding_power(self.sym, self.bp{{index}}):
       left = self.led(left)
     left.isExpr = True
     return left
 
   def nud(self):
     tree = ParseTree( NonTerminal(self.str_nonterminal['_expr'], '_expr') )
-    {% for sym, actions in nudled['nud'].items() %}
+    {% for sym, actions in exprParser['nud'].items() %}
     if self.sym.getId() == {{sym}}:
       {% for action in actions %}
 
@@ -349,12 +358,15 @@ class Parser:
 
         {% elif action['type'] == 'symbol' %}
       tree.add( self.expect({{action['sym']}}) )
+      
+        {% elif action['type'] == 'symbol-append' %}
+      tree.add( self.expect({{action['sym']}}) ) #here?
 
         {% elif action['type'] == 'infix' %}
       pass # infix noop
 
         {% elif action['type'] == 'prefix' %}
-      tree.add( self.expect(self.sym) )
+      tree.add( self.expect(self.sym.getId()) )
       tree.add( self.__EXPR({{action['binding_power']}}) )
 
         {% elif action['type'] == 'list' %}
@@ -385,13 +397,13 @@ class Parser:
       return tree
     {% endfor %}
 
-    {% if len(nudled['nud']) == 0 %}
+    {% if len(exprParser['nud']) == 0 %}
     pass
     {% endif %}
 
   def led(self, left):
     tree = ParseTree( NonTerminal(self.str_nonterminal['_expr'], '_expr') )
-    {% for sym, actions in nudled['led'].items() %}
+    {% for sym, actions in exprParser['led'].items() %}
     if self.sym.getId() == {{sym}}:
       if left:
         tree.add( left )
@@ -399,6 +411,8 @@ class Parser:
         {% if action['type'] == 'symbol' and len(actions) == 1 %}
       return self.expect({{action['sym']}})
         {% elif action['type'] == 'symbol' %}
+      tree.add( self.expect({{action['sym']}}) )
+        {% elif action['type'] == 'symbol-append' %}
       tree.add( self.expect({{action['sym']}}) )
         {% elif action['type'] == 'infix' %}
       tree.add( self.expect(self.sym.getId()) )
@@ -434,9 +448,10 @@ class Parser:
       return tree
     {% endfor %}
 
-    {% if len(nudled['led']) == 0 %}
+    {% if len(exprParser['led']) == 0 %}
     pass
     {% endif %}
+    {% endfor %}
 
 {% if add_main %}
 if __name__ == '__main__':

@@ -13,8 +13,6 @@ class ExprGrammarTest(GrammarTest):
       'sub': {'lparen', 'lbrace', 'subtract', 'lsquare', 'identifier', 'b', 'number', 'a', 'λ'},
       '_gen0': {'lbrace', 'lsquare', 'b', 'identifier', 'number', 'subtract', 'lparen', 'ε', 'a', 'λ'},
       '_gen1': {'comma', 'ε'},
-      '_gen2': {'lbrace', 'lsquare', 'subtract', 'identifier', 'number', 'ε', 'lparen', 'λ'},
-      '_gen3': {'comma', 'ε'},
       'item': {'b', 'a'},
       '_expr': {'lbrace', 'lsquare', 'identifier', 'subtract', 'lparen', 'number', 'λ'},
     })
@@ -24,7 +22,7 @@ class ExprGrammarTest(GrammarTest):
       'start': set(['σ']),
       'sub': set(['comma', 'σ']),
       'item': set(['σ', 'comma']),
-      '_expr': set(['divide', 'rparen', 'subtract', 'σ', 'comma', 'add', 'multiply']),
+      '_expr': set(['rparen', 'σ', 'comma']),
       '_gen0': set(['σ']),
       '_gen1': set(['σ'])
     })
@@ -42,7 +40,7 @@ class ExprGrammarTest(GrammarTest):
     self.loadGrammarFile('grammars/expr.zgr', 'start') \
         .runWithTokens(['a','comma','b','comma','lparen','lparen','number','multiply','identifier','lparen','number','add','number','rparen','rparen','rparen']) \
         .assertParseTree('(start: (_gen0: (sub: (item: a)), (_gen1: comma, (sub: (item: b)), (_gen1: comma, (sub: (_expr: lparen, (_expr: lparen, (_expr: number, multiply, (_expr: identifier, lparen, [(_expr: number, add, number)], rparen)), rparen), rparen)), (_gen1: )))))') \
-        .assertAst('(Statements: list=[(Item: name=a), (Item: name=b), (Mul: r=(FuncCall: params=[(_expr: number, add, number)], name=identifier), l=number)])')
+        .assertAst('(Statements: list=[(Item: name=a), (Item: name=b), (Mul: r=(FuncCall: params=[(add: r=number, l=number)], name=identifier), l=number)])')
 
 if __name__ == '__main__':
   unittest.main()

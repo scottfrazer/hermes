@@ -22,7 +22,7 @@ class Ast2Test(GrammarTest):
   def test_followSets(self):
     self.assertFollow({
       'start': {'σ'},
-      '_expr': {'div', 'add', 'eq', 'mul', 'semi', 'σ', 'sub', 'rparen'},
+      '_expr': {'semi', 'σ', 'rparen'},
       'statement': {'semi', 'σ'},
       'for': {'semi', 'σ'},
       '_gen0': {'σ'},
@@ -36,8 +36,8 @@ class Ast2Test(GrammarTest):
 
   def test_codeGeneration(self):
     self.runWithTokens(['identifier','eq','identifier','eq','n','semi','for','lparen','identifier','eq','n','semi','semi','identifier','eq','s','add','n','rparen','lbrace','identifier','eq','n','add','identifier','mul','n','div','s','semi','rbrace','semi','identifier','add','identifier']) \
-        .assertParseTree('(start: (_gen0: (statement: (_expr: identifier, eq, (_expr: identifier, eq, n))), (_gen1: semi, (statement: (for: for, lparen, (forsub: (_expr: identifier, eq, n)), semi, (forsub: ), semi, (forsub: (_expr: identifier, eq, (_expr: s, add, n))), rparen, lbrace, (forbody: (statement: (_expr: identifier, eq, (_expr: n, add, (_expr: identifier, mul, (_expr: n, div, s))))), semi, (forbody: )), rbrace)), (_gen1: semi, (statement: (_expr: identifier, add, identifier)), (_gen1: )))))') \
-        .assertAst('(Program: statements=[(Assign: rhs=(Assign: rhs=n, lhs=identifier), lhs=identifier), (For: decl=(Assign: rhs=n, lhs=identifier), body=(Assign: rhs=(Add: rhs=(Multiply: rhs=(Divide: rhs=s, lhs=n), lhs=identifier), lhs=n), lhs=identifier), cond=None, iter=(Assign: rhs=(Add: rhs=n, lhs=s), lhs=identifier)), (Add: rhs=identifier, lhs=identifier)])')
+        .assertParseTree('(start: (_gen0: (statement: (_expr: identifier, eq, (_expr: identifier, eq, n))), (_gen1: semi, (statement: (for: for, lparen, (forsub: (_expr: identifier, eq, n)), semi, (forsub: ), semi, (forsub: (_expr: identifier, eq, (_expr: s, add, n))), rparen, lbrace, (forbody: (statement: (_expr: identifier, eq, (_expr: n, add, (_expr: (_expr: identifier, mul, n), div, s)))), semi, (forbody: )), rbrace)), (_gen1: semi, (statement: (_expr: identifier, add, identifier)), (_gen1: )))))') \
+        .assertAst('(Program: statements=[(Assign: rhs=(Assign: rhs=n, lhs=identifier), lhs=identifier), (For: decl=(Assign: rhs=n, lhs=identifier), body=(Assign: rhs=(Add: rhs=(Divide: rhs=s, lhs=(Multiply: rhs=n, lhs=identifier)), lhs=n), lhs=identifier), cond=None, iter=(Assign: rhs=(Add: rhs=n, lhs=s), lhs=identifier)), (Add: rhs=identifier, lhs=identifier)])')
 
   # Same as test_codeGeneration but the last 'semi' was removed
   def test_codeGenerationWithError(self):

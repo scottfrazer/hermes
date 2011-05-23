@@ -3,7 +3,7 @@
 from types import *
 from os import path
 import sys, os, argparse
-from hermes.GrammarFileParser import GrammarFileParser
+from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
 from hermes.GrammarAnalyzer import GrammarAnalyzer
 from hermes.GrammarCodeGenerator import GrammarCodeGenerator, PythonTemplate, Resources
 
@@ -62,7 +62,8 @@ def Cli():
     sys.stderr.write("Error: File doesn't exist\n")
     sys.exit(-1)
 
-  fp = GrammarFileParser()
+  factory = HermesParserFactory()
+  fp = GrammarFileParser(factory.create())
 
   #try:
   G = fp.parse( open(result.grammar[0]), result.start )
@@ -74,8 +75,9 @@ def Cli():
   if result.tokens:
     terminals = result.tokens.lower().split(',')
     error = False
+    terminal_str = list(map(lambda x: x.string, G.terminals))
     for terminal in terminals:
-      if terminal not in G.terminals:
+      if terminal not in terminal_str:
         sys.stderr.write("Error: Token '%s' not recognized\n" %(terminal))
         error = True
     if error:

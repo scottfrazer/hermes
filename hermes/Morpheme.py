@@ -2,11 +2,10 @@ class Morpheme:
   pass
 
 class NonTerminal(Morpheme):
-  def __init__(self, string, id, root=False):
+  def __init__(self, string, id=0):
     self.string = string
     self.id = id
     self.macro = None # Is this nonterminal the root of a macro expansion?
-    self.root = root
   def id(self):
     return self.id
   def setMacro(self, macro):
@@ -17,10 +16,9 @@ class NonTerminal(Morpheme):
     return 
 
 class Terminal(Morpheme):
-  def __init__(self, string, id, root=False):
+  def __init__(self, string, id=0):
     self.string = string
     self.id = id
-    self.root = root
   def id(self):
     return self.id
   def __str__(self):

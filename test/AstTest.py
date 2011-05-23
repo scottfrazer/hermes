@@ -19,7 +19,7 @@ class AstTest(GrammarTest):
     
   def test_followSets(self):
     self.assertFollow({
-      '_expr': {'comma', 'σ', 'div', 'mul', 'add', 'sub'},
+      '_expr': {'comma', 'σ'},
       '_gen1': {'σ'},
       '_gen0': {'σ'},
       'assignstatement': {'comma', 'σ'},

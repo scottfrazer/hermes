@@ -19,25 +19,28 @@
       "token := 'semicolon' | 'minus' | 'multiply' | 'divide' | 'greater_than' | 'less_than' | 'greater_than_equal' | 'less_than_equal' | 'do' | 'while' | 'function' | 'equals' | 'string'"
     ]
   },
-  "expr": {
-    "binding_power": [
-      {"associativity": "right", "terminals": ["eq"]},
-      {"associativity": "left", "terminals": ["add", "sub"]},
-      {"associativity": "left", "terminals": ["mul", "div"]},
-      {"associativity": "unary", "terminals": ["sub"]}
-    ],
-    "rules": [
-      "expr := expr + 'union'+ expr -> Union( lhs=$0, rhs=$2 )",
-      "expr := expr + 'multiply' + expr -> Multiply( lhs=$0, rhs=$2 )",
-      "expr := expr + 'divide' + expr -> Divide( lhs=$0, rhs=$2 )",
-      "expr := expr + 'add' + expr -> Add( lhs=$0, rhs=$2 )",
-      "expr := expr + 'subtract' + expr -> Subtract( lhs=$0, rhs=$2 )",
-      "expr := 'subtract' + expr -> UMinus( arg=$0 )",
-      "expr := 'lsquare' + list(expr, 'comma') + 'rsquare' -> ListDecl( items=$1 )",
-      "expr := 'lbrace' + list(expr, 'comma') + 'rbrace' -> SetDecl( items=$1 )",
-      "expr := 'identifier' + ^'lparen' + list(expr, 'comma') + 'rparen' -> FuncCall( name=$0, parameters=$2 )",
-      "expr := 'lparen' + expr + 'rparen' -> $1",
-      "expr := 'identifier' | 'octal_number' | 'hexadecimal_number' | 'decimal_number' | 'binary_number'"
-    ]
-  }
+  "expr": [
+    {
+      "nonterminal": "_expr",
+      "binding_power": [
+        {"associativity": "right", "terminals": ["eq"]},
+        {"associativity": "left", "terminals": ["add", "sub"]},
+        {"associativity": "left", "terminals": ["mul", "div"]},
+        {"associativity": "unary", "terminals": ["sub"]}
+      ],
+      "rules": [
+        "expr := expr + 'union'+ expr -> Union( lhs=$0, rhs=$2 )",
+        "expr := expr + 'multiply' + expr -> Multiply( lhs=$0, rhs=$2 )",
+        "expr := expr + 'divide' + expr -> Divide( lhs=$0, rhs=$2 )",
+        "expr := expr + 'add' + expr -> Add( lhs=$0, rhs=$2 )",
+        "expr := expr + 'subtract' + expr -> Subtract( lhs=$0, rhs=$2 )",
+        "expr := 'subtract' + expr -> UMinus( arg=$0 )",
+        "expr := 'lsquare' + list(expr, 'comma') + 'rsquare' -> ListDecl( items=$1 )",
+        "expr := 'lbrace' + list(expr, 'comma') + 'rbrace' -> SetDecl( items=$1 )",
+        "expr := 'identifier' + ^'lparen' + list(expr, 'comma') + 'rparen' -> FuncCall( name=$0, parameters=$2 )",
+        "expr := 'lparen' + expr + 'rparen' -> $1",
+        "expr := 'identifier' | 'octal_number' | 'hexadecimal_number' | 'decimal_number' | 'binary_number'"
+      ]
+    }
+  ]
 }

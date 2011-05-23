@@ -19,7 +19,7 @@ class PythonTemplate(Template):
     x = { 
       'tokens': self.resources.getTokens(),
       'rules': self.resources.getRules(),
-      'expr_rules': self.resources.getExprRules(),
+      'expr_rules': self.resources.getExprGrammars(),
       'entry': self.resources.getEntry(),
       'entry_points': self.resources.getEntryPoints(),
       'parser': self.resources.getParser(),
@@ -40,46 +40,50 @@ class CSourceTemplate(Template):
   destination = 'parser.h'
   def __init__(self, resources):
     self.resources = resources
-
+  def render(self):
+    raise Exception('Not Implemented')
+  
 class CHeaderTemplate(Template):
   template = 'c/source.tpl'
   destination = 'parser.c'
   def __init__(self, resources):
     self.resources = resources
-
+  def render(self):
+    raise Exception('Not Implemented')
+  
 class Resources:
   def __init__(self, grammar, tokens = [], add_main = False):
     self.grammar = grammar
     self.add_main = add_main
     self.tokens = tokens
-
-  def getbp( self, terminal, assoc = ['left', 'right']):
-    if terminal not in self.grammar.exprPrecedence:
-      return -1
-    bp = self.grammar.exprPrecedence[terminal]
-    for (power, a) in bp:
-      if a.lower() == 'left' and 'left' in assoc:
-        return power
-      if a.lower() == 'right' and 'right' in assoc:
-        return power - 1
-      if a.lower() == 'unary' and 'unary' in assoc:
-        return power
-    return -1
   
-  def ruletotpl( self, expr_rule ):
+  def getbp( self, terminal, grammar, assoc = ['left', 'right']):
+    precedence = grammar.getPrecedence()
+    if terminal not in precedence:
+      return 0
+    for p in precedence[terminal]:
+      if p.associativity.lower() == 'left' and 'left' in assoc:
+        return p.precedence
+      if p.associativity.lower() == 'right' and 'right' in assoc:
+        return p.precedence - 1
+      if p.associativity.lower() == 'unary' and 'unary' in assoc:
+        return p.precedence
+    return 0
+  
+  def ruletotpl( self, grammar, expr_rule ):
     rule = expr_rule.rule
     atoms = rule.production.morphemes[rule.root:]
     tpl = []
     if expr_rule.type == 'infix':
       tpl.append({
         'type': 'infix',
-        'binding_power': self.getbp(atoms[1]),
+        'binding_power': self.getbp(atoms[1], grammar),
         'rule': rule
       })
     elif expr_rule.type == 'prefix':
       tpl.append({
         'type': 'prefix',
-        'binding_power': self.getbp(atoms[0], ['unary']),
+        'binding_power': self.getbp(atoms[0], grammar, ['unary']),
         'rule': rule
       })
     elif expr_rule.type == 'symbol':
@@ -93,6 +97,7 @@ class Resources:
       while i < len(atoms):
         atom = atoms[i]
         if isinstance(atom, Terminal):
+          # TODO: handling of the expression list macro is sloppy...
           if i < len(atoms) - 2 and isinstance(atoms[i+1], ExprListMacro) and isinstance(atoms[i+2], Terminal):
             tpl.append({
               'type': 'list',
@@ -106,7 +111,7 @@ class Resources:
             continue
           else:
             tpl.append({
-              'type': 'symbol',
+              'type': 'symbol-append',
               'sym': atom.id,
               'rule': rule
             })
@@ -114,20 +119,20 @@ class Resources:
           tpl.append({
               'type': 'nonterminal',
               'nonterminal_func': '_' + str(atom).upper(),
-              'binding_power': self.getbp(atom),
+              'binding_power': self.getbp(atom, grammar),
               'rule': rule
             })
         i += 1
     return tpl
   
   def getEntry(self):
-    return str(self.grammar.start).lower()
+    return str(self.grammar.getLL1Grammar().getStart()).lower()
   
   def getParser(self):
     tab = self.grammar._compute_parse_table()
     tpl = {}
-    for N in self.grammar.nonterminals.values():
-      # EXPR is parsed via Pratt Parser
+    for N in self.grammar.nonterminals:
+      # TODO: change this...
       if str(N).lower() == '_expr':
         continue
       tpl[N.id] = {
@@ -139,12 +144,11 @@ class Resources:
         'lambda_path_atoms': '',
         'rules': [],
         'escape_terminals': set(),
-        #'follow': self.grammar.follow[N].difference(set([self.grammar.ε, self.grammar.σ, self.grammar.λ]))
-        'follow': self.grammar.follow[N].difference(set([self.grammar.ε, self.grammar.σ]))
+        'follow': self.grammar.follow(N).difference(set([self.grammar.ε, self.grammar.σ]))
       }
     for id, tpl_nt in tpl.items():
       N = tpl_nt['nt_obj']
-      for i, rule in enumerate( self.grammar._ntrules(N) ):
+      for i, rule in enumerate( self.grammar.getLL1Grammar()._ntrules(N) ):
         tpl_rule = {
           'idx': i,
           'id': rule.id,
@@ -197,18 +201,29 @@ class Resources:
     return list(tpl.values())
   
   def getNudLed(self):
-    nud = {}
-    led = {}
+    templates = []
+    for index, grammar in enumerate(self.grammar.getExpressionGrammars()):
+      self.precedence = {}
+      for terminal, precedence in grammar.getPrecedence().items():
+        for p in precedence:
+          if p.associativity in ['left', 'right']:
+            self.precedence[terminal.id] = p.precedence
 
-    for terminal, rule in self.grammar.nud.items():
-      nud[terminal.id] = self.ruletotpl(rule)
-    for terminal, rule in self.grammar.led.items():
-      led[terminal.id] = self.ruletotpl(rule)
+      tpl = {
+        'nonterminal': str(grammar.nonterminal),
+        'index': index,
+        'precedence': self.precedence,
+        'nud': {},
+        'led': {}
+      }
 
-    return {
-      'led': led, 
-      'nud': nud
-    }
+      for terminal, rule in grammar.nud.items():
+        tpl['nud'][terminal.id] = self.ruletotpl(grammar, rule)
+      for terminal, rule in grammar.led.items():
+        tpl['led'][terminal.id] = self.ruletotpl(grammar, rule)
+
+      templates.append(tpl)
+    return templates
   
   def getDeclarations(self):
     tab = self.grammar._compute_parse_table()
@@ -216,21 +231,15 @@ class Resources:
 
     terminal_str = {}
     terminal_var = {}
-    for s,t in terminals.items():
+    for t in terminals:
       terminal_str[t.id] =  t.string
       terminal_var[t.id] = 'TERMINAL_' + str(t).strip("'").upper()
 
     nonterminal_str = {}
     nonterminal_var = {}
-    for s,n in self.grammar.nonterminals.items():
+    for n in self.grammar.nonterminals:
       nonterminal_str[n.id] =  n.string
       nonterminal_var[n.id] = 'NONTERMINAL_' + str(n).upper()
-
-    precedence= {}
-    for t, bp in self.grammar.exprPrecedence.items():
-      for b in bp:
-        if b[1].upper() == 'LEFT' or b[1].upper() == 'RIGHT':
-          precedence[t.id] = b[0]
 
     tpl = {
       'terminal_count': len(terminals),
@@ -243,24 +252,24 @@ class Resources:
       'terminal_str': terminal_str,
       'nonterminal_str': nonterminal_str,
       'terminal_var': terminal_var,
-      'nonterminal_var': nonterminal_var,
-      'binding_power': precedence
+      'nonterminal_var': nonterminal_var
     }
 
     return tpl
   
   def getEntryPoints(self):
-    return {str(self.grammar.start).lower(): '_'+str(self.grammar.start).upper()}
+    return {str(self.grammar.getLL1Grammar().getStart()).lower(): '_'+str(self.grammar.getLL1Grammar().start).upper()}
   
   def getTokens(self):
     return self.tokens
   
   def getRules(self):
-    return {r.id: r for r in self.grammar.normalized() if type(r) is not MacroGeneratedRule}
+    return {r.id: r for r in self.grammar.getNormalizedLL1Rules() if type(r) is not MacroGeneratedRule}
   
-  def getExprRules(self):
-    return {r.id: r for r in self.grammar.exprRules}
+  def getExprGrammars(self):
+    return self.grammar.getExpressionGrammars()
   
+
 class GrammarCodeGenerator:
   def __init__(self, template, directory):
     self.template = template

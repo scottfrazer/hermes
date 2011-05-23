@@ -30,7 +30,7 @@ class Factory:
     self.__init__()
 
   def buildGrammar(self, S):
-    G = Grammar()
+    G = CompositeGrammar()
     self.skewIds()
     self.ε.id = self.tc
     self.σ.id = self.tc + 1
@@ -41,12 +41,12 @@ class Factory:
     G.setGrammar( self.nonterminals, self.terminals, self.macros.values(), self.rules, S, self.exprRules, self.exprPrecedence )
     return G
 
-  def addTerminal(self, s, root=False):
+  def addTerminal(self, s):
     key = s.lower()
     try:
       t = self.terminals[key]
     except KeyError:
-      t = Terminal(s, self.tc, root)
+      t = Terminal(s, self.tc)
       self.terminals[key] = t
       self.tc += 1
     return t
@@ -58,12 +58,12 @@ class Factory:
       self.terminals['λ'] = self.λ
     return self.terminals['λ']
 
-  def addNonTerminal(self, s, root=False):
+  def addNonTerminal(self, s):
     key = s.lower()
     try:
       t = self.nonterminals[key]
     except KeyError:
-      t = NonTerminal(s, self.Nc, root)
+      t = NonTerminal(s, self.Nc)
       self.nonterminals[key] = t
       self.Nc += 1
     return t

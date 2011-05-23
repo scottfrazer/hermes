@@ -37,7 +37,7 @@ class Ast1Test(GrammarTest):
       'forstatement': {'semi', 'comma', 'σ'},
       'statement': {'semi', 'comma', 'σ'},
       'foriterstatement': {'rparen'},
-      '_expr': {'sub', 'σ', 'div', 'semi', 'mul', 'add', 'rparen', 'comma'},
+      '_expr': {'σ', 'semi', 'rparen', 'comma'},
       'forcondstatement': {'semi'},
     })
 
@@ -46,8 +46,8 @@ class Ast1Test(GrammarTest):
 
   def test_codeGeneration(self):
     self.runWithTokens(['identifier','eq','identifier','eq','n','comma','for','lparen','identifier','eq','n','semi','semi','identifier','eq','s','add','n','rparen','lbrace','identifier','eq','n','add','s','mul','n','div','s','semi','rbrace']) \
-        .assertParseTree('(start: (_gen0: (statement: (assignstatement: identifier, eq, (assignstatementsub: (assignstatement: identifier, eq, (assignstatementsub: n))))), (_gen1: comma, (statement: (forstatement: for, lparen, (fordeclstatement: (complexexpression: (assignstatement: identifier, eq, (assignstatementsub: n)))), semi, (forcondstatement: ), semi, (foriterstatement: (complexexpression: (assignstatement: identifier, eq, (assignstatementsub: (_expr: s, add, n))))), rparen, lbrace, (forbody: (statement: (assignstatement: identifier, eq, (assignstatementsub: (_expr: n, add, (_expr: s, mul, (_expr: n, div, s)))))), semi, (forbody: )), rbrace)), (_gen1: ))))') \
-        .assertAst('(Program: statements=[(Assign: var=identifier, val=(Assign: var=identifier, val=n)), (For: decl=(Assign: var=identifier, val=n), body=(Assign: var=identifier, val=(Add: rhs=(Multiply: rhs=(Divide: rhs=s, lhs=n), lhs=s), lhs=n)), cond=None, iter=(Assign: var=identifier, val=(Add: rhs=n, lhs=s)))])')
+        .assertParseTree('(start: (_gen0: (statement: (assignstatement: identifier, eq, (assignstatementsub: (assignstatement: identifier, eq, (assignstatementsub: n))))), (_gen1: comma, (statement: (forstatement: for, lparen, (fordeclstatement: (complexexpression: (assignstatement: identifier, eq, (assignstatementsub: n)))), semi, (forcondstatement: ), semi, (foriterstatement: (complexexpression: (assignstatement: identifier, eq, (assignstatementsub: (_expr: s, add, n))))), rparen, lbrace, (forbody: (statement: (assignstatement: identifier, eq, (assignstatementsub: (_expr: n, add, (_expr: (_expr: s, mul, n), div, s))))), semi, (forbody: )), rbrace)), (_gen1: ))))') \
+        .assertAst('(Program: statements=[(Assign: var=identifier, val=(Assign: var=identifier, val=n)), (For: decl=(Assign: var=identifier, val=n), body=(Assign: var=identifier, val=(Add: rhs=(Divide: rhs=s, lhs=(Multiply: rhs=n, lhs=s)), lhs=n)), cond=None, iter=(Assign: var=identifier, val=(Add: rhs=n, lhs=s)))])')
 
 if __name__ == '__main__':
   unittest.main()

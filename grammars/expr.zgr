@@ -7,24 +7,27 @@
       "item := 'b' | 'a'"
     ]
   },
-  "expr": {
-    "binding_power": [
-      {"associativity": "left", "terminals": ["add", "subtract"]},
-      {"associativity": "left", "terminals": ["multiply", "divide"]},
-      {"associativity": "unary", "terminals": ["subtract"]},
-      {"associativity": "left", "terminals": ["lparen"]}
-    ],
-    "rules": [
-      "_expr := 'identifier' + ^'lparen' + list(_expr, 'comma') + 'rparen' -> FuncCall( name=$0, params=$2 )",
-      "_expr := _expr + 'multiply' + _expr -> Mul( l=$0, r=$2 )",
-      "_expr := _expr + 'divide' + _expr -> Div( l=$0, r=$2 )",
-      "_expr := _expr + 'add' + _expr -> Add( l=$0, r=$2 )",
-      "_expr := _expr + 'subtract' + _expr -> Sub( l=$0, r=$2 )",
-      "_expr := 'subtract' + _expr -> UMinus( arg=$1 )",
-      "_expr := 'lsquare' + list(_expr, 'comma') + 'rsquare' -> ListDecl( items=$1 )",
-      "_expr := 'lbrace' + list(_expr, 'comma') + 'rbrace' -> SetDecl( items=$1 )",
-      "_expr := 'lparen' + _expr + 'rparen' -> $1",
-      "_expr := 'identifier' | 'number'"
-    ]
-  }
+  "expr": [
+    {
+      "nonterminal": "_expr",
+      "binding_power": [
+        {"associativity": "left", "terminals": ["add", "subtract"]},
+        {"associativity": "left", "terminals": ["multiply", "divide"]},
+        {"associativity": "unary", "terminals": ["subtract"]},
+        {"associativity": "left", "terminals": ["lparen"]}
+      ],
+      "rules": [
+        "_expr := 'identifier' + ^'lparen' + list(_expr, 'comma') + 'rparen' -> FuncCall( name=$0, params=$2 )",
+        "_expr := _expr + 'multiply' + _expr -> Mul( l=$0, r=$2 )",
+        "_expr := _expr + 'divide' + _expr -> Div( l=$0, r=$2 )",
+        "_expr := _expr + 'add' + _expr -> Add( l=$0, r=$2 )",
+        "_expr := _expr + 'subtract' + _expr -> Sub( l=$0, r=$2 )",
+        "_expr := 'subtract' + _expr -> UMinus( arg=$1 )",
+        "_expr := 'lsquare' + list(_expr, 'comma') + 'rsquare' -> ListDecl( items=$1 )",
+        "_expr := 'lbrace' + list(_expr, 'comma') + 'rbrace' -> SetDecl( items=$1 )",
+        "_expr := 'lparen' + _expr + 'rparen' -> $1",
+        "_expr := 'identifier' | 'number'"
+      ]
+    }
+  ]
 }
