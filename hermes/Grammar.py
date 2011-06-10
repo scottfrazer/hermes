@@ -507,7 +507,7 @@ class LL1Grammar(Grammar):
     for expanded in map(lambda x: x.expand(), rules):
       for e in expanded:
         nrules.append(e)
-    return nrules
+    return set(nrules)
   
   def __str__( self, normalize = True ):
     if normalize:

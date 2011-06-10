@@ -3,7 +3,7 @@ from collections import OrderedDict
 from hermes.Morpheme import NonTerminal, Terminal, EmptyString, EndOfStream, Expression
 from hermes.Grammar import Grammar, LL1Grammar, CompositeGrammar, ExpressionGrammar
 from hermes.Grammar import Rule, MacroGeneratedRule, Production, AstSpecification, AstTranslation
-from hermes.Macro import ExprListMacro, SeparatedListMacro, NonterminalListMacro
+from hermes.Macro import ExprListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro
 
 def pad( n, l ):
   t = int(n) - len(l)

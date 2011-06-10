@@ -171,6 +171,9 @@ class Parser:
   def terminal(self, str):
     return self.str_terminal[str]
   
+  def terminalNames(self):
+    return list(self.str_terminal.keys())
+  
   def isTerminal(self, id):
     return {{init['terminal_start']}} <= id <= {{init['terminal_end']}}
 
@@ -236,6 +239,15 @@ class Parser:
     if self.sym == None: return -1
     return self.parse_table[n - {{init['nonterminal_start']}}][self.sym.getId()]
 
+  # TODO: only output this if --add-debug set or something.
+  #       in debug mode, insert a tracer into each function
+  #       which will add information about that current call
+  #
+  #       e.g. function (nonterminal), symbol (terminal), 
+  #            rule id, call depth
+  def debug(self):
+    pass
+  
   {% for n in nt %}
   def {{n['func_name']}}(self):
     rule = self.rule({{n['id']}})
@@ -341,14 +353,14 @@ class Parser:
   }
   def _{{exprParser['nonterminal'].upper()}}( self, rbp = 0 ):
     t = self.sym
-    left = self.nud()
+    left = self.nud{{index}}()
     while rbp < self.binding_power(self.sym, self.bp{{index}}):
-      left = self.led(left)
+      left = self.led{{index}}(left)
     left.isExpr = True
     return left
 
-  def nud(self):
-    tree = ParseTree( NonTerminal(self.str_nonterminal['_expr'], '_expr') )
+  def nud{{index}}(self):
+    tree = ParseTree( NonTerminal(self.str_nonterminal['{{exprParser['nonterminal'].lower()}}'], '{{exprParser['nonterminal'].lower()}}') )
     {% for sym, actions in exprParser['nud'].items() %}
     if self.sym.getId() == {{sym}}:
       {% for action in actions %}
@@ -401,7 +413,7 @@ class Parser:
     pass
     {% endif %}
 
-  def led(self, left):
+  def led{{index}}(self, left):
     tree = ParseTree( NonTerminal(self.str_nonterminal['_expr'], '_expr') )
     {% for sym, actions in exprParser['led'].items() %}
     if self.sym.getId() == {{sym}}:
