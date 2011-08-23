@@ -299,12 +299,12 @@ class Parser:
       raise SyntaxError('Error: unexpected end of file', tracer)
     {% endif %}
   
-    {% for rule in n['rules'] %}
+    {% for index, rule in enumerate(n['rules']) %}
 
-      {% if rule['idx'] == 0 %}
-    if rule == {{rule['id']}}:
+      {% if index == 0 %}
+    if rule == {{rule['obj'].id}}:
       {% else %}
-    elif rule == {{rule['id']}}:
+    elif rule == {{rule['obj'].id}}:
       {% endif %}
       {% if isinstance(rule['obj'].ast, AstTranslation) %}
       tree.astTransform = AstTransformSubstitution({{rule['obj'].ast.idx}})
