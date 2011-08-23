@@ -4,6 +4,9 @@ from hermes.Morpheme import NonTerminal, Terminal, EmptyString, EndOfStream, Exp
 from hermes.Grammar import Grammar, LL1Grammar, CompositeGrammar, ExpressionGrammar
 from hermes.Grammar import Rule, MacroGeneratedRule, Production, AstSpecification, AstTranslation
 from hermes.Macro import ExprListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro
+from hermes.Logger import Factory as LoggerFactory
+
+moduleLogger = LoggerFactory().getModuleLogger(__name__)
 
 def pad( n, l ):
   t = int(n) - len(l)
@@ -82,6 +85,7 @@ class CachedParser:
       raise Exception('Expecting Parser object')
     self.parser = parser
     self.cache = dict()
+    self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
   
   def parse(self, string):
     normalized = self.parser.normalize(string)
@@ -97,6 +101,8 @@ class CachedParser:
   
 
 class Parser:
+  def __init__(self):
+    self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
   def normalize(self, string):
     for regex, replacement in self.rnormalize.items():
       string = regex.sub( replacement, string )
@@ -119,6 +125,7 @@ class RuleParser(Parser):
   
   def __init__(self, atomParser, astParser):
     self.__dict__.update(locals())
+    self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
   
   def parse(self, string):
     rules = []
@@ -152,6 +159,7 @@ class AstParser(Parser):
   
   def __init__(self, nonTerminalParser, terminalParser):
     self.__dict__.update(locals())
+    self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
   
   def parse(self, string):
     if not string:
@@ -177,6 +185,7 @@ class AtomParser(Parser):
   
   def __init__(self, nonTerminalParser, terminalParser, macroParser):
     self.__dict__.update(locals())
+    self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
   
   def parse(self, string):
     if string == 'ε' or string == '_empty':

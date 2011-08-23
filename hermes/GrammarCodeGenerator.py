@@ -5,7 +5,10 @@ from types import *
 from hermes.Morpheme import Terminal, NonTerminal, EmptyString
 from hermes.Macro import ExprListMacro, NonterminalListMacro, SeparatedListMacro
 from hermes.Grammar import MacroGeneratedRule, AstSpecification, AstTranslation
+from hermes.Logger import Factory as LoggerFactory
 import moody
+
+moduleLogger = LoggerFactory().getModuleLogger(__name__)
 
 class Template:
   pass
@@ -15,6 +18,7 @@ class PythonTemplate(Template):
   destination = 'Parser.py'
   def __init__(self, resources):
     self.resources = resources
+    self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
   def render(self):
     x = { 
       'tokens': self.resources.getTokens(),
@@ -56,6 +60,7 @@ class Resources:
     self.grammar = grammar
     self.add_main = add_main
     self.tokens = tokens
+    self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
   
   def getbp( self, terminal, grammar, assoc = ['left', 'right']):
     precedence = grammar.getPrecedence()
@@ -207,20 +212,48 @@ class Resources:
       for terminal, precedence in grammar.getPrecedence().items():
         for p in precedence:
           if p.associativity in ['left', 'right']:
-            self.precedence[terminal.id] = p.precedence
+            self.precedence[terminal] = p.precedence
 
       tpl = {
         'nonterminal': str(grammar.nonterminal),
         'index': index,
-        'precedence': self.precedence,
+        'precedence': {k.id: v for k,v in self.precedence.items()},
         'nud': {},
         'led': {}
       }
 
+      self.logger.debug('Nud/Led definitions for expression grammar nonterminal %s (index %d)' % (tpl['nonterminal'], tpl['index']))
+      newPrecedence = dict(map(lambda x: (x, []), set(self.precedence.values())))
+      for terminal, precedence in self.precedence.items():
+        newPrecedence[precedence].append(terminal)
+      self.logger.debug('Operator precedence map:')
+      for (precedence, terminals) in sorted(newPrecedence.items(), key=lambda x: x[0]):
+        self.logger.debug('%s: %s' % (precedence, ', '.join([str(x) for x in terminals])))
+
+      def debugTemplates(func, templates):
+        for template in templates:
+          if template['type'] == 'symbol-append':
+            self.logger.debug('%s(%s) += (%s, %s, %s)' % (func, terminal, template['type'], template['sym'], template['rule']))
+          if template['type'] == 'nonterminal':
+            self.logger.debug('%s(%s) += (%s, %s(), %s)' % (func, terminal, template['type'], template['nonterminal_func'], template['rule']))
+          if template['type'] == 'prefix':
+            self.logger.debug('%s(%s) += (%s, %s)' % (func, terminal, template['type'], template['rule']))
+          if template['type'] == 'infix':
+            self.logger.debug('%s(%s) += (%s, %s)' % (func, terminal, template['type'], template['rule']))
+          if template['type'] == 'list':
+            self.logger.debug('%s(%s) += (%s, open=%s, close=%s, func=%s())' % (func, terminal, template['type'], template['open_sym'], template['close_sym'], template['nonterminal_func']))
+          if template['type'] == 'symbol':
+            self.logger.debug('%s(%s) += (%s, %s)' % (func, terminal, template['type'], template['sym']))
+
       for terminal, rule in grammar.nud.items():
-        tpl['nud'][terminal.id] = self.ruletotpl(grammar, rule)
+        temp = self.ruletotpl(grammar, rule)
+        debugTemplates('nud', temp)
+        tpl['nud'][terminal.id] = temp
+
       for terminal, rule in grammar.led.items():
-        tpl['led'][terminal.id] = self.ruletotpl(grammar, rule)
+        temp = self.ruletotpl(grammar, rule)
+        debugTemplates('led', temp)
+        tpl['led'][terminal.id] = temp
 
       templates.append(tpl)
     return templates

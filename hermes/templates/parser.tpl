@@ -6,6 +6,20 @@ import sys
 def parse( iterator, entry ):
   p = Parser()
   return p.parse(iterator, entry)
+class DebugTracer:
+  def __init__(self, func, symbol, rule, callDepth ):
+    self.__dict__.update(locals())
+    self.children = []
+  
+  def add(self, child):
+    self.children.append(child)
+  
+  def __str__(self):
+    s = '%s[%s, symbol: %s, rule: %s]\n' % (' '.join(['' for i in range(self.callDepth)]), self.func, self.symbol, str(self.rule))
+    for child in self.children:
+      s += str(child)
+    return s
+  
 class Terminal:
   def __init__(self, id):
     self.id=id
@@ -16,6 +30,7 @@ class Terminal:
     return self
   def __str__(self):
     return self.str
+
 class NonTerminal():
   def __init__(self, id, string):
     self.id = id
@@ -23,8 +38,10 @@ class NonTerminal():
     self.list = False
   def __str__(self):
     return self.string
+
 class AstTransform:
   pass
+
 class AstTransformSubstitution(AstTransform):
   def __init__( self, idx ):
     self.idx = idx
@@ -36,10 +53,16 @@ class AstTransformNodeCreator(AstTransform):
     self.parameters = parameters
   def __repr__( self ):
     return self.name + '( ' + ', '.join(['%s=$%s' % (k,str(v)) for k,v in self.parameters.items()]) + ' )' 
+class AstList(list):
+  def toAst(self):
+    retval = []
+    for ast in self:
+      retval.append(ast.toAst())
+    return retval
 class ParseTree():
-  def __init__(self, nonterminal):
+  def __init__(self, nonterminal, tracer = None):
+    self.__dict__.update(locals())
     self.children = []
-    self.nonterminal = nonterminal
     self.astTransform = None
     self.isExpr = False
     self.list = False
@@ -48,15 +71,15 @@ class ParseTree():
   def toAst( self ):
     if self.list == 'slist' or self.list == 'nlist':
       if len(self.children) == 0:
-        return []
+        return AstList()
       offset = 1 if not isinstance(self.children[0], ParseTree) else 0
-      r = [self.children[offset].toAst()]
+      r = AstList([self.children[offset].toAst()])
       r.extend(self.children[offset+1].toAst())
       return r
     elif self.list == 'tlist':
       if len(self.children) == 0:
         return []
-      r = [self.children[0].toAst()]
+      r = AstList([self.children[0].toAst()])
       r.extend(self.children[2].toAst())
       return r
     elif self.isExpr:
@@ -101,8 +124,8 @@ class Ast():
     return '(%s: %s)' % (self.name, ', '.join('%s=%s'%(str(k), '[' + ', '.join([str(x) for x in v]) + ']' if isinstance(v, list) else str(v) ) for k,v in self.attributes.items()))
 
 class SyntaxError(Exception):
-  def __init__(self, message):
-    self.message = message
+  def __init__(self, message, tracer = None):
+    self.__dict__.update(locals())
   def __str__(self):
     return self.message
 
@@ -210,7 +233,7 @@ class Parser:
     self.sym = self.getsym()
     tree = self.entry_points[entry]()
     if self.sym != None:
-      raise SyntaxError('Syntax Error: Finished parsing without consuming all tokens.')
+      raise SyntaxError('Syntax Error: Finished parsing without consuming all tokens.', tree.tracer)
     self.iterator = None
     self.sym = None
     return tree
@@ -220,38 +243,38 @@ class Parser:
 
     if self.sym is not None and not self.isTerminal(self.sym.getId()):
       self.sym = None
-      raise SyntaxError('Invalid symbol ID: %d (%s)'%(self.sym.getId(), self.sym))
+      raise SyntaxError('Invalid symbol ID: %d (%s)'%(self.sym.getId(), self.sym), None)
 
     if self.recorder.awake and self.sym is not None:
       self.recorder.record(self.sym)
 
     return self.sym
 
-  def expect(self, s):
+  def expect(self, s, tracer):
     if self.sym and s == self.sym.getId():
       symbol = self.sym
       self.sym = self.next()
       return symbol
     else:
-      raise SyntaxError('Unexpected symbol.  Expected %s, got %s.' %(self.terminal_str[s], self.sym if self.sym else 'None'))
+      raise SyntaxError('Unexpected symbol.  Expected %s, got %s.' %(self.terminal_str[s], self.sym if self.sym else 'None'), tracer)
 
   def rule(self, n):
     if self.sym == None: return -1
     return self.parse_table[n - {{init['nonterminal_start']}}][self.sym.getId()]
 
-  # TODO: only output this if --add-debug set or something.
-  #       in debug mode, insert a tracer into each function
-  #       which will add information about that current call
-  #
-  #       e.g. function (nonterminal), symbol (terminal), 
-  #            rule id, call depth
-  def debug(self):
-    pass
+  def call(self, nt_str):
+    return getattr(self, nt_str)()
   
+
   {% for n in nt %}
-  def {{n['func_name']}}(self):
+  def {{n['func_name']}}(self, depth = 0):
     rule = self.rule({{n['id']}})
-    tree = ParseTree( NonTerminal({{n['id']}}, self.getAtomString({{n['id']}})) )
+    if depth is not False:
+      tracer = DebugTracer("{{n['func_name']}}", str(self.sym), rule, depth)
+      depth = depth + 1
+    else:
+      tracer = None
+    tree = ParseTree( NonTerminal({{n['id']}}, self.getAtomString({{n['id']}})), tracer )
     {% if isinstance(n['nt_obj'].macro, SeparatedListMacro) %}
     tree.list = 'slist'
     {% elif isinstance(n['nt_obj'].macro, NonterminalListMacro) %}
@@ -273,7 +296,7 @@ class Parser:
     {% if n['empty'] %}
       return tree
     {% else %}
-      raise SyntaxError('Error: unexpected end of file')
+      raise SyntaxError('Error: unexpected end of file', tracer)
     {% endif %}
   
     {% for rule in n['rules'] %}
@@ -293,11 +316,14 @@ class Parser:
       {% for atom in rule['atoms'] %}
 
         {% if atom['type'] == 'terminal' %}
-      tree.add( self.expect(self.{{atom['terminal_var_name']}}) )
+      tree.add( self.expect(self.{{atom['terminal_var_name']}}, tracer) )
         {% endif %}
 
         {% if atom['type'] == 'nonterminal' %}
-      tree.add( self.{{atom['nonterminal_func_name']}}() )
+      subtree = self.{{atom['nonterminal_func_name']}}(depth)
+      tree.add( subtree )
+      if tracer and isinstance(subtree, ParseTree):
+        tracer.add( subtree.tracer )
         {% endif %}
 
       {% endfor %}
@@ -322,11 +348,14 @@ class Parser:
         {% for atom in n['lambda_path_atoms'] %}
 
         {% if atom['type'] == 'terminal' %}
-        tree.add( self.expect(self.{{atom['terminal_var_name']}}) )
+        tree.add( self.expect(self.{{atom['terminal_var_name']}}, tracer) )
         {% endif %}
 
         {% if atom['type'] == 'nonterminal' %}
-        tree.add( self.{{atom['nonterminal_func_name']}}() )
+        subtree = self.{{atom['nonterminal_func_name']}}(depth)
+        tree.add( subtree )
+        if tracer and isinstance(subtree, ParseTree):
+          tracer.add( subtree.tracer )
         {% endif %}
       {% endfor %}
       except SyntaxError as e:
@@ -338,7 +367,7 @@ class Parser:
     {% endif %}
 
     {% if not n['empty'] %}
-    raise SyntaxError('Error: Unexpected symbol')
+    raise SyntaxError('Error: Unexpected symbol', tracer)
     {% else %}
     return tree
     {% endif %}
@@ -351,47 +380,60 @@ class Parser:
     {{nonterminal_id}}: {{binding_power}},
     {% endfor %}
   }
-  def _{{exprParser['nonterminal'].upper()}}( self, rbp = 0 ):
+  def {{exprParser['nonterminal'].lower().strip('_')}}(self):
+    return self._{{exprParser['nonterminal'].upper()}}()
+  def _{{exprParser['nonterminal'].upper()}}( self, rbp = 0, depth = 0 ):
     t = self.sym
-    left = self.nud{{index}}()
+    if depth is not False:
+      tracer = DebugTracer("(expr) _{{exprParser['nonterminal'].upper()}}", str(self.sym), 'N/A', depth)
+      depth = depth + 1
+    else:
+      tracer = None
+    left = self.nud{{index}}(depth)
+    if isinstance(left, ParseTree):
+      tracer.add(left.tracer)
     while rbp < self.binding_power(self.sym, self.bp{{index}}):
-      left = self.led{{index}}(left)
-    left.isExpr = True
+      left = self.led{{index}}(left, depth)
+      if isinstance(left, ParseTree):
+        tracer.add(left.tracer)
+    if left:
+      left.isExpr = True
+      left.tracer = tracer
     return left
 
-  def nud{{index}}(self):
+  def nud{{index}}(self, tracer):
     tree = ParseTree( NonTerminal(self.str_nonterminal['{{exprParser['nonterminal'].lower()}}'], '{{exprParser['nonterminal'].lower()}}') )
     {% for sym, actions in exprParser['nud'].items() %}
     if self.sym.getId() == {{sym}}:
       {% for action in actions %}
 
         {% if action['type'] == 'symbol' and len(actions) == 1 %}
-      return self.expect({{action['sym']}})
+      return self.expect( {{action['sym']}}, tracer )
 
         {% elif action['type'] == 'symbol' %}
-      tree.add( self.expect({{action['sym']}}) )
+      tree.add( self.expect( {{action['sym']}}, tracer ) )
       
         {% elif action['type'] == 'symbol-append' %}
-      tree.add( self.expect({{action['sym']}}) ) #here?
+      tree.add( self.expect( {{action['sym']}}, tracer ) ) #here?
 
         {% elif action['type'] == 'infix' %}
       pass # infix noop
 
         {% elif action['type'] == 'prefix' %}
-      tree.add( self.expect(self.sym.getId()) )
-      tree.add( self.__EXPR({{action['binding_power']}}) )
+      tree.add( self.expect( self.sym.getId(), tracer ) )
+      tree.add( self._{{exprParser['nonterminal'].upper()}}({{action['binding_power']}}) )
 
         {% elif action['type'] == 'list' %}
-      ls = []
-      tree.add( self.expect({{action['open_sym']}}) )
+      ls = AstList()
+      tree.add( self.expect({{action['open_sym']}}, tracer) )
       if self.sym.getId() != {{action['close_sym']}}:
         while 1:
           ls.append( self.{{action['nonterminal_func']}}() )
           if self.sym.getId() != {{action['separator']}}:
             break
-          self.expect({{action['separator']}})
+          self.expect({{action['separator']}}, tracer)
       tree.add( ls )
-      tree.add( self.expect({{action['close_sym']}}) )
+      tree.add( self.expect( {{action['close_sym']}}, tracer ) )
 
         {% elif action['type'] == 'nonterminal' %}
       
@@ -413,7 +455,7 @@ class Parser:
     pass
     {% endif %}
 
-  def led{{index}}(self, left):
+  def led{{index}}(self, left, tracer):
     tree = ParseTree( NonTerminal(self.str_nonterminal['_expr'], '_expr') )
     {% for sym, actions in exprParser['led'].items() %}
     if self.sym.getId() == {{sym}}:
@@ -421,29 +463,29 @@ class Parser:
         tree.add( left )
       {% for action in actions %}
         {% if action['type'] == 'symbol' and len(actions) == 1 %}
-      return self.expect({{action['sym']}})
+      return self.expect( {{action['sym']}}, tracer )
         {% elif action['type'] == 'symbol' %}
-      tree.add( self.expect({{action['sym']}}) )
+      tree.add( self.expect( {{action['sym']}}, tracer ) )
         {% elif action['type'] == 'symbol-append' %}
-      tree.add( self.expect({{action['sym']}}) )
+      tree.add( self.expect( {{action['sym']}}, tracer ) )
         {% elif action['type'] == 'infix' %}
-      tree.add( self.expect(self.sym.getId()) )
-      tree.add( self.__EXPR({{action['binding_power']}}) )
+      tree.add( self.expect( self.sym.getId(), tracer ) )
+      tree.add( self._{{exprParser['nonterminal'].upper()}}({{action['binding_power']}}) )
         {% elif action['type'] == 'prefix' %}
       pass # prefix noop
         {% elif action['type'] == 'list' %}
-      ls = []
-      tree.add( self.expect({{action['open_sym']}}) )
+      ls = AstList()
+      tree.add( self.expect( {{action['open_sym']}}, tracer ) )
       if self.sym.getId() != {{action['close_sym']}}:
         while 1:
           ls.append( self.{{action['nonterminal_func']}}() )
           if self.sym.getId() != {{action['separator']}}:
             break
-          self.expect({{action['separator']}})
+          self.expect( {{action['separator']}}, tracer )
       tree.add( ls )
-      tree.add( self.expect({{action['close_sym']}}) )
+      tree.add( self.expect({{action['close_sym']}}, tracer ) )
         {% elif action['type'] == 'nonterminal' %}
-          {% if action['nonterminal_func'] == '__EXPR' %}
+          {% if action['nonterminal_func'] == "_{{exprParser['nonterminal'].upper()}}" %}
       tree.add(self.{{action['nonterminal_func']}}({{action['binding_power']}}))
           {% else %}
       tree.add(self.{{action['nonterminal_func']}}())

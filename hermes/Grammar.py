@@ -6,6 +6,9 @@ from hermes.Morpheme import Expression
 from hermes.Morpheme import Morpheme, AbstractTerminal
 from hermes.Conflict import FirstFirstConflict, FirstFollowConflict, ListFirstFollowConflict, NudConflict, LedConflict
 from hermes.Macro import ListMacro, LL1ListMacro, ExprListMacro, SeparatedListMacro, NonterminalListMacro
+from hermes.Logger import Factory as LoggerFactory
+
+moduleLogger = LoggerFactory().getModuleLogger(__name__)
 
 class Production:
   def __init__( self, morphemes ):
@@ -20,6 +23,7 @@ class Rule:
     self.id = id
     self.root = root
     self.ast = ast
+    self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
   
   def expand( self ):
     morphemes = []
@@ -31,6 +35,7 @@ class Rule:
       else:
         morphemes.append(m)
     rules.append(Rule(self.nonterminal, Production(morphemes), self.id, self.root, self.ast))
+    self.logger.debug('Expand Rule %s => %s' % (self, ', '.join([str(x) for x in rules])))
     return rules
   
   def __str__( self ):
@@ -93,7 +98,8 @@ class OperatorPrecedence:
 #    defining its productions as an opaque, non epsilon yielding nonterminal,
 #    but only for the purposes of calculating first/follow sets.
 #
-# 2) A corollary to this is that an ExpressionGrammar should consume one or more 
+# 2) A corollary to this is that an ExpressionGrammar should consume one or more
+#    tokens.
 #
 # 3) Expression grammars and LL(1) grammars both compute first and follow the 
 #    same.
@@ -122,6 +128,9 @@ class Grammar:
   tLookup = None
   ntLookup = None
 
+  def __init__(self):
+    self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
+
   def isSimpleTerminal( self, t ):
     return isinstance(t, Terminal) and not isinstance(t, AbstractTerminal)
   
@@ -140,7 +149,6 @@ class Grammar:
       return "TERMINAL_" + str(atom).strip("'").upper()
     if isinstance(atom, NonTerminal):
       return "NONTERMINAL_" + str(atom).upper()
-  
 
   def first( self, nonterminal = None ):
     if not self.firstSet:
@@ -212,6 +220,7 @@ class Grammar:
         if (type(morpheme) is Terminal or type(morpheme) is EmptyString) and \
            morpheme not in self.firstSet[R.nonterminal]:
           progress = True
+          self.logger.debug('first(%s) = {%s} ∪ {%s}' % (R.nonterminal, ', '.join([str(x) for x in self.firstSet[R.nonterminal]]), morpheme))
           self.firstSet[R.nonterminal] = self.firstSet[R.nonterminal].union({morpheme})
 
         # TODO: WOW this is bad.  fix when tests are passing.
@@ -225,6 +234,11 @@ class Grammar:
               sub = self.firstSet[M]
             if not self.firstSet[R.nonterminal].issuperset(sub.difference({self.ε})):
               progress = True
+            self.logger.debug('first(%s) = {%s} ∪ {%s}' % ( \
+                      R.nonterminal, \
+                      ', '.join([str(x) for x in self.firstSet[R.nonterminal]]), \
+                      ', '.join([str(x) for x in sub.difference({self.ε})]) \
+                    ))
             self.firstSet[R.nonterminal] = self.firstSet[R.nonterminal].union(sub.difference({self.ε}))
             if self.ε not in sub:
               break
@@ -260,29 +274,24 @@ class Grammar:
             nsyms = self.firstSet[n].difference({self.ε})
             if not self.followSet[morpheme].issuperset(nsyms):
               progress = True
+              self.logger.debug('follow(%s) = {%s} ∪ {%s}' % ( \
+                morpheme, \
+                ', '.join([str(x) for x in self.followSet[morpheme]]), \
+                ', '.join([str(x) for x in nsyms]) \
+              ))
               self.followSet[morpheme] = self.followSet[morpheme].union(nsyms)
-            if False: # TODO: use as debug
-              print('%s + %s' %(morpheme, n))
-              print('  nsyms: [%s]' % (', '.join([str(x) for x in nsyms])))
-              print('  first(n): [%s]' % (', '.join([str(x) for x in self.firstSet[n]])))
-              print('  follow(morpheme): [%s]' % (', '.join([str(x) for x in self.followSet[morpheme]])))
           if not n or self.ε in self.firstSet[n]:
             z = self.followSet[R.nonterminal]
             y = self.followSet[morpheme]
 
             if not y.issuperset(z):
               progress = True
+              self.logger.debug('follow(%s) = {%s} ∪ {%s}' % ( \
+                morpheme, \
+                ', '.join([str(x) for x in y]), \
+                ', '.join([str(x) for x in z]) \
+              ))
               self.followSet[morpheme] = y.union(z)
-
-    # TODO: Whoa, remove this.
-    for i, R in enumerate(self.rules):
-      for j, atom in enumerate(R.production.morphemes):
-        if isinstance(atom, NonterminalListMacro):
-          try:
-            pass
-            self.followSet[atom].union({self.first[R.production.morphemes[j+1]]})
-          except:
-            pass # Might need to do : atom.first = atom.first ∪ {ε}?
     return self.followSet
   
   # These should be pre-calculated.
@@ -305,6 +314,7 @@ class Grammar:
 class ExpressionGrammar(Grammar):
   def __init__(self, nonterminals, terminals, macros, rules, precedence, nonterminal):
     self.__dict__.update(locals())
+    super().__init__()
     self._assignIds()
     self._computePrecedence()
     infixRuleIds = [r.id for r in self.rules if self.isInfixRule(r)]
@@ -428,6 +438,7 @@ class ExpressionGrammar(Grammar):
 
 class LL1Grammar(Grammar):
   def __init__(self, nonterminals, terminals, macros, rules, start):
+    super().__init__()
     self.__dict__.update(locals())
     
     specials = {'ε': EmptyString(-1), 'λ': Expression(-1), 'σ': EndOfStream(-1)}
@@ -521,6 +532,8 @@ class CompositeGrammar(Grammar):
   def __init__( self, grammar, exprgrammars ):
     if not isinstance(exprgrammars, list):
       raise Exception('parameter 2 must be a list')
+
+    super().__init__()
     self.__dict__.update(locals())
     
     # Simply by convention am I combining all the terminals and nonterminals

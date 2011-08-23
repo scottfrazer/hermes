@@ -6,6 +6,7 @@ import sys, os, argparse
 from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
 from hermes.GrammarAnalyzer import GrammarAnalyzer
 from hermes.GrammarCodeGenerator import GrammarCodeGenerator, PythonTemplate, Resources
+from hermes.Logger import Factory as LoggerFactory
 
 def Cli():
 
@@ -28,6 +29,11 @@ def Cli():
               metavar = 'GRAMMAR',
               nargs = 1,
               help = 'Zeus grammar file')
+
+  parser.add_argument('-D', '--debug',
+              required = False,
+              action='store_true',
+              help = 'Open the floodgates')
 
   parser.add_argument('-s', '--start',
               required = False,
@@ -57,6 +63,8 @@ def Cli():
               help = 'When used with the parse sub-command, the parse tree will be converted to an AST and printed out.')
 
   result = parser.parse_args()
+  logger = LoggerFactory().initialize(result.debug)
+  logger.debug('CLI Parameters: %s' % (result))
 
   if not os.path.isfile( result.grammar[0] ):
     sys.stderr.write("Error: File doesn't exist\n")
