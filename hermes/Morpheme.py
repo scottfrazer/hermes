@@ -1,10 +1,10 @@
 class Morpheme:
-  pass
+  def __init__(self, string, id=0):
+    self.__dict__.update(locals())
 
 class NonTerminal(Morpheme):
   def __init__(self, string, id=0):
-    self.string = string
-    self.id = id
+    super().__init__(string, id)
     self.macro = None # Is this nonterminal the root of a macro expansion?
   def id(self):
     return self.id
@@ -16,9 +16,6 @@ class NonTerminal(Morpheme):
     return 
 
 class Terminal(Morpheme):
-  def __init__(self, string, id=0):
-    self.string = string
-    self.id = id
   def id(self):
     return self.id
   def __str__(self):
@@ -31,18 +28,18 @@ class AbstractTerminal(Terminal):
 
 class EmptyString(AbstractTerminal):
   def __init__(self, id):
-    super(EmptyString, self).__init__('ε', id)
+    super().__init__('ε', id)
   def __str__(self):
     return 'ε'
 
 class EndOfStream(AbstractTerminal):
   def __init__(self, id):
-    super(EndOfStream, self).__init__('σ', id)
+    super().__init__('σ', id)
   def __str__(self):
     return 'σ'
 
 class Expression(AbstractTerminal):
   def __init__(self, id):
-    super(Expression, self).__init__('λ', id)
+    super().__init__('λ', id)
   def __str__(self):
     return 'λ'
