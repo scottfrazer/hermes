@@ -142,8 +142,6 @@ class Resources:
         continue
       tpl[N.id] = {
         'nt_obj': N,
-        'func_name': '_' + str(N).upper(),
-        'id': N.id,
         'empty': False,
         'lambda_path': False,
         'lambda_path_atoms': '',

@@ -267,14 +267,14 @@ class Parser:
   
 
   {% for n in nt %}
-  def {{n['func_name']}}(self, depth = 0):
-    rule = self.rule({{n['id']}})
+  def _{{n['nt_obj'].string.upper()}}(self, depth = 0):
+    rule = self.rule({{n['nt_obj'].id}})
     if depth is not False:
-      tracer = DebugTracer("{{n['func_name']}}", str(self.sym), rule, depth)
+      tracer = DebugTracer("_{{n['nt_obj'].string.upper()}}", str(self.sym), rule, depth)
       depth = depth + 1
     else:
       tracer = None
-    tree = ParseTree( NonTerminal({{n['id']}}, self.getAtomString({{n['id']}})), tracer )
+    tree = ParseTree( NonTerminal({{n['nt_obj'].id}}, self.getAtomString({{n['nt_obj'].id}})), tracer )
     {% if isinstance(n['nt_obj'].macro, SeparatedListMacro) %}
     tree.list = 'slist'
     {% elif isinstance(n['nt_obj'].macro, NonterminalListMacro) %}
