@@ -292,7 +292,7 @@ class Parser:
       {% endfor %}
     {% endif %}
 
-    if self.sym == None{% for e in n['escape_terminals'] %} or self.sym.getId() == self.{{e}}{%endfor%}:
+    if self.sym == None or self.sym.getId() in [{{', '.join(str(e.id) for e in n['escape_terminals'])}}]:
     {% if n['empty'] %}
       return tree
     {% else %}

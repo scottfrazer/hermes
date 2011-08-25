@@ -180,13 +180,13 @@ class Resources:
               'terminal_var_name': tpl_terminal_var_name,
               'nonterminal_func_name': tpl_nonterminal_func_name
             })
-          # print("NT %s leads to λ through %s" %(N, rule))
+            self.logger.debug("Nonterminal %s leads to λ through %s" %(N, rule))
           # if λ path != nonterminal... something went horribly wrong.
           # Also, if λpath is already set, that might be potentially bad.
         for atom in rule.production.morphemes:
           if isinstance(atom, NonterminalListMacro) or isinstance(atom, SeparatedListMacro):
             tpl_rule['atoms'].append(atom.start_nt)
-            escape_terminals = set(map(lambda x: self.grammar._getAtomVarName(x), self.grammar.follow[atom.start_nt].difference({self.grammar.ε, self.grammar.σ, self.grammar.λ})))
+            escape_terminals = set(self.grammar.follow[atom.start_nt].difference({self.grammar.ε, self.grammar.σ, self.grammar.λ}))
             tpl[atom.start_nt.id]['escape_terminals'] = tpl[atom.start_nt.id]['escape_terminals'].union( escape_terminals )
           elif self.grammar.isSimpleTerminal(atom) or self.grammar.isNonTerminal(atom):
             tpl_rule['atoms'].append(atom)
