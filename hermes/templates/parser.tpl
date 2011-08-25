@@ -380,12 +380,12 @@ class Parser:
     {{nonterminal_id}}: {{binding_power}},
     {% endfor %}
   }
-  def {{exprParser['nonterminal'].lower().strip('_')}}(self):
-    return self._{{exprParser['nonterminal'].upper()}}()
-  def _{{exprParser['nonterminal'].upper()}}( self, rbp = 0, depth = 0 ):
+  def {{exprParser['nonterminal'].string.lower().strip('_')}}(self):
+    return self._{{exprParser['nonterminal'].string.upper()}}()
+  def _{{exprParser['nonterminal'].string.upper()}}( self, rbp = 0, depth = 0 ):
     t = self.sym
     if depth is not False:
-      tracer = DebugTracer("(expr) _{{exprParser['nonterminal'].upper()}}", str(self.sym), 'N/A', depth)
+      tracer = DebugTracer("(expr) _{{exprParser['nonterminal'].string.upper()}}", str(self.sym), 'N/A', depth)
       depth = depth + 1
     else:
       tracer = None
@@ -402,7 +402,7 @@ class Parser:
     return left
 
   def nud{{index}}(self, tracer):
-    tree = ParseTree( NonTerminal(self.str_nonterminal['{{exprParser['nonterminal'].lower()}}'], '{{exprParser['nonterminal'].lower()}}') )
+    tree = ParseTree( NonTerminal({{exprParser['nonterminal'].id}}, '{{exprParser['nonterminal'].string.lower()}}') )
     {% for sym, actions in exprParser['nud'].items() %}
     if self.sym.getId() == {{sym}}:
       {% for action in actions %}
@@ -421,7 +421,7 @@ class Parser:
 
         {% elif action['type'] == 'prefix' %}
       tree.add( self.expect( self.sym.getId(), tracer ) )
-      tree.add( self._{{exprParser['nonterminal'].upper()}}({{action['binding_power']}}) )
+      tree.add( self._{{exprParser['nonterminal'].string.upper()}}({{action['binding_power']}}) )
 
         {% elif action['type'] == 'list' %}
       ls = AstList()
@@ -470,7 +470,7 @@ class Parser:
       tree.add( self.expect( {{action['sym']}}, tracer ) )
         {% elif action['type'] == 'infix' %}
       tree.add( self.expect( self.sym.getId(), tracer ) )
-      tree.add( self._{{exprParser['nonterminal'].upper()}}({{action['binding_power']}}) )
+      tree.add( self._{{exprParser['nonterminal'].string.upper()}}({{action['binding_power']}}) )
         {% elif action['type'] == 'prefix' %}
       pass # prefix noop
         {% elif action['type'] == 'list' %}

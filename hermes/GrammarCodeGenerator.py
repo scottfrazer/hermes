@@ -196,7 +196,7 @@ class Resources:
             self.precedence[terminal] = p.precedence
 
       tpl = {
-        'nonterminal': str(grammar.nonterminal),
+        'nonterminal': grammar.nonterminal,
         'precedence': {k.id: v for k,v in self.precedence.items()},
         'nud': {},
         'led': {}
