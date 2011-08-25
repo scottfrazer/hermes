@@ -185,19 +185,11 @@ class Resources:
           # Also, if λpath is already set, that might be potentially bad.
         for atom in rule.production.morphemes:
           if isinstance(atom, NonterminalListMacro) or isinstance(atom, SeparatedListMacro):
-            tpl_rule['atoms'].append({
-              'type': 'nonterminal',
-              'terminal_var_name': '',
-              'nonterminal_func_name': '_' + str(atom.start_nt).upper()
-            })
+            tpl_rule['atoms'].append(atom.start_nt)
             escape_terminals = set(map(lambda x: self.grammar._getAtomVarName(x), self.grammar.follow[atom.start_nt].difference({self.grammar.ε, self.grammar.σ, self.grammar.λ})))
             tpl[atom.start_nt.id]['escape_terminals'] = tpl[atom.start_nt.id]['escape_terminals'].union( escape_terminals )
           elif self.grammar.isSimpleTerminal(atom) or self.grammar.isNonTerminal(atom):
-            tpl_rule['atoms'].append({
-              'type': 'terminal' if self.grammar.isSimpleTerminal(atom) else 'nonterminal',
-              'terminal_var_name': self.grammar._getAtomVarName(atom) if self.grammar.isSimpleTerminal(atom) else '',
-              'nonterminal_func_name': '_' + str(atom).upper() if self.grammar.isNonTerminal(atom) else ''
-            })
+            tpl_rule['atoms'].append(atom)
         tpl_nt['rules'].append( tpl_rule )
     return list(tpl.values())
   

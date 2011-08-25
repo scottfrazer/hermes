@@ -2,7 +2,7 @@ import sys
 
 {% from hermes.Grammar import AstTranslation, AstSpecification %}
 {% from hermes.Macro import SeparatedListMacro, NonterminalListMacro, TerminatedListMacro %}
-
+{% from hermes.Morpheme import Terminal, NonTerminal %}
 def parse( iterator, entry ):
   p = Parser()
   return p.parse(iterator, entry)
@@ -315,12 +315,12 @@ class Parser:
       {% endif %}
       {% for atom in rule['atoms'] %}
 
-        {% if atom['type'] == 'terminal' %}
-      tree.add( self.expect(self.{{atom['terminal_var_name']}}, tracer) )
+        {% if isinstance(atom, Terminal) %}
+      tree.add( self.expect({{atom.id}}, tracer) ) # {{atom.string}}
         {% endif %}
 
-        {% if atom['type'] == 'nonterminal' %}
-      subtree = self.{{atom['nonterminal_func_name']}}(depth)
+        {% if isinstance(atom, NonTerminal) %}
+      subtree = self._{{atom.string.upper()}}(depth)
       tree.add( subtree )
       if tracer and isinstance(subtree, ParseTree):
         tracer.add( subtree.tracer )
