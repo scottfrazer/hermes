@@ -144,7 +144,7 @@ class Resources:
         'nt_obj': N,
         'empty': False,
         'lambda_path': False,
-        'lambda_path_atoms': '',
+        'lambda_path_atoms': [],
         'rules': [],
         'escape_terminals': set(),
         'follow': self.grammar.follow(N).difference(set([self.grammar.ε, self.grammar.σ]))
@@ -164,23 +164,16 @@ class Resources:
         if self.grammar.λ in self.grammar._pfirst(rule.production):
           tpl_nt['lambda_path'] = rule
           tpl_nt['lambda_path_atoms'] = []
+          self.logger.debug("Nonterminal %s leads to λ through %s" %(N, rule))
           for x in rule.production.morphemes:
             tpl_type = tpl_terminal_var_name = tpl_nonterminal_func_name = ''
             if self.grammar.isSimpleTerminal(x):
-              tpl_type = 'terminal'
-              tpl_terminal_var_name = self.grammar._getAtomVarName(x)
+              atom = x
             elif self.grammar.isNonTerminal(x):
-              tpl_type = 'nonterminal'
-              tpl_nonterminal_func_name = '_' + str(x).upper()
+              atom = x
             elif isinstance(x, SeparatedListMacro) or isinstance(x, NonterminalListMacro):
-              tpl_type = 'nonterminal'
-              tpl_nonterminal_func_name = '_' + str(x.start_nt).upper()
-            tpl_nt['lambda_path_atoms'].append({
-              'type': tpl_type,
-              'terminal_var_name': tpl_terminal_var_name,
-              'nonterminal_func_name': tpl_nonterminal_func_name
-            })
-            self.logger.debug("Nonterminal %s leads to λ through %s" %(N, rule))
+              atom = x.start_nt
+            tpl_nt['lambda_path_atoms'].append(atom)
           # if λ path != nonterminal... something went horribly wrong.
           # Also, if λpath is already set, that might be potentially bad.
         for atom in rule.production.morphemes:
