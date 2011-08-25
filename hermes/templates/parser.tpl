@@ -456,7 +456,7 @@ class Parser:
     {% endif %}
 
   def led{{index}}(self, left, tracer):
-    tree = ParseTree( NonTerminal(self.str_nonterminal['_expr'], '_expr') )
+    tree = ParseTree( NonTerminal({{exprParser['nonterminal'].id}}, '{{exprParser['nonterminal'].string.lower()}}') )
     {% for sym, actions in exprParser['led'].items() %}
     if self.sym.getId() == {{sym}}:
       if left:
