@@ -197,13 +197,12 @@ class Resources:
 
       tpl = {
         'nonterminal': str(grammar.nonterminal),
-        'index': index,
         'precedence': {k.id: v for k,v in self.precedence.items()},
         'nud': {},
         'led': {}
       }
 
-      self.logger.debug('Nud/Led definitions for expression grammar nonterminal %s (index %d)' % (tpl['nonterminal'], tpl['index']))
+      self.logger.debug('Nud/Led definitions for expression grammar nonterminal %s (index %d)' % (tpl['nonterminal'], index))
       newPrecedence = dict(map(lambda x: (x, []), set(self.precedence.values())))
       for terminal, precedence in self.precedence.items():
         newPrecedence[precedence].append(terminal)
