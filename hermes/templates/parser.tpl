@@ -464,15 +464,20 @@ class Parser:
       {% for action in actions %}
         {% if action['type'] == 'symbol' and len(actions) == 1 %}
       return self.expect( {{action['sym']}}, tracer )
+
         {% elif action['type'] == 'symbol' %}
       tree.add( self.expect( {{action['sym']}}, tracer ) )
+
         {% elif action['type'] == 'symbol-append' %}
       tree.add( self.expect( {{action['sym']}}, tracer ) )
+
         {% elif action['type'] == 'infix' %}
       tree.add( self.expect( self.sym.getId(), tracer ) )
       tree.add( self._{{exprParser['nonterminal'].string.upper()}}({{action['binding_power']}}) )
+
         {% elif action['type'] == 'prefix' %}
       pass # prefix noop
+
         {% elif action['type'] == 'list' %}
       ls = AstList()
       tree.add( self.expect( {{action['open_sym']}}, tracer ) )

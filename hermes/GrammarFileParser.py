@@ -205,8 +205,10 @@ class MacroParser(Parser):
   
   def __init__(self, nonTerminalParser, terminalParser, sListMacroParser, nListMacroParser, tListMacroParser):
     self.__dict__.update(locals())
-  
+    self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
+
   def parse(self, string):
+    self.logger.debug('Parsing macro %s' % (string))
     if string[:5].lower() == 'tlist':
       return self.tListMacroParser.parse(string)
     elif string[:4].lower() == 'list':
