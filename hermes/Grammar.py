@@ -77,11 +77,9 @@ class AstTranslation:
 
 class ExprRule:
   def __init__(self, type, atoms, rule):
-    self.type = type
-    self.atoms = atoms
-    self.rule = rule
+    self.__dict__.update(locals())
   def __str__(self):
-    return "(ExprRule: '%s', [%s], (Rule: %s))" % (self.type, ', '.join([str(x) for x in self.atoms]), str(self.rule))
+    return "(ExprRule: '%s', [%s], %s)" % (self.type, ', '.join([str(x) for x in self.atoms]), str(self.rule))
 
 class OperatorPrecedence:
   def __init__(self, terminal, precedence, associativity):
@@ -357,7 +355,7 @@ class ExpressionGrammar(Grammar):
        atoms[1] == rule.nonterminal and isinstance(atoms[0], Terminal)
   
   def isPrimitiveExprRule( self, rule ):
-    return len(rule.production.morphemes) == 1
+    return len(rule.production.morphemes) == 1 and isinstance(rule.production.morphemes[0], Terminal)
   
   def getPrecedence(self):
     return self.computedPrecedence
@@ -366,63 +364,66 @@ class ExpressionGrammar(Grammar):
     nud = {}
     led = {}
     self.conflicts = []
-    dedupe_func = lambda x, y: (x.type==y.type and (x.type == 'nonterminal' or x.type=='symbol'))
+
+    # if two rules parse the exact same atoms, they're the same rule
+    def dedupe_func(x, y):
+      types = ['mixfix', 'symbol']
+      if x.type in types and y.type in types:
+        for index in range(len(x.atoms)):
+          try:
+            if x.atoms[index] != y.atoms[index]:
+              return False
+          except IndexError:
+            return False
+        return True
+      return False
+
     morphemes = set(self.terminals).union(set(self.nonterminals))
     for m in morphemes:
       nud[m] = []
       led[m] = []
-    for e in self.rules:
-      if self.isInfixRule(e):
-        led[e.production.morphemes[1]].append(ExprRule('infix', [], e))
-      elif self.isPrefixRule(e):
-        nud[e.production.morphemes[0]].append(ExprRule('prefix', [], e))
-      elif self.isPrimitiveExprRule(e):
-        nud[e.production.morphemes[0]].append(ExprRule('symbol', [], e))
+
+    for rule in self.rules:
+      atoms = rule.production.morphemes
+      if self.isInfixRule(rule):
+        led[atoms[1]].append(ExprRule('infix', atoms, rule))
+      elif self.isPrefixRule(rule):
+        nud[atoms[0]].append(ExprRule('prefix', atoms, rule))
+      elif self.isPrimitiveExprRule(rule):
+        nud[atoms[0]].append(ExprRule('symbol', atoms, rule))
       else:
-        if e.root == 0:
-          a = e.production.morphemes
-          nud[a[0]].append(ExprRule(self._r2d2(a), a, e))
-        elif e.root == 1:
-          a = e.production.morphemes[0]
-          nud[a].append(ExprRule(self._r2d2(a), [a], e))
+        if rule.root == 0:
+          nud[ atoms[0] ].append(ExprRule('mixfix', atoms, rule))
         else:
-          raise Exception('not supported, yet.')
-        b = e.production.morphemes[1:]
-        if e.root == 1:
-          led[b[0]].append(ExprRule(self._r2d2(b), b, e))
-    
+          nudPart = atoms[:rule.root]
+          ledPart = atoms[rule.root:]
+          nud[ nudPart[0] ].append(ExprRule('mixfix', nudPart, rule))
+          led[ ledPart[0] ].append(ExprRule('mixfix', ledPart, rule))
+          self.logger.debug('nudPart (root=%d): %s' % (rule.root, ', '.join([str(x) for x in nudPart])))
+          self.logger.debug('ledPart (root=%d): %s' % (rule.root, ', '.join([str(x) for x in ledPart])))
+
+    # Filter out unused items
+    nud = {k: v for k, v in nud.items() if len(v)}
+    led = {k: v for k, v in led.items() if len(v)}
+
     self.nud = {}
     self.led = {}
-    for t, r in nud.items():
-      u = self._unique(r, dedupe_func)
-      if len(u) > 0:
-        self.nud[t] = u[0]
-
-    for t, r in led.items():
-      u = self._unique(r, dedupe_func)
-      if len(u) > 0:
-        self.led[t] = u[0]
 
     for terminal, rules in nud.items():
-      rules = self._unique(rules, dedupe_func)
-      if len(rules) > 1:
-        self.conflicts.append(NudConflict(terminal, [r.rule for r in rules]))
+      uniquedRules = self._unique(rules, dedupe_func)
+      self.logger.debug('nud(%s) = %s' % (terminal, ', '.join([str(x) for x in uniquedRules])))
+      if len(uniquedRules) == 1:
+        self.nud[terminal] = uniquedRules[0]
+      elif len(uniquedRules) > 1:
+        self.conflicts.append(NudConflict(terminal, [r.rule for r in uniquedRules]))
+
     for terminal, rules in led.items():
-      rules = self._unique(rules, dedupe_func)
-      if len(rules) > 1:
-        self.conflicts.append(LedConflict(terminal, [r.rule for r in rules]))
-  
-  # Beep-boop
-  def _r2d2(self, a):
-    if isinstance(a, Terminal):
-      return 'symbol'
-    elif isinstance(a, NonTerminal):
-      return 'nonterminal'
-    elif isinstance(a, ExprListMacro):
-      return 'list'
-    elif isinstance(a, list):
-      return 'mixfix'
-    return None
+      uniquedRules = self._unique(rules, dedupe_func)
+      self.logger.debug('led(%s) = %s' % (terminal, ', '.join([str(x) for x in uniquedRules])))
+      if len(uniquedRules) == 1:
+        self.led[terminal] = uniquedRules[0]
+      elif len(uniquedRules) > 1:
+        self.conflicts.append(LedConflict(terminal, [r.rule for r in uniquedRules]))
   
   def _unique(self, l, f):
     r = []
@@ -434,7 +435,6 @@ class ExpressionGrammar(Grammar):
       if not d:
         r.append(x)
     return r
-  
 
 class LL1Grammar(Grammar):
   def __init__(self, nonterminals, terminals, macros, rules, start):

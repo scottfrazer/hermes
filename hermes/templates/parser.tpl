@@ -414,7 +414,7 @@ class Parser:
       tree.add( self.expect( {{action['sym']}}, tracer ) )
       
         {% elif action['type'] == 'symbol-append' %}
-      tree.add( self.expect( {{action['sym']}}, tracer ) ) #here?
+      tree.add( self.expect( {{action['sym']}}, tracer ) )
 
         {% elif action['type'] == 'infix' %}
       pass # infix noop

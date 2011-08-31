@@ -77,7 +77,8 @@ class Resources:
   
   def ruletotpl( self, grammar, expr_rule ):
     rule = expr_rule.rule
-    atoms = rule.production.morphemes[rule.root:]
+    atoms = expr_rule.atoms
+
     tpl = []
     if expr_rule.type == 'infix':
       tpl.append({
@@ -94,7 +95,7 @@ class Resources:
     elif expr_rule.type == 'symbol':
       tpl.append({
         'type': 'symbol',
-        'sym': rule.production.morphemes[0].id,
+        'sym': atoms[0].id,
         'rule': rule
       })
     elif expr_rule.type == 'mixfix':
@@ -206,6 +207,7 @@ class Resources:
       newPrecedence = dict(map(lambda x: (x, []), set(self.precedence.values())))
       for terminal, precedence in self.precedence.items():
         newPrecedence[precedence].append(terminal)
+
       self.logger.debug('Operator precedence map:')
       for (precedence, terminals) in sorted(newPrecedence.items(), key=lambda x: x[0]):
         self.logger.debug('%s: %s' % (precedence, ', '.join([str(x) for x in terminals])))
