@@ -29,6 +29,5 @@ class ConflictGrammarTest(GrammarTest):
     self.assertEqual(1, len(self.grammar.conflicts), "Expecting one conflict")
     self.assertEqual(NudConflict, type(self.grammar.conflicts[0]))
   
-  
 if __name__ == '__main__':
   unittest.main()

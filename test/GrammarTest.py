@@ -23,18 +23,7 @@ class GrammarTest(unittest.TestCase):
     factory = HermesParserFactory()
     fp = GrammarFileParser( factory.create() )
     self.grammar = fp.parse( file_obj, start )
-    #self.assertGrammarIntegrity()
     return self
-  
-  def assertGrammarIntegrity(self):
-    for rule in self.grammar.rules:
-      for morpheme in rule.production.morphemes:
-        if isinstance(morpheme, NonTerminal):
-          self.assertTrue(morpheme not in self.grammar.nonterminals, "Nonterminal %s not in nonterminal list" % (morpheme) )
-        if isinstance(morpheme, Terminal):
-          self.assertTrue(morpheme not in self.grammar.terminals, "Terminal %s not in terminal list" % (morpheme) )
-        if isinstance(morpheme, LL1ListMacro):
-          self.assertTrue(morpheme not in self.grammar.terminals, "Macro %s not in terminal list" % (morpheme) )
 
   def assertFirst( self, first ):
     for nonterminal, firstSet in first.items():
