@@ -17,15 +17,15 @@ class GrammarAnalyzer:
       print("\n".join([ str(r) for r in sorted(grammar.rules, key=lambda x: x.id)]) + "\n")
 
     print(" -- First sets --")
-    for N in sorted(self.grammar.first().keys(), key=lambda x: x.id):
+    for N in sorted(self.grammar.first.keys(), key=lambda x: x.id):
       if not isinstance(N, NonTerminal):
         continue
-      print("%s = {%s}" % (N, ', '.join([str(e) for e in self.grammar.first(N)])))
+      print("%s = {%s}" % (N, ', '.join([str(e) for e in self.grammar.first[N]])))
     print("\n -- Follow sets --")
-    for N in sorted(self.grammar.follow().keys(), key=lambda x: x.id):
+    for N in sorted(self.grammar.follow.keys(), key=lambda x: x.id):
       if not isinstance(N, NonTerminal):
         continue
-      print("%s = {%s}" % (N, ', '.join([str(e) for e in self.grammar.follow(N)])))
+      print("%s = {%s}" % (N, ', '.join([str(e) for e in self.grammar.follow[N]])))
     if ( len(self.grammar.conflicts) ):
       print("\n -- Grammar conflicts detected.  Grammar is not LL(1) --")
       for conflict in self.grammar.conflicts:

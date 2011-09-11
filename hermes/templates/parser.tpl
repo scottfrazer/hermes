@@ -1,7 +1,8 @@
 import sys
 
 {% from hermes.Grammar import AstTranslation, AstSpecification %}
-{% from hermes.Macro import SeparatedListMacro, NonterminalListMacro, TerminatedListMacro %}
+{% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
+{% from hermes.Macro import ExprListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 def parse( iterator, entry ):
   p = Parser()
@@ -375,24 +376,32 @@ class Parser:
   {% endfor %}
 
   {% for index, exprParser in enumerate(nudled) %}
-  bp{{index}} = {
-    {% for nonterminal_id, binding_power in exprParser['precedence'].items() %}
-    {{nonterminal_id}}: {{binding_power}},
+
+  infixBp{{index}} = {
+    {% for terminal_id, binding_power in exprParser['infixPrecedence'].items() %}
+    {{terminal_id}}: {{binding_power}},
     {% endfor %}
   }
-  def {{exprParser['nonterminal'].string.lower().strip('_')}}(self):
-    return self._{{exprParser['nonterminal'].string.upper()}}()
-  def _{{exprParser['nonterminal'].string.upper()}}( self, rbp = 0, depth = 0 ):
+
+  prefixBp{{index}} = {
+    {% for terminal_id, binding_power in exprParser['prefixPrecedence'].items() %}
+    {{terminal_id}}: {{binding_power}},
+    {% endfor %}
+  }
+
+  def {{exprParser['grammar'].nonterminal.string.lower().strip('_')}}(self):
+    return self._{{exprParser['grammar'].nonterminal.string.upper()}}()
+  def _{{exprParser['grammar'].nonterminal.string.upper()}}( self, rbp = 0, depth = 0 ):
     t = self.sym
     if depth is not False:
-      tracer = DebugTracer("(expr) _{{exprParser['nonterminal'].string.upper()}}", str(self.sym), 'N/A', depth)
+      tracer = DebugTracer("(expr) _{{exprParser['grammar'].nonterminal.string.upper()}}", str(self.sym), 'N/A', depth)
       depth = depth + 1
     else:
       tracer = None
     left = self.nud{{index}}(depth)
     if isinstance(left, ParseTree):
       tracer.add(left.tracer)
-    while rbp < self.binding_power(self.sym, self.bp{{index}}):
+    while rbp < self.binding_power(self.sym, self.infixBp{{index}}):
       left = self.led{{index}}(left, depth)
       if isinstance(left, ParseTree):
         tracer.add(left.tracer)
@@ -402,115 +411,102 @@ class Parser:
     return left
 
   def nud{{index}}(self, tracer):
-    tree = ParseTree( NonTerminal({{exprParser['nonterminal'].id}}, '{{exprParser['nonterminal'].string.lower()}}') )
-    {% for sym, actions in exprParser['nud'].items() %}
-    if self.sym.getId() == {{sym}}:
-      {% for action in actions %}
+    tree = ParseTree( NonTerminal({{exprParser['grammar'].nonterminal.id}}, '{{exprParser['grammar'].nonterminal.string.lower()}}') )
 
-        {% if action['type'] == 'symbol' and len(actions) == 1 %}
-      return self.expect( {{action['sym']}}, tracer )
+    {% py seen = list() %}
+    {% for rule in exprParser['grammar'].rules %}
+      {% py nud = rule.nudProduction.morphemes %}
+      {% if len(nud) and nud[0] not in seen %}
+    {{'if' if len(seen)==0 else 'elif'}} self.sym.getId() == {{nud[0].id}}: # {{nud[0]}}
 
-        {% elif action['type'] == 'symbol' %}
-      tree.add( self.expect( {{action['sym']}}, tracer ) )
-      
-        {% elif action['type'] == 'symbol-append' %}
-      tree.add( self.expect( {{action['sym']}}, tracer ) )
+        {% if isinstance(rule.ast, AstSpecification) %}
+      tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', {{rule.ast.parameters}})
+        {% elif isinstance(rule.ast, AstTranslation) %}
+      tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
+        {% endif %}
 
-        {% elif action['type'] == 'infix' %}
-      pass # infix noop
-
-        {% elif action['type'] == 'prefix' %}
-      tree.add( self.expect( self.sym.getId(), tracer ) )
-      tree.add( self._{{exprParser['nonterminal'].string.upper()}}({{action['binding_power']}}) )
-
-        {% elif action['type'] == 'list' %}
+        {% if len(nud) == 1 %}
+      return self.expect( {{nud[0].id}}, tracer )
+        {% else %}
+          {% for morpheme in nud %}
+            {% if isinstance(morpheme, Terminal) %}
+      tree.add( self.expect({{morpheme.id}}, tracer) )
+            {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
+              {% if isinstance(rule.operator, PrefixOperator) %}
+      tree.add( self._{{rule.nonterminal.string.upper()}}( self.prefixBp{{index}}[{{rule.operator.operator.id}}] ) )
+              {% else %}
+      tree.add( self._{{rule.nonterminal.string.upper()}}() )
+              {% endif %}
+            {% elif isinstance(morpheme, NonTerminal) %}
+      tree.add( self._{{rule.nonterminal.string.upper()}}() )
+            {% elif isinstance(morpheme, ExprListMacro) %}
       ls = AstList()
-      tree.add( self.expect({{action['open_sym']}}, tracer) )
-      if self.sym.getId() != {{action['close_sym']}}:
+      if self.sym.getId() not in [{{', '.join([str(x.id) for x in morpheme.follow])}}]:
         while 1:
-          ls.append( self.{{action['nonterminal_func']}}() )
-          if self.sym.getId() != {{action['separator']}}:
+          ls.append( self._{{morpheme.nonterminal.string.upper()}}() )
+          if self.sym.getId() != {{morpheme.separator.id}}:
             break
-          self.expect({{action['separator']}}, tracer)
+          self.expect({{morpheme.separator.id}}, tracer)
       tree.add( ls )
-      tree.add( self.expect( {{action['close_sym']}}, tracer ) )
-
-        {% elif action['type'] == 'nonterminal' %}
-      
-      tree.add(self.{{action['nonterminal_func']}}())
-
+            {% endif %}
+          {% endfor %}
         {% endif %}
-
-        {% if isinstance(action['rule'].ast, AstSpecification) %}
-      tree.astTransform = AstTransformNodeCreator('{{action['rule'].ast.name}}', {{action['rule'].ast.parameters}})
-        {% elif isinstance(action['rule'].ast, AstTranslation) %}
-      tree.astTransform = AstTransformSubstitution({{action['rule'].ast.idx}})
-        {% endif %}
-
-      {% endfor %}
-      return tree
+        {% py seen.append(nud[0]) %}
+      {% endif %}
     {% endfor %}
 
-    {% if len(exprParser['nud']) == 0 %}
-    pass
-    {% endif %}
+    return tree
 
   def led{{index}}(self, left, tracer):
-    tree = ParseTree( NonTerminal({{exprParser['nonterminal'].id}}, '{{exprParser['nonterminal'].string.lower()}}') )
-    {% for sym, actions in exprParser['led'].items() %}
-    if self.sym.getId() == {{sym}}:
+    tree = ParseTree( NonTerminal({{exprParser['grammar'].nonterminal.id}}, '{{exprParser['grammar'].nonterminal.string.lower()}}') )
+
+    {% py seen = list() %}
+    {% for rule in exprParser['grammar'].rules %}
+      {% py led = rule.ledProduction.morphemes %}
+      {% if len(led) and led[0] not in seen %}
+    {{'if' if len(seen)==0 else 'elif'}}  self.sym.getId() == {{led[0].id}}: # {{led[0]}}
+
+        {% if isinstance(rule.ast, AstSpecification) %}
+      tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', {{rule.ast.parameters}})
+        {% elif isinstance(rule.ast, AstTranslation) %}
+      tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
+        {% endif %}
+
       if left:
-        tree.add( left )
-      {% for action in actions %}
-        {% if action['type'] == 'symbol' and len(actions) == 1 %}
-      return self.expect( {{action['sym']}}, tracer )
+        tree.add(left)
 
-        {% elif action['type'] == 'symbol' %}
-      tree.add( self.expect( {{action['sym']}}, tracer ) )
-
-        {% elif action['type'] == 'symbol-append' %}
-      tree.add( self.expect( {{action['sym']}}, tracer ) )
-
-        {% elif action['type'] == 'infix' %}
-      tree.add( self.expect( self.sym.getId(), tracer ) )
-      tree.add( self._{{exprParser['nonterminal'].string.upper()}}({{action['binding_power']}}) )
-
-        {% elif action['type'] == 'prefix' %}
-      pass # prefix noop
-
-        {% elif action['type'] == 'list' %}
+        {% if len(led) == 1 %}
+      return self.expect( {{led[0].id}}, tracer )
+        {% else %}
+          {% for morpheme in led %}
+            {% if isinstance(morpheme, Terminal) %}
+      tree.add( self.expect({{morpheme.id}}, tracer) )
+            {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
+              {% if isinstance(rule.operator, InfixOperator) %}
+      tree.add( self._{{rule.nonterminal.string.upper()}}( self.infixBp{{index}}[{{rule.operator.operator.id}}] ) )
+              {% else %}
+      tree.add( self._{{rule.nonterminal.string.upper()}}() )
+              {% endif %}
+            {% elif isinstance(morpheme, NonTerminal) %}
+      tree.add( self._{{rule.nonterminal.string.upper()}}() )
+            {% elif isinstance(morpheme, ExprListMacro) %}
       ls = AstList()
-      tree.add( self.expect( {{action['open_sym']}}, tracer ) )
-      if self.sym.getId() != {{action['close_sym']}}:
+      if self.sym.getId() not in [{{', '.join([str(x.id) for x in morpheme.follow])}}]:
         while 1:
-          ls.append( self.{{action['nonterminal_func']}}() )
-          if self.sym.getId() != {{action['separator']}}:
+          ls.append( self._{{morpheme.nonterminal.string.upper()}}() )
+          if self.sym.getId() != {{morpheme.separator.id}}:
             break
-          self.expect( {{action['separator']}}, tracer )
+          self.expect({{morpheme.separator.id}}, tracer)
       tree.add( ls )
-      tree.add( self.expect({{action['close_sym']}}, tracer ) )
-        {% elif action['type'] == 'nonterminal' %}
-          {% if action['nonterminal_func'] == "_{{exprParser['nonterminal'].upper()}}" %}
-      tree.add(self.{{action['nonterminal_func']}}({{action['binding_power']}}))
-          {% else %}
-      tree.add(self.{{action['nonterminal_func']}}())
-          {% endif %}
+            {% endif %}
+          {% endfor %}
         {% endif %}
-
-        {% if isinstance(action['rule'].ast, AstSpecification) %}
-      tree.astTransform = AstTransformNodeCreator('{{action['rule'].ast.name}}', {{action['rule'].ast.parameters}})
-        {% elif isinstance(action['rule'].ast, AstTranslation) %}
-      tree.astTransform = AstTransformSubstitution({{action['rule'].ast.idx}})
-        {% endif %}
-
-      {% endfor %}
-      return tree
+        {% py seen.append(led[0]) %}
+      {% endif %}
     {% endfor %}
 
-    {% if len(exprParser['led']) == 0 %}
-    pass
-    {% endif %}
-    {% endfor %}
+    return tree
+{% endfor %}
 
 {% if add_main %}
 if __name__ == '__main__':

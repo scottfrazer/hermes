@@ -7,13 +7,13 @@ class ListMacro(Macro):
   pass
 
 class LL1ListMacro(ListMacro):
-  def addFinishTerminalSet(t):
-    self.finishTerminals = self.finishTerminals.union(t)
+  pass
 
 class ExprListMacro(ListMacro):
   def __init__( self, nonterminal, separator ):
-    self.nonterminal = nonterminal
-    self.separator = separator
+    self.__dict__.update(locals())
+  def setFollow( self, follow ):
+    self.__dict__.update(locals())
   def __repr__( self ):
     return '<expr_list (' + str(self.nonterminal) + ', ' + str(self.separator) + ')>'
   def expand( self ):
@@ -21,10 +21,7 @@ class ExprListMacro(ListMacro):
 
 class TerminatedListMacro(LL1ListMacro):
   def __init__( self, nonterminal, terminator, start_nt, rules ):
-    self.nonterminal = nonterminal
-    self.terminator = terminator
-    self.start_nt = start_nt
-    self.rules = rules
+    self.__dict__.update(locals())
     self.finishTerminals = {}
     self.start_nt.setMacro(self)
   def __repr__( self ):

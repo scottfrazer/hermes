@@ -75,7 +75,7 @@ class Resources:
         return p.precedence
     return 0
   
-  def ruletotpl( self, grammar, expr_rule ):
+  def ruletotpl( self, grammar, exprRule ):
     rule = expr_rule.rule
     atoms = expr_rule.atoms
 
@@ -148,7 +148,7 @@ class Resources:
         'lambda_path_atoms': [],
         'rules': [],
         'escape_terminals': set(),
-        'follow': self.grammar.follow(N).difference(set([self.grammar.ε, self.grammar.σ]))
+        'follow': self.grammar.follow[N].difference(set([self.grammar.ε, self.grammar.σ]))
       }
     for id, tpl_nt in tpl.items():
       N = tpl_nt['nt_obj']
@@ -190,52 +190,20 @@ class Resources:
   def getNudLed(self):
     templates = []
     for index, grammar in enumerate(self.grammar.getExpressionGrammars()):
-      self.precedence = {}
+      infixPrecedence = dict()
+      prefixPrecedence = dict()
       for terminal, precedence in grammar.getPrecedence().items():
         for p in precedence:
           if p.associativity in ['left', 'right']:
-            self.precedence[terminal] = p.precedence
+            infixPrecedence[terminal] = p.precedence
+          if p.associativity == 'unary':
+            prefixPrecedence[terminal] = p.precedence
 
       tpl = {
-        'nonterminal': grammar.nonterminal,
-        'precedence': {k.id: v for k,v in self.precedence.items()},
-        'nud': {},
-        'led': {}
+        'grammar': grammar,
+        'infixPrecedence': {k.id: v for k,v in infixPrecedence.items()},
+        'prefixPrecedence': {k.id: v for k,v in prefixPrecedence.items()}
       }
-
-      self.logger.debug('Nud/Led definitions for expression grammar nonterminal %s (index %d)' % (tpl['nonterminal'], index))
-      newPrecedence = dict(map(lambda x: (x, []), set(self.precedence.values())))
-      for terminal, precedence in self.precedence.items():
-        newPrecedence[precedence].append(terminal)
-
-      self.logger.debug('Operator precedence map:')
-      for (precedence, terminals) in sorted(newPrecedence.items(), key=lambda x: x[0]):
-        self.logger.debug('%s: %s' % (precedence, ', '.join([str(x) for x in terminals])))
-
-      def debugTemplates(func, templates):
-        for template in templates:
-          if template['type'] == 'symbol-append':
-            self.logger.debug('%s(%s) += (%s, %s, %s)' % (func, terminal, template['type'], template['sym'], template['rule']))
-          if template['type'] == 'nonterminal':
-            self.logger.debug('%s(%s) += (%s, %s(), %s)' % (func, terminal, template['type'], template['nonterminal_func'], template['rule']))
-          if template['type'] == 'prefix':
-            self.logger.debug('%s(%s) += (%s, %s)' % (func, terminal, template['type'], template['rule']))
-          if template['type'] == 'infix':
-            self.logger.debug('%s(%s) += (%s, %s)' % (func, terminal, template['type'], template['rule']))
-          if template['type'] == 'list':
-            self.logger.debug('%s(%s) += (%s, open=%s, close=%s, func=%s())' % (func, terminal, template['type'], template['open_sym'], template['close_sym'], template['nonterminal_func']))
-          if template['type'] == 'symbol':
-            self.logger.debug('%s(%s) += (%s, %s)' % (func, terminal, template['type'], template['sym']))
-
-      for terminal, rule in grammar.nud.items():
-        temp = self.ruletotpl(grammar, rule)
-        debugTemplates('nud', temp)
-        tpl['nud'][terminal.id] = temp
-
-      for terminal, rule in grammar.led.items():
-        temp = self.ruletotpl(grammar, rule)
-        debugTemplates('led', temp)
-        tpl['led'][terminal.id] = temp
 
       templates.append(tpl)
     return templates

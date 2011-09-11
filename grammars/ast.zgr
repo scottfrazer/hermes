@@ -21,7 +21,7 @@
         "_expr := _expr + 'sub'+ _expr -> Subtract( lhs=$0, rhs=$2 )",
         "_expr := _expr + 'div' + _expr -> Divide( lhs=$0, rhs=$2 )",
         "_expr := 'sub' + _expr -> Uminus( arg=$1 )",
-        "_expr := 'a' | 'b'"
+        "_expr := {'a'} | {'b'}"
       ]
     }
   ]

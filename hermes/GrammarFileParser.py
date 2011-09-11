@@ -1,8 +1,9 @@
 import re, json, sys
 from collections import OrderedDict
 from hermes.Morpheme import NonTerminal, Terminal, EmptyString, EndOfStream, Expression
-from hermes.Grammar import Grammar, LL1Grammar, CompositeGrammar, ExpressionGrammar
-from hermes.Grammar import Rule, MacroGeneratedRule, Production, AstSpecification, AstTranslation
+from hermes.Grammar import Grammar, CompositeGrammar, LL1GrammarFactory, ExpressionGrammarFactory
+from hermes.Grammar import Rule, ExprRule, MacroGeneratedRule, Production, AstSpecification, AstTranslation
+from hermes.Grammar import InfixOperator, PrefixOperator, MixfixOperator
 from hermes.Macro import ExprListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro
 from hermes.Logger import Factory as LoggerFactory
 
@@ -150,7 +151,62 @@ class RuleParser(Parser):
       except:
         pass
     return 0
-  
+
+class ExprRuleParser(RuleParser):
+  ruleRegex = re.compile('^{([^}]*)}(\s*\+\s*{(.*)})?(->(.*))?$')
+
+  def _getAtoms(self, string):
+      if not string:
+        return list()
+      morphemes = string.replace("'__Z_PIPE__'", "'|'").split('+')
+      return list(map(self.atomParser.parse, morphemes))
+
+  def setBindingPower(self, bindingPower):
+    self.__dict__.update(locals())
+
+  def parse(self, string):
+    rules = []
+    for original, replacement in self.replacements.items():
+      string = string.replace(original, replacement)
+    (nonterminal, productions) = string.split(':=', 1)
+    nonterminal = self.atomParser.parse(nonterminal)
+    infixRegex = re.compile("^%s\s*\+\s*('[a-zA-Z_]+')\s*\+\s*%s\s*(->)?" % (nonterminal.string, nonterminal.string), re.I)
+    prefixRegex = re.compile("^('[a-zA-Z_]+')\s*\+\s*%s\s*(->)?" % (nonterminal.string), re.I)
+    for production in productions.split('|'):
+      production = production.strip()
+
+      match = infixRegex.match(production)
+      if match:
+        (parsetree, ast) = pad(2, production.split('->'))
+        operator = self.atomParser.parse(match.group(1))
+        ledMorphemes = [operator, nonterminal]
+        ast = self.astParser.parse(ast)
+        rules.append( ExprRule( nonterminal, Production(), Production(ledMorphemes), AstTranslation(0), ast, InfixOperator(operator) ))
+        continue
+
+      match = prefixRegex.match(production)
+      if match:
+        (parsetree, ast) = pad(2, production.split('->'))
+        operator = self.atomParser.parse(match.group(1))
+        nudMorphemes = [operator, nonterminal]
+        ast = self.astParser.parse(ast)
+        rules.append( ExprRule( nonterminal, Production(nudMorphemes), Production(), AstTranslation(0), ast, PrefixOperator(operator)) )
+        continue
+
+      match = self.ruleRegex.match(production)
+      if not match:
+        raise Exception('Invalidly formatted expression rule: %s' %(production))
+      (nud, ledParseTree, ast) = (match.group(1), match.group(3), match.group(5))
+      (nudParseTree, nudAst) = pad(2, nud.split('->'))
+      nudMorphemes = self._getAtoms(nudParseTree)
+      ledMorphemes = self._getAtoms(ledParseTree)
+      operator = ledMorphemes[0] if len(ledMorphemes) else nudMorphemes[0]
+      if not isinstance(operator, Terminal):
+        raise Exception('Invalid operator for rule.')
+      nudAst = self.astParser.parse(nudAst)
+      ast = self.astParser.parse(ast)
+      rules.append( ExprRule(nonterminal, Production(nudMorphemes), Production(ledMorphemes), nudAst, ast, MixfixOperator(operator)) )
+    return rules
 
 class AstParser(Parser):
   rnormalize = {
@@ -163,16 +219,18 @@ class AstParser(Parser):
   
   def parse(self, string):
     if not string:
-      return None
+      return AstTranslation(0)
     if '(' in string:
       (node, values) = string.replace(')', '').split('(')
       parameters = {}
-      for param in values.split(','):
-        (name, value) = param.split('=')
-        parameters[name] = int(value.replace('$', ''))
+      if len(values):
+        for param in values.split(','):
+          (name, value) = param.split('=')
+          parameters[name] = int(value.replace('$', ''))
       return AstSpecification( node, parameters )
     else:
-      return AstTranslation( int(string.replace('$', '')) )
+      index = '$' if string == '$$' else int(string.replace('$', ''))
+      return AstTranslation( index )
   
 
 class AtomParser(Parser):
@@ -231,12 +289,12 @@ class sListMacroParser(MacroParser):
     nonterminal = self.nonTerminalParser.parse(nonterminal)
     separator = self.terminalParser.parse(separator.replace("'", ''))
     (start, rules) = self.macroExpander.slist( nonterminal, separator )
-    context = 'expr' if str(nonterminal).lower() == '_expr' else 'll1'
 
     if str(nonterminal).lower() == '_expr':
       macro = ExprListMacro( nonterminal, separator )
     else:
       macro = SeparatedListMacro( nonterminal, separator, start, rules )
+
     rules[0].nonterminal.macro = macro
     rules[2].nonterminal.macro = macro
     return macro
@@ -291,10 +349,14 @@ class TerminalParser(AtomParser):
   
 
 class HermesParser:
-  def __init__( self, ruleParser, terminalParser, nonTerminalParser, macroParser ):
+  def __init__( self, ruleParser, exprRuleParser, terminalParser, nonTerminalParser, macroParser ):
     self.__dict__.update(locals())
   def parseRule( self, string ):
     return self.ruleParser.parse(string)
+  def _setBindingPower( self, bindingPower ):
+    self.exprRuleParser.setBindingPower(bindingPower)
+  def parseExprRule( self, string ):
+    return self.exprRuleParser.parse(string)
   def parseNonTerminal( self, string ):
     return self.nonTerminalParser.parse(string)
   def parseTerminal( self, string ):
@@ -307,19 +369,22 @@ class HermesParser:
     return self.macroParser.getCache()
 
 class HermesParserFactory:
+  def __init__(self):
+    self.tParser = CachedParser( TerminalParser() )
+    self.nParser = CachedParser( NonTerminalParser() )
+    self.macroExpander = LL1MacroExpander(self.tParser, self.nParser)
+    self.sListParser = sListMacroParser(self.nParser, self.tParser, self.macroExpander)
+    self.nListParser = nListMacroParser(self.nParser, self.tParser, self.macroExpander)
+    self.tListParser = tListMacroParser(self.nParser, self.tParser, self.macroExpander)
+    self.mParser = CachedParser( MacroParser(self.nParser, self.tParser, self.sListParser, self.nListParser, self.tListParser) )
+    self.astParser = AstParser(self.nParser, self.tParser)
+    self.atomParser = AtomParser(self.nParser, self.tParser, self.mParser) 
+    self.ruleParser = RuleParser(self.atomParser, self.astParser)
+    self.exprRuleParser = ExprRuleParser(self.atomParser, self.astParser)
   def create(self):
-    tParser = CachedParser( TerminalParser() )
-    nParser = CachedParser( NonTerminalParser() )
-    macroExpander = LL1MacroExpander(tParser, nParser)
-    sListParser = sListMacroParser(nParser, tParser, macroExpander)
-    nListParser = nListMacroParser(nParser, tParser, macroExpander)
-    tListParser = tListMacroParser(nParser, tParser, macroExpander)
-    mParser = CachedParser( MacroParser(nParser, tParser, sListParser, nListParser, tListParser) )
-    astParser = AstParser(nParser, tParser)
-    atomParser = AtomParser(nParser, tParser, mParser) 
-    ruleParser = RuleParser(atomParser, astParser)
-    return HermesParser(ruleParser, tParser, nParser, mParser)
-  
+    return HermesParser(self.ruleParser, self.exprRuleParser, self.tParser, self.nParser, self.mParser)
+  def getExprRuleParser(self):
+    return self.exprRuleParser 
 
 class GrammarFileParser:
   def __init__( self, hermesParser ):
@@ -355,13 +420,6 @@ class GrammarFileParser:
 
       json['expr'][i]['nonterminal'] = self.hermesParser.parseNonTerminal(parser['nonterminal'])
 
-      if 'rules' not in parser:
-        json['expr'][i]['rules'] = list()
-      elif not isinstance(parser['rules'], list):
-        raise Exception("json['expr'] expected to be a list")
-
-      json['expr'][i]['rules'] = flatten(list(map(self.hermesParser.parseRule, parser['rules'])))
-
       if 'binding_power' not in parser:
         json['expr'][i]['binding_power'] = list()
       elif not isinstance(parser['binding_power'], list):
@@ -378,6 +436,15 @@ class GrammarFileParser:
         json['expr'][i]['binding_power'][j]['terminals'] = \
           list(map(self.hermesParser.parseTerminal, value))
 
+      self.hermesParser._setBindingPower( json['expr'][i]['binding_power'] )
+
+      if 'rules' not in parser:
+        json['expr'][i]['rules'] = list()
+      elif not isinstance(parser['rules'], list):
+        raise Exception("json['expr'] expected to be a list")
+
+      json['expr'][i]['rules'] = flatten(list(map(self.hermesParser.parseExprRule, parser['rules'])))
+
     json['global'] = dict()
     json['global']['nonterminals'] = set(self.hermesParser.getNonTerminals())
     json['global']['terminals'] = set(self.hermesParser.getTerminals())
@@ -388,17 +455,20 @@ class GrammarFileParser:
     contents = json.load(fp)
     fp.close()
 
+    ll1GrammarFactory = LL1GrammarFactory()
+    exprGrammarFactory = ExpressionGrammarFactory()
+
     normalized = self.normalize(contents)
 
     start = self.hermesParser.parseNonTerminal(start) if start else contents['ll1']['start']
-    ll1Grammar = LL1Grammar( normalized['global']['nonterminals'], \
+    ll1Grammar = ll1GrammarFactory.create( normalized['global']['nonterminals'], \
                              normalized['global']['terminals'], \
                              normalized['global']['macros'], \
                              set(normalized['ll1']['rules']), \
                              normalized['ll1']['start'] )
     exprGrammars = []
     for grammar in normalized['expr']:
-      exprGrammars.append( ExpressionGrammar( \
+      exprGrammars.append( exprGrammarFactory.create( \
                              normalized['global']['nonterminals'], \
                              normalized['global']['terminals'], \
                              normalized['global']['macros'], \
