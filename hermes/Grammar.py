@@ -337,8 +337,6 @@ class Grammar:
   rules = set()
   nrules = set()
   conflicts = []
-  firstSet = None
-  followSet = None
   start = None
   tLookup = None
   ntLookup = None
@@ -361,13 +359,6 @@ class Grammar:
   
   def isNonTerminal( self, n ):
     return isinstance(n, NonTerminal)
-  
-  # TODO: remove
-  def _getAtomVarName( self, atom ):
-    if isinstance(atom, Terminal):
-      return "TERMINAL_" + str(atom).strip("'").upper()
-    if isinstance(atom, NonTerminal):
-      return "NONTERMINAL_" + str(atom).upper()
   
   def getTerminal( self, string ):
     if not self.tLookup:
