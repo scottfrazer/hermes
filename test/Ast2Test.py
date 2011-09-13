@@ -5,6 +5,7 @@ from GrammarTest import GrammarTest
 
 class Ast2Test(GrammarTest):
   def setUp(self):
+    self.maxDiff = None
     self.loadGrammarFile('grammars/ast2.zgr', 'START')
 
   def test_firstSets(self):
