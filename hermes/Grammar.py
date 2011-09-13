@@ -283,7 +283,7 @@ class ExpressionFirstFollowCalculator(FirstFollowCalculator):
   def _computeFirst(self, grammar):
     for rule in grammar.rules:
       if len(rule.nudProduction):
-        self.first[rule.nonterminal].union({rule.nudProduction.morphemes[0]})
+        self.first[rule.nonterminal] = self.first[rule.nonterminal].union({rule.nudProduction.morphemes[0]})
 
   def _computeFollow(self, grammar):
     for rule in grammar.rules:
@@ -300,7 +300,7 @@ class ExpressionFirstFollowCalculator(FirstFollowCalculator):
             theSet = {morphemes[index + 1]}
 
           if morpheme == rule.nonterminal:
-            self.follow[rule.nonterminal].union(theSet)
+            self.follow[rule.nonterminal] = self.follow[rule.nonterminal].union(theSet)
           elif isinstance(morpheme, ExprListMacro):
             morpheme.setFollow(theSet)
 
