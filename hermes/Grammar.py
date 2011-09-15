@@ -114,13 +114,16 @@ class Operator:
     self.__dict__.update(locals())
 
 class InfixOperator(Operator):
-  pass
+  def __str__(self):
+    return 'infix %s' % (self.operator)
 
 class PrefixOperator(Operator):
-  pass
+  def __str__(self):
+    return 'prefix %s' % (self.operator)
 
 class MixfixOperator(Operator):
-  pass
+  def __str__(self):
+    return 'mixfix %s' % (self.operator)
 
 class OperatorPrecedence:
   def __init__(self, terminal, precedence, associativity):
@@ -387,8 +390,10 @@ class Grammar:
         break
     return r
   
-  def _ntrules( self, n ):
-    return [rule for rule in self.nrules if str(rule.nonterminal) == str(n)]
+  def getRules( self, nonterminal = None ):
+    if nonterminal:
+      return [rule for rule in self.nrules if str(rule.nonterminal) == str(nonterminal)]
+    return self.rules
   
 
 class NudLedContainer:
@@ -515,9 +520,6 @@ class LL1Grammar(Grammar):
     (self.first, self.follow) = firstFollowCalc.compute(self)
     self._computeConflicts()
   
-  def getRules(self):
-    return self.rules
-  
   def getNormalizedRules(self):
     return self.nrules
   
@@ -544,7 +546,7 @@ class LL1Grammar(Grammar):
       if self.ε in self.first[N] and len(self.first[N].intersection(self.follow[N])):
         self.conflicts.append( FirstFollowConflict( N, self.first[N], self.follow[N] ) )
 
-      NR = self._ntrules( N )
+      NR = self.getRules( N )
       for x in range(len(NR)):
         for y in range(len(NR)):
           if x == y:
@@ -590,17 +592,26 @@ class CompositeGrammar(Grammar):
     self.terminals = grammar.terminals
     self.nonterminals = grammar.nonterminals
     self.rules = grammar.rules
+    self.nrules = grammar.nrules
     self.ε = grammar.ε
     self.λ = grammar.λ
     self.σ = grammar.σ
     for exprgrammar in self.exprgrammars:
       self.rules = self.rules.union(exprgrammar.rules)
+      for macros in exprgrammar.macros:
+        try:
+          self.rules = self.rules.union(macros.rules)
+          self.nrules = self.nrules.union(macros.rules)
+        except AttributeError:
+          continue
       tokens = exprgrammar.first[exprgrammar.nonterminal].union({self.λ})
       grammar.first[exprgrammar.nonterminal] = grammar.first[exprgrammar.nonterminal].union(tokens)
       tokens = exprgrammar.follow[exprgrammar.nonterminal]
       grammar.follow[exprgrammar.nonterminal] = grammar.follow[exprgrammar.nonterminal].union(tokens)
     self.conflicts = grammar.conflicts
-    
+
+    self._assignIds()
+
     progress = True
     while progress:
       progress = False
@@ -611,6 +622,21 @@ class CompositeGrammar(Grammar):
     self.follow = grammar.follow
     for exprGrammar in self.exprgrammars:
       self.conflicts.extend(exprGrammar.conflicts)
+
+  # TODO: this is duplicated
+  def _assignIds(self):
+    i = 0
+    for terminal in self.terminals:
+      if self.isSimpleTerminal(terminal):
+        terminal.id = i
+        i += 1
+    for nonterminal in self.nonterminals:
+      nonterminal.id = i
+      i += 1
+
+    for ruleSet in [self.rules, self.nrules]:
+      for i, rule in enumerate(ruleSet):
+        rule.id = i
   
   def getLL1Grammar(self):
     return self.grammar
@@ -618,11 +644,16 @@ class CompositeGrammar(Grammar):
   def getExpressionGrammars(self):
     return self.exprgrammars
   
-  def getLL1Rules(self):
-    return self.grammar.getRules()
-  
+  def getLL1Rules(self, nonterminal):
+    return self.grammar.getRules(nonterminal)
+
   def getNormalizedLL1Rules(self):
     return self.grammar.getNormalizedRules()
+
+  def getNormalizedRules(self, nonterminal = None):
+    if nonterminal:
+      return [rule for rule in self.nrules if str(rule.nonterminal) == str(nonterminal)]
+    return self.nrules
   
   # These three functions are coupled
   def _compute_parse_table( self ):
@@ -634,7 +665,7 @@ class CompositeGrammar(Grammar):
       rules = []
       for t in self._sort_dict(T):
         next = None
-        for R in self.getLL1Grammar()._ntrules(N):
+        for R in self.getNormalizedRules(N):
           Fip = self._pfirst(R.getProduction())
           if t in Fip or (self.ε in Fip and t in self.follow[N]):
             next = R

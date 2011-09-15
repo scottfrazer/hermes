@@ -28,7 +28,7 @@ def Cli():
   parser.add_argument('grammar',
               metavar = 'GRAMMAR',
               nargs = 1,
-              help = 'Zeus grammar file')
+              help = 'Grammar file')
 
   parser.add_argument('-D', '--debug',
               required = False,
@@ -47,6 +47,11 @@ def Cli():
               required = False,
               default='python',
               help = 'Language to generate the parser in.  Currently not in use. Only generates Python')
+
+  parser.add_argument('-p', '--pretty-print',
+              action='store_true',
+              default=False,
+              help = 'Pretty prints all data structures.')
 
   parser.add_argument('-t', '--tokens',
               required = False,
@@ -115,7 +120,7 @@ def Cli():
     return generator.generate()
 
   if result.action == 'parse':
-    f = '__z_code_compile__.py'
+    f = 'hermesparser.py'
 
     resources = Resources(G, terminals, True )
     template = PythonTemplate(resources)
@@ -125,12 +130,22 @@ def Cli():
     fp.write(code)
     fp.close()
 
-    import subprocess
-    output = subprocess.check_output(['python', f, 'ast' if result.ast else 'parsetree'])
-    output_str = output.decode('utf-8')
+    import hermesparser
+    parser = hermesparser.Parser()
+    entry = list(parser.entry_points.keys())[0]
+    terminals = list(map(lambda x: hermesparser.Terminal(parser.str_terminal[x]), terminals))
+    parsetree = parser.parse(terminals, entry)
+    if not result.ast:
+      print(parsetree)
+    else:
+      ast = parsetree.toAst()
+      ast = hermesparser.AstPrettyPrintable(ast) if result.pretty_print else ast
+      if isinstance(ast, list):
+        print('[%s]' % (', '.join([str(x) for x in ast])))
+      else:
+        print(ast)
     if os.path.isfile(f):
       os.remove(f)
-    sys.stdout.write(output_str)
 
 if __name__ == '__main__':
     Cli()

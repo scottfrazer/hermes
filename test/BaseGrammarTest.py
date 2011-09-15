@@ -45,5 +45,22 @@ class BaseGrammarTest(GrammarTest):
     self.loadGrammarJson( self.grammars[idx]['json'] ) \
         .assertFirst( self.grammars[idx]['first'] ) \
         .assertFollow( self.grammars[idx]['follow'] )
+
+  def test_getRules(self):
+    self.loadGrammarFile('grammars/expr2.zgr', 'start')
+    NT = self.grammar.getNonTerminal
+    T = self.grammar.getTerminal
+    rules = self.grammar.getLL1Rules(NT('initializer_list_item'))
+    self.assertEqual( 1, len(rules) )
+    self.assertEqual( 1, len(rules[0].production.morphemes) )
+    self.assertEqual( rules[0].production.morphemes[0], T('item') )
+
+  def test_getRules2(self):
+    self.loadGrammarFile('grammars/expr2.zgr', 'start')
+    NT = self.grammar.getNonTerminal
+    T = self.grammar.getTerminal
+    rules = self.grammar.getNormalizedRules(NT('_gen4'))
+    self.assertEqual( 2, len(rules) )
+
 if __name__ == '__main__':
   unittest.main()

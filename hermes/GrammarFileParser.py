@@ -268,14 +268,15 @@ class MacroParser(Parser):
   def parse(self, string):
     self.logger.debug('Parsing macro %s' % (string))
     if string[:5].lower() == 'tlist':
-      return self.tListMacroParser.parse(string)
+      macro = self.tListMacroParser.parse(string)
     elif string[:4].lower() == 'list':
       (nonterminal, separator) = pad(2, string[5:-1].split(','))
       if separator:
-        return self.sListMacroParser.parse(string)
+        macro = self.sListMacroParser.parse(string)
       else:
-        return self.nListMacroParser.parse(string)
-  
+        macro = self.nListMacroParser.parse(string)
+    self.logger.debug('Parsed macro: %s' % (macro))
+    return macro
 
 class sListMacroParser(MacroParser):
   def __init__(self, nonTerminalParser, terminalParser, macroExpander):
@@ -459,22 +460,28 @@ class GrammarFileParser:
     exprGrammarFactory = ExpressionGrammarFactory()
 
     normalized = self.normalize(contents)
-
     start = self.hermesParser.parseNonTerminal(start) if start else contents['ll1']['start']
-    ll1Grammar = ll1GrammarFactory.create( normalized['global']['nonterminals'], \
-                             normalized['global']['terminals'], \
-                             normalized['global']['macros'], \
-                             set(normalized['ll1']['rules']), \
-                             normalized['ll1']['start'] )
+
+    ll1Grammar = ll1GrammarFactory.create(
+      normalized['global']['nonterminals'], \
+      normalized['global']['terminals'], \
+      normalized['global']['macros'], \
+      set(normalized['ll1']['rules']), \
+      normalized['ll1']['start']
+    )
+
     exprGrammars = []
     for grammar in normalized['expr']:
-      exprGrammars.append( exprGrammarFactory.create( \
-                             normalized['global']['nonterminals'], \
-                             normalized['global']['terminals'], \
-                             normalized['global']['macros'], \
-                             set(grammar['rules']), \
-                             grammar['binding_power'], \
-                             grammar['nonterminal'] ))
+      exprGrammars.append( 
+        exprGrammarFactory.create(
+          normalized['global']['nonterminals'], \
+          normalized['global']['terminals'], \
+          normalized['global']['macros'], \
+          set(grammar['rules']), \
+          grammar['binding_power'], \
+          grammar['nonterminal']
+        )
+      )
 
     return CompositeGrammar(ll1Grammar, exprGrammars)
   

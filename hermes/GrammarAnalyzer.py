@@ -10,7 +10,7 @@ class GrammarAnalyzer:
     print(" -- Non-Terminals --")
     print(', '.join([str(e) for e in sorted(self.grammar.nonterminals, key=lambda x: x.id)]) + "\n")
     print(" -- Normalized Grammar -- ")
-    print("\n".join([ str(r) for r in sorted(self.grammar.getNormalizedLL1Rules(), key=lambda x: x.id)]) + "\n")
+    print("\n".join([ str(r) for r in sorted(self.grammar.getNormalizedRules(), key=lambda x: x.id)]) + "\n")
     
     for grammar in self.grammar.exprgrammars:
       print(" -- Expression Grammar (%s) -- " % (grammar.nonterminal))

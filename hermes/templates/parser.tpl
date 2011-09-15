@@ -2,7 +2,7 @@ import sys
 
 {% from hermes.Grammar import AstTranslation, AstSpecification %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
-{% from hermes.Macro import ExprListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro %}
+{% from hermes.Macro import ExprListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, LL1ListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 def parse( iterator, entry ):
   p = Parser()
@@ -29,6 +29,9 @@ class Terminal:
     return self.id
   def toAst(self):
     return self
+  def toString(self, format):
+    if format == 'type':
+      return self.str
   def __str__(self):
     return self.str
 
@@ -66,6 +69,7 @@ class ParseTree():
     self.children = []
     self.astTransform = None
     self.isExpr = False
+    self.isNud = False
     self.list = False
   def add( self, tree ):
     self.children.append( tree )
@@ -89,12 +93,20 @@ class ParseTree():
       elif isinstance(self.astTransform, AstTransformNodeCreator):
         parameters = {}
         for name, idx in self.astTransform.parameters.items():
-          if isinstance(self.children[idx], ParseTree):
-            parameters[name] = self.children[idx].toAst()
-          elif isinstance(self.children[idx], list):
-            parameters[name] = [x.toAst() for x in self.children[idx]]
+          if isinstance(self.children[0], ParseTree) and self.children[0].isNud: # implies .isExpr
+            if idx < len(self.children[0].children):
+              child = self.children[0].children[idx]
+            else:
+              index = idx - len(self.children[0].children) + 1
+              child = self.children[index]
           else:
-            parameters[name] = self.children[idx]
+            child = self.children[idx]
+          if isinstance(child, ParseTree):
+            parameters[name] = child.toAst()
+          elif isinstance(child, list):
+            parameters[name] = [x.toAst() for x in child]
+          else:
+            parameters[name] = child
         return Ast(self.astTransform.name, parameters)
     else:
       if isinstance(self.astTransform, AstTransformSubstitution):
@@ -123,6 +135,34 @@ class Ast():
     return self.attributes[attr]
   def __str__(self):
     return '(%s: %s)' % (self.name, ', '.join('%s=%s'%(str(k), '[' + ', '.join([str(x) for x in v]) + ']' if isinstance(v, list) else str(v) ) for k,v in self.attributes.items()))
+
+class AstPrettyPrintable(Ast):
+  def __init__(self, ast, tokenFormat='type'):
+    self.__dict__.update(locals())
+  def getAttr(self, attr):
+    return self.ast.getAttr(attr)
+  def __str__(self):
+    return self._prettyPrint(self.ast, 0)
+  def _prettyPrint(self, ast, indent = 0):
+    indentStr = ''.join([' ' for x in range(indent)])
+    if isinstance(ast, Ast):
+      string = '%s(%s:\n' % (indentStr, ast.name)
+      string += ',\n'.join([ \
+        '%s  %s=%s' % (indentStr, name, self._prettyPrint(value, indent + 2).lstrip()) for name, value in ast.attributes.items() \
+      ])
+      string += '\n%s)' % (indentStr)
+      return string
+    elif isinstance(ast, list):
+      if len(ast) == 0:
+        return '%s[]' % (indentStr)
+      string = '%s[\n' % (indentStr)
+      string += ',\n'.join([self._prettyPrint(element, indent + 2) for element in ast])
+      string += '\n%s]' % (indentStr)
+      return string
+    elif isinstance(ast, Terminal):
+      return '%s%s' % (indentStr, ast.toString(self.tokenFormat))
+    else:
+      return '%s%s' % (indentStr, ast)
 
 class SyntaxError(Exception):
   def __init__(self, message, tracer = None):
@@ -400,6 +440,8 @@ class Parser:
       tracer = None
     left = self.nud{{index}}(depth)
     if isinstance(left, ParseTree):
+      left.isExpr = True
+      left.isNud = True
       tracer.add(left.tracer)
     while rbp < self.binding_power(self.sym, self.infixBp{{index}}):
       left = self.led{{index}}(left, depth)
@@ -438,7 +480,9 @@ class Parser:
       tree.add( self._{{rule.nonterminal.string.upper()}}() )
               {% endif %}
             {% elif isinstance(morpheme, NonTerminal) %}
-      tree.add( self._{{rule.nonterminal.string.upper()}}() )
+      tree.add( self._{{morpheme.string.upper()}}() )
+            {% elif isinstance(morpheme, LL1ListMacro) %}
+      tree.add( self._{{morpheme.start_nt.string.upper()}}() )
             {% elif isinstance(morpheme, ExprListMacro) %}
       ls = AstList()
       if self.sym.getId() not in [{{', '.join([str(x.id) for x in morpheme.follow])}}]:
@@ -488,7 +532,9 @@ class Parser:
       tree.add( self._{{rule.nonterminal.string.upper()}}() )
               {% endif %}
             {% elif isinstance(morpheme, NonTerminal) %}
-      tree.add( self._{{rule.nonterminal.string.upper()}}() )
+      tree.add( self._{{morpheme.string.upper()}}() )
+            {% elif isinstance(morpheme, LL1ListMacro) %}
+      tree.add( self._{{morpheme.start_nt.string.upper()}}() )
             {% elif isinstance(morpheme, ExprListMacro) %}
       ls = AstList()
       if self.sym.getId() not in [{{', '.join([str(x.id) for x in morpheme.follow])}}]:
@@ -527,7 +573,11 @@ if __name__ == '__main__':
     if not parsetree or len(sys.argv) <= 1 or (len(sys.argv) > 1 and sys.argv[1] == 'parsetree'):
       print(parsetree)
     elif len(sys.argv) > 1 and sys.argv[1] == 'ast':
-      print(parsetree.toAst())
+      ast = parsetree.toAst()
+      if isinstance(ast, list):
+        print('[%s]' % (', '.join([str(x) for x in ast])))
+      else:
+        print(ast)
   except SyntaxError as e:
     print(e)
 {% endif %}

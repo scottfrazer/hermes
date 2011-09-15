@@ -83,7 +83,7 @@ class Resources:
       }
     for id, tpl_nt in tpl.items():
       N = tpl_nt['nt_obj']
-      for rule in self.grammar.getLL1Grammar()._ntrules(N):
+      for rule in self.grammar.getNormalizedRules(N):
         tpl_rule = {
           'obj': rule,
           'atoms': []
