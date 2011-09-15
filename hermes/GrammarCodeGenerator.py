@@ -14,7 +14,7 @@ class Template:
   pass
 
 class PythonTemplate(Template):
-  template = 'parser.tpl'
+  template = 'python/Parser.tpl'
   destination = 'Parser.py'
   def __init__(self, resources):
     self.resources = resources
