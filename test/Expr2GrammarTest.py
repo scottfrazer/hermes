@@ -5,6 +5,7 @@ from GrammarTest import GrammarTest
 
 class Expr2GrammarTest(GrammarTest):
   def setUp(self):
+    self.maxDiff = None
     self.loadGrammarFile('grammars/expr2.zgr', 'START')
 
   def test_firstSets(self):
@@ -49,6 +50,12 @@ class Expr2GrammarTest(GrammarTest):
         .runWithTokens(['lparen_cast','int','rparen','lbrace','item','rbrace']) \
         .assertParseTree("(start: (_gen0: (sub: (_expr: (_expr: lparen_cast, (type_name: int), rparen), lbrace, (_gen4: (initializer_list_item: item), (_gen5: )), (comma_opt: ), rbrace)), (_gen1: )))") \
         .assertAst('[(TypeInitializion: type=int, initializer=[item])]')
+
+  def test_codeGeneration2(self):
+    self.loadGrammarFile('grammars/expr2.zgr', 'start') \
+        .runWithTokens(['a','comma','identifier','lparen','rparen','comma','lparen_cast','int','rparen','lbrace','item','comma','item','comma','item','rbrace']) \
+        .assertParseTree("(start: (_gen0: (sub: (item: a)), (_gen1: comma, (sub: (_expr: identifier, lparen, [(_expr: )], rparen)), (_gen1: comma, (sub: (_expr: (_expr: lparen_cast, (type_name: int), rparen), lbrace, (_gen4: (initializer_list_item: item), (_gen5: comma, (initializer_list_item: item), (_gen5: comma, (initializer_list_item: item), (_gen5: )))), (comma_opt: ), rbrace)), (_gen1: )))))") \
+        .assertAst('[a, (FunctionCall: params=[none], name=identifier), (TypeInitializion: type=int, initializer=[item, item, item])]')
 
 if __name__ == '__main__':
   unittest.main()

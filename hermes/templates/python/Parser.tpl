@@ -93,7 +93,9 @@ class ParseTree():
       elif isinstance(self.astTransform, AstTransformNodeCreator):
         parameters = {}
         for name, idx in self.astTransform.parameters.items():
-          if isinstance(self.children[0], ParseTree) and self.children[0].isNud: # implies .isExpr
+          if idx == '$':
+            child = self.children[0]
+          elif isinstance(self.children[0], ParseTree) and self.children[0].isNud: # implies .isExpr
             if idx < len(self.children[0].children):
               child = self.children[0].children[idx]
             else:
@@ -101,6 +103,7 @@ class ParseTree():
               child = self.children[index]
           else:
             child = self.children[idx]
+
           if isinstance(child, ParseTree):
             parameters[name] = child.toAst()
           elif isinstance(child, list):

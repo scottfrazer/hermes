@@ -226,7 +226,7 @@ class AstParser(Parser):
       if len(values):
         for param in values.split(','):
           (name, value) = param.split('=')
-          parameters[name] = int(value.replace('$', ''))
+          parameters[name] = ('$' if value == '$$' else int(value.replace('$', '')))
       return AstSpecification( node, parameters )
     else:
       index = '$' if string == '$$' else int(string.replace('$', ''))
