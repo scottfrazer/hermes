@@ -88,13 +88,13 @@ class ExprRule:
     if (not nudProduction or not len(nudProduction)) and \
        (not ledProduction or not len(ledProduction)):
       raise Exception('Rule must contain a NUD or a LED portion.')
-    if not isinstance(self.getRoot(), Terminal):
+    if self.getRoot() and not isinstance(self.getRoot(), Terminal):
       raise Exception('Root of expression rule must be a terminal.')
   def getRoot(self):
     if self.ledProduction and len(self.ledProduction):
       return self.ledProduction.morphemes[0]
     else:
-      return self.nudProduction.morphemes[0]
+      return None #self.nudProduction.morphemes[0]
   def expand(self):
     return [self]
   def getProduction(self):

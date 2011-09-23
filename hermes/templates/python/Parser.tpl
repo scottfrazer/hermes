@@ -70,6 +70,8 @@ class ParseTree():
     self.astTransform = None
     self.isExpr = False
     self.isNud = False
+    self.isPrefix = False
+    self.isInfix = False
     self.list = False
   def add( self, tree ):
     self.children.append( tree )
@@ -95,7 +97,11 @@ class ParseTree():
         for name, idx in self.astTransform.parameters.items():
           if idx == '$':
             child = self.children[0]
-          elif isinstance(self.children[0], ParseTree) and self.children[0].isNud: # implies .isExpr
+          elif isinstance(self.children[0], ParseTree) and \
+               self.children[0].isNud and \
+               not self.children[0].isPrefix and \
+               not self.isInfix and \
+               not self.children[0].isInfix: # implies .isExpr
             if idx < len(self.children[0].children):
               child = self.children[0].children[idx]
             else:
@@ -479,6 +485,7 @@ class Parser:
             {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
               {% if isinstance(rule.operator, PrefixOperator) %}
       tree.add( self._{{rule.nonterminal.string.upper()}}( self.prefixBp{{index}}[{{rule.operator.operator.id}}] ) )
+      tree.isPrefix = True
               {% else %}
       tree.add( self._{{rule.nonterminal.string.upper()}}() )
               {% endif %}
@@ -531,6 +538,7 @@ class Parser:
             {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
               {% if isinstance(rule.operator, InfixOperator) %}
       tree.add( self._{{rule.nonterminal.string.upper()}}( self.infixBp{{index}}[{{rule.operator.operator.id}}] ) )
+      tree.isInfix = True
               {% else %}
       tree.add( self._{{rule.nonterminal.string.upper()}}() )
               {% endif %}

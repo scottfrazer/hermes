@@ -200,9 +200,9 @@ class ExprRuleParser(RuleParser):
       (nudParseTree, nudAst) = pad(2, nud.split('->'))
       nudMorphemes = self._getAtoms(nudParseTree)
       ledMorphemes = self._getAtoms(ledParseTree)
-      operator = ledMorphemes[0] if len(ledMorphemes) else nudMorphemes[0]
-      if not isinstance(operator, Terminal):
-        raise Exception('Invalid operator for rule.')
+      operator = ledMorphemes[0] if len(ledMorphemes) else None
+      if operator and not isinstance(operator, Terminal):
+        raise Exception('Invalid operator for rule: %s' % (production))
       nudAst = self.astParser.parse(nudAst)
       ast = self.astParser.parse(ast)
       rules.append( ExprRule(nonterminal, Production(nudMorphemes), Production(ledMorphemes), nudAst, ast, MixfixOperator(operator)) )

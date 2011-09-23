@@ -16,7 +16,7 @@ setup(
     author_email='scott.d.frazer@gmail.com',
     packages=['hermes'],
     package_dir={'hermes': 'hermes'},
-    package_data={'hermes': ['templates/*.tpl']},
+    package_data={'hermes': ['templates/Python/*.tpl']},
     install_requires=[
         "moody-templates>=0.9"
     ],
