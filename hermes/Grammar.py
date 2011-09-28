@@ -367,6 +367,20 @@ class Grammar:
   def updateFirstFollow( self, first, follow ):
       (self.first, self.follow, changed) = self.firstFollowCalc.update(self, first, follow)
       return changed
+  
+  def _assignIds(self):
+    i = 0
+    for terminal in self.terminals:
+      if self.isSimpleTerminal(terminal):
+        terminal.id = i
+        i += 1
+    for nonterminal in self.nonterminals:
+      nonterminal.id = i
+      i += 1
+
+    for ruleSet in [self.rules, self.expandedRules]:
+      for i, rule in enumerate(ruleSet):
+        rule.id = i
 
   def isSimpleTerminal( self, t ):
     return isinstance(t, Terminal) and not isinstance(t, AbstractTerminal)
@@ -434,10 +448,6 @@ class ExpressionGrammar(Grammar):
     self._computePrecedence()
     (self.first, self.follow) = firstFollowCalc.compute(self)
     self._computeConflicts()
-
-  def _assignIds(self):
-    for i, rule in enumerate(self.rules):
-      rule.id = i
   
   def _computePrecedence(self):
     counter = 1000
@@ -547,20 +557,6 @@ class LL1Grammar(Grammar):
   
   def getStart(self):
     return self.start
-  
-  def _assignIds(self):
-    i = 0
-    for terminal in self.terminals:
-      if self.isSimpleTerminal(terminal):
-        terminal.id = i
-        i += 1
-    for nonterminal in self.nonterminals:
-      nonterminal.id = i
-      i += 1
-
-    for ruleSet in [self.rules, self.expandedRules]:
-      for i, rule in enumerate(ruleSet):
-        rule.id = i
   
   def _computeConflicts( self ):
     self.conflicts = []
@@ -673,21 +669,6 @@ class CompositeGrammar(Grammar):
       nRules = self.getExpandedRules( nonterminal )
       if len(nRules) == 0 and nonterminal is not grammar.start and nonterminal not in [x.nonterminal for x in exprgrammars]:
         self.conflicts.append( UndefinedNonterminalConflict(nonterminal) )
-
-  # TODO: this is duplicated
-  def _assignIds(self):
-    i = 0
-    for terminal in self.terminals:
-      if self.isSimpleTerminal(terminal):
-        terminal.id = i
-        i += 1
-    for nonterminal in self.nonterminals:
-      nonterminal.id = i
-      i += 1
-
-    for ruleSet in [self.rules, self.expandedRules]:
-      for i, rule in enumerate(ruleSet):
-        rule.id = i
   
   def getLL1Grammar(self):
     return self.grammar
