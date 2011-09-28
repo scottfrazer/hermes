@@ -26,6 +26,10 @@ class GrammarAnalyzer:
       if not isinstance(N, NonTerminal):
         continue
       print("%s = {%s}" % (N, ', '.join([str(e) for e in self.grammar.follow[N]])))
+    if ( len(self.grammar.warnings) ):
+      print("\n -- Warnings --")
+      for warning in self.grammar.warnings:
+        print('\n' + str(warning))
     if ( len(self.grammar.conflicts) ):
       print("\n -- Grammar conflicts detected.  Grammar is not LL(1) --")
       for conflict in self.grammar.conflicts:

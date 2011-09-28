@@ -1,5 +1,41 @@
+NOTES and TODO
+==============
 
+Bugs
+----
 
+1.  Fix extraneous _genX tokens in expr.zgr
+2.  Make unit tests pass after adding the new warning and conflict.
+
+AST Transformations & Constraints
+---------------------------------
+
+[
+  {
+    "constraint": "FunctionDefinition.body is_a CompoundExpression",
+    "message": "A function body must be a compound expression"
+  },
+  {
+    "constraint": "FunctionDefinition.declarator.find(ParameterTypeList).count() == 1",
+    "message": "A function body must be a compound expression"
+  },
+  {
+    "transformation": "FunctionDefinition( name=declarator.ident, parameters=declarator.find(ParameterList), return=)"
+  }
+]
+
+Test Granularity
+----------------
+
+1) Grammar file parsing
+  a) no duplicate terminals/nonterminals
+  b) no extra _genX nonterminals or rules
+  c) test correctness of JUST the parsers alone, one by one.
+  d) test the composite parser assuming that the sub parsers work
+2) 
+
+Expression Parsing
+------------------
 # infix
 a := a + '+' + a
 a := {a} + {'+' + a}

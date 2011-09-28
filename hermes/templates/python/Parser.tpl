@@ -2,7 +2,7 @@ import sys
 
 {% from hermes.Grammar import AstTranslation, AstSpecification %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
-{% from hermes.Macro import ExprListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, LL1ListMacro %}
+{% from hermes.Macro import ListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, LL1ListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 def parse( iterator, entry ):
   p = Parser()
@@ -336,10 +336,8 @@ class Parser:
     {% endif %}
 
     {% if n['empty'] and len(n['follow']) %}
-      {% for f in n['follow']%}
-    if self.sym != None and ({{' or '.join(['self.sym.getId() == ' + str(a.id) for a in n['follow']])}}):
+    if self.sym != None and (self.sym.getId() in [{{', '.join([str(a.id) for a in n['follow']])}}]):
       return tree
-      {% endfor %}
     {% endif %}
 
     if self.sym == None or self.sym.getId() in [{{', '.join(str(e.id) for e in n['escape_terminals'])}}]:
@@ -493,15 +491,6 @@ class Parser:
       tree.add( self._{{morpheme.string.upper()}}() )
             {% elif isinstance(morpheme, LL1ListMacro) %}
       tree.add( self._{{morpheme.start_nt.string.upper()}}() )
-            {% elif isinstance(morpheme, ExprListMacro) %}
-      ls = AstList()
-      if self.sym.getId() not in [{{', '.join([str(x.id) for x in morpheme.follow])}}]:
-        while 1:
-          ls.append( self._{{morpheme.nonterminal.string.upper()}}() )
-          if self.sym.getId() != {{morpheme.separator.id}}:
-            break
-          self.expect({{morpheme.separator.id}}, tracer)
-      tree.add( ls )
             {% endif %}
           {% endfor %}
         {% endif %}
@@ -546,15 +535,6 @@ class Parser:
       tree.add( self._{{morpheme.string.upper()}}() )
             {% elif isinstance(morpheme, LL1ListMacro) %}
       tree.add( self._{{morpheme.start_nt.string.upper()}}() )
-            {% elif isinstance(morpheme, ExprListMacro) %}
-      ls = AstList()
-      if self.sym.getId() not in [{{', '.join([str(x.id) for x in morpheme.follow])}}]:
-        while 1:
-          ls.append( self._{{morpheme.nonterminal.string.upper()}}() )
-          if self.sym.getId() != {{morpheme.separator.id}}:
-            break
-          self.expect({{morpheme.separator.id}}, tracer)
-      tree.add( ls )
             {% endif %}
           {% endfor %}
         {% endif %}

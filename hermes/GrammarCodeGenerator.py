@@ -3,9 +3,10 @@ import re
 from pkg_resources import resource_filename
 from types import *
 from hermes.Morpheme import Terminal, NonTerminal, EmptyString
-from hermes.Macro import ExprListMacro, NonterminalListMacro, SeparatedListMacro
+from hermes.Macro import NonterminalListMacro, SeparatedListMacro
 from hermes.Grammar import MacroGeneratedRule, AstSpecification, AstTranslation
 from hermes.Logger import Factory as LoggerFactory
+from collections import OrderedDict
 import moody
 
 moduleLogger = LoggerFactory().getModuleLogger(__name__)
@@ -22,7 +23,6 @@ class PythonTemplate(Template):
   def render(self):
     x = { 
       'tokens': self.resources.getTokens(),
-      'rules': self.resources.getRules(),
       'expr_rules': self.resources.getExprGrammars(),
       'entry': self.resources.getEntry(),
       'entry_points': self.resources.getEntryPoints(),
@@ -33,7 +33,7 @@ class PythonTemplate(Template):
     }
     templates_dir = resource_filename(__name__, 'templates')
     loader = moody.make_loader(templates_dir)
-    code = loader.render( self.template, add_main=x['add_main'], rules=x['rules'], expr_rules=x['expr_rules'], tokens=x['tokens'], entry=x['entry'], nt=x['parser'], init=x['init'], entry_points=x['entry_points'], nudled=x['nudled'])
+    code = loader.render( self.template, add_main=x['add_main'], expr_rules=x['expr_rules'], tokens=x['tokens'], entry=x['entry'], nt=x['parser'], init=x['init'], entry_points=x['entry_points'], nudled=x['nudled'])
     linereduce = re.compile('^[ \t]*$', re.M)
     code = linereduce.sub('', code)
     code = re.sub('\n+', '\n', code)
@@ -116,7 +116,8 @@ class Resources:
           elif self.grammar.isSimpleTerminal(atom) or self.grammar.isNonTerminal(atom):
             tpl_rule['atoms'].append(atom)
         tpl_nt['rules'].append( tpl_rule )
-    return list(tpl.values())
+      tpl_nt['rules'] = sorted(tpl_nt['rules'], key=lambda x: x['obj'].id)
+    return sorted(tpl.values(), key=lambda x: str(x['nt_obj']))
   
   def getNudLed(self):
     templates = []
@@ -130,28 +131,37 @@ class Resources:
           if p.associativity == 'unary':
             prefixPrecedence[terminal] = p.precedence
 
+      infix = OrderedDict()
+      prefix = OrderedDict()
+
+      for key in sorted(infixPrecedence, key=lambda x: x.id):
+        infix[key.id] = infixPrecedence[key]
+      for key in sorted(prefixPrecedence, key=lambda x: x.id):
+        prefix[key.id] = prefixPrecedence[key]
+
       tpl = {
+        'index': index,
         'grammar': grammar,
-        'infixPrecedence': {k.id: v for k,v in infixPrecedence.items()},
-        'prefixPrecedence': {k.id: v for k,v in prefixPrecedence.items()}
+        'infixPrecedence': infix,
+        'prefixPrecedence': prefix
       }
 
       templates.append(tpl)
-    return templates
+    return sorted(templates, key=lambda x: x['index'])
   
   def getDeclarations(self):
     tab = self.grammar._compute_parse_table()
     terminals = self.grammar._strip_abstract_terminals( self.grammar.terminals.copy() )
 
-    terminal_str = {}
-    terminal_var = {}
-    for t in terminals:
+    terminal_str = OrderedDict()
+    terminal_var = OrderedDict()
+    for t in sorted(terminals, key=lambda x: str(x)):
       terminal_str[t.id] =  t.string
       terminal_var[t.id] = 'TERMINAL_' + str(t).strip("'").upper()
 
-    nonterminal_str = {}
-    nonterminal_var = {}
-    for n in self.grammar.nonterminals:
+    nonterminal_str = OrderedDict()
+    nonterminal_var = OrderedDict()
+    for n in sorted(self.grammar.nonterminals, key=lambda x: str(x)):
       nonterminal_str[n.id] =  n.string
       nonterminal_var[n.id] = 'NONTERMINAL_' + str(n).upper()
 
@@ -176,9 +186,6 @@ class Resources:
   
   def getTokens(self):
     return self.tokens
-  
-  def getRules(self):
-    return {r.id: r for r in self.grammar.getNormalizedLL1Rules() if type(r) is not MacroGeneratedRule}
   
   def getExprGrammars(self):
     return self.grammar.getExpressionGrammars()

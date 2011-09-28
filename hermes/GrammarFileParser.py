@@ -4,7 +4,7 @@ from hermes.Morpheme import NonTerminal, Terminal, EmptyString, EndOfStream, Exp
 from hermes.Grammar import Grammar, CompositeGrammar, LL1GrammarFactory, ExpressionGrammarFactory
 from hermes.Grammar import Rule, ExprRule, MacroGeneratedRule, Production, AstSpecification, AstTranslation
 from hermes.Grammar import InfixOperator, PrefixOperator, MixfixOperator
-from hermes.Macro import ExprListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro
+from hermes.Macro import SeparatedListMacro, NonterminalListMacro, TerminatedListMacro
 from hermes.Logger import Factory as LoggerFactory
 
 moduleLogger = LoggerFactory().getModuleLogger(__name__)
@@ -38,6 +38,7 @@ class LL1MacroExpander:
       return (self.tlist_cache[key][0].nonterminal, self.tlist_cache[key])
     
     nt0 = self.nonTerminalParser.parse( self.nextName() )
+    nt0.generated = True
     empty = self.terminalParser.parse('_empty')
     rules = [ MacroGeneratedRule(nt0, Production( [nonterminal, terminator, nt0] )), \
               MacroGeneratedRule(nt0, Production( [empty] )) ]
@@ -53,6 +54,7 @@ class LL1MacroExpander:
     
     nt0 = self.nonTerminalParser.parse( self.nextName() )
     nt1 = self.nonTerminalParser.parse( self.nextName() )
+    nt0.generated = nt1.generated = True
     empty = self.terminalParser.parse('_empty')
     rules = [ MacroGeneratedRule(nt0, Production( [nonterminal, nt1] )), \
               MacroGeneratedRule(nt0, Production( [empty] )), \
@@ -68,6 +70,7 @@ class LL1MacroExpander:
     if key in self.list_cache:
       return (self.list_cache[key][0].nonterminal, self.list_cache[key])
     nt0 = self.nonTerminalParser.parse( self.nextName() )
+    nt0.generated = True
     empty = self.terminalParser.parse('_empty')
     rules = [ MacroGeneratedRule(nt0, Production( [nonterminal, nt0] )), \
               MacroGeneratedRule(nt0, Production( [empty] )) ]
@@ -261,20 +264,20 @@ class MacroParser(Parser):
     re.compile(r'\s+'): ''
   }
   
-  def __init__(self, nonTerminalParser, terminalParser, sListMacroParser, nListMacroParser, tListMacroParser):
+  def __init__(self, nonTerminalParser, terminalParser, sListMacroParser, nListMacroParser, tListMacroParser, expand=True):
     self.__dict__.update(locals())
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
 
   def parse(self, string):
     self.logger.debug('Parsing macro %s' % (string))
     if string[:5].lower() == 'tlist':
-      macro = self.tListMacroParser.parse(string)
+      macro = self.tListMacroParser.parse(string, self.expand)
     elif string[:4].lower() == 'list':
       (nonterminal, separator) = pad(2, string[5:-1].split(','))
       if separator:
-        macro = self.sListMacroParser.parse(string)
+        macro = self.sListMacroParser.parse(string, self.expand)
       else:
-        macro = self.nListMacroParser.parse(string)
+        macro = self.nListMacroParser.parse(string, self.expand)
     self.logger.debug('Parsed macro: %s' % (macro))
     return macro
 
@@ -282,22 +285,23 @@ class sListMacroParser(MacroParser):
   def __init__(self, nonTerminalParser, terminalParser, macroExpander):
     self.__dict__.update(locals())
   
-  def parse(self, string):
+  def parse(self, string, expand=True):
     (nonterminal, separator) = pad(2, string[5:-1].split(','))
     if not nonterminal or not separator:
       raise Exception('bah you did things wrong: %s' %(string))
-    
+
     nonterminal = self.nonTerminalParser.parse(nonterminal)
     separator = self.terminalParser.parse(separator.replace("'", ''))
-    (start, rules) = self.macroExpander.slist( nonterminal, separator )
 
-    if str(nonterminal).lower() == '_expr':
-      macro = ExprListMacro( nonterminal, separator )
-    else:
-      macro = SeparatedListMacro( nonterminal, separator, start, rules )
+    (start, rules) = (None, None)
+    if expand:
+      (start, rules) = self.macroExpander.slist( nonterminal, separator )
 
-    rules[0].nonterminal.macro = macro
-    rules[2].nonterminal.macro = macro
+    macro = SeparatedListMacro( nonterminal, separator, start, rules )
+
+    if rules:
+      rules[0].nonterminal.macro = macro
+      rules[2].nonterminal.macro = macro
     return macro
   
 
@@ -305,11 +309,16 @@ class nListMacroParser(MacroParser):
   def __init__(self, nonTerminalParser, terminalParser, macroExpander):
     self.__dict__.update(locals())
   
-  def parse(self, string):
+  def parse(self, string, expand=True):
     nonterminal = self.nonTerminalParser.parse(string[5:-1])
-    (start, rules) = self.macroExpander.nlist( nonterminal )
+
+    (start, rules) = (None, None)
+    if expand:
+      (start, rules) = self.macroExpander.nlist( nonterminal )
+
     macro = NonterminalListMacro( nonterminal, start, rules )
-    rules[0].nonterminal.macro = macro
+    if rules:
+      rules[0].nonterminal.macro = macro
     return macro
   
 
@@ -317,15 +326,20 @@ class tListMacroParser(MacroParser):
   def __init__(self, nonTerminalParser, terminalParser, macroExpander):
     self.__dict__.update(locals())
   
-  def parse(self, string):
+  def parse(self, string, expand=True):
     (nonterminal, terminator) = pad(2, string[6:-1].split(','))
     if not nonterminal or not terminator:
       raise Exception('bah, bad')
     terminator = self.terminalParser.parse(terminator.replace("'", ''))
     nonterminal = self.nonTerminalParser.parse(nonterminal)
-    (start, rules) = self.macroExpander.tlist( nonterminal, terminator )
+
+    (start, rules) = (None, None)
+    if expand:
+      (start, rules) = self.macroExpander.tlist( nonterminal, terminator )
+
     macro = TerminatedListMacro( nonterminal, terminator, start, rules)
-    rules[0].nonterminal.macro = macro
+    if rules:
+      rules[0].nonterminal.macro = macro
     return macro
   
 
@@ -378,10 +392,12 @@ class HermesParserFactory:
     self.nListParser = nListMacroParser(self.nParser, self.tParser, self.macroExpander)
     self.tListParser = tListMacroParser(self.nParser, self.tParser, self.macroExpander)
     self.mParser = CachedParser( MacroParser(self.nParser, self.tParser, self.sListParser, self.nListParser, self.tListParser) )
+    self.expr_mParser = CachedParser( MacroParser(self.nParser, self.tParser, self.sListParser, self.nListParser, self.tListParser, expand=True) )
     self.astParser = AstParser(self.nParser, self.tParser)
     self.atomParser = AtomParser(self.nParser, self.tParser, self.mParser) 
+    self.exprAtomParser = AtomParser(self.nParser, self.tParser, self.mParser) 
     self.ruleParser = RuleParser(self.atomParser, self.astParser)
-    self.exprRuleParser = ExprRuleParser(self.atomParser, self.astParser)
+    self.exprRuleParser = ExprRuleParser(self.exprAtomParser, self.astParser)
   def create(self):
     return HermesParser(self.ruleParser, self.exprRuleParser, self.tParser, self.nParser, self.mParser)
   def getExprRuleParser(self):

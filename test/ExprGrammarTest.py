@@ -6,6 +6,7 @@ from GrammarTest import GrammarTest
 class ExprGrammarTest(GrammarTest):
   def setUp(self):
     self.loadGrammarFile('grammars/expr.zgr', 'START')
+    self.maxDiff = None
 
   def test_firstSets(self):
     self.assertFirst({
@@ -39,7 +40,7 @@ class ExprGrammarTest(GrammarTest):
   def test_codeGeneration2(self):
     self.loadGrammarFile('grammars/expr.zgr', 'start') \
         .runWithTokens(['a','comma','b','comma','lparen','lparen','number','multiply','identifier','lparen','number','add','number','rparen','rparen','rparen']) \
-        .assertParseTree('(start: (_gen0: (sub: (item: a)), (_gen1: comma, (sub: (item: b)), (_gen1: comma, (sub: (_expr: lparen, (_expr: lparen, (_expr: number, multiply, (_expr: identifier, lparen, [(_expr: number, add, number)], rparen)), rparen), rparen)), (_gen1: )))))') \
+        .assertParseTree('(start: (_gen0: (sub: (item: a)), (_gen1: comma, (sub: (item: b)), (_gen1: comma, (sub: (_expr: lparen, (_expr: lparen, (_expr: number, multiply, (_expr: identifier, lparen, (_gen2: (_expr: number, add, number), (_gen3: )), rparen)), rparen), rparen)), (_gen1: )))))') \
         .assertAst('(Statements: list=[(Item: name=a), (Item: name=b), (Mul: r=(FuncCall: params=[(add: r=number, l=number)], name=identifier), l=number)])')
 
 if __name__ == '__main__':

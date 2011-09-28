@@ -1,6 +1,27 @@
 class Conflict:
   pass
 
+class Warning:
+  pass
+
+class UnusedNonterminalWarning(Warning):
+  def __init__(self, nonterminal):
+    self.__dict__.update(locals())
+
+  def __str__(self):
+    string = ' -- Unused Nonterminal -- \n'
+    string += 'Nonterminal %s is defined but not used' % (self.nonterminal)
+    return string
+
+class UndefinedNonterminalConflict(Conflict):
+  def __init__(self, nonterminal):
+    self.__dict__.update(locals())
+
+  def __str__(self):
+    string = ' -- Undefined Nonterminal Conflict-- \n'
+    string += 'Nonterminal %s is used but not defined' % (self.nonterminal)
+    return string
+
 class ExprConflict(Conflict):
   def __init__( self, terminal, rules ):
     self.terminal = terminal
