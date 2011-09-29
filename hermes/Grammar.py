@@ -37,7 +37,11 @@ class Rule:
     return rules
   
   def __str__( self ):
-    return "%s := %s" % (str(self.nonterminal), str(self.production))
+    if self.ast and not (isinstance(self.ast, AstTranslation) and self.ast.idx == 0):
+      astString = ' -> %s' % (self.ast)
+    else:
+      astString = ''
+    return "%s := %s%s" % (str(self.nonterminal), str(self.production), astString)
   
   def getProduction(self):
     return self.production
@@ -112,13 +116,28 @@ class ExprRule:
     return self.nudProduction
   def getNonTerminal(self):
     return self.nonterminal
-  def __str__(self):
+  def toString(self, stylizer = None):
+    return self.__str__(stylizer)
+  def __str__(self, stylizer = None):
     nudProduction = self.nudProduction
     if not self.nudProduction or not len(self.nudProduction):
-      nudProduction = 'ε'
+      nudProduction = self.nonterminal
+
+    ledProduction = self.ledProduction
     if not self.ledProduction or not len(self.ledProduction):
       ledProduction = 'ε'
-    return "(ExprRule <op=%s>: {%s -> %s} + {%s} -> %s)" % (self.operator, self.nudProduction, self.nudAst, self.ledProduction, self.ast)
+
+    if isinstance(self.nudAst, AstTranslation) and self.nudAst.idx == 0:
+      nudAstString = ''
+    else:
+      nudAstString = ' -> %s' % (self.nudAst)
+
+    if self.operator.operator:
+      operatorString = '<operator %s>' % (self.operator)
+    else:
+      operatorString = ''
+
+    return "%s := {%s%s} + {%s} -> %s %s" % (self.nonterminal, nudProduction, nudAstString, ledProduction, self.ast, operatorString)
 
 class Operator:
   def __init__(self, operator, unary = False):
@@ -616,7 +635,6 @@ class CompositeGrammar(Grammar):
     
     self.terminals = grammar.terminals
     self.nonterminals = grammar.nonterminals
-    self.expandedRules = grammar.expandedRules
     self.ε = grammar.ε
     self.λ = grammar.λ
     self.σ = grammar.σ
@@ -677,18 +695,28 @@ class CompositeGrammar(Grammar):
     return self.exprgrammars
 
   def getExpandedLL1Rules(self, nonterminal = None):
+    allRules = [rule for rule in self.expandedRules if isinstance(rule, Rule)]
     if nonterminal:
-      return [rule for rule in self.expandedRules if str(rule.nonterminal) == str(nonterminal)]
-    return self.expandedRules
+      return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
+    return allRules 
 
   def getLL1Rules(self, nonterminal = None):
-    return self.grammar.getExpandedRules(nonterminal)
+    allRules = [rule for rule in self.rules if isinstance(rule, Rule)]
+    if nonterminal:
+      return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
+    return allRules 
 
   def getExpandedExpressionRules(self, nonterminal = None):
-    pass
+    allRules = [rule for rule in self.expandedRules if isinstance(rule, ExprRule)]
+    if nonterminal:
+      return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
+    return allRules 
 
   def getExpressionRules(self, nonterminal = None):
-    pass
+    allRules = [rule for rule in self.rules if isinstance(rule, ExprRule)]
+    if nonterminal:
+      return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
+    return allRules 
 
   def getNormalizedRules(self, nonterminal = None):
     return self.getExpandedLL1Rules(nonterminal)
