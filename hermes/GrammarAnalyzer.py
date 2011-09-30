@@ -52,7 +52,7 @@ class GrammarAnalyzer:
     file.write(self._title('Non-Terminals', stylizer))
     file.write(', '.join([str(e) for e in sorted(self.grammar.nonterminals, key=lambda x: x.id)]) + "\n\n")
     file.write(self._title('Expanded LL(1) Rules', stylizer))
-    file.write("\n".join([ str(r) for r in sorted(self.grammar.getExpandedLL1Rules(), key=lambda x: x.id)]) + "\n\n")
+    file.write("\n".join([ str(r) for r in sorted(self.grammar.getExpandedLL1Rules(), key=lambda x: str(x))]) + "\n\n")
     
     for exprGrammar in self.grammar.exprgrammars:
       rules = self.grammar.getExpandedExpressionRules(exprGrammar.nonterminal)

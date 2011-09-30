@@ -250,26 +250,20 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
     return changed
   
   def _computeFollow( self, grammar ):
-    rules = set(RuleExpander(grammar.rules).expand())
     changed = False
 
     progress = True
     while progress == True:
       progress = False
 
-      for rule in rules:
+      for rule in grammar.expandedRules:
         for index, morpheme in enumerate(rule.production.morphemes):
 
           if isinstance(morpheme, Terminal) or isinstance(morpheme, EmptyString):
             continue
 
-          if isinstance(morpheme, LL1ListMacro):
-            morpheme = morpheme.start_nt
-
           try:
             nextToken = rule.production.morphemes[ index + 1 ]
-            if isinstance(nextToken, LL1ListMacro):
-              nextToken = n.start_nt
           except IndexError:
             nextToken = None
 
@@ -283,6 +277,7 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
                 ', '.join([str(x) for x in newTokens]) \
               ))
               self.follow[morpheme] = self.follow[morpheme].union(newTokens)
+
           if not nextToken or grammar.ε in self.first[nextToken]:
             z = self.follow[rule.nonterminal]
             y = self.follow[morpheme]
