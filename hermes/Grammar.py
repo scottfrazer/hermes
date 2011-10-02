@@ -231,6 +231,7 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
           self.first[rule.nonterminal] = self.first[rule.nonterminal].union({morpheme})
 
         elif isinstance(morpheme, NonTerminal) or isinstance(morpheme, LL1ListMacro):
+          addEpsilon = True
           for morpheme in rule.production.morphemes:
             if isinstance(morpheme, LL1ListMacro):
               sub = self.first[morpheme.start_nt]
@@ -238,14 +239,17 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
               sub = self.first[morpheme]
             if not self.first[rule.nonterminal].issuperset(sub.difference({grammar.ε})):
               progress = changed = True
-            self.logger.debug('first(%s) = {%s} ∪ {%s}' % ( \
-                      rule.nonterminal, \
-                      ', '.join([str(x) for x in self.first[rule.nonterminal]]), \
-                      ', '.join([str(x) for x in sub.difference({grammar.ε})]) \
-                    ))
-            self.first[rule.nonterminal] = self.first[rule.nonterminal].union(sub.difference({grammar.ε}))
+              self.logger.debug('first(%s) = {%s} ∪ {%s}' % ( \
+                        rule.nonterminal, \
+                        ', '.join([str(x) for x in self.first[rule.nonterminal]]), \
+                        ', '.join([str(x) for x in sub.difference({grammar.ε})]) \
+                      ))
+              self.first[rule.nonterminal] = self.first[rule.nonterminal].union(sub.difference({grammar.ε}))
             if grammar.ε not in sub:
+              addEpsilon = False
               break
+          if addEpsilon:
+            self.first[rule.nonterminal] = self.first[rule.nonterminal].union({grammar.ε})
     return changed
   
   def _computeFollow( self, grammar ):
