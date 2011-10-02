@@ -2,7 +2,7 @@ import sys
 
 {% from hermes.Grammar import AstTranslation, AstSpecification %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
-{% from hermes.Macro import ListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, LL1ListMacro %}
+{% from hermes.Macro import ListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 def parse( iterator, entry ):
   p = Parser()
@@ -85,9 +85,18 @@ class ParseTree():
       return r
     elif self.list == 'tlist':
       if len(self.children) == 0:
-        return []
+        return AstList()
       r = AstList([self.children[0].toAst()])
       r.extend(self.children[2].toAst())
+      return r
+    elif self.list == 'mlist':
+      r = AstList()
+      if len(self.children) == 0:
+        return r
+      lastElement = len(self.children) - 1
+      for i in range(lastElement):
+        r.append(self.children[i].toAst())
+      r.extend(self.children[lastElement].toAst())
       return r
     elif self.isExpr:
       if isinstance(self.astTransform, AstTransformSubstitution):
@@ -331,6 +340,8 @@ class Parser:
     tree.list = 'nlist'
     {% elif isinstance(n['nt_obj'].macro, TerminatedListMacro) %}
     tree.list = 'tlist'
+    {% elif isinstance(n['nt_obj'].macro, MinimumListMacro) %}
+    tree.list = 'mlist'
     {% else %}
     tree.list = False
     {% endif %}

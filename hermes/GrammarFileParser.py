@@ -77,6 +77,41 @@ class LL1MacroExpander:
     self.list_cache[key] = rules
     return (rules[0].nonterminal, rules)
   
+  def mlist( self, nonterminal, minimum ):
+    rules = []
+
+    key = tuple([str(nonterminal).lower(), str(minimum).lower()])
+    if key in self.list_cache:
+      return (self.list_cache[key][0].nonterminal, self.list_cache[key])
+
+    nt0 = self.nonTerminalParser.parse( self.nextName() )
+    nt1 = self.nonTerminalParser.parse( self.nextName() )
+    nt0.generated = nt1.generated = True
+    empty = self.terminalParser.parse('_empty')
+    prod = [nonterminal for x in range(minimum)]
+    prod.append(nt1)
+    rules = [ MacroGeneratedRule(nt0, Production( prod )), \
+              MacroGeneratedRule(nt1, Production( [nonterminal, nt1] )), \
+              MacroGeneratedRule(nt1, Production( [empty] )) ]
+    if minimum == 0:
+      rules.append( MacroGeneratedRule(nt0, Production( [empty] )) )
+    self.list_cache[key] = rules
+    return (rules[0].nonterminal, rules)
+  
+  def optional( self, nonterminal ):
+    rules = []
+
+    key = tuple([str(nonterminal).lower(), str(None).lower()])
+    if key in self.list_cache:
+      return (self.list_cache[key][0].nonterminal, self.list_cache[key])
+    nt0 = self.nonTerminalParser.parse( self.nextName() )
+    nt0.generated = True
+    empty = self.terminalParser.parse('_empty')
+    rules = [ MacroGeneratedRule(nt0, Production( [nonterminal] )), \
+              MacroGeneratedRule(nt0, Production( [empty] )) ]
+    self.list_cache[key] = rules
+    return (rules[0].nonterminal, rules)
+  
   def nextName(self):
     nt = self.prefix + str(self.id)
     self.id += 1
@@ -241,7 +276,7 @@ class AtomParser(Parser):
   def parse(self, string):
     if string == 'ε' or string == '_empty':
       return self.terminalParser.parse( 'ε' )
-    elif string[:5].lower() == 'tlist' or string[:4].lower() == 'list':
+    elif string[:5].lower() in ['tlist', 'mlist'] or string[:4].lower() == 'list':
       return self.macroParser.parse(string)
     elif string[0] == "'" or (string[0] == '^' and string[1] == "'"): # Terminal
       return self.terminalParser.parse( string.replace("'", "").replace('^', '') )
@@ -254,7 +289,7 @@ class MacroParser(Parser):
     re.compile(r'\s+'): ''
   }
   
-  def __init__(self, nonTerminalParser, terminalParser, sListMacroParser, nListMacroParser, tListMacroParser, expand=True):
+  def __init__(self, nonTerminalParser, terminalParser, sListMacroParser, nListMacroParser, tListMacroParser, mListMacroParser, optionalMacroParser, expand=True):
     self.__dict__.update(locals())
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
 
@@ -262,6 +297,10 @@ class MacroParser(Parser):
     self.logger.debug('Parsing macro %s' % (string))
     if string[:5].lower() == 'tlist':
       macro = self.tListMacroParser.parse(string, self.expand)
+    elif string[:5].lower() == 'mlist':
+      macro = self.mListMacroParser.parse(string, self.expand)
+    elif string[:8].lower() == 'optional':
+      macro = self.optionalMacroParser.parse(string, self.expand)
     elif string[:4].lower() == 'list':
       (nonterminal, separator) = pad(2, string[5:-1].split(','))
       if separator:
@@ -343,11 +382,13 @@ class mListMacroParser(MacroParser):
 
     (start, rules) = (None, None)
     if expand:
-      (start, rules) = self.macroExpander.mlist( nonterminal, terminator )
+      (start, rules) = self.macroExpander.mlist( nonterminal, minimum )
 
-    macro = MinimumListMacro( nonterminal, terminator, start, rules)
+    macro = MinimumListMacro( nonterminal, minimum, start, rules)
+    # TODO: I'm setting the .macro attribute because I need it to determine how to make the AST for the resulting parsetree.  There should be a better way to achieve this.
     if rules:
       rules[0].nonterminal.macro = macro
+      rules[1].nonterminal.macro = macro
     return macro
 
 class optionalMacroParser(MacroParser):
@@ -414,8 +455,9 @@ class HermesParserFactory:
     self.sListParser = sListMacroParser(self.nParser, self.tParser, self.macroExpander)
     self.nListParser = nListMacroParser(self.nParser, self.tParser, self.macroExpander)
     self.tListParser = tListMacroParser(self.nParser, self.tParser, self.macroExpander)
-    self.mParser = CachedParser( MacroParser(self.nParser, self.tParser, self.sListParser, self.nListParser, self.tListParser) )
-    self.expr_mParser = CachedParser( MacroParser(self.nParser, self.tParser, self.sListParser, self.nListParser, self.tListParser, expand=True) )
+    self.mListParser = mListMacroParser(self.nParser, self.tParser, self.macroExpander)
+    self.optionalParser = optionalMacroParser(self.nParser, self.tParser, self.macroExpander)
+    self.mParser = CachedParser( MacroParser(self.nParser, self.tParser, self.sListParser, self.nListParser, self.tListParser, self.mListParser, self.optionalParser) )
     self.astParser = AstParser(self.nParser, self.tParser)
     self.atomParser = AtomParser(self.nParser, self.tParser, self.mParser) 
     self.exprAtomParser = AtomParser(self.nParser, self.tParser, self.mParser) 

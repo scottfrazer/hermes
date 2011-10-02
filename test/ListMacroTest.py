@@ -41,5 +41,11 @@ class ListMacroTest(GrammarTest):
     self.loadGrammarFile('grammars/list3.zgr', 'S') \
         .runWithTokens( [] ) \
         .assertParseTree('(s: )')
+  
+  def test_codeGeneration4(self):
+    self.loadGrammarFile('grammars/list4.zgr', 'START') \
+        .runWithTokens( ['nt', 'nt', 'nt'] ) \
+        .assertParseTree( '(s: (_gen0: (t: nt), (t: nt), (_gen1: (t: nt), (_gen1: ))))' ) \
+        .assertAst('[nt, nt, nt]')
 if __name__ == '__main__':
   unittest.main()

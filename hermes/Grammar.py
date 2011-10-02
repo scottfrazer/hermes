@@ -16,7 +16,7 @@ class Production:
   def __len__( self ):
     return len(self.morphemes)
   def __str__( self ):
-    return " ".join([str(p) for p in self.morphemes])
+    return ' '.join([str(p) for p in self.morphemes])
 
 class Rule:
   def __init__( self, nonterminal, production, id=None, root=None, ast=None):
