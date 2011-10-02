@@ -206,19 +206,18 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
     self.first.update({x: {x} for x in grammar.terminals})
     self.follow.update({x: set() for x in grammar.macros})
     self.first.update({x: set() for x in grammar.macros if isinstance(x, LL1ListMacro)})
-    for rule in grammar.rules:
+    for rule in grammar.expandedRules:
       if len(rule.production.morphemes) == 1 and grammar.ε in rule.production.morphemes:
         self.first[rule.nonterminal].union({grammar.ε})
     if grammar.start:
       self.follow[ grammar.start ] = {grammar.σ}
 
   def _computeFirst(self, grammar):
-    rules = set(RuleExpander(grammar.rules).expand())
     changed = False
     progress = True
     while progress == True:
       progress = False
-      for rule in rules:
+      for rule in grammar.expandedRules:
         try:
           morpheme = rule.production.morphemes[0]
         except IndexError:

@@ -1,11 +1,15 @@
 NOTES and TODO
 ==============
 
-Bugs
-----
+New Syntaxes
+------------
 
-1.  Fix extraneous _genX tokens in expr.zgr
-2.  Make unit tests pass after adding the new warning and conflict.
+mlist(nonterminal, x)
+  __gen0 := [nonterminal for y in range(x)] + __gen1
+  __gen1 := nonterminal + __gen1 | _empty
+
+optional(nonterminal)
+  __gen0 := nonterminal | _empty
 
 AST Transformations & Constraints
 ---------------------------------

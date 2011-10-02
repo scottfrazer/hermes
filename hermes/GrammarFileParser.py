@@ -140,20 +140,10 @@ class RuleParser(Parser):
     for production in productions.split('|'):
       (parsetree, ast) = pad(2, production.split('->'))
       morphemes = parsetree.replace("'__Z_PIPE__'", "'|'").split('+')
-      root = self.getRoot(morphemes)
       morphemes = list(map(self.atomParser.parse, morphemes))
       ast = self.astParser.parse(ast)
-      rules.append( Rule(nonterminal, Production(morphemes), 0, root, ast) )
+      rules.append( Rule(nonterminal, Production(morphemes), 0, 0, ast) )
     return rules
-  
-  def getRoot( self, morphemes ):
-    for idx, morpheme in enumerate(morphemes):
-      try:
-        if morpheme[0] == '^':
-          return idx
-      except:
-        pass
-    return 0
 
 class ExprRuleParser(RuleParser):
   ruleRegex = re.compile('^{([^}]*)}(\s*\+\s*{(.*)})?(->(.*))?$')
