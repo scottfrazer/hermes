@@ -29,7 +29,7 @@ class GrammarTest(unittest.TestCase):
     for nonterminal, firstSet in first.items():
       s1 = {self.grammar.getTerminal(e) for e in firstSet}
       s2 = self.grammar.first[self.grammar.getNonTerminal(nonterminal)]
-      self.assertEqual(s1, s2, "Incorrect follow set for nonterminal %s  (expected: %s) (actual: %s)"%(nonterminal, ', '.join([str(e) for e in s1]), ', '.join([str(e) for e in s2])))
+      self.assertEqual(s1, s2, "Incorrect first set for nonterminal %s  (expected: %s) (actual: %s)"%(nonterminal, ', '.join([str(e) for e in s1]), ', '.join([str(e) for e in s2])))
     return self
 
   def assertFollow( self, follow ):

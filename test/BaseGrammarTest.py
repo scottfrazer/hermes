@@ -20,7 +20,7 @@ class BaseGrammarTest(GrammarTest):
         'first': {
                   's': {'a', 'b', 'c', 'ε'},
                   't': {'a', 'b'},
-                  'u': {'c'},
+                  'u': {'c', 'ε'},
                   'v': {'c'}
                  },
         'follow': {

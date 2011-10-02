@@ -10,7 +10,7 @@ class ExprGrammarTest(GrammarTest):
 
   def test_firstSets(self):
     self.assertFirst({
-      'start': {'lparen', 'lbrace', 'subtract', 'lsquare', 'b', 'identifier', 'a', 'number', 'λ'},
+      'start': {'lparen', 'lbrace', 'subtract', 'lsquare', 'b', 'identifier', 'a', 'number', 'λ', 'ε'},
       'sub': {'lparen', 'lbrace', 'subtract', 'lsquare', 'identifier', 'b', 'number', 'a', 'λ'},
       '_gen0': {'lbrace', 'lsquare', 'b', 'identifier', 'number', 'subtract', 'lparen', 'ε', 'a', 'λ'},
       '_gen1': {'comma', 'ε'},

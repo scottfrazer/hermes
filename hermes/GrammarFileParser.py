@@ -276,7 +276,7 @@ class AtomParser(Parser):
   def parse(self, string):
     if string == 'ε' or string == '_empty':
       return self.terminalParser.parse( 'ε' )
-    elif string[:5].lower() in ['tlist', 'mlist'] or string[:4].lower() == 'list':
+    elif string[:5].lower() in ['tlist', 'mlist'] or string[:4].lower() == 'list' or string[:8] == 'optional':
       return self.macroParser.parse(string)
     elif string[0] == "'" or (string[0] == '^' and string[1] == "'"): # Terminal
       return self.terminalParser.parse( string.replace("'", "").replace('^', '') )

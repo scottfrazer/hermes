@@ -83,6 +83,10 @@ class Resources:
       }
     for id, tpl_nt in tpl.items():
       N = tpl_nt['nt_obj']
+
+      if self.grammar.ε in self.grammar.first[N]:
+        tpl_nt['empty'] = True
+
       for rule in self.grammar.getNormalizedRules(N):
         tpl_rule = {
           'obj': rule,

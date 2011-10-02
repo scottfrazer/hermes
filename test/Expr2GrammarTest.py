@@ -21,7 +21,7 @@ class Expr2GrammarTest(GrammarTest):
       'comma_opt': {'comma', 'ε'},
       '_gen5': {},
       'item': {'b', 'a'},
-      'start': {'λ', 'lsquare', 'lparen', 'a', 'subtract', 'identifier', 'lparen_cast', 'lbrace', 'b', 'number'},
+      'start': {'λ', 'lsquare', 'lparen', 'a', 'subtract', 'identifier', 'lparen_cast', 'lbrace', 'b', 'number', 'ε'},
       '_gen0': {'λ', 'lsquare', 'lparen', 'ε', 'subtract', 'a', 'identifier', 'lparen_cast', 'lbrace', 'b', 'number'}
     })
     

@@ -47,5 +47,6 @@ class ListMacroTest(GrammarTest):
         .runWithTokens( ['nt', 'nt', 'nt'] ) \
         .assertParseTree( '(s: (_gen0: (t: nt), (t: nt), (_gen1: (t: nt), (_gen1: ))))' ) \
         .assertAst('[nt, nt, nt]')
+
 if __name__ == '__main__':
   unittest.main()

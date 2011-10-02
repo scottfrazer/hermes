@@ -290,6 +290,7 @@ class Parser:
   def parse(self, iterator, entry):
     self.iterator = iter(iterator)
     self.sym = self.getsym()
+    self.start = entry.upper()
     tree = self.entry_points[entry]()
     if self.sym != None:
       raise SyntaxError('Syntax Error: Finished parsing without consuming all tokens.', tree.tracer)
@@ -346,7 +347,7 @@ class Parser:
     tree.list = False
     {% endif %}
 
-    {% if n['empty'] and len(n['follow']) %}
+    {% if n['empty'] %}
     if self.sym != None and (self.sym.getId() in [{{', '.join([str(a.id) for a in n['follow']])}}]):
       return tree
     {% endif %}
