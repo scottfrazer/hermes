@@ -4,7 +4,7 @@ from hermes.Morpheme import NonTerminal, Terminal, EmptyString, EndOfStream, Exp
 from hermes.Grammar import Grammar, CompositeGrammar, LL1GrammarFactory, ExpressionGrammarFactory
 from hermes.Grammar import Rule, ExprRule, MacroGeneratedRule, Production, AstSpecification, AstTranslation
 from hermes.Grammar import InfixOperator, PrefixOperator, MixfixOperator
-from hermes.Macro import SeparatedListMacro, NonterminalListMacro, TerminatedListMacro
+from hermes.Macro import SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro
 from hermes.Logger import Factory as LoggerFactory
 
 moduleLogger = LoggerFactory().getModuleLogger(__name__)
@@ -293,7 +293,6 @@ class sListMacroParser(MacroParser):
       rules[0].nonterminal.macro = macro
       rules[2].nonterminal.macro = macro
     return macro
-  
 
 class nListMacroParser(MacroParser):
   def __init__(self, nonTerminalParser, terminalParser, macroExpander):
@@ -310,7 +309,6 @@ class nListMacroParser(MacroParser):
     if rules:
       rules[0].nonterminal.macro = macro
     return macro
-  
 
 class tListMacroParser(MacroParser):
   def __init__(self, nonTerminalParser, terminalParser, macroExpander):
@@ -331,7 +329,42 @@ class tListMacroParser(MacroParser):
     if rules:
       rules[0].nonterminal.macro = macro
     return macro
+
+class mListMacroParser(MacroParser):
+  def __init__(self, nonTerminalParser, terminalParser, macroExpander):
+    self.__dict__.update(locals())
   
+  def parse(self, string, expand=True):
+    (nonterminal, minimum) = pad(2, string[6:-1].split(','))
+    if not nonterminal or not minimum:
+      raise Exception('bah, bad')
+    minimum = int(minimum.replace("'", ''))
+    nonterminal = self.nonTerminalParser.parse(nonterminal)
+
+    (start, rules) = (None, None)
+    if expand:
+      (start, rules) = self.macroExpander.mlist( nonterminal, terminator )
+
+    macro = MinimumListMacro( nonterminal, terminator, start, rules)
+    if rules:
+      rules[0].nonterminal.macro = macro
+    return macro
+
+class optionalMacroParser(MacroParser):
+  def __init__(self, nonTerminalParser, terminalParser, macroExpander):
+    self.__dict__.update(locals())
+  
+  def parse(self, string, expand=True):
+    nonterminal = self.nonTerminalParser.parse(string[9:-1])
+
+    (start, rules) = (None, None)
+    if expand:
+      (start, rules) = self.macroExpander.optional( nonterminal )
+
+    macro = OptionalMacro( nonterminal, start, rules )
+    if rules:
+      rules[0].nonterminal.macro = macro
+    return macro
 
 class NonTerminalParser(AtomParser):
   def __init__(self):
