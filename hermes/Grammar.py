@@ -15,8 +15,10 @@ class Production:
     self.__dict__.update(locals())
   def __len__( self ):
     return len(self.morphemes)
-  def __str__( self ):
-    return ' '.join([str(p) for p in self.morphemes])
+  def str( self, theme=None ):
+    return self.__str__(theme)
+  def __str__( self, theme=None ):
+    return ' '.join([ (p.str(theme) if theme else str(p)) for p in self.morphemes ])
 
 class Rule:
   def __init__( self, nonterminal, production, id=None, root=None, ast=None):
@@ -33,15 +35,21 @@ class Rule:
       else:
         morphemes.append(m)
     rules.append(Rule(self.nonterminal, Production(morphemes), self.id, self.root, self.ast))
-    self.logger.debug('Expand Rule %s => %s' % (self, ', '.join([str(x) for x in rules])))
+    self.logger.debug('[rule expansion] %s becomes %s' % (self, ', '.join([str(x) for x in rules])))
     return rules
-  
-  def __str__( self ):
+
+  def str( self, theme = None ):
+    return self.__str__( theme )
+
+  def __str__( self, theme = None ):
+    astString = ''
     if self.ast and not (isinstance(self.ast, AstTranslation) and self.ast.idx == 0):
-      astString = ' -> %s' % (self.ast)
-    else:
-      astString = ''
-    return "%s := %s%s" % (str(self.nonterminal), str(self.production), astString)
+      astString = ' -> %s' % (self.ast.str(theme) if theme else self.ast)
+
+    nonterminal = self.nonterminal.str(theme) if theme else str(self.nonterminal)
+    production = self.production.str(theme) if theme else str(self.production)
+    rule = "%s := %s%s" % ( nonterminal, production, astString)
+    return theme.rule(rule) if theme else rule
   
   def getProduction(self):
     return self.production
@@ -73,14 +81,20 @@ class AstSpecification:
   def __init__( self, name, parameters ):
     self.name = name
     self.parameters = parameters
-  def __repr__( self ):
-    return self.name + '( ' + ', '.join(['%s=$%s' % (k,str(v)) for k,v in self.parameters.items()]) + ' )' 
+  def str(self, theme=None):
+    return self.__str__(theme)
+  def __str__( self, theme=None ):
+    string = self.name + '( ' + ', '.join(['%s=$%s' % (k,str(v)) for k,v in self.parameters.items()]) + ' )' 
+    return theme.astSpecification(string) if theme else string
 
 class AstTranslation:
   def __init__( self, idx ):
     self.idx = idx
-  def __repr__( self ):
-    return '$'+str(self.idx)
+  def str(self, theme=None):
+    return self.__str__(theme)
+  def __str__( self, theme=None ):
+    string = '$' + str(self.idx)
+    return theme.astTranslation(string) if theme else string
 
 class ExprRule:
   def __init__(self, nonterminal, nudProduction, ledProduction, nudAst, ast, operator):
@@ -116,50 +130,61 @@ class ExprRule:
     return self.nudProduction
   def getNonTerminal(self):
     return self.nonterminal
-  def toString(self, stylizer = None):
-    return self.__str__(stylizer)
-  def __str__(self, stylizer = None):
-    nudProduction = self.nudProduction
+  def str(self, theme = None):
+    return self.__str__(theme)
+  def __str__(self, theme = None):
+    nudProduction = self.nudProduction.str(theme)
     if not self.nudProduction or not len(self.nudProduction):
-      nudProduction = self.nonterminal
+      nudProduction = self.nonterminal.str(theme)
 
-    ledProduction = self.ledProduction
+    ledProduction = self.ledProduction.str(theme)
     if not self.ledProduction or not len(self.ledProduction):
       ledProduction = 'ε'
 
     if isinstance(self.nudAst, AstTranslation) and self.nudAst.idx == 0:
       nudAstString = ''
     else:
-      nudAstString = ' -> %s' % (self.nudAst)
+      nudAstString = ' -> %s' % (self.nudAst.str(theme))
 
     if self.operator.operator:
-      operatorString = '<operator %s>' % (self.operator)
+      operatorString = '<operator %s>' % (self.operator.str(theme))
     else:
       operatorString = ''
 
-    return "%s := {%s%s} + {%s} -> %s %s" % (self.nonterminal, nudProduction, nudAstString, ledProduction, self.ast, operatorString)
+    rule = "%s := {%s%s} + {%s} -> %s %s" % (self.nonterminal.str(theme), nudProduction, nudAstString, ledProduction, self.ast.str(theme), operatorString)
+    return theme.expressionRule(rule) if theme else rule
 
 class Operator:
   def __init__(self, operator, unary = False):
     self.__dict__.update(locals())
 
 class InfixOperator(Operator):
-  def __str__(self):
-    return 'infix %s' % (self.operator)
+  def str(self, theme = None):
+    return self.__str__(theme)
+  def __str__(self, theme = None):
+    string = 'infix %s' % (self.operator.str(theme))
+    return theme.infixOperator(string) if theme else string
 
 class PrefixOperator(Operator):
-  def __str__(self):
-    return 'prefix %s' % (self.operator)
+  def str(self, theme = None):
+    return self.__str__(theme)
+  def __str__(self, theme = None):
+    string = 'prefix %s' % (self.operator.str(theme))
+    return theme.prefixOperator(string) if theme else string
 
 class MixfixOperator(Operator):
-  def __str__(self):
-    return 'mixfix %s' % (self.operator)
+  def str(self, theme = None):
+    return self.__str__(theme)
+  def __str__(self, theme = None):
+    string = 'mixfix %s' % (self.operator.str(theme))
+    return theme.mixfixOperator(string) if theme else string
 
 class OperatorPrecedence:
   def __init__(self, terminal, precedence, associativity):
     self.__dict__.update(locals())
-  
-  def __str__(self):
+  def str(self, theme = None):
+    return self.__str__(theme)
+  def __str__(self, theme = None):
     return 'OperatorPrecedence(%s, %s, %s)' % (str(self.terminal), self.precedence, self.associativity)
 
 class FirstFollowCalculator:
@@ -610,14 +635,10 @@ class LL1Grammar(Grammar):
         if self.first[macro.nonterminal].intersection(self.follow[macro]) != set():
           self.conflicts.append( ListFirstFollowConflict(macro, self.first[macro.nonterminal], self.follow[macro]) )
     return self.conflicts
-  
-  def __str__( self, normalize = True ):
-    if normalize:
-      rules = self.normalized()
-    else:
-      rules = self.rules
-    return "\n".join([ str(r) for r in rules ])
-  
+  def str(self, theme=None):
+    return self.__str__(theme)
+  def __str__(self, theme=None):
+    return ''
 
 class CompositeGrammar(Grammar):
   def __init__( self, grammar, exprgrammars ):
@@ -718,6 +739,12 @@ class CompositeGrammar(Grammar):
 
   def getNormalizedRules(self, nonterminal = None):
     return self.getExpandedLL1Rules(nonterminal)
+
+  def str(self, theme=None):
+    return self.__str__(theme)
+
+  def __str__(self, theme=None):
+    return ''
   
   # These three functions are coupled
   def _compute_parse_table( self ):

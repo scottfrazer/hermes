@@ -7,6 +7,7 @@ from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
 from hermes.GrammarAnalyzer import GrammarAnalyzer
 from hermes.GrammarCodeGenerator import GrammarCodeGenerator, PythonTemplate, Resources
 from hermes.Logger import Factory as LoggerFactory
+from hermes.Theme import AnsiStylizer, TerminalDefaultTheme, TerminalColorTheme
 
 def Cli():
 
@@ -53,6 +54,11 @@ def Cli():
               default=False,
               help = 'Pretty prints all data structures.')
 
+  parser.add_argument('-c', '--color',
+              required = False,
+              action = 'store_true',
+              help = 'Prints things in color!  For the colorblind, this is a no-op.')
+
   parser.add_argument('-t', '--tokens',
               required = False,
               help = 'If used with the parse command, this is the token list.  If used with the generate command and -m, these tokens are put in the main() function of the generated parser.')
@@ -96,9 +102,14 @@ def Cli():
     if error:
       sys.exit(-1)
 
+  if result.color:
+    theme = TerminalColorTheme(AnsiStylizer())
+  else:
+    theme = TerminalDefaultTheme()
+
   if result.action == 'analyze':
     analyzer = GrammarAnalyzer(G)
-    analyzer.analyze()
+    analyzer.analyze( theme=theme )
 
   if result.action == 'generate':
     resources = Resources(G, terminals, result.add_main )

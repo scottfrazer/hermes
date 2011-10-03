@@ -11,16 +11,20 @@ class NonTerminal(Morpheme):
     return self.id
   def setMacro(self, macro):
     self.macro = macro
-  def __str__(self):
-    return self.string
+  def str(self, theme=None):
+    return self.__str__(theme)
+  def __str__(self, theme=None):
+    return theme.nonterminal(self.string) if theme else self.string
   def first(self):
     return 
 
 class Terminal(Morpheme):
   def id(self):
     return self.id
-  def __str__(self):
-    return "'" + self.string + "'"
+  def str(self, theme=None):
+    return self.__str__(theme)
+  def __str__(self, theme=None):
+    return theme.terminal("'" + self.string + "'") if theme else "'" + self.string + "'"
   def first(self):
     return {self}
 
@@ -30,17 +34,23 @@ class AbstractTerminal(Terminal):
 class EmptyString(AbstractTerminal):
   def __init__(self, id):
     super().__init__('ε', id)
-  def __str__(self):
-    return 'ε'
+  def str(self, theme=None):
+    return self.__str__(theme)
+  def __str__(self, theme=None):
+    return theme.emptyString('ε') if theme else 'ε'
 
 class EndOfStream(AbstractTerminal):
   def __init__(self, id):
     super().__init__('σ', id)
-  def __str__(self):
-    return 'σ'
+  def str(self, theme=None):
+    return self.__str__(theme)
+  def __str__(self, theme=None):
+    return theme.endOfStream('σ') if theme else 'σ'
 
 class Expression(AbstractTerminal):
   def __init__(self, id):
     super().__init__('λ', id)
-  def __str__(self):
-    return 'λ'
+  def str(self, theme=None):
+    return self.__str__(theme)
+  def __str__(self, theme=None):
+    return theme.expression('λ') if theme else 'λ'

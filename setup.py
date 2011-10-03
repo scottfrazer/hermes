@@ -18,7 +18,8 @@ setup(
     package_dir={'hermes': 'hermes'},
     package_data={'hermes': ['templates/Python/*.tpl']},
     install_requires=[
-        "moody-templates>=0.9"
+        "moody-templates>=0.9",
+        "termcolor>=1.1.0"
     ],
     entry_points={
       'console_scripts': [
