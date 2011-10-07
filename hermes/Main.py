@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-from types import *
-from os import path
 import sys, os, argparse
 from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
 from hermes.GrammarAnalyzer import GrammarAnalyzer
@@ -116,10 +114,10 @@ def Cli():
     template = PythonTemplate(resources)
 
     if result.directory:
-      result.directory = path.abspath(result.directory)
+      result.directory = os.path.abspath(result.directory)
 
     if not result.directory:
-      result.directory = path.abspath('.')
+      result.directory = os.path.abspath('.')
     elif not os.path.isdir( result.directory ):
       sys.stderr.write("Error: Directory doesn't exist\n")
       sys.exit(-1)

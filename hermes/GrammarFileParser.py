@@ -45,7 +45,7 @@ class LL1MacroExpander:
     self.tlist_cache[key] = rules
     return (rules[0].nonterminal, rules)
   
-  def slist( self, nonterminal, separator ):
+  def slist( self, nonterminal, separator, minimum ):
     rules = []
 
     key = tuple([str(nonterminal).lower(), str(separator).lower()])
@@ -56,10 +56,18 @@ class LL1MacroExpander:
     nt1 = self.nonTerminalParser.parse( self.nextName() )
     nt0.generated = nt1.generated = True
     empty = self.terminalParser.parse('_empty')
-    rules = [ MacroGeneratedRule(nt0, Production( [nonterminal, nt1] )), \
-              MacroGeneratedRule(nt0, Production( [empty] )), \
+    if minimum > 0:
+      items = [nonterminal] * (2*minimum-1)
+      for x in filter(lambda x: x % 2 == 1, range(2 * minimum - 1)): # all odd numbers in range
+        items[x] = separator
+      items.append(nt1)
+    else:
+      items = [nonterminal, nt1]
+    rules = [ MacroGeneratedRule(nt0, Production( items )), \
               MacroGeneratedRule(nt1, Production( [separator, nonterminal, nt1] )), \
               MacroGeneratedRule(nt1, Production( [empty] )) ]
+    if minimum == 0:
+      rules.append( MacroGeneratedRule(nt0, Production( [empty] )) )
     self.list_cache[key] = rules
     return (rules[0].nonterminal, rules)
   
@@ -302,7 +310,7 @@ class MacroParser(Parser):
     elif string[:8].lower() == 'optional':
       macro = self.optionalMacroParser.parse(string, self.expand)
     elif string[:4].lower() == 'list':
-      (nonterminal, separator) = pad(2, string[5:-1].split(','))
+      (nonterminal, separator, minimum) = pad(3, string[5:-1].split(','))
       if separator:
         macro = self.sListMacroParser.parse(string, self.expand)
       else:
@@ -315,22 +323,24 @@ class sListMacroParser(MacroParser):
     self.__dict__.update(locals())
   
   def parse(self, string, expand=True):
-    (nonterminal, separator) = pad(2, string[5:-1].split(','))
+    (nonterminal, separator, minimum) = pad(3, string[5:-1].split(','))
     if not nonterminal or not separator:
       raise Exception('bah you did things wrong: %s' %(string))
 
     nonterminal = self.nonTerminalParser.parse(nonterminal)
     separator = self.terminalParser.parse(separator.replace("'", ''))
+    minimum = int(minimum) if minimum else 0
 
     (start, rules) = (None, None)
     if expand:
-      (start, rules) = self.macroExpander.slist( nonterminal, separator )
+      (start, rules) = self.macroExpander.slist( nonterminal, separator, minimum )
 
     macro = SeparatedListMacro( nonterminal, separator, start, rules )
 
     if rules:
-      rules[0].nonterminal.macro = macro
-      rules[2].nonterminal.macro = macro
+      for rule in rules:
+        rule.nonterminal.macro = macro
+
     return macro
 
 class nListMacroParser(MacroParser):
@@ -345,8 +355,11 @@ class nListMacroParser(MacroParser):
       (start, rules) = self.macroExpander.nlist( nonterminal )
 
     macro = NonterminalListMacro( nonterminal, start, rules )
+
     if rules:
-      rules[0].nonterminal.macro = macro
+      for rule in rules:
+        rule.nonterminal.macro = macro
+
     return macro
 
 class tListMacroParser(MacroParser):
@@ -365,8 +378,11 @@ class tListMacroParser(MacroParser):
       (start, rules) = self.macroExpander.tlist( nonterminal, terminator )
 
     macro = TerminatedListMacro( nonterminal, terminator, start, rules)
+
     if rules:
-      rules[0].nonterminal.macro = macro
+      for rule in rules:
+        rule.nonterminal.macro = macro
+
     return macro
 
 class mListMacroParser(MacroParser):
@@ -385,10 +401,15 @@ class mListMacroParser(MacroParser):
       (start, rules) = self.macroExpander.mlist( nonterminal, minimum )
 
     macro = MinimumListMacro( nonterminal, minimum, start, rules)
-    # TODO: I'm setting the .macro attribute because I need it to determine how to make the AST for the resulting parsetree.  There should be a better way to achieve this.
+
+    # TODO: I'm setting the .macro attribute because I need it to 
+    # determine how to make the AST for the resulting parsetree.  
+    # There should be a better way to achieve this.
+
     if rules:
-      rules[0].nonterminal.macro = macro
-      rules[1].nonterminal.macro = macro
+      for rule in rules:
+        rule.nonterminal.macro = macro
+
     return macro
 
 class optionalMacroParser(MacroParser):
@@ -403,8 +424,11 @@ class optionalMacroParser(MacroParser):
       (start, rules) = self.macroExpander.optional( nonterminal )
 
     macro = OptionalMacro( nonterminal, start, rules )
+
     if rules:
-      rules[0].nonterminal.macro = macro
+      for rule in rules:
+        rule.nonterminal.macro = macro
+
     return macro
 
 class NonTerminalParser(AtomParser):

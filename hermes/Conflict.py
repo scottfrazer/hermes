@@ -53,20 +53,19 @@ class ListFirstFollowConflict(Conflict):
     return string
 
 class FirstFirstConflict(Conflict):
-  def __init__( self, rule1, firstRule1, rule2, firstRule2 ):
-    self.rule1 = rule1
-    self.rule2 = rule2
-    self.firstRule1 = firstRule1
-    self.firstRule2 = firstRule2
+  def __init__( self, rule1, rule2, grammar ):
+    self.__dict__.update(locals())
 
   def __str__( self ):
+    rule1_first = self.grammar.ruleFirst(self.rule1)
+    rule2_first = self.grammar.ruleFirst(self.rule2)
     string = " -- FIRST/FIRST conflict --\n"
     string += "Two rules for nonterminal %s have intersecting first sets.  Can't decide which rule to choose based on terminal.\n\n" %(self.rule1.nonterminal)
     string += "(Rule-%d)  %s\n" %(self.rule1.id, self.rule1)
     string += "(Rule-%d)  %s\n\n" %(self.rule2.id, self.rule2)
-    string += "first(Rule-%d) = {%s}\n" %(self.rule1.id, ', '.join([str(e) for e in self.firstRule1]))
-    string += "first(Rule-%d) = {%s}\n" %(self.rule2.id, ', '.join([str(e) for e in self.firstRule2]))
-    string += "first(Rule-%d) ∩ first(Rule-%d): {%s}\n" % (self.rule1.id, self.rule2.id, ', '.join([str(e) for e in self.firstRule1.intersection(self.firstRule2)]))
+    string += "first(Rule-%d) = {%s}\n" %(self.rule1.id, ', '.join([str(e) for e in rule1_first]))
+    string += "first(Rule-%d) = {%s}\n" %(self.rule2.id, ', '.join([str(e) for e in rule2_first]))
+    string += "first(Rule-%d) ∩ first(Rule-%d): {%s}\n" % (self.rule1.id, self.rule2.id, ', '.join([str(e) for e in rule1_first.intersection(rule2_first)]))
 
     return string
 

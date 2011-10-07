@@ -1,5 +1,5 @@
 import sys
-from hermes.Theme import AnsiStylizer, Theme, TerminalDefaultTheme, TerminalColorTheme
+from hermes.Theme import Theme, TerminalDefaultTheme
 
 class GrammarAnalyzer:
   def __init__(self, grammar):

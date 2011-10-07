@@ -306,7 +306,7 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
               ))
               self.follow[morpheme] = self.follow[morpheme].union(newTokens)
 
-          if not nextToken or grammar.ε in self.first[nextToken]:
+          if not nextToken or grammar.ε in self._pfirst(grammar, Production(rule.production.morphemes[index+1:])):
             z = self.follow[rule.nonterminal]
             y = self.follow[morpheme]
 
@@ -319,6 +319,23 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
               ))
               self.follow[morpheme] = y.union(z)
     return changed
+  
+  # This is duplicated
+  def _pfirst( self, grammar, P ):
+    r = set()
+    addEpsilon = True
+    for m in P.morphemes:
+      if isinstance(m, NonterminalListMacro) or isinstance(m, SeparatedListMacro):
+        m = m.start_nt
+      toks = self.first[m].difference({grammar.ε})
+      if len(toks) > 0:
+        r = r.union(toks)
+      if grammar.ε not in self.first[m]:
+        addEpsilon = False
+        break
+    if addEpsilon:
+      r = r.union({grammar.ε})
+    return r
 
 class ExpressionFirstFollowCalculator(FirstFollowCalculator):
   def compute(self, grammar):
@@ -449,10 +466,14 @@ class Grammar:
       for nonterminal in self.nonterminals:
         self.ntLookup[nonterminal.string.lower()] = nonterminal
     return self.ntLookup[string]
-  
-  # These should be pre-calculated.
+ 
+  def ruleFirst(self, rule):
+    return self._pfirst(rule.production)
+
+  # These should be pre-calculated.  also this is duplicated
   def _pfirst( self, P ):
     r = set()
+    addEpsilon = True
     for m in P.morphemes:
       if isinstance(m, NonterminalListMacro) or isinstance(m, SeparatedListMacro):
         m = m.start_nt
@@ -460,7 +481,10 @@ class Grammar:
       if len(toks) > 0:
         r = r.union(toks)
       if self.ε not in self.first[m]:
+        addEpsilon = False
         break
+    if addEpsilon:
+      r = r.union({self.ε})
     return r
   
   def getExpandedRules( self, nonterminal = None ):
@@ -627,9 +651,9 @@ class LL1Grammar(Grammar):
 
           xR = self._pfirst(NR[x].production)
           yR = self._pfirst(NR[y].production)
-          intersection = xR.intersection(yR)
+          intersection = xR.intersection(yR.difference({self.ε}))
           if intersection != set():
-            self.conflicts.append( FirstFirstConflict(NR[x], xR, NR[y], yR) )
+            self.conflicts.append( FirstFirstConflict(NR[x], NR[y], self) )
     for macro in self.macros:
       if isinstance(macro, NonterminalListMacro):
         if self.first[macro.nonterminal].intersection(self.follow[macro]) != set():
@@ -686,6 +710,10 @@ class CompositeGrammar(Grammar):
       self.conflicts.extend(exprGrammar.conflicts)
     self.conflicts = list(filter(lambda x: type(x) not in [UndefinedNonterminalConflict], self.conflicts ))
     self.warnings = list(filter(lambda x: type(x) not in [UnusedNonterminalWarning], self.warnings ))
+
+    for conflict in self.conflicts:
+      if isinstance(conflict, FirstFirstConflict):
+        conflict.grammar = self
 
     nonterminalUsageMap = {N: list() for N in self.nonterminals}
     for rule in self.getExpandedRules():
@@ -746,7 +774,7 @@ class CompositeGrammar(Grammar):
   def __str__(self, theme=None):
     return ''
   
-  # These three functions are coupled
+  # These three functions are coupled.
   def _compute_parse_table( self ):
     terminals = self._strip_abstract_terminals( self.terminals.copy() )
     NT  = {n.id: n for n in self.nonterminals}
