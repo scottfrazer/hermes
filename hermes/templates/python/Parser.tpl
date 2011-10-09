@@ -190,28 +190,10 @@ class SyntaxError(Exception):
   def __str__(self):
     return self.message
 
-class TokenRecorder:
-  def __init__(self):
-    self.stack = []
-    self.awake = False
-  def wake(self):
-    self.awake = True
-    self.stack = []
-    return self
-  def sleep(self):
-    self.awake = False
-    return self
-  def record(self, s):
-    self.stack.append(s)
-    return self
-  def tokens(self):
-    return self.stack
-
 class Parser:
   def __init__(self):
     self.iterator = None
     self.sym = None
-    self.recorder = TokenRecorder()
 
   {% for terminal in nonAbstractTerminals %}
   {{terminal.varname}} = {{terminal.id}}
@@ -260,10 +242,6 @@ class Parser:
   def isNonTerminal(self, id):
     return {{len(nonAbstractTerminals)}} <= id <= {{len(nonAbstractTerminals) + len(grammar.nonterminals) - 1}}
 
-  def rewind(self, recorder):
-    global tokens
-    tokens = recorder.tokens().append(tokens)
-
   def binding_power(self, sym, bp):
     try:
       return bp[sym.getId()]
@@ -302,9 +280,6 @@ class Parser:
     if self.sym is not None and not self.isTerminal(self.sym.getId()):
       self.sym = None
       raise SyntaxError('Invalid symbol ID: %d (%s)'%(self.sym.getId(), self.sym), None)
-
-    if self.recorder.awake and self.sym is not None:
-      self.recorder.record(self.sym)
 
     return self.sym
 
