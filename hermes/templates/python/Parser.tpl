@@ -4,6 +4,8 @@ import sys
 {% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
 {% from hermes.Macro import ListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
+{% import hermes.Grammar %}
+
 def parse( iterator, entry ):
   p = Parser()
   return p.parse(iterator, entry)
@@ -210,44 +212,40 @@ class Parser:
     self.iterator = None
     self.sym = None
     self.recorder = TokenRecorder()
-    self.entry_points = {
-      {% for s,f in entry_points.items() %}
-      '{{s}}': self.{{f}},
-      {% endfor %}
-    }
 
-  {% for i,var in init['terminal_var'].items() %}
-  {{var}} = {{i}}
+  {% for terminal in nonAbstractTerminals %}
+  {{terminal.varname}} = {{terminal.id}}
   {% endfor %}
 
   terminal_str = {
-  {% for i,string in init['terminal_str'].items() %}
-    {{i}}: '{{string}}',
+  {% for terminal in nonAbstractTerminals %}
+    {{terminal.id}}: '{{terminal.string}}',
   {% endfor %}
   }
 
   nonterminal_str = {
-  {% for i,string in init['nonterminal_str'].items() %}
-    {{i}}: '{{string}}',
+  {% for nonterminal in grammar.nonterminals %}
+    {{nonterminal.id}}: '{{nonterminal.string}}',
   {% endfor %}
   }
   
   str_terminal = {
-  {% for i,string in init['terminal_str'].items() %}
-    '{{string.lower()}}': {{i}},
+  {% for terminal in nonAbstractTerminals %}
+    '{{terminal.string.lower()}}': {{terminal.id}},
   {% endfor %}
   }
 
   str_nonterminal = {
-  {% for i,string in init['nonterminal_str'].items() %}
-    '{{string.lower()}}': {{i}},
+  {% for nonterminal in grammar.nonterminals %}
+    '{{nonterminal.string.lower()}}': {{nonterminal.id}},
   {% endfor %}
   }
 
-  terminal_count = {{init['terminal_count']}}
-  nonterminal_count = {{init['nonterminal_count']}}
+  terminal_count = {{len(nonAbstractTerminals)}}
+  nonterminal_count = {{len(grammar.nonterminals)}}
+
   parse_table = [
-    {{init['parse_table']}}
+    {{parseTable}}
   ]
 
   def terminal(self, str):
@@ -257,10 +255,10 @@ class Parser:
     return list(self.str_terminal.keys())
   
   def isTerminal(self, id):
-    return {{init['terminal_start']}} <= id <= {{init['terminal_end']}}
+    return 0 <= id <= {{len(nonAbstractTerminals) - 1}}
 
   def isNonTerminal(self, id):
-    return {{init['nonterminal_start']}} <= id <= {{init['nonterminal_end']}}
+    return {{len(nonAbstractTerminals)}} <= id <= {{len(nonAbstractTerminals) + len(grammar.nonterminals) - 1}}
 
   def rewind(self, recorder):
     global tokens
@@ -287,11 +285,11 @@ class Parser:
     except StopIteration:
       return None
 
-  def parse(self, iterator, entry):
+  def parse(self, iterator):
     self.iterator = iter(iterator)
     self.sym = self.getsym()
-    self.start = entry.upper()
-    tree = self.entry_points[entry]()
+    self.start = '{{str(grammar.start).upper()}}'
+    tree = self._{{str(grammar.start).upper()}}()
     if self.sym != None:
       raise SyntaxError('Syntax Error: Finished parsing without consuming all tokens.', tree.tracer)
     self.iterator = None
@@ -320,12 +318,11 @@ class Parser:
 
   def rule(self, n):
     if self.sym == None: return -1
-    return self.parse_table[n - {{init['nonterminal_start']}}][self.sym.getId()]
+    return self.parse_table[n - {{len(nonAbstractTerminals)}}][self.sym.getId()]
 
   def call(self, nt_str):
     return getattr(self, nt_str)()
  
-{{grammar}}
   {% for nonterminal in nonExpressionNonterminals %}
 
   def _{{nonterminal.string.upper()}}(self, depth=0, tracer=None):
@@ -429,26 +426,26 @@ class Parser:
 
   {% endfor %}
 
-  {% for index, exprParser in enumerate(nudled) %}
+  {% for index, exprGrammar in enumerate(grammar.exprgrammars) %}
 
   infixBp{{index}} = {
-    {% for terminal_id, binding_power in exprParser['infixPrecedence'].items() %}
+    {% for terminal_id, binding_power in exprGrammar.infix.items() %}
     {{terminal_id}}: {{binding_power}},
     {% endfor %}
   }
 
   prefixBp{{index}} = {
-    {% for terminal_id, binding_power in exprParser['prefixPrecedence'].items() %}
+    {% for terminal_id, binding_power in exprGrammar.prefix.items() %}
     {{terminal_id}}: {{binding_power}},
     {% endfor %}
   }
 
-  def {{exprParser['grammar'].nonterminal.string.lower().strip('_')}}(self):
-    return self._{{exprParser['grammar'].nonterminal.string.upper()}}()
-  def _{{exprParser['grammar'].nonterminal.string.upper()}}( self, rbp = 0, depth = 0 ):
+  def {{exprGrammar.nonterminal.string.lower().strip('_')}}(self):
+    return self._{{exprGrammar.nonterminal.string.upper()}}()
+  def _{{exprGrammar.nonterminal.string.upper()}}( self, rbp = 0, depth = 0 ):
     t = self.sym
     if depth is not False:
-      tracer = DebugTracer("(expr) _{{exprParser['grammar'].nonterminal.string.upper()}}", str(self.sym), 'N/A', depth)
+      tracer = DebugTracer("(expr) _{{exprGrammar.nonterminal.string.upper()}}", str(self.sym), 'N/A', depth)
       depth = depth + 1
     else:
       tracer = None
@@ -467,11 +464,16 @@ class Parser:
     return left
 
   def nud{{index}}(self, tracer):
-    tree = ParseTree( NonTerminal({{exprParser['grammar'].nonterminal.id}}, '{{exprParser['grammar'].nonterminal.string.lower()}}') )
+    tree = ParseTree( NonTerminal({{exprGrammar.nonterminal.id}}, '{{exprGrammar.nonterminal.string.lower()}}') )
 
     {% py seen = list() %}
-    {% for rule in exprParser['grammar'].rules %}
-      {% py nud = rule.nudProduction.morphemes %}
+    {% for rule in exprGrammar.getExpandedRules() %}
+      {% py 
+        try:
+          nud = rule.nudProduction.morphemes
+        except:
+          nud = []
+      %}
       {% if len(nud) and nud[0] not in seen %}
     {{'if' if len(seen)==0 else 'elif'}} self.sym.getId() == {{nud[0].id}}: # {{nud[0]}}
 
@@ -508,10 +510,10 @@ class Parser:
     return tree
 
   def led{{index}}(self, left, tracer):
-    tree = ParseTree( NonTerminal({{exprParser['grammar'].nonterminal.id}}, '{{exprParser['grammar'].nonterminal.string.lower()}}') )
+    tree = ParseTree( NonTerminal({{exprGrammar.nonterminal.id}}, '{{exprGrammar.nonterminal.string.lower()}}') )
 
     {% py seen = list() %}
-    {% for rule in exprParser['grammar'].rules %}
+    {% for rule in exprGrammar.rules %}
       {% py led = rule.ledProduction.morphemes %}
       {% if len(led) and led[0] not in seen %}
     {{'if' if len(seen)==0 else 'elif'}}  self.sym.getId() == {{led[0].id}}: # {{led[0]}}
@@ -552,14 +554,14 @@ class Parser:
     return tree
 {% endfor %}
 
-{% if add_main %}
+{% if addMain %}
 if __name__ == '__main__':
-  p = Parser()
+  parser = Parser()
 
   try:
     tokens = [
-      {% for t in tokens %}
-      Terminal( p.TERMINAL_{{t.upper()}} ),
+      {% for terminal in initialTerminals %}
+      Terminal( parser.TERMINAL_{{terminal.upper()}} ),
       {% endfor %}
     ]
   except AttributeError as e:
@@ -567,7 +569,7 @@ if __name__ == '__main__':
     sys.exit(-1)
 
   try:
-    parsetree = p.parse( tokens, '{{entry}}' )
+    parsetree = parser.parse( tokens )
     if not parsetree or len(sys.argv) <= 1 or (len(sys.argv) > 1 and sys.argv[1] == 'parsetree'):
       print(parsetree)
     elif len(sys.argv) > 1 and sys.argv[1] == 'ast':

@@ -5,7 +5,7 @@ sys.path.append('..')
 
 from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory, HermesParser
 from hermes.Grammar import Grammar
-from hermes.GrammarCodeGenerator import GrammarCodeGenerator, Resources, PythonTemplate
+from hermes.GrammarCodeGenerator import PythonTemplate
 from hermes.Macro import LL1ListMacro
 from hermes.Morpheme import Terminal, NonTerminal
 
@@ -49,9 +49,8 @@ class GrammarTest(unittest.TestCase):
 
   def runWithTokens(self, tokens):
     tokens = [str(t) for t in tokens]
-    resources = Resources(self.grammar, tokens, True )
-    template = PythonTemplate(resources)
-    code = template.render(self.grammar)
+    template = PythonTemplate()
+    code = template.render(self.grammar, addMain=True, initialTerminals=tokens)
     filename = sha224( str(random()).encode('ascii') ).hexdigest()[:25] + '.py'
     fullpath = '/tmp/' + filename
     fp = open(fullpath, 'w')

@@ -669,6 +669,8 @@ class CompositeGrammar(Grammar):
     if not isinstance(exprgrammars, list):
       raise Exception('parameter 2 must be a list')
 
+    self.start = grammar.start
+
     rules = grammar.rules
     for exprgrammar in exprgrammars:
       rules = rules.union(exprgrammar.rules)

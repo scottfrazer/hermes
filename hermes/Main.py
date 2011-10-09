@@ -3,7 +3,7 @@
 import sys, os, argparse
 from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
 from hermes.GrammarAnalyzer import GrammarAnalyzer
-from hermes.GrammarCodeGenerator import GrammarCodeGenerator, PythonTemplate, Resources
+from hermes.GrammarCodeGenerator import PythonTemplate
 from hermes.Logger import Factory as LoggerFactory
 from hermes.Theme import AnsiStylizer, TerminalDefaultTheme, TerminalColorTheme
 
@@ -71,11 +71,11 @@ def Cli():
               action = 'store_true',
               help = 'When used with the parse sub-command, the parse tree will be converted to an AST and printed out.')
 
-  result = parser.parse_args()
-  logger = LoggerFactory().initialize(result.debug)
-  logger.debug('CLI Parameters: %s' % (result))
+  cli = parser.parse_args()
+  logger = LoggerFactory().initialize(cli.debug)
+  logger.debug('CLI Parameters: %s' % (cli))
 
-  if not os.path.isfile( result.grammar[0] ):
+  if not os.path.isfile( cli.grammar[0] ):
     sys.stderr.write("Error: File doesn't exist\n")
     sys.exit(-1)
 
@@ -83,14 +83,14 @@ def Cli():
   fp = GrammarFileParser(factory.create())
 
   #try:
-  G = fp.parse( open(result.grammar[0]), result.start )
+  G = fp.parse( open(cli.grammar[0]), cli.start )
   #except Exception as e:
   #  print(e)
   #  sys.exit(-1)
 
   terminals = []
-  if result.tokens:
-    terminals = result.tokens.lower().split(',')
+  if cli.tokens:
+    terminals = cli.tokens.lower().split(',')
     error = False
     terminal_str = list(map(lambda x: x.string, G.terminals))
     for terminal in terminals:
@@ -100,40 +100,41 @@ def Cli():
     if error:
       sys.exit(-1)
 
-  if result.color:
+  if cli.color:
     theme = TerminalColorTheme(AnsiStylizer())
   else:
     theme = TerminalDefaultTheme()
 
-  if result.action == 'analyze':
+  if cli.action == 'analyze':
     analyzer = GrammarAnalyzer(G)
     analyzer.analyze( theme=theme )
 
-  if result.action == 'generate':
-    resources = Resources(G, terminals, result.add_main )
-    template = PythonTemplate(resources)
+  if cli.action == 'generate':
+    if cli.directory:
+      cli.directory = os.path.abspath(cli.directory)
 
-    if result.directory:
-      result.directory = os.path.abspath(result.directory)
-
-    if not result.directory:
-      result.directory = os.path.abspath('.')
-    elif not os.path.isdir( result.directory ):
+    if not cli.directory:
+      cli.directory = os.path.abspath('.')
+    elif not os.path.isdir( cli.directory ):
       sys.stderr.write("Error: Directory doesn't exist\n")
       sys.exit(-1)
-    elif not os.access(result.directory, os.W_OK):
+    elif not os.access(cli.directory, os.W_OK):
       sys.stderr.write("Error: Directory not writable\n")
       sys.exit(-1)
 
-    generator = GrammarCodeGenerator(template, result.directory)
-    return generator.generate(G)
+    template = PythonTemplate()
+    outfile = os.path.join( cli.directory, template.destination )
+    code = template.render(G, addMain=cli.add_main, initialTerminals=terminals)
 
-  if result.action == 'parse':
+    fp = open(outfile, 'w')
+    fp.write(code)
+    fp.close()
+
+  if cli.action == 'parse':
     f = 'hermesparser.py'
 
-    resources = Resources(G, terminals, True )
-    template = PythonTemplate(resources)
-    code = template.render(G)
+    template = PythonTemplate()
+    code = template.render(G, addMain=cli.add_main, initialTerminals=terminals)
 
     fp = open(f, 'w')
     fp.write(code)
@@ -144,11 +145,11 @@ def Cli():
     entry = list(parser.entry_points.keys())[0]
     terminals = list(map(lambda x: hermesparser.Terminal(parser.str_terminal[x]), terminals))
     parsetree = parser.parse(terminals, entry)
-    if not result.ast:
+    if not cli.ast:
       print(parsetree)
     else:
       ast = parsetree.toAst()
-      ast = hermesparser.AstPrettyPrintable(ast) if result.pretty_print else ast
+      ast = hermesparser.AstPrettyPrintable(ast) if cli.pretty_print else ast
       if isinstance(ast, list):
         print('[%s]' % (', '.join([str(x) for x in ast])))
       else:
