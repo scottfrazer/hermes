@@ -126,14 +126,14 @@ def Cli():
       sys.exit(-1)
 
     generator = GrammarCodeGenerator(template, result.directory)
-    return generator.generate()
+    return generator.generate(G)
 
   if result.action == 'parse':
     f = 'hermesparser.py'
 
     resources = Resources(G, terminals, True )
     template = PythonTemplate(resources)
-    code = template.render()
+    code = template.render(G)
 
     fp = open(f, 'w')
     fp.write(code)

@@ -29,21 +29,29 @@ class GrammarTest(unittest.TestCase):
     for nonterminal, firstSet in first.items():
       s1 = {self.grammar.getTerminal(e) for e in firstSet}
       s2 = self.grammar.first[self.grammar.getNonTerminal(nonterminal)]
-      self.assertEqual(s1, s2, "Incorrect first set for nonterminal %s  (expected: %s) (actual: %s)"%(nonterminal, ', '.join([str(e) for e in s1]), ', '.join([str(e) for e in s2])))
+      if s1.issuperset(s2):
+        diff = s1.difference(s2)
+      else:
+        diff = s2.difference(s1)
+      self.assertEqual(s1, s2, "Incorrect first set for nonterminal %s  (expected: %s) (actual: %s) (diff: %s)"%(nonterminal, ', '.join([str(e) for e in s1]), ', '.join([str(e) for e in s2]), ', '.join([str(e) for e in diff])))
     return self
 
   def assertFollow( self, follow ):
     for nonterminal, followSet in follow.items():
       s1 = {self.grammar.getTerminal(e) for e in followSet}
       s2 = self.grammar.follow[self.grammar.getNonTerminal(nonterminal)]
-      self.assertEqual(s1, s2, "Incorrect follow set for nonterminal %s  (expected: %s) (actual: %s)"%(nonterminal, ', '.join([str(e) for e in s1]), ', '.join([str(e) for e in s2])))
+      if s1.issuperset(s2):
+        diff = s1.difference(s2)
+      else:
+        diff = s2.difference(s1)
+      self.assertEqual(s1, s2, "Incorrect follow set for nonterminal %s  (expected: %s) (actual: %s) (diff: %s)"%(nonterminal, ', '.join([str(e) for e in s1]), ', '.join([str(e) for e in s2]), ', '.join([str(e) for e in diff])))
     return self
 
   def runWithTokens(self, tokens):
     tokens = [str(t) for t in tokens]
     resources = Resources(self.grammar, tokens, True )
     template = PythonTemplate(resources)
-    code = template.render()
+    code = template.render(self.grammar)
     filename = sha224( str(random()).encode('ascii') ).hexdigest()[:25] + '.py'
     fullpath = '/tmp/' + filename
     fp = open(fullpath, 'w')

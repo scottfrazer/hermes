@@ -676,11 +676,19 @@ class CompositeGrammar(Grammar):
     super().__init__(rules)
     self.__dict__.update(locals())
     
-    self.terminals = grammar.terminals
-    self.nonterminals = grammar.nonterminals
+    self.terminals = set(grammar.terminals)
+    self.nonterminals = set(grammar.nonterminals)
     self.ε = grammar.ε
-    self.λ = grammar.λ
     self.σ = grammar.σ
+
+    terminalIdMax = max(map(lambda x: x.id, self.terminals))
+    self.expressionTerminals = dict()
+    for i, exprGrammar in enumerate(self.exprgrammars):
+      terminal = Terminal(exprGrammar.nonterminal.string.lower(), terminalIdMax + i)
+      self.expressionTerminals[exprGrammar] = terminal
+      self.terminals = self.terminals.union({terminal})
+      grammar.first[exprGrammar.nonterminal] = {terminal}
+
     for exprgrammar in self.exprgrammars:
       for macros in exprgrammar.macros:
         try:
@@ -688,7 +696,7 @@ class CompositeGrammar(Grammar):
           self.expandedRules = self.expandedRules.union(macros.rules)
         except AttributeError:
           continue
-      tokens = exprgrammar.first[exprgrammar.nonterminal].union({self.λ})
+      tokens = exprgrammar.first[exprgrammar.nonterminal]
       grammar.first[exprgrammar.nonterminal] = grammar.first[exprgrammar.nonterminal].union(tokens)
       tokens = exprgrammar.follow[exprgrammar.nonterminal]
       grammar.follow[exprgrammar.nonterminal] = grammar.follow[exprgrammar.nonterminal].union(tokens)
@@ -734,7 +742,17 @@ class CompositeGrammar(Grammar):
       nRules = self.getExpandedRules( nonterminal )
       if len(nRules) == 0 and nonterminal is not grammar.start and nonterminal not in [x.nonterminal for x in exprgrammars]:
         self.conflicts.append( UndefinedNonterminalConflict(nonterminal) )
-  
+
+  def getExpressionTerminal(self, exprGrammar):
+    return self.expressionTerminals[exprGrammar]
+
+  def getRuleFromFirstSet(self, nonterminal, first):
+    rules = self.getExpandedLL1Rules(nonterminal)
+    for rule in rules:
+      if self._pfirst(rule.production).issuperset(first):
+        return rule
+    return None
+
   def getLL1Grammar(self):
     return self.grammar
   

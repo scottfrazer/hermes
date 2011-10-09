@@ -324,113 +324,108 @@ class Parser:
 
   def call(self, nt_str):
     return getattr(self, nt_str)()
-  
+ 
+{{grammar}}
+  {% for nonterminal in nonExpressionNonterminals %}
 
-  {% for n in nt %}
-  def _{{n['nt_obj'].string.upper()}}(self, depth = 0):
-    rule = self.rule({{n['nt_obj'].id}})
-    if depth is not False:
-      tracer = DebugTracer("_{{n['nt_obj'].string.upper()}}", str(self.sym), rule, depth)
-      depth = depth + 1
-    else:
-      tracer = None
-    tree = ParseTree( NonTerminal({{n['nt_obj'].id}}, self.getAtomString({{n['nt_obj'].id}})), tracer )
-    {% if isinstance(n['nt_obj'].macro, SeparatedListMacro) %}
+  def _{{nonterminal.string.upper()}}(self, depth=0, tracer=None):
+    rule = self.rule({{nonterminal.id}})
+
+    tree = ParseTree( NonTerminal({{nonterminal.id}}, self.getAtomString({{nonterminal.id}})), tracer )
+
+      {% if isinstance(nonterminal.macro, SeparatedListMacro) %}
     tree.list = 'slist'
-    {% elif isinstance(n['nt_obj'].macro, NonterminalListMacro) %}
+      {% elif isinstance(nonterminal.macro, NonterminalListMacro) %}
     tree.list = 'nlist'
-    {% elif isinstance(n['nt_obj'].macro, TerminatedListMacro) %}
+      {% elif isinstance(nonterminal.macro, TerminatedListMacro) %}
     tree.list = 'tlist'
-    {% elif isinstance(n['nt_obj'].macro, MinimumListMacro) %}
+      {% elif isinstance(nonterminal.macro, MinimumListMacro) %}
     tree.list = 'mlist'
-    {% else %}
+      {% else %}
     tree.list = False
-    {% endif %}
+      {% endif %}
 
-    {% if n['empty'] %}
-    if self.sym != None and (self.sym.getId() in [{{', '.join([str(a.id) for a in n['follow']])}}]):
+      {% if nonterminal.empty %}
+    if self.sym != None and (self.sym.getId() in [{{', '.join([str(a.id) for a in grammar.follow[nonterminal]])}}]):
       return tree
-    {% endif %}
+      {% endif %}
 
-    if self.sym == None or self.sym.getId() in [{{', '.join(str(e.id) for e in n['escape_terminals'])}}]:
-    {% if n['empty'] %}
+    if self.sym == None:
+      {% if nonterminal.empty or grammar.ε in grammar.first[nonterminal] %}
       return tree
-    {% else %}
+      {% else %}
       raise SyntaxError('Error: unexpected end of file', tracer)
-    {% endif %}
-  
-    {% for index, rule in enumerate(n['rules']) %}
-
-      {% if index == 0 %}
-    if rule == {{rule['obj'].id}}:
-      {% else %}
-    elif rule == {{rule['obj'].id}}:
       {% endif %}
-      {% if isinstance(rule['obj'].ast, AstTranslation) %}
-      tree.astTransform = AstTransformSubstitution({{rule['obj'].ast.idx}})
-      {% elif isinstance(rule['obj'].ast, AstSpecification) %}
-      tree.astTransform = AstTransformNodeCreator('{{rule['obj'].ast.name}}', {{rule['obj'].ast.parameters}})
-      {% else %}
-      tree.astTransform = AstTransformSubstitution(0)
-      {% endif %}
-      {% for atom in rule['atoms'] %}
+    
+      {% for index, rule in enumerate(nonterminal.rules) %}
 
-        {% if isinstance(atom, Terminal) %}
-      tree.add( self.expect({{atom.id}}, tracer) ) # {{atom.string}}
+        {% if index == 0 %}
+    if rule == {{rule.id}}:
+        {% else %}
+    elif rule == {{rule.id}}:
         {% endif %}
 
-        {% if isinstance(atom, NonTerminal) %}
-      subtree = self._{{atom.string.upper()}}(depth)
+        {% if isinstance(rule.ast, AstTranslation) %}
+      tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
+        {% elif isinstance(rule.ast, AstSpecification) %}
+      tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', {{rule.ast.parameters}})
+        {% else %}
+      tree.astTransform = AstTransformSubstitution(0)
+        {% endif %}
+
+        {% for morpheme in rule.production.morphemes %}
+
+          {% if isinstance(morpheme, Terminal) %}
+      tree.add( self.expect({{morpheme.id}}, tracer) ) # {{morpheme.string}}
+          {% endif %}
+
+          {% if isinstance(morpheme, NonTerminal) %}
+      subtree = self._{{morpheme.string.upper()}}(depth)
       tree.add( subtree )
       if tracer and isinstance(subtree, ParseTree):
         tracer.add( subtree.tracer )
-        {% endif %}
+          {% endif %}
 
-      {% endfor %}
+        {% endfor %}
 
       return tree
 
-    {% endfor %}
+      {% endfor %}
 
-    {% if n['lambda_path'] %}
-    else:
-      try:
-        if not self.recorder.awake:
-          self.recorder.wake()
-        self.recorder.record(self.sym)
-        {% if isinstance(n['lambda_path'].ast, AstTranslation) %}
-        tree.astTransform = AstTransformSubstitution({{n['lambda_path'].ast.idx}})
-        {% elif isinstance(n['lambda_path'].ast, AstSpecification) %}
-        tree.astTransform = AstTransformNodeCreator('{{n['lambda_path'].ast.name}}', {{n['lambda_path'].ast.parameters}})
-        {% else %}
-        tree.astTransform = AstTransformSubstitution(0)
-        {% endif %}
-        {% for atom in n['lambda_path_atoms'] %}
+      {% for exprGrammar in grammar.exprgrammars %}
+        {% if grammar.getExpressionTerminal(exprGrammar) in grammar.first[nonterminal] %}
+          {% set grammar.getRuleFromFirstSet(nonterminal, {grammar.getExpressionTerminal(exprGrammar)}) as rule %}
 
-        {% if isinstance(atom, Terminal) %}
-        tree.add( self.expect({{atom.id}}, tracer) ) # {{atom.string}}
-        {% endif %}
+    elif self.sym.getId() in [{{', '.join([str(x.id) for x in grammar.first[exprGrammar.nonterminal]])}}]:
+          {% if isinstance(rule.ast, AstTranslation) %}
+      tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
+          {% elif isinstance(rule.ast, AstSpecification) %}
+      tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', {{rule.ast.parameters}})
+          {% else %}
+      tree.astTransform = AstTransformSubstitution(0)
+          {% endif %}
 
-        {% if isinstance(atom, NonTerminal) %}
-        subtree = self._{{atom.string.upper()}}(depth)
-        tree.add( subtree )
-        if tracer and isinstance(subtree, ParseTree):
-          tracer.add( subtree.tracer )
+          {% for morpheme in rule.production.morphemes %}
+
+            {% if isinstance(morpheme, Terminal) %}
+      tree.add( self.expect({{morpheme.id}}, tracer) ) # {{morpheme.string}}
+            {% endif %}
+
+            {% if isinstance(morpheme, NonTerminal) %}
+      subtree = self._{{morpheme.string.upper()}}(depth)
+      tree.add( subtree )
+      if tracer and isinstance(subtree, ParseTree):
+        tracer.add( subtree.tracer )
+            {% endif %}
+          {% endfor %}
         {% endif %}
       {% endfor %}
-      except SyntaxError as e:
-        if self.recorder.awake:
-          self.recorder.sleep()
-          self.rewind(self.recorder)
-        raise e
-      return tree
-    {% endif %}
 
-    {% if not n['empty'] %}
+      {% if not nonterminal.empty %}
     raise SyntaxError('Error: Unexpected symbol', tracer)
-    {% else %}
+      {% else %}
     return tree
-    {% endif %}
+      {% endif %}
 
   {% endfor %}
 

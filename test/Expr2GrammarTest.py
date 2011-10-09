@@ -13,16 +13,16 @@ class Expr2GrammarTest(GrammarTest):
       'type_name': {'int', 'char'},
       'initializer_list_item': {'item'},
       '_gen2': {},
-      'sub': {'λ', 'lsquare', 'lparen', 'a', 'subtract', 'identifier', 'lparen_cast', 'lbrace', 'b', 'number'},
+      'sub': {'_expr', 'lsquare', 'lparen', 'a', 'subtract', 'identifier', 'lparen_cast', 'lbrace', 'b', 'number'},
       '_gen3': {},
-      '_expr': {'λ', 'lsquare', 'lparen_cast', 'subtract', 'identifier', 'lparen', 'lbrace', 'number'},
+      '_expr': {'_expr', 'lsquare', 'lparen_cast', 'subtract', 'identifier', 'lparen', 'lbrace', 'number'},
       '_gen1': {'comma', 'ε'},
       '_gen4': {},
       'comma_opt': {'comma', 'ε'},
       '_gen5': {},
       'item': {'b', 'a'},
-      'start': {'λ', 'lsquare', 'lparen', 'a', 'subtract', 'identifier', 'lparen_cast', 'lbrace', 'b', 'number', 'ε'},
-      '_gen0': {'λ', 'lsquare', 'lparen', 'ε', 'subtract', 'a', 'identifier', 'lparen_cast', 'lbrace', 'b', 'number'}
+      'start': {'_expr', 'lsquare', 'lparen', 'a', 'subtract', 'identifier', 'lparen_cast', 'lbrace', 'b', 'number', 'ε'},
+      '_gen0': {'_expr', 'lsquare', 'lparen', 'ε', 'subtract', 'a', 'identifier', 'lparen_cast', 'lbrace', 'b', 'number'}
     })
     
   def test_followSets(self):
@@ -54,8 +54,8 @@ class Expr2GrammarTest(GrammarTest):
   def test_codeGeneration2(self):
     self.loadGrammarFile('grammars/expr2.zgr', 'start') \
         .runWithTokens(['a','comma','identifier','lparen','rparen','comma','lparen_cast','int','rparen','lbrace','item','comma','item','comma','item','rbrace']) \
-        .assertParseTree("(start: (_gen0: (sub: (item: a)), (_gen1: comma, (sub: (_expr: identifier, lparen, (_gen2: (_expr: ), (_gen3: )), rparen)), (_gen1: comma, (sub: (_expr: (_expr: lparen_cast, (type_name: int), rparen), lbrace, (_gen4: (initializer_list_item: item), (_gen5: comma, (initializer_list_item: item), (_gen5: comma, (initializer_list_item: item), (_gen5: )))), (comma_opt: ), rbrace)), (_gen1: )))))") \
-        .assertAst('[a, (FunctionCall: params=[none], name=identifier), (TypeInitializion: type=int, initializer=[item, item, item])]')
+        .assertParseTree("(start: (_gen0: (sub: (item: a)), (_gen1: comma, (sub: (_expr: identifier, lparen, (_gen2: ), rparen)), (_gen1: comma, (sub: (_expr: (_expr: lparen_cast, (type_name: int), rparen), lbrace, (_gen4: (initializer_list_item: item), (_gen5: comma, (initializer_list_item: item), (_gen5: comma, (initializer_list_item: item), (_gen5: )))), (comma_opt: ), rbrace)), (_gen1: )))))") \
+        .assertAst('[a, (FunctionCall: params=[], name=identifier), (TypeInitializion: type=int, initializer=[item, item, item])]')
 
 if __name__ == '__main__':
   unittest.main()

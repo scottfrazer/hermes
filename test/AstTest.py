@@ -9,12 +9,12 @@ class AstTest(GrammarTest):
 
   def test_firstSets(self):
     self.assertFirst({
-      '_expr': {'a', 'b', 'sub', 'λ'},
+      '_expr': {'a', 'b', 'sub', '_expr'},
       '_gen1': {'comma', 'ε'},
-      '_gen0': {'ε', 'identifier', 'a', 'b', 'sub', 'λ'},
+      '_gen0': {'ε', 'identifier', 'a', 'b', 'sub', '_expr'},
       'assignstatement': {'identifier'},
-      'start': {'ε', 'identifier', 'a', 'b', 'sub', 'λ'},
-      'statements': {'identifier', 'a', 'b', 'sub', 'λ'},
+      'start': {'ε', 'identifier', 'a', 'b', 'sub', '_expr'},
+      'statements': {'identifier', 'a', 'b', 'sub', '_expr'},
     })
     
   def test_followSets(self):

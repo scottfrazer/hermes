@@ -9,17 +9,17 @@ class Ast1Test(GrammarTest):
 
   def test_firstSets(self):
     self.assertFirst({
-      'start': {'sub', 'identifier', 'n', 's', 'ε', 'for', 'λ'},
-      'assignstatementsub': {'sub', 'identifier', 'n', 's', 'λ'},
-      'statement': {'identifier', 'sub', 'n', 'for', 's', 'λ'},
-      '_gen0': {'sub', 'identifier', 'n', 's', 'ε', 'for', 'λ'},
+      'start': {'sub', 'identifier', 'n', 's', 'ε', 'for', '_expr'},
+      'assignstatementsub': {'sub', 'identifier', 'n', 's', '_expr'},
+      'statement': {'identifier', 'sub', 'n', 'for', 's', '_expr'},
+      '_gen0': {'sub', 'identifier', 'n', 's', 'ε', 'for', '_expr'},
       '_gen1': {'ε', 'comma'},
-      '_expr': {'sub', 'n', 's', 'λ'},
-      'fordeclstatement': {'sub', 'identifier', 'n', 'ε', 's', 'λ'},
-      'complexexpression': {'sub', 'identifier', 'n', 's', 'λ'},
-      'forcondstatement': {'sub', 'n', 'ε', 's', 'λ'},
-      'foriterstatement': {'sub', 'identifier', 'n', 'ε', 's', 'λ'},
-      'forbody': {'sub', 'identifier', 'n', 's', 'ε', 'for', 'λ'},
+      '_expr': {'sub', 'n', 's', '_expr'},
+      'fordeclstatement': {'sub', 'identifier', 'n', 'ε', 's', '_expr'},
+      'complexexpression': {'sub', 'identifier', 'n', 's', '_expr'},
+      'forcondstatement': {'sub', 'n', 'ε', 's', '_expr'},
+      'foriterstatement': {'sub', 'identifier', 'n', 'ε', 's', '_expr'},
+      'forbody': {'sub', 'identifier', 'n', 's', 'ε', 'for', '_expr'},
       'assignstatement': {'identifier'},
       'forstatement': {'for'}
     })

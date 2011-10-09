@@ -20,7 +20,7 @@ class PythonTemplate(Template):
   def __init__(self, resources):
     self.resources = resources
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
-  def render(self):
+  def render(self, grammar):
     x = { 
       'tokens': self.resources.getTokens(),
       'expr_rules': self.resources.getExprGrammars(),
@@ -33,7 +33,8 @@ class PythonTemplate(Template):
     }
     templates_dir = resource_filename(__name__, 'templates')
     loader = moody.make_loader(templates_dir)
-    code = loader.render( self.template, add_main=x['add_main'], expr_rules=x['expr_rules'], tokens=x['tokens'], entry=x['entry'], nt=x['parser'], init=x['init'], entry_points=x['entry_points'], nudled=x['nudled'])
+    nonExpressionNonterminals = [x for x in grammar.nonterminals if x not in map(lambda x: x.nonterminal, grammar.exprgrammars)]
+    code = loader.render( self.template, nonExpressionNonterminals=nonExpressionNonterminals, grammar=grammar, add_main=x['add_main'], expr_rules=x['expr_rules'], tokens=x['tokens'], entry=x['entry'], nt=x['parser'], init=x['init'], entry_points=x['entry_points'], nudled=x['nudled'])
     linereduce = re.compile('^[ \t]*$', re.M)
     code = linereduce.sub('', code)
     code = re.sub('\n+', '\n', code)
@@ -66,62 +67,19 @@ class Resources:
     return str(self.grammar.getLL1Grammar().getStart()).lower()
   
   def getParser(self):
-    tab = self.grammar._compute_parse_table()
-    tpl = {}
-    for N in self.grammar.nonterminals:
-      # TODO: change this...
-      if str(N).lower() == '_expr':
+    exprNonTerminals = list(map(lambda x: x.nonterminal, self.grammar.getExpressionGrammars()))
+    for nonterminal in self.grammar.nonterminals:
+      if nonterminal in exprNonTerminals:
         continue
-      tpl[N.id] = {
-        'nt_obj': N,
-        'empty': False,
-        'lambda_path': False,
-        'lambda_path_atoms': [],
-        'rules': [],
-        'escape_terminals': set(),
-        'follow': self.grammar.follow[N].difference(set([self.grammar.ε, self.grammar.σ]))
-      }
-    for id, tpl_nt in tpl.items():
-      N = tpl_nt['nt_obj']
-
-      if self.grammar.ε in self.grammar.first[N]:
-        tpl_nt['empty'] = True
-
-      for rule in self.grammar.getNormalizedRules(N):
-        tpl_rule = {
-          'obj': rule,
-          'atoms': []
-        }
-
+      nonterminal.empty = False
+      nonterminal.rules = self.grammar.getExpandedLL1Rules(nonterminal)
+      nonterminal.escape_terminals = set() # TODO: is this needed???
+      for rule in nonterminal.rules:
+        rule.empty = False
         if len(rule.production.morphemes) == 1 and rule.production.morphemes[0] == self.grammar.ε:
-          tpl_nt['empty'] = True
-          continue
-
-        if self.grammar.λ in self.grammar._pfirst(rule.production):
-          tpl_nt['lambda_path'] = rule
-          tpl_nt['lambda_path_atoms'] = []
-          self.logger.debug("Nonterminal %s leads to λ through %s" %(N, rule))
-          for x in rule.production.morphemes:
-            tpl_type = tpl_terminal_var_name = tpl_nonterminal_func_name = ''
-            if self.grammar.isSimpleTerminal(x):
-              atom = x
-            elif self.grammar.isNonTerminal(x):
-              atom = x
-            elif isinstance(x, SeparatedListMacro) or isinstance(x, NonterminalListMacro):
-              atom = x.start_nt
-            tpl_nt['lambda_path_atoms'].append(atom)
-          # if λ path != nonterminal... something went horribly wrong.
-          # Also, if λpath is already set, that might be potentially bad.
-        for atom in rule.production.morphemes:
-          if isinstance(atom, NonterminalListMacro) or isinstance(atom, SeparatedListMacro):
-            tpl_rule['atoms'].append(atom.start_nt)
-            escape_terminals = set(self.grammar.follow[atom.start_nt].difference({self.grammar.ε, self.grammar.σ, self.grammar.λ}))
-            tpl[atom.start_nt.id]['escape_terminals'] = tpl[atom.start_nt.id]['escape_terminals'].union( escape_terminals )
-          elif self.grammar.isSimpleTerminal(atom) or self.grammar.isNonTerminal(atom):
-            tpl_rule['atoms'].append(atom)
-        tpl_nt['rules'].append( tpl_rule )
-      tpl_nt['rules'] = sorted(tpl_nt['rules'], key=lambda x: x['obj'].id)
-    return sorted(tpl.values(), key=lambda x: str(x['nt_obj']))
+          rule.empty = True
+          nonterminal.empty = True
+      nonterminal.rules = list(filter(lambda x: not x.empty, nonterminal.rules))
   
   def getNudLed(self):
     templates = []
@@ -200,10 +158,10 @@ class GrammarCodeGenerator:
     self.template = template
     self.directory = directory
   
-  def generate( self ):
+  def generate( self, grammar ):
     #try:
       fp = open( path.join( self.directory, self.template.destination ), 'w' )
-      fp.write( self.template.render() )
+      fp.write( self.template.render(grammar) )
       fp.close()
       return True
     #except:

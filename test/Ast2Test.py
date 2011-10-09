@@ -10,14 +10,14 @@ class Ast2Test(GrammarTest):
 
   def test_firstSets(self):
     self.assertFirst({
-      'start': {'identifier', 'ε', 'sub', 'n', 'for', 's', 'λ'},
-      'statement': {'n', 'for', 'identifier', 's', 'sub', 'λ'},
+      'start': {'identifier', 'ε', 'sub', 'n', 'for', 's', '_expr'},
+      'statement': {'n', 'for', 'identifier', 's', 'sub', '_expr'},
       '_gen1': {'semi', 'ε'},
-      '_expr': {'identifier', 'sub', 'n', 's', 'λ'},
+      '_expr': {'identifier', 'sub', 'n', 's', '_expr'},
       'for': {'for'},
-      '_gen0': {'for', 'identifier', 'ε', 's', 'n', 'sub', 'λ'},
-      'forsub': {'identifier', 'ε', 'sub', 'n', 's', 'λ'},
-      'forbody': {'identifier', 'ε', 's', 'n', 'for', 'sub', 'λ'}
+      '_gen0': {'for', 'identifier', 'ε', 's', 'n', 'sub', '_expr'},
+      'forsub': {'identifier', 'ε', 'sub', 'n', 's', '_expr'},
+      'forbody': {'identifier', 'ε', 's', 'n', 'for', 'sub', '_expr'}
     })
     
   def test_followSets(self):

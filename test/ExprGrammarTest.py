@@ -10,12 +10,12 @@ class ExprGrammarTest(GrammarTest):
 
   def test_firstSets(self):
     self.assertFirst({
-      'start': {'lparen', 'lbrace', 'subtract', 'lsquare', 'b', 'identifier', 'a', 'number', 'λ', 'ε'},
-      'sub': {'lparen', 'lbrace', 'subtract', 'lsquare', 'identifier', 'b', 'number', 'a', 'λ'},
-      '_gen0': {'lbrace', 'lsquare', 'b', 'identifier', 'number', 'subtract', 'lparen', 'ε', 'a', 'λ'},
+      'start': {'lparen', 'lbrace', 'subtract', 'lsquare', 'b', 'identifier', 'a', 'number', '_expr', 'ε'},
+      'sub': {'_expr', 'lparen', 'lbrace', 'subtract', 'lsquare', 'identifier', 'b', 'number', 'a'},
+      '_gen0': {'lbrace', 'lsquare', 'b', 'identifier', 'number', 'subtract', 'lparen', 'ε', 'a', '_expr'},
       '_gen1': {'comma', 'ε'},
       'item': {'b', 'a'},
-      '_expr': {'lbrace', 'lsquare', 'identifier', 'subtract', 'lparen', 'number', 'λ'},
+      '_expr': {'lbrace', 'lsquare', 'identifier', 'subtract', 'lparen', 'number', '_expr'},
     })
     
   def test_followSets(self):
