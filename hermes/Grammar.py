@@ -2,7 +2,6 @@ from hermes.Morpheme import Terminal
 from hermes.Morpheme import EmptyString
 from hermes.Morpheme import EndOfStream
 from hermes.Morpheme import NonTerminal
-from hermes.Morpheme import Expression
 from hermes.Morpheme import Morpheme, AbstractTerminal
 from hermes.Conflict import FirstFirstConflict, FirstFollowConflict, ListFirstFollowConflict, NudConflict, LedConflict, UndefinedNonterminalConflict, UnusedNonterminalWarning
 from hermes.Macro import ListMacro, LL1ListMacro, SeparatedListMacro, NonterminalListMacro
@@ -380,30 +379,8 @@ class ExpressionFirstFollowCalculator(FirstFollowCalculator):
         except IndexError:
           continue
 
-# Important note on first/follow sets
-#
-# 1) LL(1) Grammar will treat any nonterminal in a grammar without a rule 
-#    defining its productions as an opaque, non epsilon yielding nonterminal,
-#    but only for the purposes of calculating first/follow sets.
-#
-# 2) A corollary to this is that an ExpressionGrammar should consume one or more
-#    tokens.
-#
-# 3) Expression grammars and LL(1) grammars both compute first and follow the 
-#    same.
-#
-# 4) The union of single LL(1) grammar and n Expression grammars is a
-#    CompoundGrammar.  The CompoundGrammar will union in a `λ` terminal into the
-#    first sets of each of the n Expression grammar's `nonterminal` which is
-#    exposes to the LL(1) parser.  Then, _computeFirst and _computeFollow are
-#
-# 5) first(infix) = {} and follow(infix) = {}. all other expression rules follow
-#    the normal algorithm.  This means that any infix operator is essentially
-#    invisible to the LL(1) grammar.
-
 class Grammar:
   ε = EmptyString(-1)
-  λ = Expression(-1)
   σ = EndOfStream(-1)
   terminals = []
   nonterminals = []
@@ -595,13 +572,11 @@ class LL1Grammar(Grammar):
     super().__init__(rules)
     self.__dict__.update(locals())
     
-    specials = {'ε': EmptyString(-1), 'λ': Expression(-1), 'σ': EndOfStream(-1)}
+    specials = {'ε': EmptyString(-1), 'σ': EndOfStream(-1)}
     for terminal in self.terminals:
       key = None
       if isinstance(terminal, EmptyString):
         key = 'ε'
-      elif isinstance(terminal, Expression):
-        key = 'λ'
       elif isinstance(terminal, EndOfStream):
         key = 'σ'
       
@@ -761,6 +736,9 @@ class CompositeGrammar(Grammar):
   def getExpressionGrammars(self):
     return self.exprgrammars
 
+  def getSimpleTerminals(self):
+    return [terminal for terminal in self.terminals if terminal not in [self.ε, self.σ]]
+
   def getExpandedLL1Rules(self, nonterminal = None):
     allRules = [rule for rule in self.expandedRules if isinstance(rule, Rule)]
     if nonterminal:
@@ -794,34 +772,23 @@ class CompositeGrammar(Grammar):
   def __str__(self, theme=None):
     return ''
   
-  # These three functions are coupled.
-  def _compute_parse_table( self ):
-    terminals = self._strip_abstract_terminals( self.terminals.copy() )
-    NT  = {n.id: n for n in self.nonterminals}
-    T   = {t.id: t for t in terminals}
-    tab = []
-    for N in self._sort_dict(NT):
+  def getParseTable( self ):
+    nonterminals  = {n.id: n for n in self.nonterminals}
+    terminals   = {t.id: t for t in self.getSimpleTerminals()}
+    sort = lambda x: [x[key] for key in sorted(x.keys())]
+    table = []
+    for nonterminal in sort(nonterminals):
       rules = []
-      for t in self._sort_dict(T):
+      for terminal in sort(terminals):
         next = None
-        for R in self.getExpandedLL1Rules(N):
-          Fip = self._pfirst(R.getProduction())
-          if t in Fip or (self.ε in Fip and t in self.follow[N]):
-            next = R
+        for rule in self.getExpandedLL1Rules(nonterminal):
+          Fip = self._pfirst(rule.getProduction())
+          if terminal in Fip or (self.ε in Fip and terminal in self.follow[nonterminal]):
+            next = rule
             break
         rules.append(next)
-      tab.append(rules)
-    return tab
-  
-  def _sort_dict(self, a):
-    return [a[key] for key in sorted(a.keys())]
-  
-  def _strip_abstract_terminals( self, terminals ):
-    new = []
-    for terminal in terminals: #['λ', 'ε', 'σ']:
-      if str(terminal) not in ['λ', 'ε', 'σ']:
-        new.append(terminal)
-    return new
+      table.append(rules)
+    return table
 
 class LL1GrammarFactory:
   def create(self, nonterminals, terminals, macros, rules, start):

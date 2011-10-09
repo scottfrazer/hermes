@@ -2,9 +2,8 @@ import sys
 
 {% from hermes.Grammar import AstTranslation, AstSpecification %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
-{% from hermes.Macro import ListMacro, SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro %}
+{% from hermes.Macro import SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
-{% import hermes.Grammar %}
 
 def parse( iterator, entry ):
   p = Parser()
@@ -227,7 +226,10 @@ class Parser:
   nonterminal_count = {{len(grammar.nonterminals)}}
 
   parse_table = [
-    {{parseTable}}
+    {% py parseTable = grammar.getParseTable() %}
+    {% for i in range(len(grammar.nonterminals)) %}
+    [{{', '.join([str(rule.id) if rule else str(-1) for rule in parseTable[i]])}}],
+    {% endfor %}
   ]
 
   def terminal(self, str):
@@ -298,7 +300,7 @@ class Parser:
   def call(self, nt_str):
     return getattr(self, nt_str)()
  
-  {% for nonterminal in nonExpressionNonterminals %}
+  {% for nonterminal in LL1Nonterminals %}
 
   def _{{nonterminal.string.upper()}}(self, depth=0, tracer=None):
     rule = self.rule({{nonterminal.id}})

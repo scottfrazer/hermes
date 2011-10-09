@@ -1,7 +1,7 @@
-import re, json, sys
+import re, json
 from collections import OrderedDict
-from hermes.Morpheme import NonTerminal, Terminal, EmptyString, EndOfStream, Expression
-from hermes.Grammar import Grammar, CompositeGrammar, LL1GrammarFactory, ExpressionGrammarFactory
+from hermes.Morpheme import NonTerminal, Terminal, EmptyString
+from hermes.Grammar import CompositeGrammar, LL1GrammarFactory, ExpressionGrammarFactory
 from hermes.Grammar import Rule, ExprRule, MacroGeneratedRule, Production, AstSpecification, AstTranslation
 from hermes.Grammar import InfixOperator, PrefixOperator, MixfixOperator
 from hermes.Macro import SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro

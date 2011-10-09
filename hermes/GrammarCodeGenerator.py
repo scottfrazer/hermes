@@ -1,30 +1,18 @@
-from os import path
-import re
+import re, moody
 from pkg_resources import resource_filename
-from types import *
-from hermes.Morpheme import Terminal, NonTerminal, EmptyString
-from hermes.Macro import NonterminalListMacro, SeparatedListMacro
-from hermes.Grammar import MacroGeneratedRule, AstSpecification, AstTranslation
 from hermes.Logger import Factory as LoggerFactory
 from collections import OrderedDict
-import moody
 
 moduleLogger = LoggerFactory().getModuleLogger(__name__)
 
 class Template:
-  pass
-
-class PythonTemplate(Template):
-  template = 'python/Parser.tpl'
-  destination = 'Parser.py'
-
   def __init__(self):
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
 
   def _prepare(self, grammar):
-    tab = grammar._compute_parse_table()
-    terminals = grammar._strip_abstract_terminals( grammar.terminals.copy() )
-    parseTable = ',\n  '.join(['[' + ', '.join([str(r.id) if r else str(-1) for r in tab[i]]) + ']' for i in range(len(grammar.nonterminals))])
+
+    # Set the variable name for each terminal and nonterminal
+    terminals = grammar.getSimpleTerminals()
 
     for terminal in terminals:
       terminal.varname = 'TERMINAL_' + str(terminal).strip("'").upper()
@@ -68,22 +56,18 @@ class PythonTemplate(Template):
           nonterminal.empty = True
       nonterminal.rules = list(filter(lambda x: not x.empty, nonterminal.rules))
 
-    return (terminals, parseTable)
-
-  def render(self, grammar, addMain=False, entryPoints=[], initialTerminals=[]):
+  def render(self, grammar, addMain=False, initialTerminals=[]):
     templates_dir = resource_filename(__name__, 'templates')
     loader = moody.make_loader(templates_dir)
-    (terminals, parseTable) = self._prepare(grammar)
-    nonExpressionNonterminals = [x for x in grammar.nonterminals if x not in map(lambda x: x.nonterminal, grammar.exprgrammars)]
+    self._prepare(grammar)
+    LL1Nonterminals = [x for x in grammar.nonterminals if x not in map(lambda x: x.nonterminal, grammar.exprgrammars)]
 
     code = loader.render (
               self.template, \
               grammar = grammar, \
-              nonExpressionNonterminals = nonExpressionNonterminals, \
-              nonAbstractTerminals = terminals, \
-              parseTable = parseTable, \
+              LL1Nonterminals = LL1Nonterminals, \
+              nonAbstractTerminals = grammar.getSimpleTerminals(), \
               addMain = addMain, \
-              entryPoints = entryPoints, \
               initialTerminals = initialTerminals
            )
 
@@ -92,18 +76,14 @@ class PythonTemplate(Template):
     code = re.sub('\n+', '\n', code)
     return code
 
-class CSourceTemplate(Template):
+class PythonTemplate(Template):
+  template = 'python/Parser.tpl'
+  destination = 'Parser.py'
+
+class CHeaderTemplate(Template):
   template = 'c/header.tpl'
   destination = 'parser.h'
-  def __init__(self, resources):
-    self.resources = resources
-  def render(self):
-    raise Exception('Not Implemented')
   
-class CHeaderTemplate(Template):
+class CSourceTemplate(Template):
   template = 'c/source.tpl'
   destination = 'parser.c'
-  def __init__(self, resources):
-    self.resources = resources
-  def render(self):
-    raise Exception('Not Implemented')

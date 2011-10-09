@@ -46,11 +46,3 @@ class EndOfStream(AbstractTerminal):
     return self.__str__(theme)
   def __str__(self, theme=None):
     return theme.endOfStream('σ') if theme else 'σ'
-
-class Expression(AbstractTerminal):
-  def __init__(self, id):
-    super().__init__('λ', id)
-  def str(self, theme=None):
-    return self.__str__(theme)
-  def __str__(self, theme=None):
-    return theme.expression('λ') if theme else 'λ'
