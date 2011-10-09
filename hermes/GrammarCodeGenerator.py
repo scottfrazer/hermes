@@ -73,7 +73,6 @@ class Resources:
         continue
       nonterminal.empty = False
       nonterminal.rules = self.grammar.getExpandedLL1Rules(nonterminal)
-      nonterminal.escape_terminals = set() # TODO: is this needed???
       for rule in nonterminal.rules:
         rule.empty = False
         if len(rule.production.morphemes) == 1 and rule.production.morphemes[0] == self.grammar.ε:
