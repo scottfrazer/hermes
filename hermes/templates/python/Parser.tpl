@@ -1,9 +1,15 @@
 import sys
 
-{% from hermes.Grammar import AstTranslation, AstSpecification %}
+{% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
 {% from hermes.Macro import SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
+
+import inspect
+def whoami():
+  return inspect.stack()[1][3]
+def whosdaddy():
+  return inspect.stack()[2][3]
 
 def parse( iterator, entry ):
   p = Parser()
@@ -291,7 +297,7 @@ class Parser:
       self.sym = self.next()
       return symbol
     else:
-      raise SyntaxError('Unexpected symbol.  Expected %s, got %s.' %(self.terminal_str[s], self.sym if self.sym else 'None'), tracer)
+      raise SyntaxError('Unexpected symbol when parsing %s.  Expected %s, got %s.' %(whosdaddy(), self.terminal_str[s], self.sym if self.sym else 'None'), tracer)
 
   def rule(self, n):
     if self.sym == None: return -1
@@ -396,7 +402,7 @@ class Parser:
       {% endfor %}
 
       {% if not nonterminal.empty %}
-    raise SyntaxError('Error: Unexpected symbol', tracer)
+    raise SyntaxError('Error: Unexpected symbol (%s) when parsing %s' % (self.sym, whoami()), tracer)
       {% else %}
     return tree
       {% endif %}
@@ -443,16 +449,13 @@ class Parser:
   def nud{{index}}(self, tracer):
     tree = ParseTree( NonTerminal({{exprGrammar.nonterminal.id}}, '{{exprGrammar.nonterminal.string.lower()}}') )
 
-    {% py seen = list() %}
-    {% for rule in exprGrammar.getExpandedRules() %}
-      {% py 
-        try:
-          nud = rule.nudProduction.morphemes
-        except:
-          nud = []
-      %}
-      {% if len(nud) and nud[0] not in seen %}
-    {{'if' if len(seen)==0 else 'elif'}} self.sym.getId() == {{nud[0].id}}: # {{nud[0]}}
+    if not self.sym:
+      return tree
+
+    {% for i, rule in enumerate(exprGrammar.getExpandedRules()) %}
+      {% py ruleFirstSet = exprGrammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
+      {% if len(ruleFirstSet) %}
+    {{'if' if i == 0 else 'elif'}} self.sym.getId() in [{{', '.join([str(x.id) for x in exprGrammar.ruleFirst(rule)])}}]:
 
         {% if isinstance(rule.ast, AstSpecification) %}
       tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', {{rule.ast.parameters}})
@@ -460,10 +463,10 @@ class Parser:
       tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
         {% endif %}
 
-        {% if len(nud) == 1 %}
-      return self.expect( {{nud[0].id}}, tracer )
+        {% if len(rule.nudProduction) == 1 and isinstance(rule.nudProduction.morphemes[0], Terminal) %}
+      return self.expect( {{rule.nudProduction.morphemes[0].id}}, tracer )
         {% else %}
-          {% for morpheme in nud %}
+          {% for morpheme in rule.nudProduction.morphemes %}
             {% if isinstance(morpheme, Terminal) %}
       tree.add( self.expect({{morpheme.id}}, tracer) )
             {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
@@ -480,7 +483,6 @@ class Parser:
             {% endif %}
           {% endfor %}
         {% endif %}
-        {% py seen.append(nud[0]) %}
       {% endif %}
     {% endfor %}
 

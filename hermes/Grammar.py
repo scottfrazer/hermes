@@ -189,6 +189,23 @@ class OperatorPrecedence:
 class FirstFollowCalculator:
   def __init__(self):
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
+  
+  # This is duplicated
+  def _pfirst( self, grammar, P ):
+    r = set()
+    addEpsilon = True
+    for m in P.morphemes:
+      if isinstance(m, NonterminalListMacro) or isinstance(m, SeparatedListMacro):
+        m = m.start_nt
+      toks = self.first[m].difference({grammar.ε})
+      if len(toks) > 0:
+        r = r.union(toks)
+      if grammar.ε not in self.first[m]:
+        addEpsilon = False
+        break
+    if addEpsilon:
+      r = r.union({grammar.ε})
+    return r
 
   def update(self, grammar, first, follow):
     change = False
@@ -318,23 +335,6 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
               ))
               self.follow[morpheme] = y.union(z)
     return changed
-  
-  # This is duplicated
-  def _pfirst( self, grammar, P ):
-    r = set()
-    addEpsilon = True
-    for m in P.morphemes:
-      if isinstance(m, NonterminalListMacro) or isinstance(m, SeparatedListMacro):
-        m = m.start_nt
-      toks = self.first[m].difference({grammar.ε})
-      if len(toks) > 0:
-        r = r.union(toks)
-      if grammar.ε not in self.first[m]:
-        addEpsilon = False
-        break
-    if addEpsilon:
-      r = r.union({grammar.ε})
-    return r
 
 class ExpressionFirstFollowCalculator(FirstFollowCalculator):
   def compute(self, grammar):
@@ -355,7 +355,8 @@ class ExpressionFirstFollowCalculator(FirstFollowCalculator):
   def _computeFirst(self, grammar):
     for rule in grammar.rules:
       if len(rule.nudProduction):
-        self.first[rule.nonterminal] = self.first[rule.nonterminal].union({rule.nudProduction.morphemes[0]})
+        firstSet = self._pfirst(grammar, rule.nudProduction).difference({grammar.ε})
+        self.first[rule.nonterminal] = self.first[rule.nonterminal].union(firstSet)
 
   def _computeFollow(self, grammar):
     for rule in grammar.rules:
@@ -504,6 +505,11 @@ class ExpressionGrammar(Grammar):
   
   def getPrecedence(self):
     return self.computedPrecedence
+ 
+  def ruleFirst(self, rule):
+    if len(rule.nudProduction) and rule.nudProduction.morphemes[0] != rule.nonterminal:
+      return self._pfirst(rule.nudProduction)
+    return set()
   
   def _computeConflicts( self ):
     nud = {}

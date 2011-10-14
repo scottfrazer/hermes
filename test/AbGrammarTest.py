@@ -30,13 +30,13 @@ class AbGrammarTest(GrammarTest):
     self.runWithTokens( ['a','b','semi'] ).assertParseTree( '(start: (sub: a, (sub: ), b), semi)' )
 
   def test_codeGeneration2(self):
-    self.runWithTokens( ['a','a','a','b','semi'] ).assertParseTree( 'Unexpected symbol.  Expected b, got semi.' )
+    self.runWithTokens( ['a','a','a','b','semi'] ).assertParseTree( 'Unexpected symbol when parsing _sub.  Expected b, got semi.' )
 
   def test_codeGeneration3(self):
     self.runWithTokens( ['semi'] ).assertParseTree( '(start: (sub: ), semi)' )
 
   def test_codeGeneration4(self):
-    self.runWithTokens( ['a'] ).assertParseTree( 'Unexpected symbol.  Expected b, got None.' )
+    self.runWithTokens( ['a'] ).assertParseTree( 'Unexpected symbol when parsing _sub.  Expected b, got None.' )
 
   def test_codeGeneration5(self):
     self.runWithTokens( [] ).assertParseTree( 'Error: unexpected end of file' )
