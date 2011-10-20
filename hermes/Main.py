@@ -142,9 +142,8 @@ def Cli():
 
     import hermesparser
     parser = hermesparser.Parser()
-    entry = list(parser.entry_points.keys())[0]
     terminals = list(map(lambda x: hermesparser.Terminal(parser.str_terminal[x]), terminals))
-    parsetree = parser.parse(terminals, entry)
+    parsetree = parser.parse(terminals)
     if not cli.ast:
       print(parsetree)
     else:

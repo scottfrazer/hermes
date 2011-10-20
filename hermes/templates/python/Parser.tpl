@@ -79,6 +79,8 @@ class ParseTree():
     self.isNud = False
     self.isPrefix = False
     self.isInfix = False
+    self.nudMorphemeCount = 0
+    self.isExprNud = False # true for rules like _expr := {_expr} + {...}
     self.list = False
   def add( self, tree ):
     self.children.append( tree )
@@ -116,12 +118,12 @@ class ParseTree():
           elif isinstance(self.children[0], ParseTree) and \
                self.children[0].isNud and \
                not self.children[0].isPrefix and \
-               not self.isInfix and \
-               not self.children[0].isInfix: # implies .isExpr
-            if idx < len(self.children[0].children):
+               not self.isExprNud and \
+               not self.isInfix:
+            if idx < self.children[0].nudMorphemeCount:
               child = self.children[0].children[idx]
             else:
-              index = idx - len(self.children[0].children) + 1
+              index = idx - self.children[0].nudMorphemeCount + 1
               child = self.children[index]
           else:
             child = self.children[idx]
@@ -463,6 +465,8 @@ class Parser:
       tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
         {% endif %}
 
+      tree.nudMorphemeCount = {{len(rule.nudProduction)}}
+
         {% if len(rule.nudProduction) == 1 and isinstance(rule.nudProduction.morphemes[0], Terminal) %}
       return self.expect( {{rule.nudProduction.morphemes[0].id}}, tracer )
         {% else %}
@@ -502,6 +506,10 @@ class Parser:
         {% elif isinstance(rule.ast, AstTranslation) %}
       tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
         {% endif %}
+
+      {% if len(rule.nudProduction) == 1 and rule.nudProduction.morphemes[0] == rule.nonterminal%}
+      tree.isExprNud = True
+      {% endif %}
 
       if left:
         tree.add(left)
