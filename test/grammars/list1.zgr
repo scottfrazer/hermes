@@ -1,0 +1,9 @@
+{
+  "ll1": {
+    "start": "start",
+    "rules": [
+      "Start := 'lparen' + list(Item) + 'rparen'",
+      "Item := 'a' | 'b' | 'rparen'"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "ll1": {
+    "start": "start",
+    "rules": [
+      "start := list(sub, 'comma')",
+      "sub := item | _expr",
+      "item := 'b' | 'a'"
+    ]
+  },
+  "expr": [
+    {
+      "nonterminal": "_expr",
+      "binding_power": [
+        {"associativity": "left", "terminals": ["add", "subtract"]},
+        {"associativity": "left", "terminals": ["multiply", "divide"]},
+        {"associativity": "unary", "terminals": ["sub"]}
+      ],
+      "rules": [
+        "_expr := _expr + 'multiply' + _expr",
+        "_expr := _expr + 'divide' + _expr",
+        "_expr := _expr + 'add' + _expr",
+        "_expr := _expr + 'subtract' + _expr",
+        "_expr := 'subtract' + _expr",
+        "_expr := {'lsquare' + list(_expr, 'comma') + 'rsquare'}",
+        "_expr := {'lbrace' + list(_expr, 'comma') + 'rbrace'}",
+        "_expr := {'identifier' + 'lparen' + list(_expr, 'comma') + 'rparen'}",
+        "_expr := {'lparen' + _expr + 'rparen'}",
+        "_expr := {'identifier'} | {'number'}"
+      ]
+    }
+  ]
+}
