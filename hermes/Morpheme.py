@@ -19,6 +19,9 @@ class NonTerminal(Morpheme):
     return 
 
 class Terminal(Morpheme):
+  def __init__(self, string, id=0):
+    super().__init__(string, id)
+    self.isSeparator = False
   def id(self):
     return self.id
   def str(self, theme=None):

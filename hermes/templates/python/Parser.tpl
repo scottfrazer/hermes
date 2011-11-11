@@ -81,6 +81,7 @@ class ParseTree():
     self.isInfix = False
     self.nudMorphemeCount = 0
     self.isExprNud = False # true for rules like _expr := {_expr} + {...}
+    self.listSeparator = None
     self.list = False
   def add( self, tree ):
     self.children.append( tree )
@@ -88,7 +89,7 @@ class ParseTree():
     if self.list == 'slist' or self.list == 'nlist':
       if len(self.children) == 0:
         return AstList()
-      offset = 1 if not isinstance(self.children[0], ParseTree) else 0
+      offset = 1 if self.children[0] == self.listSeparator else 0
       r = AstList([self.children[offset].toAst()])
       r.extend(self.children[offset+1].toAst())
       return r
@@ -355,10 +356,14 @@ class Parser:
       tree.astTransform = AstTransformSubstitution(0)
         {% endif %}
 
-        {% for morpheme in rule.production.morphemes %}
+        {% for index, morpheme in enumerate(rule.production.morphemes) %}
 
           {% if isinstance(morpheme, Terminal) %}
-      tree.add( self.expect({{morpheme.id}}, tracer) ) # {{morpheme.string}}
+      t = self.expect({{morpheme.id}}, tracer) # {{morpheme.string}}
+      tree.add(t)
+            {% if isinstance(nonterminal.macro, SeparatedListMacro) and index == 0 %}
+      tree.listSeparator = t
+            {% endif %}
           {% endif %}
 
           {% if isinstance(morpheme, NonTerminal) %}

@@ -48,6 +48,7 @@ class LL1MacroExpander:
   def slist( self, nonterminal, separator, minimum ):
     rules = []
 
+    separator.isSeparator = True
     key = tuple([str(nonterminal).lower(), str(separator).lower()])
     if key in self.list_cache:
       return (self.list_cache[key][0].nonterminal, self.list_cache[key])
@@ -575,17 +576,24 @@ class GrammarFileParser:
     )
 
     exprGrammars = []
+    parentGrammars = dict()
     for grammar in normalized['expr']:
-      exprGrammars.append( 
-        exprGrammarFactory.create(
-          normalized['global']['nonterminals'], \
-          normalized['global']['terminals'], \
-          normalized['global']['macros'], \
-          set(grammar['rules']), \
-          grammar['binding_power'], \
-          grammar['nonterminal']
-        )
+      exprGrammar = exprGrammarFactory.create(
+        normalized['global']['nonterminals'], \
+        normalized['global']['terminals'], \
+        normalized['global']['macros'], \
+        set(grammar['rules']), \
+        grammar['binding_power'], \
+        grammar['nonterminal']
       )
+      exprGrammars.append(exprGrammar)
+      if 'extends' in grammar:
+        parentGrammars[exprGrammar] = grammar['extends']
+    
+    for grammar, parent in parentGrammars.items():
+      for grammar2 in exprGrammars:
+        if grammar2.nonterminal.string == parent:
+          grammar.extend(grammar2)
 
     return CompositeGrammar(ll1Grammar, exprGrammars)
-  
+

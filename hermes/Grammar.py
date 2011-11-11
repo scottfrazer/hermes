@@ -1,3 +1,4 @@
+from copy import copy
 from hermes.Morpheme import Terminal
 from hermes.Morpheme import EmptyString
 from hermes.Morpheme import EndOfStream
@@ -23,7 +24,8 @@ class Rule:
   def __init__( self, nonterminal, production, id=None, root=None, ast=None):
     self.__dict__.update(locals())
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
-  
+  def __copy__( self ):
+    return Rule(self.nonterminal, Production(copy(self.production.morphemes)), self.id, self.root, self.ast)
   def expand( self ):
     morphemes = []
     rules = []
@@ -103,6 +105,10 @@ class ExprRule:
       raise Exception('Rule must contain a NUD or a LED portion.')
     if self.getRoot() and not isinstance(self.getRoot(), Terminal):
       raise Exception('Root of expression rule must be a terminal.')
+  def __copy__( self ):
+    np = Production(copy(self.nudProduction.morphemes))
+    lp = Production(copy(self.ledProduction.morphemes))
+    return ExprRule(self.nonterminal, np, lp, self.nudAst, self.ast, self.operator)
   def getRoot(self):
     if self.ledProduction and len(self.ledProduction):
       return self.ledProduction.morphemes[0]
@@ -398,6 +404,7 @@ class Grammar:
     
     self.expandedRules = set()
     for expandedRuleSet in map(lambda x: x.expand(), rules.copy()):
+      # TODO: this could probably just be self.expandedRules.union(expandedRuleSet)
       for eRule in expandedRuleSet:
         self.expandedRules = self.expandedRules.union({eRule})
 
@@ -492,7 +499,29 @@ class ExpressionGrammar(Grammar):
     self._computePrecedence()
     (self.first, self.follow) = firstFollowCalc.compute(self)
     self._computeConflicts()
-  
+
+  def extend(self, exprGrammar):
+    self.rules = self.rules.union({copy(rule) for rule in exprGrammar.rules})
+    self.expandedRules = self.expandedRules.union({copy(rule) for rule in exprGrammar.expandedRules})
+    for ruleSet in [self.rules, self.expandedRules]:
+      for rule in ruleSet:
+        rule.nonterminal = self.nonterminal
+        if not isinstance(rule, ExprRule):
+          continue
+        for index, atom in enumerate(rule.nudProduction.morphemes):
+          if atom == exprGrammar.nonterminal:
+            rule.nudProduction.morphemes[index] = self.nonterminal
+        for index, atom in enumerate(rule.ledProduction.morphemes):
+          if atom == exprGrammar.nonterminal:
+            rule.ledProduction.morphemes[index] = self.nonterminal
+    self.nonterminals = self.nonterminals.union(exprGrammar.nonterminals)
+    self.terminals = self.terminals.union(exprGrammar.terminals)
+    self.macros = self.macros.union(exprGrammar.macros)
+    self.precedence = exprGrammar.precedence + self.precedence
+    self._computePrecedence()
+    (self.first, self.follow) = self.firstFollowCalc.compute(self)
+    self._computeConflicts()
+
   def _computePrecedence(self):
     counter = 1000
     self.computedPrecedence = {}
@@ -653,8 +682,10 @@ class CompositeGrammar(Grammar):
     self.start = grammar.start
 
     rules = grammar.rules
+    expandedRules = grammar.expandedRules
     for exprgrammar in exprgrammars:
       rules = rules.union(exprgrammar.rules)
+      expandedRules = expandedRules.union(exprgrammar.expandedRules)
 
     super().__init__(rules)
     self.__dict__.update(locals())
