@@ -1,0 +1,10 @@
+{
+  "for": ["for"],
+  "forsub": ["sub", "n", "s", "ε", "_expr", "identifier"],
+  "forbody": ["sub", "for", "n", "s", "ε", "_expr", "identifier"],
+  "start": ["sub", "for", "n", "s", "ε", "_expr", "identifier"],
+  "statement": ["sub", "for", "n", "s", "_expr", "identifier"],
+  "_expr": ["_expr", "s", "identifier", "sub", "n"],
+  "_gen0": ["sub", "for", "n", "s", "ε", "_expr", "identifier"],
+  "_gen1": ["ε", "semi"]
+}

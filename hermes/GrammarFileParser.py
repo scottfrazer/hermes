@@ -73,7 +73,6 @@ class LL1MacroExpander:
   
   def nlist( self, nonterminal ):
     rules = []
-
     key = tuple([str(nonterminal).lower(), str(None).lower()])
     if key in self.list_cache:
       return (self.list_cache[key][0].nonterminal, self.list_cache[key])

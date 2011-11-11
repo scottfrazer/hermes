@@ -1,0 +1,10 @@
+{
+  "for": ["σ", "semi"],
+  "forsub": ["rparen", "semi"],
+  "forbody": ["rbrace"],
+  "start": ["σ"],
+  "statement": ["σ", "semi"],
+  "_expr": ["σ", "rparen", "semi"],
+  "_gen0": ["σ"],
+  "_gen1": ["σ"]
+}

@@ -1,0 +1,23 @@
+{
+  "term": ["ident", "number", "lparen"],
+  "ident": ["ident"],
+  "block_var": ["var", "ε"],
+  "expression_sub1": ["plus", "ε", "minus"],
+  "term_sub1": ["ε", "divide", "times"],
+  "block_var1": ["ε", "comma"],
+  "statement_sub1": ["ε", "semi"],
+  "block_const1": ["comma", "ε"],
+  "number": ["number"],
+  "block_const": ["const", "ε"],
+  "add_op": ["plus", "minus"],
+  "program": ["begin", "ident", "const", "while", "call", "var", "procedure", "if"],
+  "condition": ["ident", "number", "plus", "lparen", "odd", "minus"],
+  "statement": ["while", "ident", "call", "begin", "if"],
+  "factor": ["ident", "number", "lparen"],
+  "block_proc": ["ε", "procedure"],
+  "mul_op": ["divide", "times"],
+  "expression": ["ident", "plus", "number", "lparen", "minus"],
+  "unary_add_op": ["plus", "ε", "minus"],
+  "block": ["begin", "ident", "const", "while", "call", "var", "procedure", "if"],
+  "op": ["pound", "gteq", "lteq", "equal", "lt", "gt"]
+}

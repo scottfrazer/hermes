@@ -28,7 +28,7 @@ class OptionalMacro(LL1ListMacro):
     if start_nt:
       self.start_nt.setMacro(self)
   def __repr__( self ):
-    return '<list (%s)>' % (str(self.nonterminal))
+    return '<optional (%s)>' % (str(self.nonterminal))
 
 class TerminatedListMacro(LL1ListMacro):
   def __init__( self, nonterminal, terminator, start_nt=None, rules=None ):

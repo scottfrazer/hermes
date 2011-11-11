@@ -1,0 +1,23 @@
+{
+  "program": ["σ"],
+  "term": ["do", "pound", "end", "semi", "then", "lteq", "gteq", "equal", "lt", "gt", "plus", "rparen", "minus", "dot"],
+  "ident": ["do", "pound", "end", "divide", "semi", "then", "lteq", "gteq", "minus", "equal", "comma", "times", "lt", "gt", "plus", "rparen", "assign", "dot"],
+  "block_var": ["procedure"],
+  "expression_sub1": ["do", "pound", "end", "semi", "gteq", "lteq", "equal", "lt", "gt", "then", "rparen", "dot"],
+  "expression": ["do", "gt", "end", "semi", "gteq", "lteq", "equal", "lt", "pound", "then", "rparen", "dot"],
+  "statement_sub1": ["end"],
+  "block_const1": ["var"],
+  "number": ["do", "pound", "end", "divide", "semi", "then", "lteq", "gteq", "equal", "comma", "times", "lt", "gt", "plus", "var", "rparen", "minus", "dot"],
+  "block_const": ["var"],
+  "term_sub1": ["do", "pound", "end", "semi", "then", "lteq", "gteq", "equal", "lt", "gt", "plus", "rparen", "minus", "dot"],
+  "condition": ["then", "do"],
+  "statement": ["end", "semi", "dot"],
+  "add_op": ["then", "pound", "end", "ident", "semi", "do", "lteq", "gteq", "number", "equal", "lt", "gt", "plus", "lparen", "rparen", "minus", "dot"],
+  "block_proc": ["while", "ident", "call", "begin", "if"],
+  "factor": ["do", "pound", "end", "divide", "semi", "then", "lteq", "gteq", "equal", "times", "lt", "gt", "plus", "rparen", "minus", "dot"],
+  "mul_op": ["do", "pound", "end", "divide", "semi", "then", "lteq", "gteq", "equal", "times", "lt", "gt", "plus", "rparen", "minus", "dot"],
+  "block_var1": ["semi"],
+  "unary_add_op": ["ident", "number", "lparen"],
+  "block": ["semi", "dot"],
+  "op": ["ident", "plus", "number", "lparen", "minus"]
+}

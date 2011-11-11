@@ -1,65 +1,89 @@
-import unittest, os, subprocess, re
+import unittest, os, subprocess, re, json
+from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
+from hermes.Morpheme import NonTerminal
 
 directory = 'test/cases'
 
-class HermesFirstSetTest(unittest.TestCase):
+class HermesTest(unittest.TestCase):
+  pass
 
-  def __init__(self, arg=None, expected=None, actual=None):
-    super().__init__(arg)
+class HermesFirstSetTest(HermesTest):
+
+  def __init__(self, testCaseDir=None, nonterminal=None, expected=None, actual=None):
+    super().__init__()
     self.__dict__.update(locals())
     self.maxDiff = None
 
-  def test_areTheFirstSetsCorrect(self):
-    self.assertEqual(self.actual, self.expected)
+  def runTest(self):
+    self.assertEqual(self.actual, self.expected, \
+        'First set for nonterminal %s in test %s does not match expected value\n\nexpected: %s\nactual:%s' % ( self.nonterminal, self.testCaseDir, self.expected, self.actual))
 
-class HermesFollowSetTest(unittest.TestCase):
+class HermesFollowSetTest(HermesTest):
 
-  def __init__(self, arg=None, expected=None, actual=None):
-    super().__init__(arg)
+  def __init__(self, testCaseDir=None, nonterminal=None, expected=None, actual=None):
+    super().__init__()
     self.__dict__.update(locals())
     self.maxDiff = None
 
-  def test_areTheFollowSetsCorrect(self):
-    self.assertEqual(self.actual, self.expected)
+  def runTest(self):
+    self.assertEqual(self.actual, self.expected, \
+        'Follow set for nonterminal %s in test %s does not match expected value\n\nexpected: %s\nactual:%s' % ( self.nonterminal, self.testCaseDir, self.expected, self.actual))
 
-class HermesParseTest(unittest.TestCase):
+class HermesParseTest:
+  pass
 
-  def __init__(self, arg=None, filepath=None):
-    super().__init__(arg)
-    self.__dict__.update(locals())
-    self.maxDiff = None
-
-  def test_parseTree(self):
-    filepath = os.path.join(directory, self.filepath)
-    self.assertEqual(self.getGccOutput(filepath), self.getCastOutput(filepath), \
-        "File %s didn't parse the same in GCC and cAST" % (filepath) )
-
-class HermesAbstractSyntaxTreeTest(unittest.TestCase):
-
-  def __init__(self, arg=None, filepath=None):
-    super().__init__(arg)
-    self.__dict__.update(locals())
-    self.maxDiff = None
-
-  def test_abstractSyntaxTree(self):
-    filepath = os.path.join(directory, self.filepath)
-    self.assertEqual(self.getGccOutput(filepath), self.getCastOutput(filepath), \
-        "File %s didn't parse the same in GCC and cAST" % (filepath) )
+class HermesAbstractSyntaxTreeTest:
+  pass
 
 def load_tests(loader, tests, pattern):
-  files = os.listdir(os.path.join(directory, 'grammar'))
+  testsDirectory = os.path.join(directory, 'grammar')
   suite = unittest.TestSuite()
-  for path in files:
-    suite.addTest(CastVersusGccTest('test_doesCastPreprocessExactlyLikeGccDoes', path))
-    for (extension, transformFunction) in transformations:
-      expectedPath = os.path.join(directory, path + '.' + extension)
-      sourcePath = os.path.join(directory, path)
-      sourcecode = SourceCode(path, open(sourcePath))
-      actual = transformFunction(sourcecode)
-      if not os.path.exists(expectedPath):
-        fp = open(expectedPath, 'w')
-        fp.write(actual)
-        fp.close()
-      expected = open(expectedPath).read()
-      suite.addTest( CastTest('test_isCorrect', expected, actual) )
+  jsonify = lambda arg:'{\n%s\n}' % (',\n'.join(['  "%s": [%s]' % (nt, ', '.join(['"'+z+'"' for z in theSet])) for nt, theSet in arg.items()]))
+  for grammarTest in os.listdir(testsDirectory):
+    try:
+      int(grammarTest)
+    except ValueError:
+      continue
+    testDirectory = os.path.join(testsDirectory, grammarTest)
+    grammarParser = GrammarFileParser(HermesParserFactory().create())
+    grammar = grammarParser.parse( open(os.path.join(testDirectory, 'grammar.zgr')) )
+    grammarFirst = dict()
+    for k,v in grammar.first.items():
+      if isinstance(k, NonTerminal):
+        grammarFirst[k.string] = set(map(lambda x: x.string, v))
+    grammarFollow = dict()
+    for k,v in grammar.follow.items():
+      if isinstance(k, NonTerminal):
+        grammarFollow[k.string] = set(map(lambda x: x.string, v))
+
+    path = os.path.join(testDirectory, 'first.json')
+    if os.path.exists(path):
+      contents = open(path).read()
+      if len(contents):
+        expected = json.loads(contents)
+        for k,v in expected.items():
+          suite.addTest(HermesFirstSetTest(testDirectory, k, set(expected[k]), grammarFirst[k]))
+    else:
+      for k,v in grammarFirst.items():
+        grammarFirst[k] = list(v)
+      fp = open(path, 'w')
+      fp.write(jsonify(grammarFirst))
+      fp.close()
+      print('generated %s/first.json' % (path))
+
+    path = os.path.join(testDirectory, 'follow.json')
+    if os.path.exists(path):
+      contents = open(path).read()
+      if len(contents):
+        expected = json.loads(contents)
+        for k,v in expected.items():
+          suite.addTest(HermesFollowSetTest(testDirectory, k, set(expected[k]), grammarFollow[k]))
+    else:
+      for k,v in grammarFollow.items():
+        grammarFollow[k] = list(v)
+      fp = open(path, 'w')
+      fp.write(jsonify(grammarFollow))
+      fp.close()
+      print('generated %s/follow.json' % (path))
+
   return suite

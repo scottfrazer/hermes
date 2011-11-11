@@ -1,0 +1,13 @@
+{
+  "funcdef": ["function", "a", "σ", "b", "rbrace", "private", "class", "public"],
+  "classdef": ["a", "function", "σ", "b", "rbrace", "class"],
+  "param": ["rparen", "comma"],
+  "class_statement": ["public", "private", "rbrace"],
+  "start": ["σ"],
+  "class_atom": ["public", "private", "rbrace"],
+  "statement": ["function", "a", "σ", "b", "rbrace", "class"],
+  "_gen0": ["σ", "rbrace"],
+  "_gen1": ["rparen"],
+  "_gen2": ["rparen"],
+  "_gen3": ["rbrace"]
+}

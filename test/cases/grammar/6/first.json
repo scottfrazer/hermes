@@ -1,0 +1,10 @@
+{
+  "sub": ["a", "b", "lsquare", "number", "lbrace", "lparen", "_expr", "identifier", "subtract"],
+  "start": ["a", "b", "lsquare", "number", "lbrace", "ε", "lparen", "_expr", "identifier", "subtract"],
+  "item": ["a", "b"],
+  "_expr": ["lbrace", "lsquare", "number", "lparen", "_expr", "identifier", "subtract"],
+  "_gen0": ["a", "b", "lsquare", "number", "lbrace", "ε", "lparen", "_expr", "identifier", "subtract"],
+  "_gen1": ["ε", "comma"],
+  "_gen2": [],
+  "_gen3": []
+}
