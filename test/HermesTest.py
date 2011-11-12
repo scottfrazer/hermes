@@ -1,5 +1,8 @@
 import unittest, os, subprocess, re, json
+from hashlib import sha224
+from random import random
 from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
+from hermes.GrammarCodeGenerator import PythonTemplate
 from hermes.Morpheme import NonTerminal
 
 directory = 'test/cases'
@@ -39,22 +42,85 @@ class HermesConflictTest(HermesTest):
   def runTest(self):
     self.assertEqual(self.actual, self.expected, 'expected conflicts to match')
 
-class HermesParseTest:
-  pass
+class HermesParseTreeTest(HermesTest):
 
-class HermesAbstractSyntaxTreeTest:
-  pass
+  def __init__(self, testCaseDir=None, expected=None, actual=None):
+    super().__init__()
+    self.__dict__.update(locals())
+    self.maxDiff = None
+
+  def runTest(self):
+    self.assertEqual(self.actual, self.expected, 'expected parse trees to match (test %s)' % (self.testCaseDir))
+
+class HermesAbstractSyntaxTreeTest(HermesTest):
+
+  def __init__(self, testCaseDir=None, expected=None, actual=None):
+    super().__init__()
+    self.__dict__.update(locals())
+    self.maxDiff = None
+
+  def runTest(self):
+    self.assertEqual(self.actual, self.expected, 'expected ASTs to match (test %s)' % (self.testCaseDir))
+
+def run(grammar, tokens):
+  tokens = [str(t) for t in tokens]
+  template = PythonTemplate()
+  code = template.render(grammar, addMain=True, initialTerminals=tokens)
+  filename = sha224( str(random()).encode('ascii') ).hexdigest()[:25] + '.py'
+  fullpath = '/tmp/' + filename
+  fp = open(fullpath, 'w')
+  fp.write(code)
+  fp.close()
+  parsetree = subprocess.check_output(['python', fullpath, 'parsetree']).decode('utf-8').strip()
+  ast = subprocess.check_output(['python', fullpath, 'ast']).decode('utf-8').strip()
+  os.remove(fullpath)
+  return (parsetree, ast)
 
 def load_tests(loader, tests, pattern):
-  testsDirectory = os.path.join(directory, 'grammar')
+  grammarTestsDirectory = os.path.join(directory, 'grammar')
+  parsingTestsDirectory = os.path.join(directory, 'parsing')
   suite = unittest.TestSuite()
   jsonifySets = lambda arg:'{\n%s\n}' % (',\n'.join(['  "%s": [%s]' % (nt, ', '.join(['"'+z+'"' for z in theSet])) for nt, theSet in arg.items()]))
-  for grammarTest in os.listdir(testsDirectory):
+  for parsingTest in os.listdir(parsingTestsDirectory):
+    try:
+      int(parsingTest)
+    except ValueError:
+      continue
+    testDirectory = os.path.join(parsingTestsDirectory, parsingTest)
+    grammarParser = GrammarFileParser(HermesParserFactory().create())
+    grammar = grammarParser.parse( open(os.path.join(testDirectory, 'grammar.zgr')) )
+    tokens = list(filter(lambda x: x, open(os.path.join(testDirectory, 'tokens')).read().split('\n')))
+    (parsetree, ast) = run(grammar, tokens)
+
+    path = os.path.join(testDirectory, 'parsetree')
+    if os.path.exists(path):
+      expectedParseTree = open(path).read().strip()
+      if len(expectedParseTree):
+        suite.addTest(HermesParseTreeTest(testDirectory, parsetree, expectedParseTree))
+    else:
+      fp = open(path, 'w')
+      fp.write(parsetree)
+      fp.close()
+      print('generated %s/parsetree' % (path))
+
+    path = os.path.join(testDirectory, 'ast')
+    if os.path.exists(path):
+      expectedAst = open(path).read().strip()
+      if len(expectedAst):
+        suite.addTest(HermesAbstractSyntaxTreeTest(testDirectory, ast, expectedAst))
+    else:
+      fp = open(path, 'w')
+      fp.write(ast)
+      fp.close()
+      print('generated %s/ast' % (path))
+
+
+  for grammarTest in os.listdir(grammarTestsDirectory):
     try:
       int(grammarTest)
     except ValueError:
       continue
-    testDirectory = os.path.join(testsDirectory, grammarTest)
+    testDirectory = os.path.join(grammarTestsDirectory, grammarTest)
     grammarParser = GrammarFileParser(HermesParserFactory().create())
     grammar = grammarParser.parse( open(os.path.join(testDirectory, 'grammar.zgr')) )
     grammarFirst = dict()
