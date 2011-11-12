@@ -1,15 +1,15 @@
 {
+  "forcondstatement": ["s", "n", "ε", "sub", "_expr"],
   "forstatement": ["for"],
-  "forcondstatement": ["s", "_expr", "ε", "sub", "n"],
-  "assignstatementsub": ["_expr", "s", "identifier", "sub", "n"],
-  "_expr": ["s", "_expr", "sub", "n"],
+  "assignstatementsub": ["n", "s", "identifier", "sub", "_expr"],
   "fordeclstatement": ["sub", "n", "s", "ε", "_expr", "identifier"],
   "forbody": ["sub", "for", "n", "s", "ε", "_expr", "identifier"],
-  "complexexpression": ["_expr", "s", "identifier", "sub", "n"],
+  "complexexpression": ["n", "s", "identifier", "sub", "_expr"],
   "start": ["sub", "for", "n", "s", "ε", "_expr", "identifier"],
   "foriterstatement": ["sub", "n", "s", "ε", "_expr", "identifier"],
+  "_gen1": ["ε", "comma"],
   "statement": ["sub", "for", "n", "s", "_expr", "identifier"],
-  "_gen1": ["comma", "ε"],
+  "_expr": ["s", "n", "sub", "_expr"],
   "_gen0": ["sub", "for", "n", "s", "ε", "_expr", "identifier"],
   "assignstatement": ["identifier"]
 }

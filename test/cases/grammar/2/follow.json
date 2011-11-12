@@ -1,15 +1,15 @@
 {
-  "forcondstatement": ["semi"],
   "forstatement": ["σ", "comma", "semi"],
-  "assignstatementsub": ["comma", "σ", "rparen", "semi"],
+  "forcondstatement": ["semi"],
+  "assignstatementsub": ["rparen", "σ", "comma", "semi"],
+  "assignstatement": ["rparen", "σ", "comma", "semi"],
   "fordeclstatement": ["semi"],
   "forbody": ["rbrace"],
   "complexexpression": ["rparen", "semi"],
   "start": ["σ"],
   "foriterstatement": ["rparen"],
-  "_gen1": ["σ"],
   "statement": ["σ", "comma", "semi"],
-  "_expr": ["comma", "σ", "rparen", "semi"],
+  "_expr": ["rparen", "σ", "comma", "semi"],
   "_gen0": ["σ"],
-  "assignstatement": ["comma", "σ", "rparen", "semi"]
+  "_gen1": ["σ"]
 }
