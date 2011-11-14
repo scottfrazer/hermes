@@ -93,7 +93,10 @@ def getParser(grammar):
   fp = open(fullpath, 'w')
   fp.write(code)
   fp.close()
-  os.remove('__pycache__/hermesparser.cpython-32.pyc')
+  try:
+    os.remove('__pycache__/hermesparser.cpython-32.pyc')
+  except OSError:
+    pass
   hermesparser = imp.load_source('hermesparser', 'hermesparser.py')
   parser = hermesparser.Parser()
   os.remove(fullpath)
