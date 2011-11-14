@@ -171,7 +171,7 @@ class ParseTreePrettyPrintable:
     return self._prettyPrint(self.ast, 0)
   def _prettyPrint(self, parsetree, indent = 0):
     indentStr = ''.join([' ' for x in range(indent)])
-    if isinstance(parsetree, ppParseTree) or isinstance(parsetree, cParseTree):
+    if isinstance(parsetree, ParseTree):
       if len(parsetree.children) == 0:
         return '(%s: )' % (parsetree.nonterminal)
       string = '%s(%s:\n' % (indentStr, parsetree.nonterminal)
@@ -180,7 +180,7 @@ class ParseTreePrettyPrintable:
       ])
       string += '\n%s)' % (indentStr)
       return string
-    elif isinstance(parsetree, Token):
+    elif isinstance(parsetree, Terminal):
       return '%s%s' % (indentStr, parsetree.toString(self.tokenFormat))
     else:
       return '%s%s' % (indentStr, parsetree)

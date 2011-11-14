@@ -1,1 +1,30 @@
-(start: (_gen0: (statements: (_expr: a, add, b)), (_gen1: comma, (statements: (assignstatement: identifier, eq, (_expr: a, sub, (_expr: b, mul, a)))), (_gen1: ))))
+(start:
+  (_gen0:
+    (statements:
+      (_expr:
+        a,
+        add,
+        b
+      )
+    ),
+    (_gen1:
+      comma,
+      (statements:
+        (assignstatement:
+          identifier,
+          eq,
+          (_expr:
+            a,
+            sub,
+            (_expr:
+              b,
+              mul,
+              a
+            )
+          )
+        )
+      ),
+      (_gen1: )
+    )
+  )
+)

@@ -69,7 +69,8 @@ def getParseTree(grammar, tokens):
     parsetree = parser.parse(terminals)
   except hermesparser.SyntaxError as error:
     return str(error)
-  return str(parsetree)
+  parsetreePrettyPrint = hermesparser.ParseTreePrettyPrintable(parsetree)
+  return str(parsetreePrettyPrint)
 
 def getAst(grammar, tokens):
   parser = getParser(grammar)

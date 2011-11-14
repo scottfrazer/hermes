@@ -1,1 +1,56 @@
-(start: (_gen0: (sub: (item: a)), (_gen1: comma, (sub: (_expr: identifier, lparen, (_gen2: ), rparen)), (_gen1: comma, (sub: (_expr: (_expr: lparen_cast, (type_name: int), rparen), lbrace, (_gen4: (initializer_list_item: item), (_gen5: comma, (initializer_list_item: item), (_gen5: comma, (initializer_list_item: item), (_gen5: )))), (comma_opt: ), rbrace)), (_gen1: )))))
+(start:
+  (_gen0:
+    (sub:
+      (item:
+        a
+      )
+    ),
+    (_gen1:
+      comma,
+      (sub:
+        (_expr:
+          identifier,
+          lparen,
+          (_gen2: ),
+          rparen
+        )
+      ),
+      (_gen1:
+        comma,
+        (sub:
+          (_expr:
+            (_expr:
+              lparen_cast,
+              (type_name:
+                int
+              ),
+              rparen
+            ),
+            lbrace,
+            (_gen4:
+              (initializer_list_item:
+                item
+              ),
+              (_gen5:
+                comma,
+                (initializer_list_item:
+                  item
+                ),
+                (_gen5:
+                  comma,
+                  (initializer_list_item:
+                    item
+                  ),
+                  (_gen5: )
+                )
+              )
+            ),
+            (comma_opt: ),
+            rbrace
+          )
+        ),
+        (_gen1: )
+      )
+    )
+  )
+)

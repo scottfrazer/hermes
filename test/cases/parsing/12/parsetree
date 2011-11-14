@@ -1,1 +1,28 @@
-(start: (_gen0: (sub: (item: a)), (_gen1: comma, (sub: (item: b)), (_gen1: comma, (sub: (_expr: number, add, number)), (_gen1: )))))
+(start:
+  (_gen0:
+    (sub:
+      (item:
+        a
+      )
+    ),
+    (_gen1:
+      comma,
+      (sub:
+        (item:
+          b
+        )
+      ),
+      (_gen1:
+        comma,
+        (sub:
+          (_expr:
+            number,
+            add,
+            number
+          )
+        ),
+        (_gen1: )
+      )
+    )
+  )
+)
