@@ -164,6 +164,27 @@ class Ast():
   def __str__(self):
     return '(%s: %s)' % (self.name, ', '.join('%s=%s'%(str(k), '[' + ', '.join([str(x) for x in v]) + ']' if isinstance(v, list) else str(v) ) for k,v in self.attributes.items()))
 
+class ParseTreePrettyPrintable:
+  def __init__(self, ast, tokenFormat='type'):
+    self.__dict__.update(locals())
+  def __str__(self):
+    return self._prettyPrint(self.ast, 0)
+  def _prettyPrint(self, parsetree, indent = 0):
+    indentStr = ''.join([' ' for x in range(indent)])
+    if isinstance(parsetree, ppParseTree) or isinstance(parsetree, cParseTree):
+      if len(parsetree.children) == 0:
+        return '(%s: )' % (parsetree.nonterminal)
+      string = '%s(%s:\n' % (indentStr, parsetree.nonterminal)
+      string += ',\n'.join([ \
+        '%s  %s' % (indentStr, self._prettyPrint(value, indent + 2).lstrip()) for value in parsetree.children \
+      ])
+      string += '\n%s)' % (indentStr)
+      return string
+    elif isinstance(parsetree, Token):
+      return '%s%s' % (indentStr, parsetree.toString(self.tokenFormat))
+    else:
+      return '%s%s' % (indentStr, parsetree)
+
 class AstPrettyPrintable(Ast):
   def __init__(self, ast, tokenFormat='type'):
     self.__dict__.update(locals())

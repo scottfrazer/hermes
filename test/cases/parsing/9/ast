@@ -1,1 +1,18 @@
-(Program: statements=[(Add: rhs=b, lhs=a), (Assign: var=identifier, val=(Subtract: rhs=(Multiply: rhs=a, lhs=b), lhs=a))])
+(Program:
+  statements=[
+    (Add:
+      rhs=b,
+      lhs=a
+    ),
+    (Assign:
+      var=identifier,
+      val=(Subtract:
+        rhs=(Multiply:
+          rhs=a,
+          lhs=b
+        ),
+        lhs=a
+      )
+    )
+  ]
+)

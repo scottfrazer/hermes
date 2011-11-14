@@ -472,25 +472,35 @@ class HermesParser:
     return self.macroParser.getCache()
 
 class HermesParserFactory:
-  def __init__(self):
-    self.tParser = CachedParser( TerminalParser() )
-    self.nParser = CachedParser( NonTerminalParser() )
-    self.macroExpander = LL1MacroExpander(self.tParser, self.nParser)
-    self.sListParser = sListMacroParser(self.nParser, self.tParser, self.macroExpander)
-    self.nListParser = nListMacroParser(self.nParser, self.tParser, self.macroExpander)
-    self.tListParser = tListMacroParser(self.nParser, self.tParser, self.macroExpander)
-    self.mListParser = mListMacroParser(self.nParser, self.tParser, self.macroExpander)
-    self.optionalParser = optionalMacroParser(self.nParser, self.tParser, self.macroExpander)
-    self.mParser = CachedParser( MacroParser(self.nParser, self.tParser, self.sListParser, self.nListParser, self.tListParser, self.mListParser, self.optionalParser) )
-    self.astParser = AstParser(self.nParser, self.tParser)
-    self.atomParser = AtomParser(self.nParser, self.tParser, self.mParser) 
-    self.exprAtomParser = AtomParser(self.nParser, self.tParser, self.mParser) 
-    self.ruleParser = RuleParser(self.atomParser, self.astParser)
-    self.exprRuleParser = ExprRuleParser(self.exprAtomParser, self.astParser)
   def create(self):
-    return HermesParser(self.ruleParser, self.exprRuleParser, self.tParser, self.nParser, self.mParser)
+    tParser = CachedParser( TerminalParser() )
+    nParser = CachedParser( NonTerminalParser() )
+    macroExpander = LL1MacroExpander(tParser, nParser)
+    sListParser = sListMacroParser(nParser, tParser, macroExpander)
+    nListParser = nListMacroParser(nParser, tParser, macroExpander)
+    tListParser = tListMacroParser(nParser, tParser, macroExpander)
+    mListParser = mListMacroParser(nParser, tParser, macroExpander)
+    optionalParser = optionalMacroParser(nParser, tParser, macroExpander)
+    mParser = CachedParser( MacroParser(nParser, tParser, sListParser, nListParser, tListParser, mListParser, optionalParser) )
+    astParser = AstParser(nParser, tParser)
+    atomParser = AtomParser(nParser, tParser, mParser) 
+    exprAtomParser = AtomParser(nParser, tParser, mParser) 
+    ruleParser = RuleParser(atomParser, astParser)
+    exprRuleParser = ExprRuleParser(exprAtomParser, astParser)
+    return HermesParser(ruleParser, exprRuleParser, tParser, nParser, mParser)
   def getExprRuleParser(self):
-    return self.exprRuleParser 
+    tParser = CachedParser( TerminalParser() )
+    nParser = CachedParser( NonTerminalParser() )
+    macroExpander = LL1MacroExpander(tParser, nParser)
+    sListParser = sListMacroParser(nParser, tParser, macroExpander)
+    nListParser = nListMacroParser(nParser, tParser, macroExpander)
+    tListParser = tListMacroParser(nParser, tParser, macroExpander)
+    mListParser = mListMacroParser(nParser, tParser, macroExpander)
+    optionalParser = optionalMacroParser(nParser, tParser, macroExpander)
+    mParser = CachedParser( MacroParser(nParser, tParser, sListParser, nListParser, tListParser, mListParser, optionalParser) )
+    exprAtomParser = AtomParser(nParser, tParser, mParser) 
+    astParser = AstParser(nParser, tParser)
+    return ExprRuleParser(exprAtomParser, astParser)
 
 class GrammarFileParser:
   def __init__( self, hermesParser ):

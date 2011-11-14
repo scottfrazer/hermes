@@ -1,1 +1,14 @@
-(Statements: list=[(Item: name=a), (Item: name=b), (Add: r=number, l=number)])
+(Statements:
+  list=[
+    (Item:
+      name=a
+    ),
+    (Item:
+      name=b
+    ),
+    (Add:
+      r=number,
+      l=number
+    )
+  ]
+)

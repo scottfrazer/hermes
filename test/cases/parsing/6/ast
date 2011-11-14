@@ -1,1 +1,38 @@
-(Program: statements=[(Assign: var=identifier, val=(Assign: var=identifier, val=n)), (For: decl=(Assign: var=identifier, val=n), body=(Assign: var=identifier, val=(Add: rhs=(Divide: rhs=s, lhs=(Multiply: rhs=n, lhs=s)), lhs=n)), cond=None, iter=(Assign: var=identifier, val=(Add: rhs=n, lhs=s)))])
+(Program:
+  statements=[
+    (Assign:
+      var=identifier,
+      val=(Assign:
+        var=identifier,
+        val=n
+      )
+    ),
+    (For:
+      decl=(Assign:
+        var=identifier,
+        val=n
+      ),
+      body=(Assign:
+        var=identifier,
+        val=(Add:
+          rhs=(Divide:
+            rhs=s,
+            lhs=(Multiply:
+              rhs=n,
+              lhs=s
+            )
+          ),
+          lhs=n
+        )
+      ),
+      cond=None,
+      iter=(Assign:
+        var=identifier,
+        val=(Add:
+          rhs=n,
+          lhs=s
+        )
+      )
+    )
+  ]
+)

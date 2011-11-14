@@ -1,4 +1,4 @@
-import unittest, os, subprocess, re, json
+import unittest, os, subprocess, re, json, imp
 from hashlib import sha224
 from random import random
 from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
@@ -44,37 +44,60 @@ class HermesConflictTest(HermesTest):
 
 class HermesParseTreeTest(HermesTest):
 
-  def __init__(self, testCaseDir=None, expected=None, actual=None):
+  def __init__(self, testCaseDir=None, grammar=None, tokens=None, expected=None):
     super().__init__()
     self.__dict__.update(locals())
     self.maxDiff = None
 
   def runTest(self):
-    self.assertEqual(self.actual, self.expected, 'expected parse trees to match (test %s)' % (self.testCaseDir))
+    self.assertEqual(self.expected, getParseTree(self.grammar, self.tokens), 'expected parse trees to match (test %s)' % (self.testCaseDir))
 
 class HermesAbstractSyntaxTreeTest(HermesTest):
 
-  def __init__(self, testCaseDir=None, expected=None, actual=None):
+  def __init__(self, testCaseDir=None, grammar=None, tokens=None, expected=None):
     super().__init__()
     self.__dict__.update(locals())
     self.maxDiff = None
 
   def runTest(self):
-    self.assertEqual(self.actual, self.expected, 'expected ASTs to match (test %s)' % (self.testCaseDir))
+    self.assertEqual(self.expected, getAst(self.grammar, self.tokens), 'expected ASTs to match (test %s)' % (self.testCaseDir))
 
-def run(grammar, tokens):
-  tokens = [str(t) for t in tokens]
+def getParseTree(grammar, tokens):
+  parser = getParser(grammar)
+  terminals = list(map(lambda x: hermesparser.Terminal(parser.str_terminal[x]), tokens))
+  try:
+    parsetree = parser.parse(terminals)
+  except hermesparser.SyntaxError as error:
+    return str(error)
+  return str(parsetree)
+
+def getAst(grammar, tokens):
+  parser = getParser(grammar)
+  terminals = list(map(lambda x: hermesparser.Terminal(parser.str_terminal[x]), tokens))
+  try:
+    ast = parser.parse(terminals).toAst()
+  except hermesparser.SyntaxError as error:
+    return str(error)
+  astPrettyPrint = hermesparser.AstPrettyPrintable(ast)
+  if isinstance(astPrettyPrint, list):
+    return '[%s]' % (', '.join([str(x) for x in ast]))
+  else:
+    return str(astPrettyPrint)
+
+def getParser(grammar):
+  global hermesparser
   template = PythonTemplate()
-  code = template.render(grammar, addMain=True, initialTerminals=tokens)
-  filename = sha224( str(random()).encode('ascii') ).hexdigest()[:25] + '.py'
-  fullpath = '/tmp/' + filename
+  code = template.render(grammar)
+  modulename = 'hermesparser' #sha224( str(random()).encode('ascii') ).hexdigest()[:25]
+  fullpath = modulename + '.py'
   fp = open(fullpath, 'w')
   fp.write(code)
   fp.close()
-  parsetree = subprocess.check_output(['python', fullpath, 'parsetree']).decode('utf-8').strip()
-  ast = subprocess.check_output(['python', fullpath, 'ast']).decode('utf-8').strip()
+  os.remove('__pycache__/hermesparser.cpython-32.pyc')
+  hermesparser = imp.load_source('hermesparser', 'hermesparser.py')
+  parser = hermesparser.Parser()
   os.remove(fullpath)
-  return (parsetree, ast)
+  return parser
 
 def load_tests(loader, tests, pattern):
   grammarTestsDirectory = os.path.join(directory, 'grammar')
@@ -87,32 +110,33 @@ def load_tests(loader, tests, pattern):
     except ValueError:
       continue
     testDirectory = os.path.join(parsingTestsDirectory, parsingTest)
+    grammarFile = os.path.join(testDirectory, 'grammar.zgr')
+    tokensFile = os.path.join(testDirectory, 'tokens')
     grammarParser = GrammarFileParser(HermesParserFactory().create())
-    grammar = grammarParser.parse( open(os.path.join(testDirectory, 'grammar.zgr')) )
-    tokens = list(filter(lambda x: x, open(os.path.join(testDirectory, 'tokens')).read().split('\n')))
-    (parsetree, ast) = run(grammar, tokens)
+    grammar = grammarParser.parse( open(grammarFile) )
+    tokens = list(filter(lambda x: x, open(tokensFile).read().split('\n')))
 
     path = os.path.join(testDirectory, 'parsetree')
     if os.path.exists(path):
       expectedParseTree = open(path).read().strip()
       if len(expectedParseTree):
-        suite.addTest(HermesParseTreeTest(testDirectory, parsetree, expectedParseTree))
+        suite.addTest(HermesParseTreeTest(testDirectory, grammar, tokens, expectedParseTree))
     else:
       fp = open(path, 'w')
-      fp.write(parsetree)
+      fp.write(getParseTree(grammar, tokens))
       fp.close()
-      print('generated %s/parsetree' % (path))
+      print('generated %s' % (path))
 
     path = os.path.join(testDirectory, 'ast')
     if os.path.exists(path):
       expectedAst = open(path).read().strip()
       if len(expectedAst):
-        suite.addTest(HermesAbstractSyntaxTreeTest(testDirectory, ast, expectedAst))
+        suite.addTest(HermesAbstractSyntaxTreeTest(testDirectory, grammar, tokens, expectedAst))
     else:
       fp = open(path, 'w')
-      fp.write(ast)
+      fp.write(getAst(grammar, tokens))
       fp.close()
-      print('generated %s/ast' % (path))
+      print('generated %s' % (path))
 
 
   for grammarTest in os.listdir(grammarTestsDirectory):

@@ -1,1 +1,15 @@
-[a, (FunctionCall: params=[], name=identifier), (TypeInitializion: type=int, initializer=[item, item, item])]
+[
+  a,
+  (FunctionCall:
+    params=[],
+    name=identifier
+  ),
+  (TypeInitializion:
+    type=int,
+    initializer=[
+      item,
+      item,
+      item
+    ]
+  )
+]

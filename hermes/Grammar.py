@@ -807,7 +807,7 @@ class CompositeGrammar(Grammar):
     return self.__str__(theme)
 
   def __str__(self, theme=None):
-    return ''
+    return '<composite grammar %d>' % id(self)
   
   def getParseTable( self ):
     nonterminals  = {n.id: n for n in self.nonterminals}
