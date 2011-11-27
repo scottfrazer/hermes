@@ -540,26 +540,22 @@ class Parser:
       if left:
         tree.add(left)
 
-        {% if len(led) == 1 %}
-      return self.expect( {{led[0].id}}, tracer )
-        {% else %}
-          {% for morpheme in led %}
-            {% if isinstance(morpheme, Terminal) %}
+        {% for morpheme in led %}
+          {% if isinstance(morpheme, Terminal) %}
       tree.add( self.expect({{morpheme.id}}, tracer) )
-            {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
-              {% if isinstance(rule.operator, InfixOperator) %}
+          {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
+            {% if isinstance(rule.operator, InfixOperator) %}
       tree.add( self._{{rule.nonterminal.string.upper()}}( self.infixBp{{index}}[{{rule.operator.operator.id}}] ) )
       tree.isInfix = True
-              {% else %}
+            {% else %}
       tree.add( self._{{rule.nonterminal.string.upper()}}() )
-              {% endif %}
-            {% elif isinstance(morpheme, NonTerminal) %}
-      tree.add( self._{{morpheme.string.upper()}}() )
-            {% elif isinstance(morpheme, LL1ListMacro) %}
-      tree.add( self._{{morpheme.start_nt.string.upper()}}() )
             {% endif %}
-          {% endfor %}
-        {% endif %}
+          {% elif isinstance(morpheme, NonTerminal) %}
+      tree.add( self._{{morpheme.string.upper()}}() )
+          {% elif isinstance(morpheme, LL1ListMacro) %}
+      tree.add( self._{{morpheme.start_nt.string.upper()}}() )
+          {% endif %}
+        {% endfor %}
         {% py seen.append(led[0]) %}
       {% endif %}
     {% endfor %}
