@@ -1,11 +1,11 @@
 (Program:
   statements=[
     (Assign:
-      rhs=n,
-      lhs=(Assign:
-        rhs=identifier,
+      rhs=(Assign:
+        rhs=n,
         lhs=identifier
-      )
+      ),
+      lhs=identifier
     ),
     (For:
       decl=(Assign:

@@ -24,8 +24,10 @@ class Template:
     for index, egrammar in enumerate(grammar.getExpressionGrammars()):
       infixPrecedence = dict()
       prefixPrecedence = dict()
+      thePrecedence = dict()
       for terminal, precedence in egrammar.getPrecedence().items():
         for p in precedence:
+          thePrecedence[terminal.id] = p.associativity
           if p.associativity in ['left', 'right']:
             infixPrecedence[terminal] = p.precedence
           if p.associativity == 'unary':
@@ -41,6 +43,7 @@ class Template:
 
       egrammar.infix = infix
       egrammar.prefix = prefix
+      egrammar.precedence = thePrecedence
 
     #  LL1 Rule helpers
     exprNonTerminals = list(map(lambda x: x.nonterminal, grammar.getExpressionGrammars()))

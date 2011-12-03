@@ -544,11 +544,12 @@ class Parser:
           {% if isinstance(morpheme, Terminal) %}
       tree.add( self.expect({{morpheme.id}}, tracer) )
           {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
+      modifier = {{1 if exprGrammar.precedence[rule.operator.operator.id] == 'right' else 0}}
             {% if isinstance(rule.operator, InfixOperator) %}
-      tree.add( self._{{rule.nonterminal.string.upper()}}( self.infixBp{{index}}[{{rule.operator.operator.id}}] ) )
+      tree.add( self._{{rule.nonterminal.string.upper()}}( self.infixBp{{index}}[{{rule.operator.operator.id}}] - modifier ) )
       tree.isInfix = True
             {% else %}
-      tree.add( self._{{rule.nonterminal.string.upper()}}() )
+      tree.add( self._{{rule.nonterminal.string.upper()}}( self.infixBp{{index}}[{{rule.operator.operator.id}}] - modifier ) )
             {% endif %}
           {% elif isinstance(morpheme, NonTerminal) %}
       tree.add( self._{{morpheme.string.upper()}}() )
