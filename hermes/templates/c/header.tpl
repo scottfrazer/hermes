@@ -1,6 +1,13 @@
 #ifndef __{{}}_H
 #define __{{}}_H
 
+typedef struct terminal_t {
+
+  int id;
+  char * string_id;
+
+} TERMINAL_T;
+
 typedef union parse_tree_node_u {
 
   struct terminal_t terminal;
@@ -30,13 +37,13 @@ typedef struct parse_tree_t {
 
 } PARSE_TREE_T;
 
-typedef struct ast_specification_t {
+typedef struct abstract_syntax_tree_t {
 
   char * name;
   struct ast_specification_attributes_t * children;
   int nchildren;
 
-} AST_SPECIFICATION_T;
+} ABSTRACT_SYNTAX_TREE_T;
 
 typedef struct ast_specification_attributes_t {
 
@@ -72,4 +79,8 @@ typedef union parsetree_to_ast_conversion_u {
 
 } PARSE_TREE_TO_AST_CONVERSION_U;
 
+PARSE_TREE_T * parse( TOKEN_LIST_T * tokens );
+ABSTRACT_SYNTAX_TREE_T * parse_tree_to_ast( PARSE_TREE_T * parse_tree );
+void free_parse_tree( PARSE_TREE_T * tree );
+void free_ast( ABSTRACT_SYNTAX_TREE_T * ast );
 #endif
