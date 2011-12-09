@@ -50,7 +50,8 @@ class HermesParseTreeTest(HermesTest):
     self.maxDiff = None
 
   def runTest(self):
-    self.assertEqual(self.expected, getParseTree(self.grammar, self.tokens), 'expected parse trees to match (test %s)' % (self.testCaseDir))
+    tree = getParseTree(self.grammar, self.tokens)
+    self.assertEqual(self.expected, tree, 'expected parse trees to match (test %s)' % (self.testCaseDir))
 
 class HermesAbstractSyntaxTreeTest(HermesTest):
 
@@ -64,7 +65,7 @@ class HermesAbstractSyntaxTreeTest(HermesTest):
 
 def getParseTree(grammar, tokens):
   parser = getParser(grammar)
-  terminals = list(map(lambda x: hermesparser.Terminal(parser.str_terminal[x]), tokens))
+  terminals = hermesparser.TokenStream(list(map(lambda x: hermesparser.Terminal(parser.terminals[x]), tokens)))
   try:
     parsetree = parser.parse(terminals)
   except hermesparser.SyntaxError as error:
@@ -74,7 +75,7 @@ def getParseTree(grammar, tokens):
 
 def getAst(grammar, tokens):
   parser = getParser(grammar)
-  terminals = list(map(lambda x: hermesparser.Terminal(parser.str_terminal[x]), tokens))
+  terminals = hermesparser.TokenStream(list(map(lambda x: hermesparser.Terminal(parser.terminals[x]), tokens)))
   try:
     ast = parser.parse(terminals).toAst()
   except hermesparser.SyntaxError as error:

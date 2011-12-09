@@ -34,12 +34,12 @@
         "_expr := _expr + 'divide' + _expr -> Divide( lhs=$0, rhs=$2 )",
         "_expr := _expr + 'add' + _expr -> Add( lhs=$0, rhs=$2 )",
         "_expr := _expr + 'subtract' + _expr -> Subtract( lhs=$0, rhs=$2 )",
-        "_expr := 'subtract' + _expr -> UMinus( arg=$0 )",
-        "_expr := 'lsquare' + list(_expr, 'comma') + 'rsquare' -> ListDecl( items=$1 )",
-        "_expr := 'lbrace' + list(_expr, 'comma') + 'rbrace' -> SetDecl( items=$1 )",
-        "_expr := 'identifier' + ^'lparen' + list(_expr, 'comma') + 'rparen' -> FuncCall( name=$0, parameters=$2 )",
-        "_expr := 'lparen' + _expr + 'rparen' -> $1",
-        "_expr := 'identifier' | 'octal_number' | 'hexadecimal_number' | 'decimal_number' | 'binary_number'"
+        "_expr := {'subtract' + _expr} -> UMinus( arg=$0 )",
+        "_expr := {'lsquare' + list(_expr, 'comma') + 'rsquare'} -> ListDecl( items=$1 )",
+        "_expr := {'lbrace' + list(_expr, 'comma') + 'rbrace'} -> SetDecl( items=$1 )",
+        "_expr := {'identifier'} + {'lparen' + list(_expr, 'comma') + 'rparen'} -> FuncCall( name=$0, parameters=$2 )",
+        "_expr := {'lparen' + _expr + 'rparen'} -> $1",
+        "_expr := {'identifier'} | {'octal_number'} | {'hexadecimal_number'} | {'decimal_number'} | {'binary_number'}"
       ]
     }
   ]

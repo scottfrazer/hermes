@@ -550,13 +550,20 @@ class ExpressionGrammar(Grammar):
       nud[m] = []
       led[m] = []
 
-    for rule in self.rules:
-      if len(rule.nudProduction):
-        morphemes = rule.nudProduction.morphemes
-        nud[morphemes[0]].append( NudLedContainer(morphemes, rule) )
-      if len(rule.ledProduction):
-        morphemes = rule.ledProduction.morphemes
-        led[morphemes[0]].append( NudLedContainer(morphemes, rule) )
+    for rule in self.expandedRules:
+      try:
+        if len(rule.nudProduction):
+          morphemes = rule.nudProduction.morphemes
+          nud[morphemes[0]].append( NudLedContainer(morphemes, rule) )
+      except AttributeError:
+        pass
+
+      try:
+        if len(rule.ledProduction):
+          morphemes = rule.ledProduction.morphemes
+          led[morphemes[0]].append( NudLedContainer(morphemes, rule) )
+      except AttributeError:
+        pass
 
     # if two rules parse the exact same atoms, they're the same rule
     def dedupe_func(x, y):

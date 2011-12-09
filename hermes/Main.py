@@ -143,7 +143,7 @@ def Cli():
     sys.path.append('.')
     import hermesparser
     parser = hermesparser.Parser()
-    terminals = list(map(lambda x: hermesparser.Terminal(parser.str_terminal[x]), terminals))
+    terminals = list(map(lambda x: hermesparser.Terminal(parser.terminals[x]), terminals))
     parsetree = parser.parse(terminals)
     if not cli.ast:
       parsetree = hermesparser.ParseTreePrettyPrintable(parsetree) if cli.pretty_print else parsetree
