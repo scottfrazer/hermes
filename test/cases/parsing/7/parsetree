@@ -2,12 +2,18 @@
   (_gen0:
     (statement:
       (_expr:
-        identifier,
+        (_expr:
+          identifier
+        ),
         eq,
         (_expr:
-          identifier,
+          (_expr:
+            identifier
+          ),
           eq,
-          n
+          (_expr:
+            n
+          )
         )
       )
     ),
@@ -19,9 +25,13 @@
           lparen,
           (forsub:
             (_expr:
-              identifier,
+              (_expr:
+                identifier
+              ),
               eq,
-              n
+              (_expr:
+                n
+              )
             )
           ),
           semi,
@@ -29,12 +39,18 @@
           semi,
           (forsub:
             (_expr:
-              identifier,
+              (_expr:
+                identifier
+              ),
               eq,
               (_expr:
-                s,
+                (_expr:
+                  s
+                ),
                 add,
-                n
+                (_expr:
+                  n
+                )
               )
             )
           ),
@@ -43,18 +59,28 @@
           (forbody:
             (statement:
               (_expr:
-                identifier,
+                (_expr:
+                  identifier
+                ),
                 eq,
                 (_expr:
-                  n,
+                  (_expr:
+                    n
+                  ),
                   add,
                   (_expr:
-                    identifier,
+                    (_expr:
+                      identifier
+                    ),
                     mul,
                     (_expr:
-                      n,
+                      (_expr:
+                        n
+                      ),
                       power,
-                      s
+                      (_expr:
+                        s
+                      )
                     )
                   )
                 )
@@ -70,9 +96,13 @@
         semi,
         (statement:
           (_expr:
-            identifier,
+            (_expr:
+              identifier
+            ),
             add,
-            identifier
+            (_expr:
+              identifier
+            )
           )
         ),
         (_gen1: )

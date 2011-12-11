@@ -3,7 +3,7 @@
 import sys, os, argparse
 from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
 from hermes.GrammarAnalyzer import GrammarAnalyzer
-from hermes.GrammarCodeGenerator import PythonTemplate
+from hermes.GrammarCodeGenerator import PythonTemplate, CSourceTemplate, CHeaderTemplate
 from hermes.Logger import Factory as LoggerFactory
 from hermes.Theme import AnsiStylizer, TerminalDefaultTheme, TerminalColorTheme
 
@@ -45,7 +45,7 @@ def Cli():
   parser.add_argument('-l', '--language',
               required = False,
               default='python',
-              help = 'Language to generate the parser in.  Currently not in use. Only generates Python')
+              help = 'Language to generate the parser in.  Accepts c or python.')
 
   parser.add_argument('-p', '--pretty-print',
               action='store_true',
@@ -122,13 +122,18 @@ def Cli():
       sys.stderr.write("Error: Directory not writable\n")
       sys.exit(-1)
 
-    template = PythonTemplate()
-    outfile = os.path.join( cli.directory, template.destination )
-    code = template.render(G, addMain=cli.add_main, initialTerminals=terminals)
+    if cli.language.lower() == 'python':
+      templates = [PythonTemplate()]
+    elif cli.language.lower() == 'c':
+      templates = [CSourceTemplate(), CHeaderTemplate()]
+    else:
+      sys.stderr.write("Error: invalid parameter for --language option\n")
+      sys.exit(-1)
 
-    fp = open(outfile, 'w')
-    fp.write(code)
-    fp.close()
+    for template in templates:
+      fp = open(os.path.join(cli.directory, template.destination), 'w')
+      fp.write(template.render(G, addMain=cli.add_main, initialTerminals=terminals))
+      fp.close()
 
   if cli.action == 'parse':
     f = 'hermesparser.py'

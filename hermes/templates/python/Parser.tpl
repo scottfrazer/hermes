@@ -113,6 +113,8 @@ class ParseTree():
             else:
               index = idx - self.children[0].nudMorphemeCount + 1
               child = self.children[index]
+          elif len(self.children) == 1 and not isinstance(self.children[0], ParseTree) and not isinstance(self.children[0], list):
+            return self.children[0]
           else:
             child = self.children[idx]
 
@@ -276,26 +278,22 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
 
       tree.nudMorphemeCount = {{len(rule.nudProduction)}}
 
-        {% if len(rule.nudProduction) == 1 and isinstance(rule.nudProduction.morphemes[0], Terminal) %}
-      return self.expect( {{rule.nudProduction.morphemes[0].id}} )
-        {% else %}
-          {% for morpheme in rule.nudProduction.morphemes %}
-            {% if isinstance(morpheme, Terminal) %}
+        {% for morpheme in rule.nudProduction.morphemes %}
+          {% if isinstance(morpheme, Terminal) %}
       tree.add( self.expect({{morpheme.id}}) )
-            {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
-              {% if isinstance(rule.operator, PrefixOperator) %}
+          {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
+            {% if isinstance(rule.operator, PrefixOperator) %}
       tree.add( self.parent.parse_{{rule.nonterminal.string.lower()}}( self.getPrefixBp({{rule.operator.operator.id}}) ) )
       tree.isPrefix = True
-              {% else %}
+            {% else %}
       tree.add( self.parent.parse_{{rule.nonterminal.string.lower()}}() )
-              {% endif %}
-            {% elif isinstance(morpheme, NonTerminal) %}
-      tree.add( self.parent.parse_{{morpheme.string.lower()}}() )
-            {% elif isinstance(morpheme, LL1ListMacro) %}
-      tree.add( self.parent.parse_{{morpheme.start_nt.string.lower()}}() )
             {% endif %}
-          {% endfor %}
-        {% endif %}
+          {% elif isinstance(morpheme, NonTerminal) %}
+      tree.add( self.parent.parse_{{morpheme.string.lower()}}() )
+          {% elif isinstance(morpheme, LL1ListMacro) %}
+      tree.add( self.parent.parse_{{morpheme.start_nt.string.lower()}}() )
+          {% endif %}
+        {% endfor %}
       {% endif %}
     {% endfor %}
 
@@ -317,12 +315,12 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
       tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
         {% endif %}
 
-      {% if len(rule.nudProduction) == 1 and rule.nudProduction.morphemes[0] == rule.nonterminal%}
+      {% py morpheme = rule.nudProduction.morphemes[0] if len(rule.nudProduction) else None %}
+      {% if morpheme == rule.nonterminal or (isinstance(morpheme, NonTerminal) and morpheme.macro and morpheme.macro.nonterminal == rule.nonterminal) %}
       tree.isExprNud = True
       {% endif %}
 
-      if left:
-        tree.add(left)
+      tree.add(left)
 
         {% for morpheme in led %}
           {% if isinstance(morpheme, Terminal) %}
@@ -330,11 +328,9 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
           {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
       modifier = {{1 if exprGrammar.precedence[rule.operator.operator.id] == 'right' else 0}}
             {% if isinstance(rule.operator, InfixOperator) %}
-      tree.add( self.parent.parse_{{rule.nonterminal.string.lower()}}( self.getInfixBp({{rule.operator.operator.id}}) - modifier ) )
       tree.isInfix = True
-            {% else %}
-      tree.add( self.parent.parse_{{rule.nonterminal.string.lower()}}( self.getInfixBp({{rule.operator.operator.id}}) - modifier ) )
             {% endif %}
+      tree.add( self.parent.parse_{{rule.nonterminal.string.lower()}}( self.getInfixBp({{rule.operator.operator.id}}) - modifier ) )
           {% elif isinstance(morpheme, NonTerminal) %}
       tree.add( self.parent.parse_{{morpheme.string.lower()}}() )
           {% elif isinstance(morpheme, LL1ListMacro) %}
@@ -411,15 +407,15 @@ class Parser:
     self.start = '{{str(grammar.start).upper()}}'
     tree = self.parse_{{str(grammar.start).lower()}}()
     if self.tokens.current() != None:
-      raise SyntaxError( 'Syntax Error: Finished parsing without consuming all tokens.' )
+      raise SyntaxError( 'Finished parsing without consuming all tokens.' )
     return tree
 
   def expect(self, terminalId):
     currentToken = self.tokens.current()
     if not currentToken:
-      raise SyntaxError('No more tokens.  Expecting %s' % (self.terminals[terminalId]))
+      raise SyntaxError( 'No more tokens.  Expecting %s' % (self.terminals[terminalId]) )
     if currentToken.getId() != terminalId:
-      raise SyntaxError('Unexpected symbol when parsing %s.  Expected %s, got %s.' %(whosdaddy(), self.terminals[terminalId], currentToken if currentToken else 'None'))
+      raise SyntaxError( 'Unexpected symbol when parsing %s.  Expected %s, got %s.' %(whosdaddy(), self.terminals[terminalId], currentToken if currentToken else 'None') )
 
     nextToken = self.tokens.advance()
     if nextToken and not self.isTerminal(nextToken.getId()):

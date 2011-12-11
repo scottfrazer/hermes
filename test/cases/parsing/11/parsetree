@@ -9,7 +9,9 @@
       comma,
       (sub:
         (_expr:
-          identifier,
+          (_expr:
+            identifier
+          ),
           lparen,
           (_gen2: ),
           rparen

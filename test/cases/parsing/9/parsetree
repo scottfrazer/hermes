@@ -2,9 +2,13 @@
   (_gen0:
     (statements:
       (_expr:
-        a,
+        (_expr:
+          a
+        ),
         add,
-        b
+        (_expr:
+          b
+        )
       )
     ),
     (_gen1:
@@ -14,12 +18,18 @@
           identifier,
           eq,
           (_expr:
-            a,
+            (_expr:
+              a
+            ),
             sub,
             (_expr:
-              b,
+              (_expr:
+                b
+              ),
               mul,
-              a
+              (_expr:
+                a
+              )
             )
           )
         )

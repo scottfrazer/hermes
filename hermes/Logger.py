@@ -15,7 +15,6 @@ class Factory:
     formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
     fileLogger.setFormatter(formatter)
     stdoutLogger.setFormatter(formatter)
-    logger.addHandler(fileLogger)
     logger.addHandler(stdoutLogger)
     return logger
   def getProgramLogger(self):

@@ -9,7 +9,9 @@
             identifier,
             eq,
             (assignstatementsub:
-              n
+              (_expr:
+                n
+              )
             )
           )
         )
@@ -27,7 +29,9 @@
                 identifier,
                 eq,
                 (assignstatementsub:
-                  n
+                  (_expr:
+                    n
+                  )
                 )
               )
             )
@@ -42,9 +46,13 @@
                 eq,
                 (assignstatementsub:
                   (_expr:
-                    s,
+                    (_expr:
+                      s
+                    ),
                     add,
-                    n
+                    (_expr:
+                      n
+                    )
                   )
                 )
               )
@@ -59,16 +67,24 @@
                 eq,
                 (assignstatementsub:
                   (_expr:
-                    n,
+                    (_expr:
+                      n
+                    ),
                     add,
                     (_expr:
                       (_expr:
-                        s,
+                        (_expr:
+                          s
+                        ),
                         mul,
-                        n
+                        (_expr:
+                          n
+                        )
                       ),
                       div,
-                      s
+                      (_expr:
+                        s
+                      )
                     )
                   )
                 )

@@ -20,16 +20,24 @@
             (_expr:
               lparen,
               (_expr:
-                number,
+                (_expr:
+                  number
+                ),
                 multiply,
                 (_expr:
-                  identifier,
+                  (_expr:
+                    identifier
+                  ),
                   lparen,
                   (_gen2:
                     (_expr:
-                      number,
+                      (_expr:
+                        number
+                      ),
                       add,
-                      number
+                      (_expr:
+                        number
+                      )
                     ),
                     (_gen3: )
                   ),

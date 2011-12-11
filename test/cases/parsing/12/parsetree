@@ -16,9 +16,13 @@
         comma,
         (sub:
           (_expr:
-            number,
+            (_expr:
+              number
+            ),
             add,
-            number
+            (_expr:
+              number
+            )
           )
         ),
         (_gen1: )
