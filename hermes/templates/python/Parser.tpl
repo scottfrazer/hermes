@@ -118,12 +118,7 @@ class ParseTree():
           else:
             child = self.children[idx]
 
-          if isinstance(child, ParseTree):
-            parameters[name] = child.toAst()
-          elif isinstance(child, list):
-            parameters[name] = [x.toAst() for x in child]
-          else:
-            parameters[name] = child
+          parameters[name] = child.toAst()
         return Ast(self.astTransform.name, parameters)
     else:
       if isinstance(self.astTransform, AstTransformSubstitution):
@@ -131,8 +126,6 @@ class ParseTree():
       elif isinstance(self.astTransform, AstTransformNodeCreator):
         parameters = {name: self.children[idx].toAst() for name, idx in self.astTransform.parameters.items()}
         return Ast(self.astTransform.name, parameters)
-      elif len(self.children):
-        return self.children[0].toAst()
       else:
         return None
   def __str__( self ):
@@ -163,16 +156,14 @@ class ParseTreePrettyPrintable:
     if isinstance(parsetree, ParseTree):
       if len(parsetree.children) == 0:
         return '(%s: )' % (parsetree.nonterminal)
-      string = '%s(%s:\n' % (indentStr, parsetree.nonterminal)
+      string = '%s(%s:\n' % ('', parsetree.nonterminal)
       string += ',\n'.join([ \
-        '%s  %s' % (indentStr, self._prettyPrint(value, indent + 2).lstrip()) for value in parsetree.children \
+        '%s  %s' % (indentStr, self._prettyPrint(value, indent + 2)) for value in parsetree.children \
       ])
       string += '\n%s)' % (indentStr)
       return string
     elif isinstance(parsetree, Terminal):
-      return '%s%s' % (indentStr, parsetree.toString(self.tokenFormat))
-    else:
-      return '%s%s' % (indentStr, parsetree)
+      return parsetree.toString(self.tokenFormat)
 
 class AstPrettyPrintable(Ast):
   def __init__(self, ast, tokenFormat='type'):
@@ -326,7 +317,7 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
           {% if isinstance(morpheme, Terminal) %}
       tree.add( self.expect({{morpheme.id}}) )
           {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
-      modifier = {{1 if exprGrammar.precedence[rule.operator.operator.id] == 'right' else 0}}
+      modifier = {{1 if rule.operator.operator.id in exprGrammar.precedence and exprGrammar.precedence[rule.operator.operator.id] == 'right' else 0}}
             {% if isinstance(rule.operator, InfixOperator) %}
       tree.isInfix = True
             {% endif %}
