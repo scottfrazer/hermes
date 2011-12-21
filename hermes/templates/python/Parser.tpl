@@ -183,16 +183,14 @@ class AstPrettyPrintable(Ast):
       return string
     elif isinstance(ast, list):
       if len(ast) == 0:
-        return '%s[]' % (indentStr)
-      string = '%s[\n' % (indentStr)
+        return '[]'
+      string = '[\n'
       string += ',\n'.join([self._prettyPrint(element, indent + 2) for element in ast])
       string += '\n%s]' % (indentStr)
       return string
     elif isinstance(ast, Terminal):
       return '%s%s' % (indentStr, ast.toString(self.tokenFormat))
-    else:
-      return '%s%s' % (indentStr, ast)
-
+    return 'None'
 class SyntaxError(Exception):
   def __init__(self, message):
     self.__dict__.update(locals())
@@ -530,11 +528,11 @@ if __name__ == '__main__':
   parser = Parser()
 
   try:
-    tokens = [
+    tokens = TokenStream([
       {% for terminal in initialTerminals %}
       Terminal( parser.TERMINAL_{{terminal.upper()}} ),
       {% endfor %}
-    ]
+    ])
   except AttributeError as e:
     sys.stderr.write( str(e) + "\n" )
     sys.exit(-1)
@@ -542,13 +540,13 @@ if __name__ == '__main__':
   try:
     parsetree = parser.parse( tokens )
     if not parsetree or len(sys.argv) <= 1 or (len(sys.argv) > 1 and sys.argv[1] == 'parsetree'):
-      print(parsetree)
+      print(ParseTreePrettyPrintable(parsetree))
     elif len(sys.argv) > 1 and sys.argv[1] == 'ast':
       ast = parsetree.toAst()
       if isinstance(ast, list):
-        print('[%s]' % (', '.join([str(x) for x in ast])))
+        print('[%s]' % (', '.join([str(AstPrettyPrintable(x)) for x in ast])))
       else:
-        print(ast)
+        print(AstPrettyPrintable(ast))
   except SyntaxError as e:
     print(e)
 {% endif %}

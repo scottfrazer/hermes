@@ -722,8 +722,6 @@ class CompositeGrammar(Grammar):
       tokens = exprgrammar.follow[exprgrammar.nonterminal]
       grammar.follow[exprgrammar.nonterminal] = grammar.follow[exprgrammar.nonterminal].union(tokens)
 
-    self._assignIds()
-
     progress = True
     while progress:
       progress = False
@@ -763,6 +761,8 @@ class CompositeGrammar(Grammar):
       nRules = self.getExpandedRules( nonterminal )
       if len(nRules) == 0 and nonterminal is not grammar.start and nonterminal not in [x.nonterminal for x in exprgrammars]:
         self.conflicts.append( UndefinedNonterminalConflict(nonterminal) )
+
+    self._assignIds()
 
   def getExpressionTerminal(self, exprGrammar):
     return self.expressionTerminals[exprGrammar]
