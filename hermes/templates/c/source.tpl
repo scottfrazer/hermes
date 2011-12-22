@@ -957,21 +957,34 @@ _ast_to_string_bytes( ABSTRACT_SYNTAX_TREE_T * node, int indent )
   AST_OBJECT_T * ast_object;
   AST_LIST_T * ast_list, * list_node;
   TERMINAL_T * terminal;
+  ABSTRACT_SYNTAX_TREE_T * child;
+  char * attr;
   int i, bytes;
+  int initial_indent = (indent < 0) ? 0 : indent;
+  indent = (indent < 0) ? -indent : indent;
 
   if ( node->type == AST_NODE_TYPE_OBJECT )
   {
     ast_object = (AST_OBJECT_T *) node->object;
-    bytes = 3 + indent + strlen(ast_object->name);
+
+    /*  <initial_indent, '(', ast_object->name, ':', '\n', indent>  */
+    bytes = (initial_indent + indent + strlen(ast_object->name) + 3);
 
     for ( i = 0; i < ast_object->nchildren; i++ )
     {
       if ( i != 0 )
-        bytes += 2;
-      bytes += 3 + strlen(ast_object->children[i].name) + _ast_to_string_bytes(ast_object->children[i].tree, indent + 2);
+        /* <',', '\n', indent> as the separator */
+        bytes += (2 + indent);
+
+      attr = ast_object->children[i].name;
+      child = ast_object->children[i].tree;
+
+      /* <' ', ' ', attr, '=', _ast_to_string_bytes(child)> */
+      bytes += (2 + 1 + strlen(attr) + _ast_to_string_bytes(child, -(indent + 2)));
     }
 
-    bytes += 2 + indent;
+    /*  <'\n', indent, ')'>  */
+    bytes += (2 + indent);
     return bytes;
   }
 
@@ -984,20 +997,28 @@ _ast_to_string_bytes( ABSTRACT_SYNTAX_TREE_T * node, int indent )
       return 2; /* "[]" */
     }
 
-    bytes = 4 + indent;
+    /* <initial_indent, '[', '\n', indent> */
+    bytes = (initial_indent + 2 + indent);
+
     for ( i = 0, list_node = ast_list; list_node && list_node->tree; i++, list_node = list_node->next )
     {
       if ( i != 0 )
-        bytes += 2;
-      bytes += _ast_to_string_bytes(list_node->tree, indent + 2);
+        /* <',', '\n', indent> as the separator */
+        bytes += (2 + indent);
+
+      /* <' ', ' ', _ast_to_string_bytes(list_node->tree)> */
+      bytes += 2 + _ast_to_string_bytes(list_node->tree, -(indent + 2));
     }
+
+    /* <'\n', indent, ']'> */
+    bytes += (indent + 2);
     return bytes;
   }
 
   if ( node->type == AST_NODE_TYPE_TERMINAL )
   {
     terminal = (TERMINAL_T *) node->object;
-    return indent + strlen(terminal_to_str(terminal->id));
+    return initial_indent + strlen(terminal_to_str(terminal->id));
   }
 
   return 4; /* "None" */
