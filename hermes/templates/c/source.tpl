@@ -20,13 +20,13 @@ static ABSTRACT_SYNTAX_TREE_T *
 _parsetree_node_to_ast( PARSE_TREE_NODE_T * node );
 
 static ABSTRACT_SYNTAX_TREE_T *
-__parsetree_node_to_ast_normal( PARSE_TREE_NODE_T * node, ABSTRACT_SYNTAX_TREE_T * ast );
+__parsetree_node_to_ast_normal( PARSE_TREE_NODE_T * node );
 
 static ABSTRACT_SYNTAX_TREE_T *
-__parsetree_node_to_ast_expr( PARSE_TREE_NODE_T * node, ABSTRACT_SYNTAX_TREE_T * ast );
+__parsetree_node_to_ast_expr( PARSE_TREE_NODE_T * node );
 
 static ABSTRACT_SYNTAX_TREE_T *
-__parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node, ABSTRACT_SYNTAX_TREE_T * ast );
+__parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node );
 
 static char *
 _parsetree_to_string( PARSE_TREE_NODE_T * node, int indent );
@@ -36,6 +36,9 @@ _ast_to_string_bytes( ABSTRACT_SYNTAX_TREE_T * node, int indent );
 
 static char *
 _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent );
+
+void
+_free_parse_tree( PARSE_TREE_NODE_T * node );
 
 typedef struct ast_object_specification_init {
   int rule_id;
@@ -603,19 +606,17 @@ parsetree_to_ast( PARSE_TREE_T * tree )
 static ABSTRACT_SYNTAX_TREE_T *
 _parsetree_node_to_ast( PARSE_TREE_NODE_T * node )
 {
-  ABSTRACT_SYNTAX_TREE_T * ast;
+  ABSTRACT_SYNTAX_TREE_T * ast = NULL;
   PARSE_TREE_T * tree;
   PARSE_TREE_NODE_T * child;
   int i, index;
   char * name;
 
-  ast = calloc(1, sizeof(ABSTRACT_SYNTAX_TREE_T));
-
   if ( node->type == PARSE_TREE_NODE_TYPE_TERMINAL )
   {
+    ast = calloc(1, sizeof(ABSTRACT_SYNTAX_TREE_T));
     ast->type = AST_NODE_TYPE_TERMINAL;
     ast->object = (AST_NODE_U *) node->object;
-    return ast;
   }
 
   if ( node->type == PARSE_TREE_NODE_TYPE_PARSETREE )
@@ -624,33 +625,36 @@ _parsetree_node_to_ast( PARSE_TREE_NODE_T * node )
 
     if ( tree->list && strlen(tree->list) )
     {
-      return __parsetree_node_to_ast_list(node, ast);
+      ast = __parsetree_node_to_ast_list(node);
     }
     else if ( tree->isExpr )
     {
-      return __parsetree_node_to_ast_expr(node, ast);
+      ast = __parsetree_node_to_ast_expr(node);
     }
     else
     {
-      return __parsetree_node_to_ast_normal(node, ast);
+      ast = __parsetree_node_to_ast_normal(node);
     }
   }
 
-  return NULL;
+  return ast;
 }
 
 static ABSTRACT_SYNTAX_TREE_T *
-__parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node, ABSTRACT_SYNTAX_TREE_T * ast )
+__parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
 {
+  ABSTRACT_SYNTAX_TREE_T * ast = NULL;
   AST_LIST_T * item, * lnode, * tail, * ast_list;
   ABSTRACT_SYNTAX_TREE_T * this, * next;
   PARSE_TREE_T * tree = (PARSE_TREE_T *) node->object;
   int offset, i;
-  ast->type = AST_NODE_TYPE_LIST;
-  ast->object = NULL;
 
   if ( tree->nchildren == 0 )
     return NULL;
+
+  ast = calloc(1, sizeof(ABSTRACT_SYNTAX_TREE_T));
+  ast->type = AST_NODE_TYPE_LIST;
+  ast->object = NULL;
 
   if ( !strcmp(tree->list, "slist") || !strcmp(tree->list, "nlist") )
   {
@@ -670,6 +674,8 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node, ABSTRACT_SYNTAX_TREE_T *
         ast_list->next = (AST_LIST_T *) next->object;
       }
     }
+
+    if ( next ) free(next);
   }
   else if ( !strcmp(tree->list, "tlist") )
   {
@@ -688,6 +694,8 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node, ABSTRACT_SYNTAX_TREE_T *
         ast_list->next = (AST_LIST_T *) next->object;
       }
     }
+
+    if ( next ) free(next);
   }
   else if ( !strcmp(tree->list, "mlist") )
   {
@@ -713,8 +721,9 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node, ABSTRACT_SYNTAX_TREE_T *
 }
 
 static ABSTRACT_SYNTAX_TREE_T *
-__parsetree_node_to_ast_expr( PARSE_TREE_NODE_T * node, ABSTRACT_SYNTAX_TREE_T * ast )
+__parsetree_node_to_ast_expr( PARSE_TREE_NODE_T * node )
 {
+  ABSTRACT_SYNTAX_TREE_T * ast = NULL;
   PARSE_TREE_T * tree = (PARSE_TREE_T *) node->object, * first;
   AST_OBJECT_T * ast_object;
   PARSETREE_TO_AST_CONVERSION_T * ast_converter = tree->ast_converter;
@@ -725,17 +734,17 @@ __parsetree_node_to_ast_expr( PARSE_TREE_NODE_T * node, ABSTRACT_SYNTAX_TREE_T *
 
   if ( tree->ast_converter->type == AST_RETURN_INDEX )
   {
-    free(ast);
-    return _parsetree_node_to_ast( &tree->children[ast_return_index->index] );
+    ast = _parsetree_node_to_ast( &tree->children[ast_return_index->index] );
   }
 
   if ( tree->ast_converter->type == AST_CREATE_OBJECT )
   {
+    ast = calloc(1, sizeof(ABSTRACT_SYNTAX_TREE_T));
     ast_object = calloc(1, sizeof(AST_OBJECT_T));
     ast_object->name = calloc(strlen(ast_object_spec->name) + 1, sizeof(char));
-    strcpy(ast_object->name, ast_object_spec->name);
-
     ast_object->children = calloc(ast_object_spec->nattrs, sizeof(ABSTRACT_SYNTAX_TREE_ATTR_T));
+
+    strcpy(ast_object->name, ast_object_spec->name);
     ast_object->nchildren = ast_object_spec->nattrs;
 
     ast->object = (AST_NODE_U *) ast_object;
@@ -782,12 +791,13 @@ __parsetree_node_to_ast_expr( PARSE_TREE_NODE_T * node, ABSTRACT_SYNTAX_TREE_T *
     return ast;
   }
 
-  return NULL;
+  return ast;
 }
 
 static ABSTRACT_SYNTAX_TREE_T *
-__parsetree_node_to_ast_normal( PARSE_TREE_NODE_T * node, ABSTRACT_SYNTAX_TREE_T * ast )
+__parsetree_node_to_ast_normal( PARSE_TREE_NODE_T * node )
 {
+  ABSTRACT_SYNTAX_TREE_T * ast = NULL;
   AST_OBJECT_T * ast_object;
   PARSE_TREE_T * tree = (PARSE_TREE_T *) node->object;
   PARSETREE_TO_AST_CONVERSION_T * ast_converter = tree->ast_converter;
@@ -797,29 +807,30 @@ __parsetree_node_to_ast_normal( PARSE_TREE_NODE_T * node, ABSTRACT_SYNTAX_TREE_T
 
   if ( tree->ast_converter->type == AST_RETURN_INDEX )
   {
-    free(ast);
-    return _parsetree_node_to_ast( &tree->children[ast_return_index->index] );
+    ast = _parsetree_node_to_ast( &tree->children[ast_return_index->index] );
   }
 
   if ( tree->ast_converter->type == AST_CREATE_OBJECT )
   {
+    ast = calloc(1, sizeof(ABSTRACT_SYNTAX_TREE_T));
     ast_object = calloc(1, sizeof(AST_OBJECT_T));
     ast_object->name = calloc(strlen(ast_object_spec->name)+1, sizeof(char));
-    strcpy( ast_object->name, ast_object_spec->name );
     ast_object->children = calloc(ast_object_spec->nattrs, sizeof(ABSTRACT_SYNTAX_TREE_ATTR_T));
+
+    strcpy( ast_object->name, ast_object_spec->name );
     ast_object->nchildren = ast_object_spec->nattrs;
+
+    ast->object = (AST_NODE_U *) ast_object;
+    ast->type = AST_NODE_TYPE_OBJECT;
 
     for ( i = 0; i < ast_object_spec->nattrs; i++ )
     {
       ast_object->children[i].name = ast_object_spec->attrs[i].name;
       ast_object->children[i].tree = _parsetree_node_to_ast(&tree->children[ast_object_spec->attrs[i].index]);
     }
-
-    ast->object = (AST_NODE_U *) ast_object;
-    ast->type = AST_NODE_TYPE_OBJECT;
-    return ast;
   }
-  return NULL;
+
+  return ast;
 }
 
 static char *
@@ -1157,7 +1168,50 @@ _free_parse_tree( PARSE_TREE_NODE_T * node )
 void
 free_ast( ABSTRACT_SYNTAX_TREE_T * ast )
 {
+  AST_OBJECT_T * ast_object;
+  AST_LIST_T * ast_list, * current, * tmp;
+  int i;
 
+  if ( ast->type == AST_NODE_TYPE_OBJECT )
+  {
+    ast_object = (AST_OBJECT_T *) ast->object;
+    free(ast_object->name);
+
+    for ( i = 0; i < ast_object->nchildren; i++ )
+    {
+      free_ast(ast_object->children[i].tree);
+    }
+
+    free(ast_object->children);
+    free(ast_object);
+  }
+  
+  if ( ast->type == AST_NODE_TYPE_LIST )
+  {
+    ast_list = (AST_LIST_T *) ast->object;
+
+    for ( current = ast_list; current != NULL; current = current->next )
+    {
+      if ( current->tree != NULL )
+        free_ast(current->tree);
+    }
+
+    current = ast_list;
+    while ( current )
+    {
+      tmp = current;
+      current = current->next;
+      if ( tmp != NULL )
+        free(tmp);
+    }
+  }
+
+  if (ast->type == AST_NODE_TYPE_TERMINAL )
+  {
+    /* this data structure provided by the user */
+  }
+
+  free(ast);
 }
 
 {% if addMain %}
@@ -1192,7 +1246,7 @@ main(int argc, char * argv[])
   {
     ast = parsetree_to_ast(tree);
     str = ast_to_string(ast);
-    free(ast);
+    free_ast(ast);
   }
   printf("%s\n", str);
 
