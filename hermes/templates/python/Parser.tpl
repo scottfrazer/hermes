@@ -126,6 +126,8 @@ class ParseTree():
       elif isinstance(self.astTransform, AstTransformNodeCreator):
         parameters = {name: self.children[idx].toAst() for name, idx in self.astTransform.parameters.items()}
         return Ast(self.astTransform.name, parameters)
+      elif len(self.children):
+        return self.children[0].toAst()
       else:
         return None
   def __str__( self ):
@@ -543,10 +545,7 @@ if __name__ == '__main__':
       print(ParseTreePrettyPrintable(parsetree))
     elif len(sys.argv) > 1 and sys.argv[1] == 'ast':
       ast = parsetree.toAst()
-      if isinstance(ast, list):
-        print('[%s]' % (', '.join([str(AstPrettyPrintable(x)) for x in ast])))
-      else:
-        print(AstPrettyPrintable(ast))
+      print(AstPrettyPrintable(ast))
   except SyntaxError as e:
     print(e)
 {% endif %}

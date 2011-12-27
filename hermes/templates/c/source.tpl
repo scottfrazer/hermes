@@ -424,7 +424,6 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
     {% endif %}
   }
 
-
     {% for index0, rule in enumerate(nonterminal.rules) %}
       {% if index0 == 0 %}
   if ( rule == {{rule.id}} )
@@ -1048,7 +1047,7 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent )
 
   if ( node == NULL )
   {
-    strcpy(str, "none");
+    strcpy(str, "None");
     return str;
   }
 

@@ -81,10 +81,7 @@ def getAst(grammar, tokens):
   except hermesparser.SyntaxError as error:
     return str(error)
   astPrettyPrint = hermesparser.AstPrettyPrintable(ast)
-  if isinstance(astPrettyPrint, list):
-    return '[%s]' % (', '.join([str(x) for x in ast]))
-  else:
-    return str(astPrettyPrint)
+  return str(astPrettyPrint)
 
 def getParser(grammar):
   global hermesparser
@@ -135,8 +132,7 @@ def load_tests(loader, tests, pattern):
     path = os.path.join(testDirectory, 'ast')
     if os.path.exists(path):
       expectedAst = open(path).read().strip()
-      if len(expectedAst):
-        suite.addTest(HermesAbstractSyntaxTreeTest(testDirectory, grammar, tokens, expectedAst))
+      suite.addTest(HermesAbstractSyntaxTreeTest(testDirectory, grammar, tokens, expectedAst))
     else:
       fp = open(path, 'w')
       fp.write(getAst(grammar, tokens))

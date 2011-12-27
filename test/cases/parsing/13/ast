@@ -1,0 +1,22 @@
+(Statements:
+  list=[
+    (Item:
+      name=a
+    ),
+    (Item:
+      name=b
+    ),
+    (Mul:
+      r=(FuncCall:
+        params=[
+          (Add:
+            r=number,
+            l=number
+          )
+        ],
+        name=identifier
+      ),
+      l=number
+    )
+  ]
+)
