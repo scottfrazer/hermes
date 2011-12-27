@@ -168,10 +168,20 @@ typedef struct token_list_t {
 
 } TOKEN_LIST_T;
 
+typedef struct syntax_error_t {
+
+  TERMINAL_T * terminal;
+  char * message;
+  struct syntax_error_t * next;
+
+} SYNTAX_ERROR_T;
+
 typedef struct parser_context_t {
 
-  TOKEN_LIST_T * tokens;
-  /* syntax error structure here */
+  struct token_list_t * tokens;
+  char * current_function;
+  struct syntax_error_t * syntax_errors;
+  struct syntax_error_t * last;
 
 } PARSER_CONTEXT_T;
 

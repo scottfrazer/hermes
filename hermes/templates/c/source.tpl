@@ -16,6 +16,9 @@ static PARSE_TREE_T * parse_{{exprGrammar.nonterminal.string.lower()}}(PARSER_CO
 static PARSE_TREE_T * _parse_{{exprGrammar.nonterminal.string.lower()}}(int, PARSER_CONTEXT_T *);
 {% endfor %}
 
+void
+syntax_error( PARSER_CONTEXT_T * ctx, char * message );
+
 static ABSTRACT_SYNTAX_TREE_T *
 _parsetree_node_to_ast( PARSE_TREE_NODE_T * node );
 
@@ -46,6 +49,48 @@ typedef struct ast_object_specification_init {
   char * attr;
   int index;
 } AST_CREATE_OBJECT_INIT;
+
+/* index with TERMINAL_E or NONTERMINAL_E */
+static char * morphemes[] = {
+{% for terminal in sorted(nonAbstractTerminals, key=lambda x: x.id) %}
+  "{{terminal.string}}", /* {{terminal.id}} */
+{% endfor %}
+
+{% for nonterminal in sorted(grammar.nonterminals, key=lambda x: x.id) %}
+  "{{nonterminal.string}}", /* {{nonterminal.id}} */
+{% endfor %}
+};
+
+static char *
+nonterminal_to_str(NONTERMINAL_E nonterminal)
+{
+  return morphemes[nonterminal];
+}
+
+static char *
+terminal_to_str(TERMINAL_E terminal)
+{
+  return morphemes[terminal];
+}
+
+static int first[{{len(grammar.nonterminals)}}][{{len(nonAbstractTerminals)+2}}] = {
+{% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
+  { {{', '.join([str(x.id) for x in grammar.first[nonterminal]])}}{{', ' if len(grammar.first[nonterminal]) else ''}}-2 },
+{% endfor %}
+};
+
+static int follow[{{len(grammar.nonterminals)}}][{{len(nonAbstractTerminals)+2}}] = {
+{% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
+  { {{', '.join([str(x.id) for x in grammar.follow[nonterminal]])}}{{', ' if len(grammar.follow[nonterminal]) else ''}}-2 },
+{% endfor %}
+};
+
+static int table[{{len(grammar.nonterminals)}}][{{len(nonAbstractTerminals)}}] = {
+  {% py parseTable = grammar.getParseTable() %}
+  {% for i in range(len(grammar.nonterminals)) %}
+  { {{', '.join([str(rule.id) if rule else str(-1) for rule in parseTable[i]])}} },
+  {% endfor %}
+};
 
 static int
 in_array(int * array, int element )
@@ -79,18 +124,23 @@ expect(TERMINAL_E terminal_id, PARSER_CONTEXT_T * ctx)
   TERMINAL_E current, next;
   TERMINAL_T * current_token;
   TOKEN_LIST_T * token_list = ctx->tokens;
+  char * message, * fmt;
 
-  if ( token_list == NULL )
+  if ( token_list == NULL || token_list->current == TERMINAL_END_OF_STREAM )
   {
-    perror("expect");
-    /* "No more tokens.  Expecting %s' % (self.terminals[terminalId])" */
+    fmt = "No more tokens.  Expecting %s";
+    message = calloc( strlen(fmt) + strlen(terminal_to_str(terminal_id)) + 1, sizeof(char) );
+    sprintf(message, fmt, terminal_to_str(terminal_id));
+    syntax_error(ctx, message);
   }
 
   current = token_list->tokens[token_list->current_index].id;
   if ( current != terminal_id )
   {
-    perror("expect");
-    /* raise SyntaxError( 'Unexpected symbol when parsing %s.  Expected %s, got %s.' %(whosdaddy(), self.terminals[terminalId], current if current else 'None') ) */
+    fmt = "Unexpected symbol when parsing %s.  Expected %s, got %s.";
+    message = calloc( strlen(fmt) + strlen(terminal_to_str(terminal_id)) + strlen(terminal_to_str(current)) + strlen(ctx->current_function) + 1, sizeof(char) );
+    sprintf(message, fmt, ctx->current_function, terminal_to_str(terminal_id), current ? terminal_to_str(current) : "None");
+    syntax_error(ctx, message);
   }
 
   current_token = &token_list->tokens[token_list->current_index];
@@ -98,8 +148,10 @@ expect(TERMINAL_E terminal_id, PARSER_CONTEXT_T * ctx)
 
   if ( next != TERMINAL_END_OF_STREAM && !IS_TERMINAL(next) )
   {
-    perror("expect");
-    /* raise SyntaxError( 'Invalid symbol ID: %d (%s)' % (nextToken.getId(), nextToken) ) */
+    fmt = "Invalid symbol ID: %d (%s)";
+    message = calloc( strlen(fmt) + strlen(terminal_to_str(next)) + 10, sizeof(char) );
+    sprintf(message, fmt, next, terminal_to_str(next));
+    syntax_error(ctx, message);
   }
 
   return current_token;
@@ -183,48 +235,6 @@ get_ast_converter(int rule_id)
   return converter;
 }
 
-/* index with TERMINAL_E or NONTERMINAL_E */
-static char * morphemes[] = {
-{% for terminal in sorted(nonAbstractTerminals, key=lambda x: x.id) %}
-  "{{terminal.string}}", /* {{terminal.id}} */
-{% endfor %}
-
-{% for nonterminal in sorted(grammar.nonterminals, key=lambda x: x.id) %}
-  "{{nonterminal.string}}", /* {{nonterminal.id}} */
-{% endfor %}
-};
-
-static char *
-nonterminal_to_str(NONTERMINAL_E nonterminal)
-{
-  return morphemes[nonterminal];
-}
-
-static char *
-terminal_to_str(TERMINAL_E terminal)
-{
-  return morphemes[terminal];
-}
-
-static int first[{{len(grammar.nonterminals)}}][{{len(nonAbstractTerminals)+2}}] = {
-{% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
-  { {{', '.join([str(x.id) for x in grammar.first[nonterminal]])}}{{', ' if len(grammar.first[nonterminal]) else ''}}-2 },
-{% endfor %}
-};
-
-static int follow[{{len(grammar.nonterminals)}}][{{len(nonAbstractTerminals)+2}}] = {
-{% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
-  { {{', '.join([str(x.id) for x in grammar.follow[nonterminal]])}}{{', ' if len(grammar.follow[nonterminal]) else ''}}-2 },
-{% endfor %}
-};
-
-static int table[{{len(grammar.nonterminals)}}][{{len(nonAbstractTerminals)}}] = {
-  {% py parseTable = grammar.getParseTable() %}
-  {% for i in range(len(grammar.nonterminals)) %}
-  { {{', '.join([str(rule.id) if rule else str(-1) for rule in parseTable[i]])}} },
-  {% endfor %}
-};
-
 {% for exprGrammar in grammar.exprgrammars %}
 
 static int infixBp_{{exprGrammar.nonterminal.string.lower()}}[{{len(grammar.terminals)}}] = {
@@ -243,14 +253,12 @@ static int prefixBp_{{exprGrammar.nonterminal.string.lower()}}[{{len(grammar.ter
 static int
 getInfixBp_{{name}}(TERMINAL_E id)
 {
-  /* TODO: return index in infixBp_{{exprGrammar.nonterminal.string.lower()}} */
   return infixBp_{{name}}[id];
 }
 
 static int
 getPrefixBp_{{name}}(TERMINAL_E id)
 {
-  /* TODO: return index in prefixBp_{{exprGrammar.nonterminal.string.lower()}} */
   return prefixBp_{{name}}[id];
 }
 
@@ -346,7 +354,6 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
     tree->isExprNud = 1; 
     {% endif %}
 
-    /* TODO: this is wrong, actually need to copy left */
     tree->children[0].type = PARSE_TREE_NODE_TYPE_PARSETREE;
     tree->children[0].object = left;
 
@@ -386,7 +393,10 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
   TERMINAL_E current;
   TOKEN_LIST_T * tokens = ctx->tokens;
   PARSE_TREE_T * tree, * subtree;
+  char * message, fmt;
   int rule = -1;
+
+  ctx->current_function = "parse_{{nonterminal.string.lower()}}";
 
   tree = calloc(1, sizeof(PARSE_TREE_T));
   tree->nonterminal = _NONTERMINAL_{{nonterminal.string.upper()}};
@@ -420,7 +430,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
     {% if nonterminal.empty or grammar.ε in grammar.first[nonterminal] %}
     return tree;
     {% else %}
-    /* TODO: raise SyntaxError('Error: unexpected end of file') */
+    syntax_error(ctx, strdup("Error: unexpected end of file"));
     {% endif %}
   }
 
@@ -478,7 +488,10 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
     {% endfor %}
 
     {% if not nonterminal.empty %}
-  /* TODO: raise SyntaxError('Error: Unexpected symbol (%s) when parsing %s' % (current, whoami())) */
+  fmt = "Error: Unexpected symbol (%s) when parsing %s";
+  message = calloc( strlen(fmt) + strlen(terminal_to_str(tokens->tokens[tokens->current_index].id)) + strlen("parse_{{nonterminal.string.lower()}}") + 1, sizeof(char) );
+  sprintf(message, fmt, terminal_to_str(tokens->tokens[tokens->current_index].id), "parse_{{nonterminal.string.lower()}}");
+  syntax_error(ctx, message);
   return NULL;
     {% else %}
   return tree;
@@ -515,6 +528,7 @@ _parse_{{exprGrammar.nonterminal.string.lower()}}(int rbp, PARSER_CONTEXT_T * ct
 static PARSE_TREE_T *
 parse_{{exprGrammar.nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 {
+  ctx->current_function = "parse_{{exprGrammar.nonterminal.string.lower()}}";
   return _parse_{{exprGrammar.nonterminal.string.lower()}}(0, ctx);
 }
 {% endfor %}
@@ -544,7 +558,34 @@ parser_init( TOKEN_LIST_T * tokens )
 void
 parser_exit( PARSER_CONTEXT_T * ctx)
 {
+  SYNTAX_ERROR_T * error, * next;
+  for ( error = ctx->syntax_errors; error != NULL; error = next )
+  {
+    next = error->next;
+    free(error->message);
+    free(error);
+  }
   free(ctx);
+}
+
+void
+syntax_error( PARSER_CONTEXT_T * ctx, char * message )
+{
+  SYNTAX_ERROR_T * syntax_error = calloc(1, sizeof(SYNTAX_ERROR_T));
+  syntax_error->message = message;
+  syntax_error->terminal = &ctx->tokens->tokens[ctx->tokens->current_index];
+  syntax_error->next = NULL;
+
+  if ( ctx->syntax_errors == NULL )
+  {
+    ctx->syntax_errors = syntax_error;
+  }
+  else
+  {
+    ctx->last->next = syntax_error;
+  }
+
+  ctx->last = syntax_error;
 }
 
 PARSE_TREE_T *
@@ -557,11 +598,9 @@ parse(TOKEN_LIST_T * tokens, NONTERMINAL_E start, PARSER_CONTEXT_T * ctx)
 
   tree = functions[start - {{len(nonAbstractTerminals)}}](ctx);
 
-  /* TODO: init the parser_context_t here? */
-
   if ( tokens->current != TERMINAL_END_OF_STREAM )
   {
-    /* TODO: SyntaxError( 'Finished parsing without consuming all tokens.' ) */
+    syntax_error(ctx, strdup("Finished parsing without consuming all tokens."));
   }
 
   return tree;
@@ -1238,6 +1277,7 @@ main(int argc, char * argv[])
   PARSER_CONTEXT_T * ctx;
   ABSTRACT_SYNTAX_TREE_T * ast;
   TOKEN_LIST_T token_list;
+  SYNTAX_ERROR_T * error;
   char * str;
 
   {% if len(initialTerminals) %}
@@ -1264,6 +1304,15 @@ main(int argc, char * argv[])
 
   ctx = parser_init(&token_list);
   tree = parse(&token_list, -1, ctx);
+
+  if ( ctx->syntax_errors )
+  {
+    for ( error = ctx->syntax_errors; error; error = error->next )
+    {
+      printf("%s\n", error->message);
+      exit(1);
+    }
+  }
 
   if ( argc <= 1 || (argc > 1 && !strcmp(argv[1], "parsetree")) )
   {
