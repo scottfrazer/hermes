@@ -3,17 +3,20 @@
 
 typedef enum terminal_e {
 {% for terminal in nonAbstractTerminals %}
-  TERMINAL_{{terminal.string.upper()}} = {{terminal.id}},
+  _TERMINAL_{{terminal.string.upper()}} = {{terminal.id}},
 {% endfor %}
-  TERMINAL_NONE = -1
+  TERMINAL_END_OF_STREAM = -1
 } TERMINAL_E;
 
 typedef enum nonterminal_e {
 {% for nonterminal in grammar.nonterminals %}
-  NONTERMINAL_{{nonterminal.string.upper()}} = {{nonterminal.id}},
+  _NONTERMINAL_{{nonterminal.string.upper()}} = {{nonterminal.id}},
 {% endfor %}
-  NONTERMINAL_NONE = -1
+  NONTERMINAL_END_OF_STREAM = -1
 } NONTERMINAL_E;
+
+#define IS_TERMINAL(id) (0 <= id && id <= {{len(nonAbstractTerminals) - 1}})
+#define IS_NONTERMINAL(id) ({{len(nonAbstractTerminals)}} <= id && id <= {{len(nonAbstractTerminals) + len(grammar.nonterminals) - 1}})
 
 typedef struct terminal_t {
 

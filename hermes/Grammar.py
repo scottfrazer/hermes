@@ -522,6 +522,12 @@ class ExpressionGrammar(Grammar):
     (self.first, self.follow) = self.firstFollowCalc.compute(self)
     self._computeConflicts()
 
+  def getExpandedExpressionRules(self, nonterminal = None):
+    allRules = [rule for rule in self.expandedRules if isinstance(rule, ExprRule)]
+    if nonterminal:
+      return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
+    return allRules 
+
   def _computePrecedence(self):
     counter = 1000
     self.computedPrecedence = {}

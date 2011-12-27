@@ -60,36 +60,13 @@ in_array(int * array, int element )
   return 0;
 }
 
-static PARSE_TREE_NODE_U *
-copy_parse_tree(PARSE_TREE_T * tree)
-{
-  PARSE_TREE_T * new;
-  new = calloc(1, sizeof(PARSE_TREE_T));
-  memcpy(new, tree, sizeof(PARSE_TREE_T));
-  new->children = calloc(new->nchildren, sizeof(PARSE_TREE_NODE_T));
-  memcpy(new->children, tree->children, new->nchildren * sizeof(PARSE_TREE_NODE_T));
-  return (PARSE_TREE_NODE_U *) new;
-}
-
-static int
-is_terminal(int id)
-{
-  return (0 <= id && id <= {{len(nonAbstractTerminals) - 1}});
-}
-
-static int
-is_nonterminal(int id)
-{
-  return ({{len(nonAbstractTerminals)}} <= id && id <= {{len(nonAbstractTerminals) + len(grammar.nonterminals) - 1}});
-}
-
 static TERMINAL_E
 advance(PARSER_CONTEXT_T * ctx)
 {
   TOKEN_LIST_T * token_list = ctx->tokens;
   if ( token_list->current_index == token_list->ntokens )
   {
-    return TERMINAL_NONE;
+    return TERMINAL_END_OF_STREAM;
   }
   token_list->current_index += 1;
   token_list->current = token_list->tokens[token_list->current_index].id;
@@ -119,7 +96,7 @@ expect(TERMINAL_E terminal_id, PARSER_CONTEXT_T * ctx)
   current_token = &token_list->tokens[token_list->current_index];
   next = advance(ctx);
 
-  if ( next != TERMINAL_NONE && !is_terminal(next) )
+  if ( next != TERMINAL_END_OF_STREAM && !IS_TERMINAL(next) )
   {
     perror("expect");
     /* raise SyntaxError( 'Invalid symbol ID: %d (%s)' % (nextToken.getId(), nextToken) ) */
@@ -129,7 +106,7 @@ expect(TERMINAL_E terminal_id, PARSER_CONTEXT_T * ctx)
 }
 
 /* Index with rule ID */
-static PARSETREE_TO_AST_CONVERSION_TYPE_E ast_types[{{len(grammar.rules)}}] = {
+static PARSETREE_TO_AST_CONVERSION_TYPE_E ast_types[{{len(grammar.expandedRules)}}] = {
   {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
     {% if isinstance(rule.ast, AstSpecification) %}
   AST_CREATE_OBJECT, /* ({{rule.id}}) {{rule}} */
@@ -143,7 +120,7 @@ static AST_CREATE_OBJECT_INIT ast_objects[] = {
   {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
     {% if isinstance(rule.ast, AstSpecification) %}
       {% for i, key in enumerate(rule.ast.parameters.keys()) %}
-  { {{rule.id}}, "{{rule.ast.name}}", "{{key}}", {{rule.ast.parameters[key]}} },
+  { {{rule.id}}, "{{rule.ast.name}}", "{{key}}", {{rule.ast.parameters[key] if rule.ast.parameters[key] != '$' else "'$'"}} },
       {% endfor %}
     {% endif %}
   {% endfor %}
@@ -169,7 +146,6 @@ get_ast_converter(int rule_id)
   conversion_type = ast_types[rule_id];
 
   /* Create map (rule_id -> PARSETREE_TO_AST_CONVERSION_T) if it doesn't exist.  Then return result */
-
   if (conversion_type == AST_RETURN_INDEX)
   {
     ast_return_index = calloc(1, sizeof(AST_RETURN_INDEX_T));
@@ -230,13 +206,13 @@ terminal_to_str(TERMINAL_E terminal)
   return morphemes[terminal];
 }
 
-static int first[{{len(grammar.nonterminals)}}][{{len(nonAbstractTerminals)}}] = {
+static int first[{{len(grammar.nonterminals)}}][{{len(nonAbstractTerminals)+2}}] = {
 {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
   { {{', '.join([str(x.id) for x in grammar.first[nonterminal]])}}{{', ' if len(grammar.first[nonterminal]) else ''}}-2 },
 {% endfor %}
 };
 
-static int follow[{{len(grammar.nonterminals)}}][{{len(nonAbstractTerminals)}}] = {
+static int follow[{{len(grammar.nonterminals)}}][{{len(nonAbstractTerminals)+2}}] = {
 {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
   { {{', '.join([str(x.id) for x in grammar.follow[nonterminal]])}}{{', ' if len(grammar.follow[nonterminal]) else ''}}-2 },
 {% endfor %}
@@ -289,12 +265,12 @@ nud_{{name}}(PARSER_CONTEXT_T * ctx)
   list = ctx->tokens;
 
   tree = calloc(1, sizeof(PARSE_TREE_T));
-  tree->nonterminal = NONTERMINAL_{{exprGrammar.nonterminal.string.upper()}};
+  tree->nonterminal = _NONTERMINAL_{{exprGrammar.nonterminal.string.upper()}};
+
+  current = list->current;
 
   if ( list == NULL )
     return tree;
-
-  current = list->current;
 
   {% for i, rule in enumerate(exprGrammar.getExpandedRules()) %}
     {% py ruleFirstSet = exprGrammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
@@ -311,7 +287,7 @@ nud_{{name}}(PARSER_CONTEXT_T * ctx)
     {% for index, morpheme in enumerate(rule.nudProduction.morphemes) %}
       {% if isinstance(morpheme, Terminal) %}
     tree->children[{{index}}].type = PARSE_TREE_NODE_TYPE_TERMINAL;
-    tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) expect( TERMINAL_{{morpheme.string.upper()}}, ctx );
+    tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) expect( _TERMINAL_{{morpheme.string.upper()}}, ctx );
     {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
 
         {% if isinstance(rule.operator, PrefixOperator) %}
@@ -349,7 +325,7 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
   list = ctx->tokens;
 
   tree = calloc(1, sizeof(PARSE_TREE_T));
-  tree->nonterminal = NONTERMINAL_{{exprGrammar.nonterminal.string.upper()}};
+  tree->nonterminal = _NONTERMINAL_{{exprGrammar.nonterminal.string.upper()}};
 
   if ( list == NULL )
     return tree;
@@ -357,7 +333,7 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
   current = list->current;
 
   {% py seen = list() %}
-  {% for rule in exprGrammar.getExpandedRules() %}
+  {% for rule in exprGrammar.getExpandedExpressionRules() %}
     {% py led = rule.ledProduction.morphemes %}
     {% if len(led) and led[0] not in seen %}
   {{'if' if len(seen)==0 else 'else if'}} ( current == {{led[0].id}} ) /* {{led[0]}} */
@@ -377,7 +353,7 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
       {% for index, morpheme in enumerate(led) %}
         {% if isinstance(morpheme, Terminal) %}
     tree->children[{{index + 1}}].type = PARSE_TREE_NODE_TYPE_TERMINAL;
-    tree->children[{{index + 1}}].object = (PARSE_TREE_NODE_U *) expect( TERMINAL_{{morpheme.string.upper()}}, ctx );
+    tree->children[{{index + 1}}].object = (PARSE_TREE_NODE_U *) expect( _TERMINAL_{{morpheme.string.upper()}}, ctx );
         {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
     modifier = {{1 if rule.operator.operator.id in exprGrammar.precedence and exprGrammar.precedence[rule.operator.operator.id] == 'right' else 0}};
           {% if isinstance(rule.operator, InfixOperator) %}
@@ -410,17 +386,10 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
   TERMINAL_E current;
   TOKEN_LIST_T * tokens = ctx->tokens;
   PARSE_TREE_T * tree, * subtree;
-  int rule;
+  int rule = -1;
 
   tree = calloc(1, sizeof(PARSE_TREE_T));
-  tree->nonterminal = NONTERMINAL_{{nonterminal.string.upper()}};
-
-  rule = -1;
-  if ( tokens != NULL )
-  {
-    current = tokens->current;
-    rule = table[{{nonterminal.id - len(nonAbstractTerminals)}}][current];
-  }
+  tree->nonterminal = _NONTERMINAL_{{nonterminal.string.upper()}};
 
     {% if isinstance(nonterminal.macro, SeparatedListMacro) %}
   tree->list = "slist";
@@ -434,14 +403,19 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
   tree->list = NULL;
     {% endif %}
 
-    {% if nonterminal.empty %}
-  if ( tokens != NULL && in_array(follow[NONTERMINAL_{{nonterminal.string.upper()}} - {{len(nonAbstractTerminals)}}], current))
+  if ( tokens != NULL )
   {
-    return tree;
-  }
+    current = tokens->current;
+    rule = table[{{nonterminal.id - len(nonAbstractTerminals)}}][current];
+    {% if nonterminal.empty %}
+    if ( in_array(follow[_NONTERMINAL_{{nonterminal.string.upper()}} - {{len(nonAbstractTerminals)}}], current))
+    {
+      return tree;
+    }
     {% endif %}
+  }
 
-  if ( tokens == NULL )
+  if ( tokens == NULL || current == TERMINAL_END_OF_STREAM )
   {
     {% if nonterminal.empty or grammar.ε in grammar.first[nonterminal] %}
     return tree;
@@ -464,7 +438,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
       {% for index, morpheme in enumerate(rule.production.morphemes) %}
         {% if isinstance(morpheme, Terminal) %}
     tree->children[{{index}}].type = PARSE_TREE_NODE_TYPE_TERMINAL;
-    tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) expect( TERMINAL_{{morpheme.string.upper()}}, ctx );
+    tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) expect( _TERMINAL_{{morpheme.string.upper()}}, ctx );
           {% if isinstance(nonterminal.macro, SeparatedListMacro) and index == 0 %}
     tree->listSeparator = tree->children[{{index}}].object;
           {% endif %}
@@ -484,7 +458,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
       {% if grammar.getExpressionTerminal(exprGrammar) in grammar.first[nonterminal] %}
         {% set grammar.getRuleFromFirstSet(nonterminal, {grammar.getExpressionTerminal(exprGrammar)}) as rule %}
 
-  else if ( in_array(first[NONTERMINAL_{{exprGrammar.nonterminal.string.upper()}} - {{len(nonAbstractTerminals)}}], current) )
+  else if ( in_array(first[_NONTERMINAL_{{exprGrammar.nonterminal.string.upper()}} - {{len(nonAbstractTerminals)}}], current) )
   {
     tree->ast_converter = get_ast_converter({{rule.id}});
 
@@ -492,7 +466,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 
           {% if isinstance(morpheme, Terminal) %}
     tree->children[{{index}}].type = PARSE_TREE_NODE_TYPE_TERMINAL;
-    tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) expect( TERMINAL_{{morpheme.string.upper()}}, ctx );
+    tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) expect( _TERMINAL_{{morpheme.string.upper()}}, ctx );
           {% endif %}
 
           {% if isinstance(morpheme, NonTerminal) %}
@@ -580,13 +554,13 @@ parse(TOKEN_LIST_T * tokens, NONTERMINAL_E start, PARSER_CONTEXT_T * ctx)
   PARSE_TREE_T * tree;
 
   if ( start == -1 )
-    start = NONTERMINAL_{{grammar.start.string.upper()}};
+    start = _NONTERMINAL_{{grammar.start.string.upper()}};
 
   tree = functions[start - {{len(nonAbstractTerminals)}}](ctx);
 
   /* TODO: init the parser_context_t here? */
 
-  if ( tokens->current != TERMINAL_NONE )
+  if ( tokens->current != TERMINAL_END_OF_STREAM )
   {
     /* TODO: SyntaxError( 'Finished parsing without consuming all tokens.' ) */
   }
@@ -608,9 +582,8 @@ _parsetree_node_to_ast( PARSE_TREE_NODE_T * node )
 {
   ABSTRACT_SYNTAX_TREE_T * ast = NULL;
   PARSE_TREE_T * tree;
-  PARSE_TREE_NODE_T * child;
-  int i, index;
-  char * name;
+
+  if ( node == NULL ) return NULL;
 
   if ( node->type == PARSE_TREE_NODE_TYPE_TERMINAL )
   {
@@ -644,7 +617,7 @@ static ABSTRACT_SYNTAX_TREE_T *
 __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
 {
   ABSTRACT_SYNTAX_TREE_T * ast = NULL;
-  AST_LIST_T * item, * lnode, * tail, * ast_list;
+  AST_LIST_T * lnode, * tail, * ast_list;
   ABSTRACT_SYNTAX_TREE_T * this, * next;
   PARSE_TREE_T * tree = (PARSE_TREE_T *) node->object;
   int offset, i;
@@ -800,17 +773,31 @@ __parsetree_node_to_ast_normal( PARSE_TREE_NODE_T * node )
   ABSTRACT_SYNTAX_TREE_T * ast = NULL;
   AST_OBJECT_T * ast_object;
   PARSE_TREE_T * tree = (PARSE_TREE_T *) node->object;
-  PARSETREE_TO_AST_CONVERSION_T * ast_converter = tree->ast_converter;
-  AST_OBJECT_SPECIFICATION_T * ast_object_spec = (AST_OBJECT_SPECIFICATION_T *) ast_converter->object;
-  AST_RETURN_INDEX_T * ast_return_index = (AST_RETURN_INDEX_T *) ast_converter->object;
+  PARSETREE_TO_AST_CONVERSION_TYPE_E ast_conversion_type;
+  AST_OBJECT_SPECIFICATION_T * ast_object_spec;
+  AST_RETURN_INDEX_T * ast_return_index;
+  AST_RETURN_INDEX_T default_action = { .index = 0 };
   int i;
 
-  if ( tree->ast_converter->type == AST_RETURN_INDEX )
+  if ( tree->ast_converter )
+  {
+    ast_object_spec = (AST_OBJECT_SPECIFICATION_T *) tree->ast_converter->object;
+    ast_return_index = (AST_RETURN_INDEX_T *) tree->ast_converter->object;
+    ast_conversion_type = tree->ast_converter->type;
+  }
+  else
+  {
+    ast_object_spec = (AST_OBJECT_SPECIFICATION_T *) NULL;
+    ast_return_index = (AST_RETURN_INDEX_T *) &default_action;
+    ast_conversion_type = AST_RETURN_INDEX;
+  }
+
+  if ( ast_conversion_type == AST_RETURN_INDEX )
   {
     ast = _parsetree_node_to_ast( &tree->children[ast_return_index->index] );
   }
 
-  if ( tree->ast_converter->type == AST_CREATE_OBJECT )
+  if ( ast_conversion_type == AST_CREATE_OBJECT )
   {
     ast = calloc(1, sizeof(ABSTRACT_SYNTAX_TREE_T));
     ast_object = calloc(1, sizeof(AST_OBJECT_T));
@@ -847,6 +834,14 @@ parsetree_to_string( PARSE_TREE_T * tree )
 {
   PARSE_TREE_NODE_T node;
   char * str;
+
+  if ( tree == NULL )
+  {
+    str = calloc(3, sizeof(char));
+    strcpy(str, "()");
+    return str;
+  }
+
   node.type = PARSE_TREE_NODE_TYPE_PARSETREE;
   node.object = (PARSE_TREE_NODE_U *) tree;
   return _parsetree_to_string(&node, 0);
@@ -974,6 +969,8 @@ _ast_to_string_bytes( ABSTRACT_SYNTAX_TREE_T * node, int indent )
   int initial_indent = (indent < 0) ? 0 : indent;
   indent = (indent < 0) ? -indent : indent;
 
+  if ( node == NULL ) return 4; /* "none" */
+
   if ( node->type == AST_NODE_TYPE_OBJECT )
   {
     ast_object = (AST_OBJECT_T *) node->object;
@@ -1043,9 +1040,17 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent )
   TERMINAL_T * terminal;
   char * str, * key, * value, * indent_str, * tmp;
   int bytes, i;
+  int initial_indent = (indent < 0) ? 0 : indent;
+  indent = (indent < 0) ? -indent : indent;
 
   bytes = _ast_to_string_bytes(node, indent) + 1;
   str = calloc( bytes, sizeof(char) );
+
+  if ( node == NULL )
+  {
+    strcpy(str, "none");
+    return str;
+  }
 
   if ( node->type == AST_NODE_TYPE_OBJECT )
   {
@@ -1105,7 +1110,12 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent )
   if ( node->type == AST_NODE_TYPE_TERMINAL )
   {
     terminal = (TERMINAL_T *) node->object;
-    strcpy(str, terminal_to_str(terminal->id));
+    indent_str = "";
+    if ( initial_indent )
+      indent_str = _get_indent_str(indent);
+    sprintf(str, "%s%s", indent_str, terminal_to_str(terminal->id));
+    if ( initial_indent )
+      free(indent_str);
     return str;
   }
 
@@ -1116,7 +1126,11 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent )
 void
 free_parse_tree( PARSE_TREE_T * tree )
 {
-  PARSE_TREE_NODE_T node;;
+  PARSE_TREE_NODE_T node;
+
+  if ( tree == NULL )
+    return;
+
   node.type = PARSE_TREE_NODE_TYPE_PARSETREE;
   node.object = (PARSE_TREE_NODE_U *) tree;
   _free_parse_tree(&node);
@@ -1171,47 +1185,50 @@ free_ast( ABSTRACT_SYNTAX_TREE_T * ast )
   AST_OBJECT_T * ast_object;
   AST_LIST_T * ast_list, * current, * tmp;
   int i;
-
-  if ( ast->type == AST_NODE_TYPE_OBJECT )
-  {
-    ast_object = (AST_OBJECT_T *) ast->object;
-    free(ast_object->name);
-
-    for ( i = 0; i < ast_object->nchildren; i++ )
-    {
-      free_ast(ast_object->children[i].tree);
-    }
-
-    free(ast_object->children);
-    free(ast_object);
-  }
   
-  if ( ast->type == AST_NODE_TYPE_LIST )
+  if ( ast )
   {
-    ast_list = (AST_LIST_T *) ast->object;
-
-    for ( current = ast_list; current != NULL; current = current->next )
+    if ( ast->type == AST_NODE_TYPE_OBJECT )
     {
-      if ( current->tree != NULL )
-        free_ast(current->tree);
+      ast_object = (AST_OBJECT_T *) ast->object;
+      free(ast_object->name);
+
+      for ( i = 0; i < ast_object->nchildren; i++ )
+      {
+        free_ast(ast_object->children[i].tree);
+      }
+
+      free(ast_object->children);
+      free(ast_object);
+    }
+    
+    if ( ast->type == AST_NODE_TYPE_LIST )
+    {
+      ast_list = (AST_LIST_T *) ast->object;
+
+      for ( current = ast_list; current != NULL; current = current->next )
+      {
+        if ( current->tree != NULL )
+          free_ast(current->tree);
+      }
+
+      current = ast_list;
+      while ( current )
+      {
+        tmp = current;
+        current = current->next;
+        if ( tmp != NULL )
+          free(tmp);
+      }
     }
 
-    current = ast_list;
-    while ( current )
+    if (ast->type == AST_NODE_TYPE_TERMINAL )
     {
-      tmp = current;
-      current = current->next;
-      if ( tmp != NULL )
-        free(tmp);
+      /* this data structure provided by the user */
     }
-  }
 
-  if (ast->type == AST_NODE_TYPE_TERMINAL )
-  {
-    /* this data structure provided by the user */
+    free(ast);
   }
-
-  free(ast);
 }
 
 {% if addMain %}
@@ -1224,11 +1241,22 @@ main(int argc, char * argv[])
   TOKEN_LIST_T token_list;
   char * str;
 
-  TERMINAL_T tokens[{{len(initialTerminals)}}] = {
+  {% if len(initialTerminals) %}
+
+  TERMINAL_T tokens[{{len(initialTerminals)}} + 1] = {
     {% for terminal in initialTerminals %}
-    {TERMINAL_{{terminal.upper()}}, "" },
+    {_TERMINAL_{{terminal.upper()}}, "" },
     {% endfor %}
+    {TERMINAL_END_OF_STREAM, ""}
   };
+
+  {% else %}
+
+  TERMINAL_T tokens[1] = {
+    {TERMINAL_END_OF_STREAM, ""}
+  };
+
+  {% endif %}
 
   token_list.tokens = tokens;
   token_list.ntokens = {{len(initialTerminals)}};
@@ -1236,9 +1264,9 @@ main(int argc, char * argv[])
   token_list.current_index = 0;
 
   ctx = parser_init(&token_list);
-
   tree = parse(&token_list, -1, ctx);
-  if ( tree == NULL || argc <= 1 || (argc > 1 && !strcmp(argv[1], "parsetree")) )
+
+  if ( argc <= 1 || (argc > 1 && !strcmp(argv[1], "parsetree")) )
   {
     str = parsetree_to_string(tree);
   }
@@ -1248,11 +1276,12 @@ main(int argc, char * argv[])
     str = ast_to_string(ast);
     free_ast(ast);
   }
-  printf("%s\n", str);
 
+  printf("%s", str);
   free_parse_tree(tree);
   parser_exit(ctx);
-  free(str);
+  if (str) free(str);
+
   return 0;
 }
 {% endif %}
