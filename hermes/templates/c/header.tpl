@@ -25,6 +25,15 @@ typedef struct terminal_t {
 
 } TERMINAL_T;
 
+typedef struct token_t {
+  
+  struct terminal_t * terminal;
+  int lineno;
+  int colno;
+  char * source_string;
+
+} TOKEN_T;
+
 typedef struct nonterminal_t {
 
   enum terminal_e id;
@@ -163,7 +172,7 @@ typedef struct token_list_t {
 
   TERMINAL_E current;
   int current_index;
-  TERMINAL_T * tokens;
+  TOKEN_T * tokens;
   int ntokens;
 
 } TOKEN_LIST_T;

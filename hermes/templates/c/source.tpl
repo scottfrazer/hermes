@@ -114,7 +114,7 @@ advance(PARSER_CONTEXT_T * ctx)
     return TERMINAL_END_OF_STREAM;
   }
   token_list->current_index += 1;
-  token_list->current = token_list->tokens[token_list->current_index].id;
+  token_list->current = token_list->tokens[token_list->current_index].terminal->id;
   return token_list->current;
 }
 
@@ -122,7 +122,7 @@ static TERMINAL_T *
 expect(TERMINAL_E terminal_id, PARSER_CONTEXT_T * ctx)
 {
   TERMINAL_E current, next;
-  TERMINAL_T * current_token;
+  TOKEN_T * current_token;
   TOKEN_LIST_T * token_list = ctx->tokens;
   char * message, * fmt;
 
@@ -134,7 +134,7 @@ expect(TERMINAL_E terminal_id, PARSER_CONTEXT_T * ctx)
     syntax_error(ctx, message);
   }
 
-  current = token_list->tokens[token_list->current_index].id;
+  current = token_list->tokens[token_list->current_index].terminal->id;
   if ( current != terminal_id )
   {
     fmt = "Unexpected symbol when parsing %s.  Expected %s, got %s.";
@@ -154,7 +154,7 @@ expect(TERMINAL_E terminal_id, PARSER_CONTEXT_T * ctx)
     syntax_error(ctx, message);
   }
 
-  return current_token;
+  return current_token->terminal;
 }
 
 /* Index with rule ID */
@@ -355,7 +355,7 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
     {% endif %}
 
     tree->children[0].type = PARSE_TREE_NODE_TYPE_PARSETREE;
-    tree->children[0].object = left;
+    tree->children[0].object = (PARSE_TREE_NODE_U *) left;
 
       {% for index, morpheme in enumerate(led) %}
         {% if isinstance(morpheme, Terminal) %}
@@ -489,8 +489,8 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 
     {% if not nonterminal.empty %}
   fmt = "Error: Unexpected symbol (%s) when parsing %s";
-  message = calloc( strlen(fmt) + strlen(terminal_to_str(tokens->tokens[tokens->current_index].id)) + strlen("parse_{{nonterminal.string.lower()}}") + 1, sizeof(char) );
-  sprintf(message, fmt, terminal_to_str(tokens->tokens[tokens->current_index].id), "parse_{{nonterminal.string.lower()}}");
+  message = calloc( strlen(fmt) + strlen(terminal_to_str(tokens->tokens[tokens->current_index].terminal->id)) + strlen("parse_{{nonterminal.string.lower()}}") + 1, sizeof(char) );
+  sprintf(message, fmt, terminal_to_str(tokens->tokens[tokens->current_index].terminal->id), "parse_{{nonterminal.string.lower()}}");
   syntax_error(ctx, message);
   return NULL;
     {% else %}
@@ -551,7 +551,7 @@ parser_init( TOKEN_LIST_T * tokens )
   ctx = calloc(1, sizeof(PARSER_CONTEXT_T));
   ctx->tokens = tokens;
   tokens->current_index = 0;
-  tokens->current = tokens->tokens[0].id;
+  tokens->current = tokens->tokens[0].terminal->id;
   return ctx;
 }
 
@@ -726,7 +726,7 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
       tail = tail->next;
     }
     next = _parsetree_node_to_ast(&tree->children[tree->nchildren - 1]);
-    tail->next = (next != NULL) ? next->object : NULL;
+    tail->next = (AST_LIST_T *) (next != NULL) ? next->object : NULL;
   }
 
   ast->object = (AST_NODE_U *) ast_list;
@@ -1284,24 +1284,35 @@ main(int argc, char * argv[])
 
   {% if len(initialTerminals) %}
 
-  TERMINAL_T tokens[{{len(initialTerminals)}} + 1] = {
+  TERMINAL_T terminals[{{len(initialTerminals) + 1}}] = {
     {% for terminal in initialTerminals %}
-    {_TERMINAL_{{terminal.upper()}}, "" },
+    {_TERMINAL_{{terminal.upper()}}, "{{terminal.lower()}}"},
     {% endfor %}
-    {TERMINAL_END_OF_STREAM, ""}
+    {TERMINAL_END_OF_STREAM, "_end_of_stream"}
+  };
+
+  TOKEN_T tokens[{{len(initialTerminals) + 1}}] = {
+    {% for index, terminal in enumerate(initialTerminals) %}
+    { &terminals[{{index}}], 0, 0, "" },
+    {% endfor %}
+    { &terminals[{{index + 1}}], 0, 0, "" }
   };
 
   {% else %}
 
-  TERMINAL_T tokens[1] = {
-    {TERMINAL_END_OF_STREAM, ""}
+  TERMINAL_T terminals[1] = {
+    {TERMINAL_END_OF_STREAM, "_end_of_stream"}
+  };
+
+  TOKEN_T tokens[1] = {
+    { &terminals[0], 0, 0, "" }
   };
 
   {% endif %}
 
   token_list.tokens = tokens;
   token_list.ntokens = {{len(initialTerminals)}};
-  token_list.current = tokens[0].id;
+  token_list.current = tokens[0].terminal->id;
   token_list.current_index = 0;
 
   ctx = parser_init(&token_list);
