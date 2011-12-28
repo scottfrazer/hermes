@@ -393,7 +393,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
   TERMINAL_E current;
   TOKEN_LIST_T * tokens = ctx->tokens;
   PARSE_TREE_T * tree, * subtree;
-  char * message, fmt;
+  char * message, * fmt;
   int rule = -1;
 
   ctx->current_function = "parse_{{nonterminal.string.lower()}}";
@@ -725,6 +725,8 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
       tail->next = (AST_LIST_T *) lnode;
       tail = tail->next;
     }
+    next = _parsetree_node_to_ast(&tree->children[tree->nchildren - 1]);
+    tail->next = (next != NULL) ? next->object : NULL;
   }
 
   ast->object = (AST_NODE_U *) ast_list;

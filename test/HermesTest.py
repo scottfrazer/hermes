@@ -2,7 +2,7 @@ import unittest, os, subprocess, re, json, imp
 from hashlib import sha224
 from random import random
 from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
-from hermes.GrammarCodeGenerator import PythonTemplate
+from hermes.GrammarCodeGenerator import PythonTemplate, CHeaderTemplate, CSourceTemplate
 from hermes.Morpheme import NonTerminal
 
 directory = 'test/cases'
@@ -42,7 +42,7 @@ class HermesConflictTest(HermesTest):
   def runTest(self):
     self.assertEqual(self.actual, self.expected, 'expected conflicts to match')
 
-class HermesParseTreeTest(HermesTest):
+class HermesPythonParseTreeTest(HermesTest):
 
   def __init__(self, testCaseDir=None, grammar=None, tokens=None, expected=None):
     super().__init__()
@@ -53,7 +53,7 @@ class HermesParseTreeTest(HermesTest):
     tree = getParseTree(self.grammar, self.tokens)
     self.assertEqual(self.expected, tree, 'expected parse trees to match (test %s)' % (self.testCaseDir))
 
-class HermesAbstractSyntaxTreeTest(HermesTest):
+class HermesPythonAbstractSyntaxTreeTest(HermesTest):
 
   def __init__(self, testCaseDir=None, grammar=None, tokens=None, expected=None):
     super().__init__()
@@ -62,6 +62,27 @@ class HermesAbstractSyntaxTreeTest(HermesTest):
 
   def runTest(self):
     self.assertEqual(self.expected, getAst(self.grammar, self.tokens), 'expected ASTs to match (test %s)' % (self.testCaseDir))
+
+class HermesCParseTreeTest(HermesTest):
+
+  def __init__(self, testCaseDir=None, grammar=None, tokens=None, expected=None):
+    super().__init__()
+    self.__dict__.update(locals())
+    self.maxDiff = None
+
+  def runTest(self):
+    tree = getCParseTree(self.grammar, self.tokens)
+    self.assertEqual(self.expected, tree, 'expected parse trees to match (test %s)' % (self.testCaseDir))
+
+class HermesCAbstractSyntaxTreeTest(HermesTest):
+
+  def __init__(self, testCaseDir=None, grammar=None, tokens=None, expected=None):
+    super().__init__()
+    self.__dict__.update(locals())
+    self.maxDiff = None
+
+  def runTest(self):
+    self.assertEqual(self.expected, getCAst(self.grammar, self.tokens, self.testCaseDir), 'expected ASTs to match (test %s)' % (self.testCaseDir))
 
 def getParseTree(grammar, tokens):
   parser = getParser(grammar)
@@ -83,11 +104,43 @@ def getAst(grammar, tokens):
   astPrettyPrint = hermesparser.AstPrettyPrintable(ast)
   return str(astPrettyPrint)
 
+def getCParseTree(grammar, tokens):
+  parser = getParser(grammar)
+  terminals = hermesparser.TokenStream(list(map(lambda x: hermesparser.Terminal(parser.terminals[x]), tokens)))
+  try:
+    parsetree = parser.parse(terminals)
+  except hermesparser.SyntaxError as error:
+    return str(error)
+  parsetreePrettyPrint = hermesparser.ParseTreePrettyPrintable(parsetree)
+  return str(parsetreePrettyPrint)
+
+def getCAst(grammar, tokens, testPath):
+  hash = sha224( str(random()).encode('ascii') ).hexdigest()[:10]
+  for (outfile, renderer) in [('parser.h', CHeaderTemplate()), ('parser.c', CSourceTemplate())]:
+    fullpath = outfile
+    code = renderer.render(grammar, addMain=True, initialTerminals=tokens)
+    fp = open(fullpath, 'w')
+    fp.write(code)
+    fp.close()
+
+  subprocess.check_call('gcc -std=c99 -g -o parser parser.c 2>/dev/null', shell=True, stderr=None)
+  if '/5' in testPath:
+    subprocess.check_call('cp parser.c parser5.c', shell=True, stderr=None)
+    subprocess.check_call('cp parser.h parser5.h', shell=True, stderr=None)
+
+  ast = ''
+  try:
+    ast = subprocess.check_output('./parser ast'.split())
+  except subprocess.CalledProcessError as exception:
+    ast = exception.output
+  subprocess.check_call('rm parser.h parser.c parser'.split())
+  return ast.decode('ascii').strip()
+
 def getParser(grammar):
   global hermesparser
   template = PythonTemplate()
   code = template.render(grammar)
-  modulename = 'hermesparser' #sha224( str(random()).encode('ascii') ).hexdigest()[:25]
+  modulename = 'hermesparser' #
   fullpath = modulename + '.py'
   fp = open(fullpath, 'w')
   fp.write(code)
@@ -122,7 +175,8 @@ def load_tests(loader, tests, pattern):
     if os.path.exists(path):
       expectedParseTree = open(path).read().strip()
       if len(expectedParseTree):
-        suite.addTest(HermesParseTreeTest(testDirectory, grammar, tokens, expectedParseTree))
+        suite.addTest(HermesPythonParseTreeTest(testDirectory, grammar, tokens, expectedParseTree))
+        suite.addTest(HermesCParseTreeTest(testDirectory, grammar, tokens, expectedParseTree))
     else:
       fp = open(path, 'w')
       fp.write(getParseTree(grammar, tokens))
@@ -132,7 +186,8 @@ def load_tests(loader, tests, pattern):
     path = os.path.join(testDirectory, 'ast')
     if os.path.exists(path):
       expectedAst = open(path).read().strip()
-      suite.addTest(HermesAbstractSyntaxTreeTest(testDirectory, grammar, tokens, expectedAst))
+      suite.addTest(HermesPythonAbstractSyntaxTreeTest(testDirectory, grammar, tokens, expectedAst))
+      suite.addTest(HermesCAbstractSyntaxTreeTest(testDirectory, grammar, tokens, expectedAst))
     else:
       fp = open(path, 'w')
       fp.write(getAst(grammar, tokens))

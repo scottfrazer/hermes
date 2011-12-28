@@ -185,7 +185,7 @@ class AstPrettyPrintable(Ast):
       return string
     elif isinstance(ast, list):
       if len(ast) == 0:
-        return '[]'
+        return 'None'
       string = '[\n'
       string += ',\n'.join([self._prettyPrint(element, indent + 2) for element in ast])
       string += '\n%s]' % (indentStr)
