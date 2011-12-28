@@ -124,9 +124,6 @@ def getCAst(grammar, tokens, testPath):
     fp.close()
 
   subprocess.check_call('gcc -std=c99 -g -o parser parser.c 2>/dev/null', shell=True, stderr=None)
-  if '/5' in testPath:
-    subprocess.check_call('cp parser.c parser5.c', shell=True, stderr=None)
-    subprocess.check_call('cp parser.h parser5.h', shell=True, stderr=None)
 
   ast = ''
   try:
