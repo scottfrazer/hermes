@@ -7,6 +7,14 @@ from hermes.Morpheme import NonTerminal
 
 directory = 'test/cases'
 
+class terminal:
+  def __init__(self, id, string):
+    self.__dict__.update(locals())
+
+class token:
+  def __init__(self, terminal, lineno=0, colno=0, source_string=''):
+    self.__dict__.update(locals())
+
 class HermesTest(unittest.TestCase):
   pass
 
@@ -69,6 +77,9 @@ class HermesCParseTreeTest(HermesTest):
     super().__init__()
     self.__dict__.update(locals())
     self.maxDiff = None
+    self.tokens = None
+    if tokens:
+      self.tokens = list(map(lambda x: token(terminal(grammar.getTerminal(x), x)), tokens))
 
   def runTest(self):
     tree = getCParseTree(self.grammar, self.tokens)
@@ -80,9 +91,12 @@ class HermesCAbstractSyntaxTreeTest(HermesTest):
     super().__init__()
     self.__dict__.update(locals())
     self.maxDiff = None
+    self.tokens = None
+    if tokens:
+      self.tokens = list(map(lambda x: token(terminal(grammar.getTerminal(x), x)), tokens))
 
   def runTest(self):
-    self.assertEqual(self.expected, getCAst(self.grammar, self.tokens, self.testCaseDir), 'expected ASTs to match (test %s)' % (self.testCaseDir))
+    self.assertEqual(self.expected, getCAst(self.grammar, self.tokens), 'expected ASTs to match (test %s)' % (self.testCaseDir))
 
 def getParseTree(grammar, tokens):
   parser = getParser(grammar)
@@ -105,33 +119,29 @@ def getAst(grammar, tokens):
   return str(astPrettyPrint)
 
 def getCParseTree(grammar, tokens):
-  parser = getParser(grammar)
-  terminals = hermesparser.TokenStream(list(map(lambda x: hermesparser.Terminal(parser.terminals[x]), tokens)))
-  try:
-    parsetree = parser.parse(terminals)
-  except hermesparser.SyntaxError as error:
-    return str(error)
-  parsetreePrettyPrint = hermesparser.ParseTreePrettyPrintable(parsetree)
-  return str(parsetreePrettyPrint)
+  return runCParser(grammar, tokens, 'parsetree')
 
-def getCAst(grammar, tokens, testPath):
+def getCAst(grammar, tokens):
+  return runCParser(grammar, tokens, 'ast')
+
+def runCParser(grammar, tokens, arg):
   hash = sha224( str(random()).encode('ascii') ).hexdigest()[:10]
   for (outfile, renderer) in [('parser.h', CHeaderTemplate()), ('parser.c', CSourceTemplate())]:
     fullpath = outfile
-    code = renderer.render(grammar, addMain=True, initialTerminals=tokens)
+    code = renderer.render(grammar, addMain=True, initialTokens=tokens)
     fp = open(fullpath, 'w')
     fp.write(code)
     fp.close()
 
   subprocess.check_call('gcc -std=c99 -g -o parser parser.c 2>/dev/null', shell=True, stderr=None)
 
-  ast = ''
+  output = ''
   try:
-    ast = subprocess.check_output('./parser ast'.split())
+    output = subprocess.check_output('./parser ' + arg, shell=True, stderr=None)
   except subprocess.CalledProcessError as exception:
-    ast = exception.output
-  subprocess.check_call('rm parser.h parser.c parser'.split())
-  return ast.decode('ascii').strip()
+    output = exception.output
+  subprocess.check_call('rm parser.h parser.c parser', shell=True, stderr=None)
+  return output.decode('ascii').strip()
 
 def getParser(grammar):
   global hermesparser

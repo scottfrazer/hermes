@@ -531,8 +531,8 @@ if __name__ == '__main__':
 
   try:
     tokens = TokenStream([
-      {% for terminal in initialTerminals %}
-      Terminal( parser.TERMINAL_{{terminal.upper()}} ),
+      {% for token in initialTokens %}
+      Terminal( parser.TERMINAL_{{token.terminal.string.upper()}} ),
       {% endfor %}
     ])
   except AttributeError as e:

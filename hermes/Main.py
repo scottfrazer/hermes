@@ -82,19 +82,24 @@ def Cli():
   factory = HermesParserFactory()
   fp = GrammarFileParser(factory.create())
 
-  #try:
-  G = fp.parse( open(cli.grammar[0]), cli.start )
-  #except Exception as e:
-  #  print(e)
-  #  sys.exit(-1)
+  grammar = fp.parse( open(cli.grammar[0]), cli.start )
 
-  terminals = []
+  class terminal:
+    def __init__(self, id, string):
+      self.__dict__.update(locals())
+
+  class token:
+    def __init__(self, terminal, lineno=0, colno=0, source_string=''):
+      self.__dict__.update(locals())
+
+  tokens = []
   if cli.tokens:
-    terminals = cli.tokens.lower().split(',')
+    tokens = cli.tokens.lower().split(',')
+    tokens = list(map(lambda x: token(terminal(grammar.getTerminal(x), x)), tokens))
+    terminals = list(map(lambda x: x.string, grammar.terminals))
     error = False
-    terminal_str = list(map(lambda x: x.string, G.terminals))
-    for terminal in terminals:
-      if terminal not in terminal_str:
+    for token in tokens:
+      if token.terminal.string not in terminals:
         sys.stderr.write("Error: Token '%s' not recognized\n" %(terminal))
         error = True
     if error:
@@ -106,7 +111,7 @@ def Cli():
     theme = TerminalDefaultTheme()
 
   if cli.action == 'analyze':
-    analyzer = GrammarAnalyzer(G)
+    analyzer = GrammarAnalyzer(grammar)
     analyzer.analyze( theme=theme )
 
   if cli.action == 'generate':
@@ -132,14 +137,14 @@ def Cli():
 
     for template in templates:
       fp = open(os.path.join(cli.directory, template.destination), 'w')
-      fp.write(template.render(G, addMain=cli.add_main, initialTerminals=terminals))
+      fp.write(template.render(grammar, addMain=cli.add_main, initialTokens=tokens))
       fp.close()
 
   if cli.action == 'parse':
     f = 'hermesparser.py'
 
     template = PythonTemplate()
-    code = template.render(G, addMain=cli.add_main, initialTerminals=terminals)
+    code = template.render(grammar, addMain=cli.add_main, initialTokens=tokens)
 
     fp = open(f, 'w')
     fp.write(code)

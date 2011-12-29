@@ -499,7 +499,12 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 }
 {% endfor %}
 
+#define HAS_MORE_TOKENS(ctx) (ctx->tokens->current != TERMINAL_END_OF_STREAM)
+
 {% for exprGrammar in grammar.exprgrammars %}
+
+#define {{exprGrammar.nonterminal.string.upper()}}_LEFT_BINDING_POWER_LARGER(ctx, rbp) (rbp < getInfixBp_{{exprGrammar.nonterminal.string.lower()}}(ctx->tokens->current))
+
 static PARSE_TREE_T *
 _parse_{{exprGrammar.nonterminal.string.lower()}}(int rbp, PARSER_CONTEXT_T * ctx)
 {
@@ -512,7 +517,7 @@ _parse_{{exprGrammar.nonterminal.string.lower()}}(int rbp, PARSER_CONTEXT_T * ct
     left->isNud = 1;
   }
 
-  while ( ctx->tokens->current && rbp < getInfixBp_{{exprGrammar.nonterminal.string.lower()}}(ctx->tokens->current) )
+  while ( HAS_MORE_TOKENS(ctx) && {{exprGrammar.nonterminal.string.upper()}}_LEFT_BINDING_POWER_LARGER(ctx, rbp) )
   {
     left = led_{{name}}(left, ctx);
   }
@@ -1282,20 +1287,20 @@ main(int argc, char * argv[])
   SYNTAX_ERROR_T * error;
   char * str;
 
-  {% if len(initialTerminals) %}
+  {% if initialTokens and len(initialTokens) %}
 
-  TERMINAL_T terminals[{{len(initialTerminals) + 1}}] = {
-    {% for terminal in initialTerminals %}
-    {_TERMINAL_{{terminal.upper()}}, "{{terminal.lower()}}"},
+  TERMINAL_T terminals[{{len(initialTokens) + 1}}] = {
+    {% for token in initialTokens %}
+    {_TERMINAL_{{token.terminal.string.upper()}}, "{{token.terminal.string.lower()}}"},
     {% endfor %}
     {TERMINAL_END_OF_STREAM, "_end_of_stream"}
   };
 
-  TOKEN_T tokens[{{len(initialTerminals) + 1}}] = {
-    {% for index, terminal in enumerate(initialTerminals) %}
-    { &terminals[{{index}}], 0, 0, "" },
+  TOKEN_T tokens[{{len(initialTokens) + 1}}] = {
+    {% for index, token in enumerate(initialTokens) %}
+    { &terminals[{{index}}], {{token.lineno}}, {{token.colno}}, "{{token.source_string}}" },
     {% endfor %}
-    { &terminals[{{index + 1}}], 0, 0, "" }
+    { &terminals[{{index + 1}}], {{token.lineno}}, {{token.colno}}, "" }
   };
 
   {% else %}
@@ -1311,7 +1316,7 @@ main(int argc, char * argv[])
   {% endif %}
 
   token_list.tokens = tokens;
-  token_list.ntokens = {{len(initialTerminals)}};
+  token_list.ntokens = {{len(initialTokens) if initialTokens else 0}};
   token_list.current = tokens[0].terminal->id;
   token_list.current_index = 0;
 

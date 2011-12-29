@@ -59,7 +59,7 @@ class Template:
           nonterminal.empty = True
       nonterminal.rules = list(filter(lambda x: not x.empty, nonterminal.rules))
 
-  def render(self, grammar, addMain=False, initialTerminals=[]):
+  def render(self, grammar, addMain=False, initialTokens=[]):
     templates_dir = resource_filename(__name__, 'templates')
     loader = moody.make_loader(templates_dir)
     self._prepare(grammar)
@@ -71,7 +71,7 @@ class Template:
               LL1Nonterminals = LL1Nonterminals, \
               nonAbstractTerminals = grammar.getSimpleTerminals(), \
               addMain = addMain, \
-              initialTerminals = initialTerminals
+              initialTokens = initialTokens
            )
 
     linereduce = re.compile('^[ \t]*$', re.M)
