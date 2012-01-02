@@ -306,9 +306,11 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
       tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
         {% endif %}
 
-      {% py morpheme = rule.nudProduction.morphemes[0] if len(rule.nudProduction) else None %}
-      {% if morpheme == rule.nonterminal or (isinstance(morpheme, NonTerminal) and morpheme.macro and morpheme.macro.nonterminal == rule.nonterminal) %}
+      {% if len(rule.nudProduction) == 1 and isinstance(rule.nudProduction.morphemes[0], NonTerminal) %}
+        {% py nt = rule.nudProduction.morphemes[0] %}
+        {% if nt == rule.nonterminal or (isinstance(nt.macro, OptionalMacro) and nt.macro.nonterminal == rule.nonterminal) %}
       tree.isExprNud = True
+        {% endif %}
       {% endif %}
 
       tree.add(left)

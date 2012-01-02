@@ -139,7 +139,7 @@ expect(TERMINAL_E terminal_id, PARSER_CONTEXT_T * ctx)
   {
     fmt = "Unexpected symbol when parsing %s.  Expected %s, got %s.";
     message = calloc( strlen(fmt) + strlen(terminal_to_str(terminal_id)) + strlen(terminal_to_str(current)) + strlen(ctx->current_function) + 1, sizeof(char) );
-    sprintf(message, fmt, ctx->current_function, terminal_to_str(terminal_id), current ? terminal_to_str(current) : "None");
+    sprintf(message, fmt, ctx->current_function, terminal_to_str(terminal_id), current != TERMINAL_END_OF_STREAM ? terminal_to_str(current) : "(end of stream)");
     syntax_error(ctx, message);
   }
 
@@ -184,6 +184,20 @@ static int ast_index[{{len(grammar.expandedRules)}}] = {
   {{rule.ast.idx if isinstance(rule.ast, AstTranslation) else 0}},
   {% endfor %}
 };
+
+static PARSETREE_TO_AST_CONVERSION_T *
+get_default_ast_converter()
+{
+  PARSETREE_TO_AST_CONVERSION_T * converter = NULL;
+  AST_RETURN_INDEX_T * ast_return_index;
+
+  converter = calloc(1, sizeof(PARSETREE_TO_AST_CONVERSION_T));
+  ast_return_index = calloc(1, sizeof(AST_RETURN_INDEX_T));
+  ast_return_index->index = 0;
+  converter->type = AST_RETURN_INDEX;
+  converter->object = (PARSE_TREE_TO_AST_CONVERSION_U *) ast_return_index;
+  return converter;
+}
 
 static PARSETREE_TO_AST_CONVERSION_T *
 get_ast_converter(int rule_id)
@@ -236,19 +250,15 @@ get_ast_converter(int rule_id)
 }
 
 {% for exprGrammar in grammar.exprgrammars %}
+{% py name = exprGrammar.nonterminal.string.lower() %}
 
-static int infixBp_{{exprGrammar.nonterminal.string.lower()}}[{{len(grammar.terminals)}}] = {
+static int infixBp_{{name}}[{{len(grammar.terminals)}}] = {
   {% for i in range(len(grammar.terminals)) %}{{0 if i not in exprGrammar.infix else exprGrammar.infix[i]}}, {% endfor %}
 };
 
-static int prefixBp_{{exprGrammar.nonterminal.string.lower()}}[{{len(grammar.terminals)}}] = {
+static int prefixBp_{{name}}[{{len(grammar.terminals)}}] = {
   {% for i in range(len(grammar.terminals)) %}{{0 if i not in exprGrammar.prefix else exprGrammar.prefix[i]}}, {% endfor %}
 };
-
-{% endfor %}
-
-{% for exprGrammar in grammar.exprgrammars %}
-{% py name = exprGrammar.nonterminal.string.lower() %}
 
 static int
 getInfixBp_{{name}}(TERMINAL_E id)
@@ -278,15 +288,22 @@ nud_{{name}}(PARSER_CONTEXT_T * ctx)
   current = list->current;
 
   if ( list == NULL )
+  {
+    tree->ast_converter = get_default_ast_converter();
     return tree;
+  }
 
   {% for i, rule in enumerate(exprGrammar.getExpandedRules()) %}
     {% py ruleFirstSet = exprGrammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
 
     {% py isOptional = isinstance(rule, ExprRule) and len(rule.nudProduction.morphemes) and isinstance(rule.nudProduction.morphemes[0], NonTerminal) and rule.nudProduction.morphemes[0].macro and isinstance(rule.nudProduction.morphemes[0].macro, OptionalMacro) and rule.nudProduction.morphemes[0].macro.nonterminal == exprGrammar.nonterminal %}
 
+    {% if isOptional %}
+    printf("isOptional\n");
+    {% endif %}
+
     {% if len(ruleFirstSet) and not isOptional %}
-  {{'if' if i == 0 else 'else if'}} ( {{' || '.join(['current == %d' % (x.id) for x in exprGrammar.ruleFirst(rule)])}} )
+  if ( {{' || '.join(['current == %d' % (x.id) for x in exprGrammar.ruleFirst(rule)])}} )
   {
     tree->ast_converter = get_ast_converter({{rule.id}});
     tree->nchildren = {{len(rule.nudProduction)}};
@@ -315,10 +332,12 @@ nud_{{name}}(PARSER_CONTEXT_T * ctx)
     tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) parse_{{morpheme.start_nt.string.lower()}}(ctx);
       {% endif %}
     {% endfor %}
+    return tree;
   }
   {% endif %}
   {% endfor %}
 
+  tree->ast_converter = get_default_ast_converter();
   return tree;
 }
 
@@ -350,8 +369,11 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
     tree->nchildren = {{len(led) + 1}};
     tree->children = calloc(tree->nchildren, sizeof(PARSE_TREE_NODE_T));
 
-    {% if len(rule.nudProduction) == 1 and rule.nudProduction.morphemes[0] == rule.nonterminal%}
+    {% if len(rule.nudProduction) == 1 and isinstance(rule.nudProduction.morphemes[0], NonTerminal) %}
+      {% py nt = rule.nudProduction.morphemes[0] %}
+      {% if nt == rule.nonterminal or (isinstance(nt.macro, OptionalMacro) and nt.macro.nonterminal == rule.nonterminal) %}
     tree->isExprNud = 1; 
+      {% endif %}
     {% endif %}
 
     tree->children[0].type = PARSE_TREE_NODE_TYPE_PARSETREE;
@@ -509,7 +531,7 @@ static PARSE_TREE_T *
 _parse_{{exprGrammar.nonterminal.string.lower()}}(int rbp, PARSER_CONTEXT_T * ctx)
 {
   PARSE_TREE_T * left = NULL;
-  left = nud_{{name}}(ctx);
+  left = nud_{{exprGrammar.nonterminal.string.lower()}}(ctx);
 
   if ( left != NULL )
   {
@@ -519,7 +541,7 @@ _parse_{{exprGrammar.nonterminal.string.lower()}}(int rbp, PARSER_CONTEXT_T * ct
 
   while ( HAS_MORE_TOKENS(ctx) && {{exprGrammar.nonterminal.string.upper()}}_LEFT_BINDING_POWER_LARGER(ctx, rbp) )
   {
-    left = led_{{name}}(left, ctx);
+    left = led_{{exprGrammar.nonterminal.string.lower()}}(left, ctx);
   }
 
   if ( left != NULL )
