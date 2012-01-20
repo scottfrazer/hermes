@@ -736,6 +736,7 @@ class CompositeGrammar(Grammar):
         progress |= grammar.updateFirstFollow(exprgrammar.first, exprgrammar.follow)
     self.first = grammar.first
     self.follow = grammar.follow
+    self.grammar._computeConflicts()
 
     self.conflicts = grammar.conflicts
     self.warnings = grammar.warnings
@@ -834,6 +835,8 @@ class CompositeGrammar(Grammar):
         for rule in self.getExpandedLL1Rules(nonterminal):
           Fip = self._pfirst(rule.getProduction())
           if terminal in Fip or (self.ε in Fip and terminal in self.follow[nonterminal]):
+            if rule.nonterminal.string.lower() == 'parameter_declaration_sub_sub':
+              print('parameter_declaration_sub_sub: terminal:%s rule:%s' % (terminal, rule))
             next = rule
             break
         rules.append(next)

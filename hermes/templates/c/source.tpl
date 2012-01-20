@@ -298,12 +298,8 @@ nud_{{name}}(PARSER_CONTEXT_T * ctx)
 
     {% py isOptional = isinstance(rule, ExprRule) and len(rule.nudProduction.morphemes) and isinstance(rule.nudProduction.morphemes[0], NonTerminal) and rule.nudProduction.morphemes[0].macro and isinstance(rule.nudProduction.morphemes[0].macro, OptionalMacro) and rule.nudProduction.morphemes[0].macro.nonterminal == exprGrammar.nonterminal %}
 
-    {% if isOptional %}
-    printf("isOptional\n");
-    {% endif %}
-
     {% if len(ruleFirstSet) and not isOptional %}
-  if ( {{' || '.join(['current == %d' % (x.id) for x in exprGrammar.ruleFirst(rule)])}} )
+  if ( {{' || '.join(['current == %d' % (x.id) for x in ruleFirstSet])}} )
   {
     tree->ast_converter = get_ast_converter({{rule.id}});
     tree->nchildren = {{len(rule.nudProduction)}};

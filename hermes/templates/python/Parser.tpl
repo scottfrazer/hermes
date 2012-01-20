@@ -295,10 +295,11 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
     current = self.getCurrentToken()
 
     {% py seen = list() %}
-    {% for rule in exprGrammar.rules %}
+    {% for rule in exprGrammar.getExpandedExpressionRules() %}
       {% py led = rule.ledProduction.morphemes %}
       {% if len(led) and led[0] not in seen %}
-    {{'if' if len(seen)==0 else 'elif'}} current.getId() == {{led[0].id}}: # {{led[0]}}
+
+    {{'if' if len(seen)==0 else 'else if'}} current.getId() == {{led[0].id}}: # {{led[0]}}
 
         {% if isinstance(rule.ast, AstSpecification) %}
       tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', {{rule.ast.parameters}})
@@ -306,12 +307,12 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
       tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
         {% endif %}
 
-      {% if len(rule.nudProduction) == 1 and isinstance(rule.nudProduction.morphemes[0], NonTerminal) %}
-        {% py nt = rule.nudProduction.morphemes[0] %}
-        {% if nt == rule.nonterminal or (isinstance(nt.macro, OptionalMacro) and nt.macro.nonterminal == rule.nonterminal) %}
-      tree.isExprNud = True
+        {% if len(rule.nudProduction) == 1 and isinstance(rule.nudProduction.morphemes[0], NonTerminal) %}
+          {% py nt = rule.nudProduction.morphemes[0] %}
+          {% if nt == rule.nonterminal or (isinstance(nt.macro, OptionalMacro) and nt.macro.nonterminal == rule.nonterminal) %}
+      tree.isExprNud = True 
+          {% endif %}
         {% endif %}
-      {% endif %}
 
       tree.add(left)
 
@@ -330,7 +331,7 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
       tree.add( self.parent.parse_{{morpheme.start_nt.string.lower()}}() )
           {% endif %}
         {% endfor %}
-        {% py seen.append(led[0]) %}
+      return tree
       {% endif %}
     {% endfor %}
 
