@@ -18,7 +18,7 @@ def Cli():
 
   parser = argparse.ArgumentParser(
               description = 'Hermes Parser Generator',
-              epilog = '(c) 2011 Scott Frazer')
+              epilog = '(c) 2011-2012 Scott Frazer')
 
   parser.add_argument('action',
               choices = ['analyze', 'generate', 'parse'],
