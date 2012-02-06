@@ -9,33 +9,33 @@ README = os.path.join(os.path.dirname(__file__), 'README')
 long_description = open(README).read()
 
 setup(
-    name='Hermes',
-    version=version,
-    description=long_description,
-    author='Scott Frazer',
-    author_email='scott.d.frazer@gmail.com',
-    packages=['hermes'],
-    package_dir={'hermes': 'hermes'},
-    package_data={'hermes': ['templates/Python/*.tpl']},
-    install_requires=[
-        "moody-templates>=0.9",
-        "termcolor>=1.1.0"
-    ],
-    entry_points={
-      'console_scripts': [
-            'hermes = hermes.Main:Cli'
-        ]
-      },
-    license = "GPL",
-    keywords = "Parser, Recursive Descent, LL(1), Pratt, Expression, Parser Generator",
-    url = "http://zeus-lang.org/hermes",
-    classifiers=[
-          "License :: OSI Approved :: GNU General Public License (GPL)",
-          "Programming Language :: Python",
-          "Development Status :: 4 - Beta",
-          "Intended Audience :: Developers",
-          "Natural Language :: English",
-          "Topic :: Software Development :: Code Generators",
-          "Topic :: Software Development :: Compilers"
-      ]
-    )
+  name='Hermes',
+  version=version,
+  description=long_description,
+  author='Scott Frazer',
+  author_email='scott.d.frazer@gmail.com',
+  packages=['hermes'],
+  package_dir={'hermes': 'hermes'},
+  package_data={'hermes': ['templates/python/*.tpl', 'templates/c/*.tpl']},
+  install_requires=[
+    "moody-templates>=0.9",
+    "xtermcolor>=1.0.1"
+  ],
+  entry_points={
+  'console_scripts': [
+      'hermes = hermes.Main:Cli'
+    ]
+  },
+  license = "GPL",
+  keywords = "Parser, Recursive Descent, LL(1), Pratt, Expression, Parser Generator",
+  url = "http://zeus-lang.org/hermes",
+  classifiers=[
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Programming Language :: Python",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Software Development :: Compilers"
+  ]
+)
