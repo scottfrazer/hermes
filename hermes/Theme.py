@@ -1,8 +1,10 @@
-from termcolor import colored
+from xtermcolor.ColorMap import XTermColorMap
 
 class AnsiStylizer:
-  def color(self, string, color, attrs=[]):
-    return colored(string, color, attrs=attrs)
+  def __init__(self):
+    self.colormap = XTermColorMap()
+  def color(self, string, ansi):
+    return self.colormap.colorize(string, ansi=ansi)
 
 class Theme:
   def rule(self, string):
@@ -58,9 +60,9 @@ class TerminalColorTheme(Theme):
   def production(self, string):
     return string
   def nonterminal(self, string):
-    return self.ansiStylizer.color(string, 'green')
+    return self.ansiStylizer.color(string, 2)
   def terminal(self, string):
-    return "'" + self.ansiStylizer.color(string.strip("'"), 'cyan') + "'"
+    return "'" + self.ansiStylizer.color(string.strip("'"), 14) + "'"
   def endOfStream(self, string):
     return string
   def emptyString(self, string):
@@ -76,19 +78,19 @@ class TerminalColorTheme(Theme):
   def mixfixOperator(self, string):
     return string
   def title(self, string):
-    return self._boxed(string, 'blue')
+    return self._boxed(string, 4)
   def warning(self, string):
-    return self._boxed(string, 'yellow')
+    return self._boxed(string, 11)
   def conflict(self, string):
-    return self._boxed(string, 'red')
+    return self._boxed(string, 2)
   def conflictsFound(self, string):
-    return self.ansiStylizer.color(string, 'red')
+    return self.ansiStylizer.color(string, 2)
   def noConflicts(self, string):
-    return self.ansiStylizer.color(string, 'green')
+    return self.ansiStylizer.color(string, 2)
   def astTranslation(self, string):
     return string
   def astSpecification(self, string):
-    return self.ansiStylizer.color(string, 'magenta')
+    return self.ansiStylizer.color(string, 13)
   def _boxed(self, string, color):
     line = '+%s+' % (''.join(['-' for i in range(len(string)+2)]))
     return self.ansiStylizer.color('%s\n| %s |\n%s\n\n' % (line, string, line), color)
