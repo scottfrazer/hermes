@@ -65,14 +65,14 @@ class Template:
     self._prepare(grammar)
     LL1Nonterminals = [x for x in grammar.nonterminals if x not in map(lambda x: x.nonterminal, grammar.exprgrammars)]
 
-    code = loader.render (
-              self.template, \
-              grammar = grammar, \
-              LL1Nonterminals = LL1Nonterminals, \
-              nonAbstractTerminals = grammar.getSimpleTerminals(), \
-              addMain = addMain, \
-              initialTokens = initialTokens
-           )
+    code = loader.render(
+      self.template,
+      grammar = grammar,
+      LL1Nonterminals = LL1Nonterminals,
+      nonAbstractTerminals = grammar.getSimpleTerminals(),
+      addMain = addMain,
+      initialTokens = initialTokens
+    )
 
     linereduce = re.compile('^[ \t]*$', re.M)
     code = linereduce.sub('', code)
