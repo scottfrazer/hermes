@@ -26,11 +26,12 @@ setup(
       'hermes = hermes.Main:Cli'
     ]
   },
-  license = "GPL",
+  test_suite='test.HermesTest',
+  license = 'MIT',
   keywords = "Parser, Recursive Descent, LL(1), Pratt, Expression, Parser Generator",
-  url = "http://zeus-lang.org/hermes",
+  url = "http://github.com/scottfrazer/hermes",
   classifiers=[
-    "License :: OSI Approved :: GNU General Public License (GPL)",
+    'License :: OSI Approved :: MIT License',
     "Programming Language :: Python",
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
