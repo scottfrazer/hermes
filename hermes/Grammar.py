@@ -26,6 +26,13 @@ class Rule:
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
   def __copy__( self ):
     return Rule(self.nonterminal, Production(copy(self.production.morphemes)), self.id, self.root, self.ast)
+  def isTokenAlias(self):
+    if len(self.production.morphemes) == 1 and isinstance(self.production.morphemes[0], Terminal):
+      return self.production.morphemes[0]
+    return False
+  def isAliasFor(self, terminal_str):
+    # terminal alias rule is a rule in the form nt := 'terminal'
+    return len(self.production.morphemes) == 1 and isinstance(self.production.morphemes[0], Terminal) and self.production.morphemes[0].string == terminal_str
   def expand( self ):
     morphemes = []
     rules = []
@@ -109,6 +116,13 @@ class ExprRule:
     np = Production(copy(self.nudProduction.morphemes))
     lp = Production(copy(self.ledProduction.morphemes))
     return ExprRule(self.nonterminal, np, lp, self.nudAst, self.ast, self.operator)
+  def isTokenAlias(self):
+    if len(self.nudProduction) == 1 and isinstance(self.nudProduction.morphemes[0], Terminal):
+      return self.nudProduction.morphemes[0]
+    return False
+  def isAliasFor(self, terminal_str):
+    # terminal alias rule is a rule in the form nt := 'terminal'
+    return len(self.nudProduction) == 1 and isinstance(self.nudProduction.morphemes[0], Terminal) and self.nudProduction.morphemes[0].string == terminal_str
   def getRoot(self):
     if self.ledProduction and len(self.ledProduction):
       return self.ledProduction.morphemes[0]
