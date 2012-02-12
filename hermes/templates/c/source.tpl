@@ -1305,8 +1305,6 @@ main(int argc, char * argv[])
   SYNTAX_ERROR_T * error;
   char * str;
 
-  {% if initialTokens and len(initialTokens) %}
-
   TERMINAL_T terminals[{{len(initialTokens) + 1}}] = {
     {% for token in initialTokens %}
     {_TERMINAL_{{token.terminal.string.upper()}}, "{{token.terminal.string.lower()}}"},
@@ -1320,18 +1318,6 @@ main(int argc, char * argv[])
     {% endfor %}
     { &terminals[{{index + 1}}], {{token.lineno}}, {{token.colno}}, "" }
   };
-
-  {% else %}
-
-  TERMINAL_T terminals[1] = {
-    {TERMINAL_END_OF_STREAM, "_end_of_stream"}
-  };
-
-  TOKEN_T tokens[1] = {
-    { &terminals[0], 0, 0, "" }
-  };
-
-  {% endif %}
 
   token_list.tokens = tokens;
   token_list.ntokens = {{len(initialTokens) if initialTokens else 0}};
