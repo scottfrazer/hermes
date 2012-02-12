@@ -612,7 +612,7 @@ syntax_error( PARSER_CONTEXT_T * ctx, char * message )
 }
 
 PARSE_TREE_T *
-parse(TOKEN_LIST_T * tokens, NONTERMINAL_E start, PARSER_CONTEXT_T * ctx)
+{{prefix}}parse(TOKEN_LIST_T * tokens, NONTERMINAL_E start, PARSER_CONTEXT_T * ctx)
 {
   PARSE_TREE_T * tree;
 
@@ -630,7 +630,7 @@ parse(TOKEN_LIST_T * tokens, NONTERMINAL_E start, PARSER_CONTEXT_T * ctx)
 }
 
 ABSTRACT_SYNTAX_TREE_T *
-parsetree_to_ast( PARSE_TREE_T * tree )
+{{prefix}}ast( PARSE_TREE_T * tree )
 {
   PARSE_TREE_NODE_T node;
   node.type = PARSE_TREE_NODE_TYPE_PARSETREE;
@@ -1339,7 +1339,7 @@ main(int argc, char * argv[])
   token_list.current_index = 0;
 
   ctx = parser_init(&token_list);
-  tree = parse(&token_list, -1, ctx);
+  tree = {{prefix}}parse(&token_list, -1, ctx);
 
   if ( ctx->syntax_errors )
   {
@@ -1356,7 +1356,7 @@ main(int argc, char * argv[])
   }
   else if ( argc > 1 && !strcmp(argv[1], "ast") )
   {
-    ast = parsetree_to_ast(tree);
+    ast = {{prefix}}ast(tree);
     str = ast_to_string(ast);
     free_ast(ast);
   }

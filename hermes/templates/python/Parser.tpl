@@ -12,13 +12,13 @@ def whosdaddy():
   return inspect.stack()[2][3]
 
 def parse( iterator, entry ):
-  p = Parser()
+  p = {{prefix}}Parser()
   return p.parse(iterator, entry)
   
 class Terminal:
   def __init__(self, id):
     self.id=id
-    self.str=Parser.terminals[id]
+    self.str={{prefix}}Parser.terminals[id]
   def getId(self):
     return self.id
   def toAst(self):
@@ -201,7 +201,7 @@ class SyntaxError(Exception):
 
 {% for exprGrammar in grammar.exprgrammars %}
 
-class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
+class {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
   def __init__(self, parent):
     self.__dict__.update(locals())
 
@@ -351,7 +351,7 @@ class TokenStream:
   def current(self):
     return self.token
 
-class Parser:
+class {{prefix}}Parser:
   # Quark - finite string set maps one string to exactly one int, and vice versa
   terminals = {
   {% for terminal in nonAbstractTerminals %}
@@ -524,13 +524,13 @@ class Parser:
   def parse_{{exprGrammar.nonterminal.string.lower()}}( self, rbp = 0):
     name = '{{exprGrammar.nonterminal.string.lower()}}'
     if name not in self.expressionParsers:
-      self.expressionParsers[name] = ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}(self)
+      self.expressionParsers[name] = {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}(self)
     return self.expressionParsers[name].parse(rbp)
   {% endfor %}
 
 {% if addMain %}
 if __name__ == '__main__':
-  parser = Parser()
+  parser = {{prefix}}Parser()
 
   try:
     tokens = TokenStream([

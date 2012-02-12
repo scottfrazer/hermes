@@ -194,8 +194,9 @@ typedef struct parser_context_t {
 
 } PARSER_CONTEXT_T;
 
-PARSE_TREE_T * parse( TOKEN_LIST_T * tokens, NONTERMINAL_E start, PARSER_CONTEXT_T * ctx );
-ABSTRACT_SYNTAX_TREE_T * parsetree_to_ast( PARSE_TREE_T * parse_tree );
+PARSE_TREE_T * {{prefix}}parse( TOKEN_LIST_T * tokens, NONTERMINAL_E start, PARSER_CONTEXT_T * ctx );
+ABSTRACT_SYNTAX_TREE_T * {{prefix}}ast( PARSE_TREE_T * parse_tree );
+void * {{prefix}}eval( PARSE_TREE_T * parse_tree );
 void free_parse_tree( PARSE_TREE_T * tree );
 void free_ast( ABSTRACT_SYNTAX_TREE_T * ast );
 #endif

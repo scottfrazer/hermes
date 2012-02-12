@@ -39,8 +39,9 @@ def Cli():
               help = 'The start symbol of the grammar.  Defaults to \'s\'')
 
   parser.add_argument('-d', '--directory',
-              required = False,
-              help = 'output file for parser generation')
+              required=False,
+              default='.'
+              help='output file for parser generation')
 
   parser.add_argument('-l', '--language',
               required = False,
@@ -60,6 +61,10 @@ def Cli():
   parser.add_argument('-t', '--tokens',
               required = False,
               help = 'If used with the parse command, this is the token list.  If used with the generate command and -m, these tokens are put in the main() function of the generated parser.')
+
+  parser.add_argument('-p', '--prefix',
+              required = False,
+              help = 'If this is specified, generated source files and public APIs will use the prefix specified to avoid name conflicts.')
 
   parser.add_argument('-m', '--add-main',
               required = False,
@@ -115,11 +120,8 @@ def Cli():
     analyzer.analyze( theme=theme )
 
   if cli.action == 'generate':
-    if cli.directory:
-      cli.directory = os.path.abspath(cli.directory)
+    cli.directory = os.path.abspath(cli.directory)
 
-    if not cli.directory:
-      cli.directory = os.path.abspath('.')
     elif not os.path.isdir( cli.directory ):
       sys.stderr.write("Error: Directory doesn't exist\n")
       sys.exit(-1)
@@ -136,8 +138,9 @@ def Cli():
       sys.exit(-1)
 
     for template in templates:
-      fp = open(os.path.join(cli.directory, template.destination), 'w')
-      fp.write(template.render(grammar, addMain=cli.add_main, initialTokens=tokens))
+      prefix = cli.prefix + '_' if cli.prefix else ''
+      fp = open(os.path.join(cli.directory, prefix + template.destination), 'w')
+      fp.write(template.render(grammar, addMain=cli.add_main, initialTokens=tokens,  prefix=cli.prefix))
       fp.close()
 
   if cli.action == 'parse':
