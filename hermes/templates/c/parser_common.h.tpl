@@ -1,26 +1,9 @@
-#ifndef __PARSER_H
-#define __PARSER_H
-
-typedef enum terminal_e {
-{% for terminal in nonAbstractTerminals %}
-  _TERMINAL_{{terminal.string.upper()}} = {{terminal.id}},
-{% endfor %}
-  TERMINAL_END_OF_STREAM = -1
-} TERMINAL_E;
-
-typedef enum nonterminal_e {
-{% for nonterminal in grammar.nonterminals %}
-  _NONTERMINAL_{{nonterminal.string.upper()}} = {{nonterminal.id}},
-{% endfor %}
-  NONTERMINAL_END_OF_STREAM = -1
-} NONTERMINAL_E;
-
-#define IS_TERMINAL(id) (0 <= id && id <= {{len(nonAbstractTerminals) - 1}})
-#define IS_NONTERMINAL(id) ({{len(nonAbstractTerminals)}} <= id && id <= {{len(nonAbstractTerminals) + len(grammar.nonterminals) - 1}})
+#ifndef __PARSER_COMMON_H
+#define __PARSER_COMMON_H
 
 typedef struct terminal_t {
 
-  enum terminal_e id;
+  int id;
   char * string;
 
 } TERMINAL_T;
@@ -31,12 +14,13 @@ typedef struct token_t {
   int lineno;
   int colno;
   char * source_string;
+  char * resource;
 
 } TOKEN_T;
 
 typedef struct nonterminal_t {
 
-  enum terminal_e id;
+  int id;
   char * string;
 
 } NONTERMINAL_T;
@@ -57,7 +41,7 @@ typedef struct parse_tree_node_t {
 
 typedef struct parse_tree_t {
 
-  enum nonterminal_e nonterminal;
+  int nonterminal;
   struct parse_tree_node_t * children;
   int nchildren;
   struct parsetree_to_ast_conversion_t * ast_converter;
@@ -170,7 +154,7 @@ typedef union parsetree_to_ast_conversion_u {
 
 typedef struct token_list_t {
 
-  TERMINAL_E current;
+  int current; /* terminal id */
   int current_index;
   TOKEN_T * tokens;
   int ntokens;
@@ -185,18 +169,32 @@ typedef struct syntax_error_t {
 
 } SYNTAX_ERROR_T;
 
+typedef char * (*morpheme_to_str_func)(int);
+typedef int (*str_to_morpheme_func)(const char *);
+
 typedef struct parser_context_t {
 
   struct token_list_t * tokens;
   char * current_function;
   struct syntax_error_t * syntax_errors;
   struct syntax_error_t * last;
+  morpheme_to_str_func morpheme_to_str;
 
 } PARSER_CONTEXT_T;
 
-PARSE_TREE_T * {{prefix}}parse( TOKEN_LIST_T * tokens, NONTERMINAL_E start, PARSER_CONTEXT_T * ctx );
-ABSTRACT_SYNTAX_TREE_T * {{prefix}}ast( PARSE_TREE_T * parse_tree );
-void * {{prefix}}eval( PARSE_TREE_T * parse_tree );
+typedef struct ast_object_specification_init {
+
+  int rule_id;
+  char * name;
+  char * attr;
+  int index;
+
+} AST_CREATE_OBJECT_INIT;
+
+char * ast_to_string( ABSTRACT_SYNTAX_TREE_T * tree, PARSER_CONTEXT_T * ctx );
+char * parsetree_to_string( PARSE_TREE_T * tree, PARSER_CONTEXT_T * ctx );
+ABSTRACT_SYNTAX_TREE_T * parsetree_node_to_ast( PARSE_TREE_NODE_T * node );
 void free_parse_tree( PARSE_TREE_T * tree );
 void free_ast( ABSTRACT_SYNTAX_TREE_T * ast );
+
 #endif

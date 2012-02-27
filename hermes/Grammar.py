@@ -412,7 +412,7 @@ class Grammar:
   tLookup = None
   ntLookup = None
 
-  def __init__(self, rules):
+  def __init__(self, name, rules):
     self.__dict__.update(locals())
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
     
@@ -507,7 +507,7 @@ class NudLedContainer:
 
 class ExpressionGrammar(Grammar):
   def __init__(self, nonterminals, terminals, macros, rules, precedence, nonterminal, firstFollowCalc):
-    super().__init__(rules)
+    super().__init__('expr', rules) # TODO: fix this first parameter
     self.__dict__.update(locals())
     self._assignIds()
     self._computePrecedence()
@@ -630,8 +630,8 @@ class ExpressionGrammar(Grammar):
     return r
 
 class LL1Grammar(Grammar):
-  def __init__(self, nonterminals, terminals, macros, rules, start, firstFollowCalc):
-    super().__init__(rules)
+  def __init__(self, name, nonterminals, terminals, macros, rules, start, firstFollowCalc):
+    super().__init__(name, rules)
     self.__dict__.update(locals())
     
     specials = {'ε': EmptyString(-1), 'σ': EndOfStream(-1)}
@@ -702,7 +702,7 @@ class LL1Grammar(Grammar):
     return ''
 
 class CompositeGrammar(Grammar):
-  def __init__( self, grammar, exprgrammars ):
+  def __init__( self, name, grammar, exprgrammars ):
     if not isinstance(exprgrammars, list):
       raise Exception('parameter 2 must be a list')
 
@@ -714,7 +714,7 @@ class CompositeGrammar(Grammar):
       rules = rules.union(exprgrammar.rules)
       expandedRules = expandedRules.union(exprgrammar.expandedRules)
 
-    super().__init__(rules)
+    super().__init__(name, rules)
     self.__dict__.update(locals())
     
     self.terminals = set(grammar.terminals)
@@ -858,8 +858,8 @@ class CompositeGrammar(Grammar):
     return table
 
 class LL1GrammarFactory:
-  def create(self, nonterminals, terminals, macros, rules, start):
-    return LL1Grammar(nonterminals, terminals, macros, rules, start, LL1FirstFollowCalculator())
+  def create(self, name, nonterminals, terminals, macros, rules, start):
+    return LL1Grammar(name, nonterminals, terminals, macros, rules, start, LL1FirstFollowCalculator())
 
 class ExpressionGrammarFactory:
   def create(self, nonterminals, terminals, macros, rules, bindingPower, nonterminal):

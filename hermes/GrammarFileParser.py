@@ -567,7 +567,7 @@ class GrammarFileParser:
     json['global']['macros'] = set(self.hermesParser.getMacros())
     return json
   
-  def parse( self, fp, start=None ):
+  def parse( self, name, fp, start=None ):
     contents = json.load(fp)
     fp.close()
 
@@ -578,6 +578,7 @@ class GrammarFileParser:
     start = self.hermesParser.parseNonTerminal(start) if start else contents['ll1']['start']
 
     ll1Grammar = ll1GrammarFactory.create(
+      name,
       normalized['global']['nonterminals'], \
       normalized['global']['terminals'], \
       normalized['global']['macros'], \
@@ -605,5 +606,5 @@ class GrammarFileParser:
         if grammar2.nonterminal.string == parent:
           grammar.extend(grammar2)
 
-    return CompositeGrammar(ll1Grammar, exprGrammars)
+    return CompositeGrammar(name, ll1Grammar, exprGrammars)
 

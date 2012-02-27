@@ -1,4 +1,4 @@
-import re, moody
+import re, moody, os
 from pkg_resources import resource_filename
 from hermes.Logger import Factory as LoggerFactory
 from collections import OrderedDict
@@ -8,7 +8,53 @@ moduleLogger = LoggerFactory().getModuleLogger(__name__)
 class Template:
   def __init__(self):
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
+  def render(self):
+    raise Exception('not implemented')
 
+class MainTemplate(Template):
+  def __init__(self, grammars):
+    super().__init__()
+    self.__dict__.update(locals())
+  def getFilename(self):
+    return os.path.basename(self.template[:-4])
+  def render(self):
+    templates_dir = resource_filename(__name__, 'templates')
+    loader = moody.make_loader(templates_dir)
+
+    code = loader.render(
+      self.template,
+      grammars=self.grammars,
+    )
+
+    linereduce = re.compile('^[ \t]*$', re.M)
+    code = linereduce.sub('', code)
+    code = re.sub('\n+', '\n', code)
+    return code
+    
+
+class CommonTemplate(Template):
+  def __init__(self):
+    super().__init__()
+  def getFilename(self):
+    return os.path.basename(self.template[:-4])
+  def render(self):
+    templates_dir = resource_filename(__name__, 'templates')
+    loader = moody.make_loader(templates_dir)
+
+    code = loader.render(
+      self.template
+    )
+
+    linereduce = re.compile('^[ \t]*$', re.M)
+    code = linereduce.sub('', code)
+    code = re.sub('\n+', '\n', code)
+    return code
+    
+
+class GrammarTemplate(Template):
+  def __init__(self, grammar):
+    super().__init__()
+    self.__dict__.update(locals())
   def _prepare(self, grammar):
 
     # Set the variable name for each terminal and nonterminal
@@ -59,20 +105,20 @@ class Template:
           nonterminal.empty = True
       nonterminal.rules = list(filter(lambda x: not x.empty, nonterminal.rules))
 
-  def render(self, grammar, addMain=False, initialTokens=[], prefix=''):
+  def getFilename(self):
+    return self.grammar.name + '_' + os.path.basename(self.template[:-4])
+  def render(self):
     templates_dir = resource_filename(__name__, 'templates')
     loader = moody.make_loader(templates_dir)
-    self._prepare(grammar)
-    LL1Nonterminals = [x for x in grammar.nonterminals if x not in map(lambda x: x.nonterminal, grammar.exprgrammars)]
+    self._prepare(self.grammar)
+    LL1Nonterminals = [x for x in self.grammar.nonterminals if x not in map(lambda x: x.nonterminal, self.grammar.exprgrammars)]
 
     code = loader.render(
       self.template,
-      grammar = grammar,
-      LL1Nonterminals = LL1Nonterminals,
-      nonAbstractTerminals = grammar.getSimpleTerminals(),
-      addMain = addMain,
-      initialTokens = initialTokens,
-      prefix = prefix + '_' if len(prefix) else ''
+      grammar=self.grammar,
+      LL1Nonterminals=LL1Nonterminals,
+      nonAbstractTerminals=self.grammar.getSimpleTerminals(),
+      prefix=self.grammar.name + '_',
     )
 
     linereduce = re.compile('^[ \t]*$', re.M)
@@ -80,14 +126,64 @@ class Template:
     code = re.sub('\n+', '\n', code)
     return code
 
-class PythonTemplate(Template):
-  template = 'python/Parser.tpl'
-  destination = 'Parser.py'
 
-class CHeaderTemplate(Template):
-  template = 'c/header.tpl'
-  destination = 'parser.h'
+class PythonTemplate(GrammarTemplate):
+  template = 'python/Parser.py.tpl'
+
+class PythonCommonTemplate(CommonTemplate):
+  template = 'python/ParserCommon.py.tpl'
+
+class PythonMainTemplate(MainTemplate):
+  template = 'python/ParserMain.py.tpl'
+
+class CHeaderTemplate(GrammarTemplate):
+  template = 'c/parser.h.tpl'
   
-class CSourceTemplate(Template):
-  template = 'c/source.tpl'
-  destination = 'parser.c'
+class CSourceTemplate(GrammarTemplate):
+  template = 'c/parser.c.tpl'
+
+class CCommonHeaderTemplate(CommonTemplate):
+  template = 'c/parser_common.h.tpl'
+
+class CCommonSourceTemplate(CommonTemplate):
+  template = 'c/parser_common.c.tpl'
+
+class CMainSourceTemplate(MainTemplate):
+  template = 'c/parser_main.c.tpl'
+
+class FactoryFactory:
+  def create(self, language):
+    if language == 'python':
+      return PythonTemplateFactory();
+    elif language == 'c':
+      return CTemplateFactory()
+    else:
+      raise Exception('invalid language')
+
+class PythonTemplateFactory:
+  def create(self, grammars, addMain=False):
+    templates = [PythonCommonTemplate()]
+    for grammar in grammars:
+      templates.extend([PythonTemplate(grammar)])
+    if addMain:
+      templates.append(PythonMainTemplate(grammars))
+    return templates
+
+class CTemplateFactory:
+  def create(self, grammars, addMain=False):
+    templates = [CCommonHeaderTemplate(), CCommonSourceTemplate()]
+    for grammar in grammars:
+      templates.extend([CSourceTemplate(grammar), CHeaderTemplate(grammar)])
+    if addMain:
+      templates.append(CMainSourceTemplate(grammars))
+    return templates
+
+class TemplateWriter:
+  def __init__(self, templateFactory):
+    self.__dict__.update(locals())
+  def write(self, grammars, directory, addMain=False):
+    templates = self.templateFactory.create(grammars, addMain)
+    for template in templates:
+      code = template.render() 
+      with open(os.path.join(directory, template.getFilename()), 'w') as fp:
+        fp.write(code)

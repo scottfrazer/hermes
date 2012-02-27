@@ -3,7 +3,8 @@
 import sys, os, argparse
 from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
 from hermes.GrammarAnalyzer import GrammarAnalyzer
-from hermes.GrammarCodeGenerator import PythonTemplate, CSourceTemplate, CHeaderTemplate
+from hermes.GrammarCodeGenerator import FactoryFactory as TemplateFactoryFactory
+from hermes.GrammarCodeGenerator import TemplateWriter
 from hermes.Logger import Factory as LoggerFactory
 from hermes.Theme import AnsiStylizer, TerminalDefaultTheme, TerminalColorTheme
 
@@ -40,13 +41,14 @@ def Cli():
 
   parser.add_argument('-d', '--directory',
               required=False,
-              default='.'
+              default='.',
               help='output file for parser generation')
 
   parser.add_argument('-l', '--language',
               required = False,
               default='python',
-              help = 'Language to generate the parser in.  Accepts c or python.')
+              choices=['c', 'python'],
+              help = 'Language to generate the parser in.')
 
   parser.add_argument('-p', '--pretty-print',
               action='store_true',
@@ -57,14 +59,6 @@ def Cli():
               required = False,
               action = 'store_true',
               help = 'Prints things in color!  For the colorblind, this is a no-op.')
-
-  parser.add_argument('-t', '--tokens',
-              required = False,
-              help = 'If used with the parse command, this is the token list.  If used with the generate command and -m, these tokens are put in the main() function of the generated parser.')
-
-  parser.add_argument('-p', '--prefix',
-              required = False,
-              help = 'If this is specified, generated source files and public APIs will use the prefix specified to avoid name conflicts.')
 
   parser.add_argument('-m', '--add-main',
               required = False,
@@ -80,14 +74,19 @@ def Cli():
   logger = LoggerFactory().initialize(cli.debug)
   logger.debug('CLI Parameters: %s' % (cli))
 
-  if not os.path.isfile( cli.grammar[0] ):
-    sys.stderr.write("Error: File doesn't exist\n")
-    sys.exit(-1)
-
   factory = HermesParserFactory()
   fp = GrammarFileParser(factory.create())
 
-  grammar = fp.parse( open(cli.grammar[0]), cli.start )
+  grammars = []
+  for grammar in cli.grammar:
+    if not os.path.isfile( grammar ):
+      sys.stderr.write("Error: Grammar file doesn't exist\n")
+      sys.exit(-1)
+    try:
+      name = grammar[:grammar.index('.')]
+    except ValueError:
+      name = grammar
+    grammars.append( fp.parse( name, open(grammar), cli.start ) )
 
   class terminal:
     def __init__(self, id, string):
@@ -97,8 +96,9 @@ def Cli():
     def __init__(self, terminal, lineno=0, colno=0, source_string=''):
       self.__dict__.update(locals())
 
+  # TODO: get rid of --tokens altogether
   tokens = []
-  if cli.tokens:
+  if False and cli.tokens:
     tokens = cli.tokens.lower().split(',')
     tokens = list(map(lambda x: token(terminal(grammar.getTerminal(x), x)), tokens))
     terminals = list(map(lambda x: x.string, grammar.terminals))
@@ -116,32 +116,23 @@ def Cli():
     theme = TerminalDefaultTheme()
 
   if cli.action == 'analyze':
-    analyzer = GrammarAnalyzer(grammar)
-    analyzer.analyze( theme=theme )
+    for grammar in grammars:
+      analyzer = GrammarAnalyzer(grammar)
+      analyzer.analyze( theme=theme )
 
   if cli.action == 'generate':
     cli.directory = os.path.abspath(cli.directory)
 
-    elif not os.path.isdir( cli.directory ):
+    if not os.path.isdir( cli.directory ):
       sys.stderr.write("Error: Directory doesn't exist\n")
       sys.exit(-1)
     elif not os.access(cli.directory, os.W_OK):
       sys.stderr.write("Error: Directory not writable\n")
       sys.exit(-1)
 
-    if cli.language.lower() == 'python':
-      templates = [PythonTemplate()]
-    elif cli.language.lower() == 'c':
-      templates = [CSourceTemplate(), CHeaderTemplate()]
-    else:
-      sys.stderr.write("Error: invalid parameter for --language option\n")
-      sys.exit(-1)
-
-    for template in templates:
-      prefix = cli.prefix + '_' if cli.prefix else ''
-      fp = open(os.path.join(cli.directory, prefix + template.destination), 'w')
-      fp.write(template.render(grammar, addMain=cli.add_main, initialTokens=tokens,  prefix=cli.prefix))
-      fp.close()
+    templateFactory = TemplateFactoryFactory().create(language=cli.language.lower())
+    templateWriter = TemplateWriter(templateFactory)
+    templateWriter.write(grammars, cli.directory, addMain=cli.add_main)
 
   if cli.action == 'parse':
     f = 'hermesparser.py'
