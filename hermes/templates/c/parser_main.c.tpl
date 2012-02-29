@@ -11,6 +11,16 @@
 
 #define STDIN_BUF_SIZE 1024
 
+typedef struct token_stream_t {
+
+	TOKEN_T * token;
+	struct token_stream_t * next;
+
+} TOKEN_STREAM_T;
+
+static int stdin_nlines = 0;
+static TOKEN_STREAM_T * stdin_tokens = NULL;
+
 static TOKEN_T *
 parse_token( const char * string, str_to_morpheme_func convert, TOKEN_T * token)
 {
@@ -56,51 +66,25 @@ parse_token( const char * string, str_to_morpheme_func convert, TOKEN_T * token)
   return NULL;
 }
 
-static char *
+TOKEN_STREAM_T *
 read_stdin()
 {
-  char buffer[STDIN_BUF_SIZE];
-  size_t size = 0, bytes;
-  int flags;
-  char * content, * old;
+  char line[2048];
+  TOKEN_STREAM_T * tokens = NULL, * last = NULL, * node = NULL;
 
-  flags = fcntl(fileno(stdin), F_GETFL, 0);
-  flags |= O_NONBLOCK;
-  fcntl(fileno(stdin), F_SETFL, flags);
-
-  while(1)
+  while( fgets(line, 2048, stdin) )
   {
-    old = content;
-    bytes = fread(buffer, 1, STDIN_BUF_SIZE-1, stdin);
-
-    if ( bytes == -1 )
-    {
-      perror("read");
-      exit(-1);
-    }
-
-    if ( bytes == 0 )
-    {
-      break;
-    }
-
-    buffer[bytes] = '\0';
-    content = realloc(content, size + bytes + 1);
-
-    if ( content == NULL )
-    {
-      perror("realloc");
-      free(old);
-      exit(-1);
-    }
-
-    if ( size == 0 )
-      *content = '\0';
-    size += bytes;
-    strcat(content, buffer);
+    stdin_nlines++;
+    node = calloc(1, sizeof(TOKEN_STREAM_T));
+    node->token = calloc(1, sizeof(TOKEN_T));
+    node->next = NULL;
+    parse_token(line, {{grammar.name}}_str_to_morpheme, node->token);
+    if ( last ) last->next = node;
+    if ( !tokens ) { tokens = last = node;}
+    else { last = node; }
   }
-
-  return content;
+	
+  return tokens;
 }
 
 int
@@ -112,32 +96,15 @@ main(int argc, char * argv[])
   TOKEN_LIST_T token_list;
   SYNTAX_ERROR_T * error;
   char * str, * buffer, ** lines, * line;
-  int i, nlines = 0;
-  TOKEN_T * tokens;
+  int i, rval;
+  TOKEN_T * token, * tokens;
+	TOKEN_STREAM_T * current;
   char * grammars = "{{','.join([grammar.name for grammar in grammars])}}";
-  
+
   TOKEN_T eos;
   memset(&eos, 0, sizeof(TOKEN_T));
   eos.terminal = calloc(1, sizeof(TERMINAL_T));
   eos.terminal->id = -1;
-
-  buffer = read_stdin();
-  if ( buffer != NULL && strlen(buffer) != 0 )
-  {
-    for( i = 1, str = buffer; *str; str++ )
-    {
-      if ( *str == '\n' )
-        i++;
-    }
-
-    lines = calloc(i + 1, sizeof(char *));
-
-    line = strtok(buffer, "\n");
-    for( nlines = 0; line; line = strtok(NULL, "\n") )
-    {
-      lines[nlines++] = line;
-    }
-  }
 	
   if ( argc < 2 )
   {
@@ -145,22 +112,24 @@ main(int argc, char * argv[])
     exit(-1);
   }
 
+  stdin_tokens = read_stdin();
+
   do
   {
     {% for grammar in grammars %}
     if ( strcmp(argv[1], "{{grammar.name}}") == 0 )
     {
-      tokens = calloc(nlines + 1, sizeof(TOKEN_T));
+      tokens = calloc(stdin_nlines + 1, sizeof(TOKEN_T));
 
-      for ( i = 0; i < nlines; i++ )
+      for ( current = stdin_tokens, i = 0; current != NULL; current = current->next, i++ )
       {
-        parse_token(lines[i], {{grammar.name}}_str_to_morpheme, &tokens[i]);
+        memcpy(&tokens[i], current->token, sizeof(TOKEN_T));
       }
 
       memcpy(&tokens[i], &eos, sizeof(TOKEN_T));
 
       token_list.tokens = tokens;
-      token_list.ntokens = nlines;
+      token_list.ntokens = stdin_nlines;
       token_list.current = tokens[0].terminal->id;
       token_list.current_index = 0;
 
@@ -179,6 +148,22 @@ main(int argc, char * argv[])
 
       free_parse_tree(parse_tree);
       free_ast(abstract_syntax_tree);
+
+      if ( ctx->syntax_errors )
+      {
+        rval = 1;
+        printf("%s\n", ctx->syntax_errors->message);
+        /*for ( error = ctx->syntax_errors; error; error = error->next )
+        {
+          printf("%s\n", error->message);
+        }*/
+      }
+      else
+      {
+        rval = 0;
+        printf("%s", str);
+      }
+
       {{grammar.name}}_parser_exit(ctx);
       break;
     }
@@ -189,19 +174,8 @@ main(int argc, char * argv[])
 
   } while(0);
 
-  if ( ctx->syntax_errors )
-  {
-    for ( error = ctx->syntax_errors; error; error = error->next )
-    {
-      printf("%s\n", error->message);
-      exit(1);
-    }
-  }
-  else
-  {
-    printf("%s", str);
-  }
-
+  if (eos.terminal) free(eos.terminal);
+  if (tokens) free(tokens);
   if (str) free(str);
-  return 0;
+  return rval;
 }

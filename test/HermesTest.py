@@ -94,31 +94,37 @@ class HermesCAbstractSyntaxTreeTest(HermesTest):
   def runTest(self):
     self.assertEqual(self.expected, getCAst(self.grammar, self.testCaseDir), 'expected ASTs to match (test %s)' % (self.testCaseDir))
 
-def getTokenStream(tokensFile, parser):
-  with open(tokensFile) as fp:
-    tokens = list(filter(lambda x: x, fp.read().split('\n')))
-    tokens = list(map(lambda x: re.match('<([a-zA-Z0-9]+).*>', x).group(1), tokens))
-  return hermesparser.TokenStream(list(map(lambda x: hermesparser.Terminal(parser.terminals[x],x,'resource',0,0), tokens)))
-
 def getParseTree(grammar, testCaseDir):
-  parser = getPythonParser(grammar)
-  terminals = getTokenStream( os.path.join(testCaseDir, 'tokens'), parser )
+  tmpDir = tempfile.mkdtemp()
+  shutil.copy(os.path.join(testCaseDir, 'tokens'), tmpDir)
+
+  templateFactory = TemplateFactoryFactory().create('python')
+  templateWriter = TemplateWriter(templateFactory)
+  templateWriter.write([grammar], tmpDir, addMain=True)
+
   try:
-    parsetree = parser.parse(terminals)
-  except hermesparser.SyntaxError as error:
-    return str(error)
-  parsetreePrettyPrint = hermesparser.ParseTreePrettyPrintable(parsetree)
-  return str(parsetreePrettyPrint)
+    runCmd = 'python ParserMain.py grammar parsetree < tokens'
+    return subprocess.check_output(runCmd, shell=True, stderr=None, cwd=tmpDir).decode('utf-8').strip()
+  except subprocess.CalledProcessError as exception:
+    return exception.output.decode('utf-8').strip()
+  finally:
+    shutil.rmtree(tmpDir)
 
 def getAst(grammar, testCaseDir):
-  parser = getPythonParser(grammar)
-  terminals = getTokenStream( os.path.join(testCaseDir, 'tokens'), parser )
+  tmpDir = tempfile.mkdtemp()
+  shutil.copy(os.path.join(testCaseDir, 'tokens'), tmpDir)
+
+  templateFactory = TemplateFactoryFactory().create('python')
+  templateWriter = TemplateWriter(templateFactory)
+  templateWriter.write([grammar], tmpDir, addMain=True)
+
   try:
-    ast = parser.parse(terminals).toAst()
-  except hermesparser.SyntaxError as error:
-    return str(error)
-  astPrettyPrint = hermesparser.AstPrettyPrintable(ast)
-  return str(astPrettyPrint)
+    runCmd = 'python ParserMain.py grammar ast < tokens'
+    return subprocess.check_output(runCmd, shell=True, stderr=None, cwd=tmpDir).decode('utf-8').strip()
+  except subprocess.CalledProcessError as exception:
+    return exception.output.decode('utf-8').strip()
+  finally:
+    shutil.rmtree(tmpDir)
 
 def getCParseTree(grammar, testCaseDir):
   return runCParser(grammar, testCaseDir, 'parsetree')
@@ -133,12 +139,15 @@ def runCParser(grammar, testCaseDir, arg):
   templateWriter = TemplateWriter(templateFactory)
   templateWriter.write([grammar], tmpDir, addMain=True)
 
-  cSourceFiles = os.listdir(tmpDir)
+  cSourceFiles = list(filter(lambda x: x != 'tokens', os.listdir(tmpDir)))
 
   try:
     compileCmd = 'gcc -o parser {sources} -g -Wall -pedantic -ansi -std=c99 2>/dev/null'.format(sources=' '.join(cSourceFiles))
-    subprocess.check_call(compileCmd, cwd=tmpDir, shell=True)
+    subprocess.check_call(compileCmd, cwd=tmpDir, shell=True, stderr=None)
+  except subprocess.CalledProcessError:
+    pass
 
+  try:
     runCmd = './parser grammar {type} < tokens'.format(type=arg)
     return subprocess.check_output(runCmd, shell=True, stderr=None, cwd=tmpDir).decode('utf-8').strip()
   except subprocess.CalledProcessError as exception:
@@ -172,6 +181,7 @@ def load_tests(loader, tests, pattern):
       int(parsingTest)
     except ValueError:
       continue
+
     testDirectory = os.path.join(parsingTestsDirectory, parsingTest)
     grammarFile = os.path.join(testDirectory, 'grammar.zgr')
     tokensFile = os.path.join(testDirectory, 'tokens')

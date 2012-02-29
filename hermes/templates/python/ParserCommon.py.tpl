@@ -185,15 +185,15 @@ class SyntaxError(Exception):
   def __str__(self):
     return self.message
 
-class TokenStream:
-  def __init__(self, iterable):
-    self.iterable = iter(iterable)
-    self.advance()
+class TokenStream(list):
+  def __init__(self, arg):
+    super().__init__(arg)
+    self.index = 0
   def advance(self):
-    try:
-      self.token = next(self.iterable)
-    except StopIteration:
-      self.token = None
-    return self.token
+    self.index += 1
+    return self.current()
   def current(self):
-    return self.token
+    try:
+      return self[self.index]
+    except IndexError:
+      return None
