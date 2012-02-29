@@ -27,7 +27,7 @@ def Cli():
 
   parser.add_argument('grammar',
               metavar = 'GRAMMAR',
-              nargs = 1,
+              nargs = '+',
               help = 'Grammar file')
 
   parser.add_argument('-D', '--debug',
