@@ -158,7 +158,7 @@ class ExprRule:
 
     ledProduction = self.ledProduction.str(theme)
     if not self.ledProduction or not len(self.ledProduction):
-      ledProduction = 'ε'
+      ledProduction = '_empty'
 
     if isinstance(self.nudAst, AstTranslation) and self.nudAst.idx == 0:
       nudAstString = ''
@@ -217,14 +217,14 @@ class FirstFollowCalculator:
     for m in P.morphemes:
       if isinstance(m, NonterminalListMacro) or isinstance(m, SeparatedListMacro):
         m = m.start_nt
-      toks = self.first[m].difference({grammar.ε})
+      toks = self.first[m].difference({grammar._empty})
       if len(toks) > 0:
         r = r.union(toks)
-      if grammar.ε not in self.first[m]:
+      if grammar._empty not in self.first[m]:
         addEpsilon = False
         break
     if addEpsilon:
-      r = r.union({grammar.ε})
+      r = r.union({grammar._empty})
     return r
 
   def update(self, grammar, first, follow):
@@ -268,10 +268,10 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
     self.follow.update({x: set() for x in grammar.macros})
     self.first.update({x: set() for x in grammar.macros if isinstance(x, LL1ListMacro)})
     for rule in grammar.expandedRules:
-      if len(rule.production.morphemes) == 1 and grammar.ε in rule.production.morphemes:
-        self.first[rule.nonterminal].union({grammar.ε})
+      if len(rule.production.morphemes) == 1 and grammar._empty in rule.production.morphemes:
+        self.first[rule.nonterminal].union({grammar._empty})
     if grammar.start:
-      self.follow[ grammar.start ] = {grammar.σ}
+      self.follow[ grammar.start ] = {grammar._end}
 
   def _computeFirst(self, grammar):
     changed = False
@@ -284,7 +284,7 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
         except IndexError:
           continue
 
-        # TODO: filter out extraneous ε's in grammar files (e.g. x := ε + 'a' + ε)
+        # TODO: filter out extraneous _empty's in grammar files (e.g. x := _empty + 'a' + _empty)
         if (isinstance(morpheme, Terminal) or isinstance(morpheme, EmptyString)) and \
            morpheme not in self.first[rule.nonterminal]:
           progress = changed = True
@@ -298,19 +298,19 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
               sub = self.first[morpheme.start_nt]
             else:
               sub = self.first[morpheme]
-            if not self.first[rule.nonterminal].issuperset(sub.difference({grammar.ε})):
+            if not self.first[rule.nonterminal].issuperset(sub.difference({grammar._empty})):
               progress = changed = True
               self.logger.debug('first(%s) = {%s} ∪ {%s}' % ( \
                         rule.nonterminal, \
                         ', '.join([str(x) for x in self.first[rule.nonterminal]]), \
-                        ', '.join([str(x) for x in sub.difference({grammar.ε})]) \
+                        ', '.join([str(x) for x in sub.difference({grammar._empty})]) \
                       ))
-              self.first[rule.nonterminal] = self.first[rule.nonterminal].union(sub.difference({grammar.ε}))
-            if grammar.ε not in sub:
+              self.first[rule.nonterminal] = self.first[rule.nonterminal].union(sub.difference({grammar._empty}))
+            if grammar._empty not in sub:
               addEpsilon = False
               break
           if addEpsilon:
-            self.first[rule.nonterminal] = self.first[rule.nonterminal].union({grammar.ε})
+            self.first[rule.nonterminal] = self.first[rule.nonterminal].union({grammar._empty})
     return changed
   
   def _computeFollow( self, grammar ):
@@ -332,7 +332,7 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
             nextToken = None
 
           if nextToken:
-            newTokens = self.first[nextToken].difference({grammar.ε})
+            newTokens = self.first[nextToken].difference({grammar._empty})
             if not self.follow[morpheme].issuperset(newTokens):
               progress = changed = True
               self.logger.debug('follow(%s) = {%s} ∪ {%s}' % ( \
@@ -342,7 +342,7 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
               ))
               self.follow[morpheme] = self.follow[morpheme].union(newTokens)
 
-          if not nextToken or grammar.ε in self._pfirst(grammar, Production(rule.production.morphemes[index+1:])):
+          if not nextToken or grammar._empty in self._pfirst(grammar, Production(rule.production.morphemes[index+1:])):
             z = self.follow[rule.nonterminal]
             y = self.follow[morpheme]
 
@@ -375,7 +375,7 @@ class ExpressionFirstFollowCalculator(FirstFollowCalculator):
   def _computeFirst(self, grammar):
     for rule in grammar.rules:
       if len(rule.nudProduction):
-        firstSet = self._pfirst(grammar, rule.nudProduction).difference({grammar.ε})
+        firstSet = self._pfirst(grammar, rule.nudProduction).difference({grammar._empty})
         self.first[rule.nonterminal] = self.first[rule.nonterminal].union(firstSet)
 
   def _computeFollow(self, grammar):
@@ -401,8 +401,8 @@ class ExpressionFirstFollowCalculator(FirstFollowCalculator):
           continue
 
 class Grammar:
-  ε = EmptyString(-1)
-  σ = EndOfStream(-1)
+  _empty = EmptyString(-1)
+  _end = EndOfStream(-1)
   terminals = []
   nonterminals = []
   rules = set()
@@ -476,14 +476,14 @@ class Grammar:
     for m in P.morphemes:
       if isinstance(m, NonterminalListMacro) or isinstance(m, SeparatedListMacro):
         m = m.start_nt
-      toks = self.first[m].difference({self.ε})
+      toks = self.first[m].difference({self._empty})
       if len(toks) > 0:
         r = r.union(toks)
-      if self.ε not in self.first[m]:
+      if self._empty not in self.first[m]:
         addEpsilon = False
         break
     if addEpsilon:
-      r = r.union({self.ε})
+      r = r.union({self._empty})
     return r
   
   def getExpandedRules( self, nonterminal = None ):
@@ -634,13 +634,13 @@ class LL1Grammar(Grammar):
     super().__init__(name, rules)
     self.__dict__.update(locals())
     
-    specials = {'ε': EmptyString(-1), 'σ': EndOfStream(-1)}
+    specials = {'_empty': EmptyString(-1), '_end': EndOfStream(-1)}
     for terminal in self.terminals:
       key = None
       if isinstance(terminal, EmptyString):
-        key = 'ε'
+        key = '_empty'
       elif isinstance(terminal, EndOfStream):
-        key = 'σ'
+        key = '_end'
       
       if key:
         del(specials[key])
@@ -672,7 +672,7 @@ class LL1Grammar(Grammar):
           nonterminalUsageMap[M].append(R)
 
     for N in self.nonterminals:
-      if self.ε in self.first[N] and len(self.first[N].intersection(self.follow[N])):
+      if self._empty in self.first[N] and len(self.first[N].intersection(self.follow[N])):
         self.conflicts.append( FirstFollowConflict( N, self.first[N], self.follow[N] ) )
 
       if not len(nonterminalUsageMap[N]) and not N.generated:
@@ -688,7 +688,7 @@ class LL1Grammar(Grammar):
 
           xR = self._pfirst(NR[x].production)
           yR = self._pfirst(NR[y].production)
-          intersection = xR.intersection(yR.difference({self.ε}))
+          intersection = xR.intersection(yR.difference({self._empty}))
           if intersection != set():
             self.conflicts.append( FirstFirstConflict(NR[x], NR[y], self) )
     for macro in self.macros:
@@ -719,8 +719,8 @@ class CompositeGrammar(Grammar):
     
     self.terminals = set(grammar.terminals)
     self.nonterminals = set(grammar.nonterminals)
-    self.ε = grammar.ε
-    self.σ = grammar.σ
+    self._empty = grammar._empty
+    self._end = grammar._end
 
     terminalIdMax = max(map(lambda x: x.id, self.terminals))
     self.expressionTerminals = dict()
@@ -802,7 +802,7 @@ class CompositeGrammar(Grammar):
     return self.exprgrammars
 
   def getSimpleTerminals(self):
-    return [terminal for terminal in self.terminals if terminal not in [self.ε, self.σ]]
+    return [terminal for terminal in self.terminals if terminal not in [self._empty, self._end]]
 
   def getExpandedLL1Rules(self, nonterminal = None):
     allRules = [rule for rule in self.expandedRules if isinstance(rule, Rule)]
@@ -848,7 +848,7 @@ class CompositeGrammar(Grammar):
         next = None
         for rule in self.getExpandedLL1Rules(nonterminal):
           Fip = self._pfirst(rule.getProduction())
-          if terminal in Fip or (self.ε in Fip and terminal in self.follow[nonterminal]):
+          if terminal in Fip or (self._empty in Fip and terminal in self.follow[nonterminal]):
             if rule.nonterminal.string.lower() == 'parameter_declaration_sub_sub':
               print('parameter_declaration_sub_sub: terminal:%s rule:%s' % (terminal, rule))
             next = rule

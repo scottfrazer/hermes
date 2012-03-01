@@ -402,7 +402,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 
   if ( tokens == NULL || current == {{prefix.upper()}}TERMINAL_END_OF_STREAM )
   {
-    {% if nonterminal.empty or grammar.ε in grammar.first[nonterminal] %}
+    {% if nonterminal.empty or grammar._empty in grammar.first[nonterminal] %}
     return tree;
     {% else %}
     syntax_error(ctx, strdup("Error: unexpected end of file"));

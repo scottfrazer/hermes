@@ -2,11 +2,11 @@
   "ll1": {
     "start": "start",
     "rules": [
-      "start := list(statement, 'semi') -> Program(statements=$0) | ε",
+      "start := list(statement, 'semi') -> Program(statements=$0) | _empty",
       "statement := _expr | for",
       "for := 'for' + 'lparen' + forsub + 'semi' + forsub + 'semi' + forsub + 'rparen' + 'lbrace' + forbody + 'rbrace' -> For( decl=$2, cond=$4, iter=$6, body=$9 )",
-      "forsub := _expr | ε",
-      "forbody := statement + 'semi' + forbody | ε"
+      "forsub := _expr | _empty",
+      "forbody := statement + 'semi' + forbody | _empty"
     ]
   },
   "expr": [

@@ -2,16 +2,16 @@
   "ll1": {
     "start": "start",
     "rules": [
-      "start := list(statement, 'comma') -> Program(statements=$0) | ε",
+      "start := list(statement, 'comma') -> Program(statements=$0) | _empty",
       "statement := _expr | assignstatement | forstatement",
       "assignstatement := 'identifier' + 'eq' + assignstatementsub -> Assign( var=$0, val=$2 )",
       "assignstatementsub := assignstatement | _expr -> $0",
       "complexexpression := _expr | assignstatement",
       "forstatement := 'for' + 'lparen' + fordeclstatement + 'semi' + forcondstatement + 'semi' + foriterstatement + 'rparen' + 'lbrace' + forbody + 'rbrace' -> For( decl=$2, cond=$4, iter=$6, body=$9 )",
-      "fordeclstatement := complexexpression | ε",
-      "forcondstatement := _expr | ε",
-      "foriterstatement := complexexpression | ε",
-      "forbody := statement + 'semi' + forbody | ε"
+      "fordeclstatement := complexexpression | _empty",
+      "forcondstatement := _expr | _empty",
+      "foriterstatement := complexexpression | _empty",
+      "forbody := statement + 'semi' + forbody | _empty"
     ]
   },
   "expr": [

@@ -2,7 +2,7 @@
   "ll1": {
     "start": "start",
     "rules": [
-      "start := list(statements, 'comma') -> Program(statements=$0) | ε",
+      "start := list(statements, 'comma') -> Program(statements=$0) | _empty",
       "statements := _expr | assignstatement",
       "assignstatement := 'identifier' + 'eq' + _expr -> Assign( var=$0, val=$2 )"
     ]

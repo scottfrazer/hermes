@@ -2,7 +2,7 @@
   "ll1": {
     "start": "program",
     "rules": [
-      "program := list(statement) -> Program( statements=$0 ) | ε",
+      "program := list(statement) -> Program( statements=$0 ) | _empty",
       "statement := funcdef | classdef | simple_statement",
       "funcdef := 'function' + 'identifier' + 'lparen' + list(param, 'comma') + 'rparen' + 'lbrace' + list(statement) + 'rbrace' -> FuncDef( name=$1, params=$3, body=$6 )",
       "param := 'identifier' -> param( name=$0 )",

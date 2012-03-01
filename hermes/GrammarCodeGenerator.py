@@ -100,7 +100,7 @@ class GrammarTemplate(Template):
       nonterminal.rules = grammar.getExpandedLL1Rules(nonterminal)
       for rule in nonterminal.rules:
         rule.empty = False
-        if len(rule.production.morphemes) == 1 and rule.production.morphemes[0] == grammar.ε:
+        if len(rule.production.morphemes) == 1 and rule.production.morphemes[0] == grammar._empty:
           rule.empty = True
           nonterminal.empty = True
       nonterminal.rules = list(filter(lambda x: not x.empty, nonterminal.rules))

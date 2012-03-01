@@ -6,7 +6,7 @@
       "sub := item | _expr",
       "item := 'b' | 'a'",
       "type_name := 'int' | 'char'",
-      "comma_opt := 'comma' | ε",
+      "comma_opt := 'comma' | _empty",
       "initializer_list_item := 'item'"
     ]
   },

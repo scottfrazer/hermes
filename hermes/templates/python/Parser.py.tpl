@@ -243,7 +243,7 @@ class {{prefix}}Parser:
       {% endif %}
 
     if current == None:
-      {% if nonterminal.empty or grammar.ε in grammar.first[nonterminal] %}
+      {% if nonterminal.empty or grammar._empty in grammar.first[nonterminal] %}
       return tree
       {% else %}
       raise SyntaxError('Error: unexpected end of file')
