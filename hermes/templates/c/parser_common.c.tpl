@@ -31,12 +31,12 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
   PARSE_TREE_T * tree = (PARSE_TREE_T *) node->object;
   int offset, i;
 
-  if ( tree->nchildren == 0 )
-    return NULL;
-
   ast = calloc(1, sizeof(ABSTRACT_SYNTAX_TREE_T));
   ast->type = AST_NODE_TYPE_LIST;
   ast->object = NULL;
+
+  if ( tree->nchildren == 0 )
+    return ast;
 
   if ( !strcmp(tree->list, "slist") || !strcmp(tree->list, "nlist") )
   {
@@ -414,7 +414,7 @@ _ast_to_string_bytes( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_
   {
     ast_list = (AST_LIST_T *) node->object;
 
-    if ( ast_list->tree == NULL )
+    if ( ast_list == NULL || ast_list->tree == NULL )
     {
       return 2; /* "[]" */
     }
