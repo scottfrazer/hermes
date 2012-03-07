@@ -590,6 +590,7 @@ PARSE_TREE_T *
 char *
 {{prefix}}morpheme_to_str(int id)
 {
+  if ( id == -1 ) return "<end of stream>";
   return {{prefix}}morphemes[id];
 }
 
