@@ -1,6 +1,13 @@
 {
-  "type": "FirstFirstConflict",
-  "first(a)": ['c', ε],
-  "follow(a)": ['c'],
-  "first(a) ∩ follow(a)": ['c']
+  "type": "FirstFollowConflict", 
+  "first(a)": [
+    "c", 
+    "\u03b5"
+  ], 
+  "follow(a)": [
+    "c"
+  ], 
+  "first(a) \u2229 follow(a)": [
+    "c"
+  ]
 }

@@ -1,3 +1,6 @@
+from collections import OrderedDict
+import json
+
 class Conflict:
   pass
 
@@ -7,6 +10,12 @@ class Warning:
 class UnusedNonterminalWarning(Warning):
   def __init__(self, nonterminal):
     self.__dict__.update(locals())
+
+  def toJson(self):
+    return json.dumps(OrderedDict([
+      ('type', '"UnusedNonterminalWarning"'),
+      ('message', 'Nonterminal %s is defined but not used' % (self.nonterminal))
+    ]))
 
   def __str__(self):
     string = ' -- Unused Nonterminal -- \n'
@@ -18,11 +27,10 @@ class UndefinedNonterminalConflict(Conflict):
     self.__dict__.update(locals())
 
   def toJson(self):
-    x = [
+    return json.dumps(OrderedDict([
       ('type', '"UndefinedNonterminalConflict"'),
       ('message', 'Nonterminal %s is used but not defined' % (self.nonterminal))
-    ]
-    return '{\n%s\n}' % (',\n'.join(['  "%s": %s' % (k,v) for k,v in x]))
+    ]))
 
   def __str__(self):
     string = ' -- Undefined Nonterminal Conflict-- \n'
@@ -34,13 +42,14 @@ class ExprConflict(Conflict):
     self.terminal = terminal
     self.rules = rules
   def toJson(self):
-    x = [
-      ('type', '"ExprConflict"'),
-      ('message', '"Terminal %s requires two different %s() functions."' % (self.terminal, self.type))
-    ]
+    x = OrderedDict([
+      ('type', 'ExprConflict'),
+      ('message', 'Terminal %s requires two different %s() functions.' % (self.terminal, self.type))
+    ])
+
     for index, rule in enumerate(sorted(self.rules, key=lambda x: str(x))):
-      x.append(('rule-'+str(index), str(rule)))
-    return '{\n%s\n}' % (',\n'.join(['  "%s": %s' % (k,v) for k,v in x]))
+      x['rule-{0}'.format(index)] = str(rule)
+    return json.dumps(x, indent=2)
   def __str__( self ):
     string = " -- %s conflict -- \n" % (self.type)
     string += "Terminal %s requires two different %s() functions.  Cannot choose between these rules:\n\n"%(self.terminal, self.type)
@@ -61,13 +70,12 @@ class ListFirstFollowConflict(Conflict):
     self.followList = followList
 
   def toJson(self):
-    x = [
+    return json.dumps(OrderedDict([
       ('type', '"ListFirstFollowConflict"'),
-      ('first(%s)'%(self.listMacro.nonterminal), '[%s]'%(', '.join(sorted([str(e) for e in self.firstNonterminal])))),
-      ('follow(%s)'%(self.listMacro), '[%s]'%(', '.join(sorted([str(e) for e in self.followList])))),
-      ('first(%s) ∩ follow(%s)'%(self.listMacro.nonterminal, self.listMacro), '[%s]'%(', '.join(sorted([str(e) for e in self.firstNonterminal.intersection(self.followList)]))))
-    ]
-    return '{\n%s\n}' % (',\n'.join(['  "%s": %s' % (k,v) for k,v in x]))
+      ('first(%s)'%(self.listMacro.nonterminal), sorted([e.string for e in self.firstNonterminal])),
+      ('follow(%s)'%(self.listMacro), sorted([e.string for e in self.followList])),
+      ('first(%s) ∩ follow(%s)'%(self.listMacro.nonterminal, self.listMacro), sorted([e.string for e in self.firstNonterminal.intersection(self.followList)]))
+    ]), indent=2)
 
   def __str__( self ):
     string = " -- LIST FIRST/FOLLOW conflict --\n"
@@ -83,15 +91,14 @@ class FirstFirstConflict(Conflict):
   def toJson(self):
     rule1_first = self.grammar.ruleFirst(self.rule1)
     rule2_first = self.grammar.ruleFirst(self.rule2)
-    x = [
-      ('type', '"FirstFirstConflict"'),
+    return json.dumps(OrderedDict([
+      ('type', 'FirstFirstConflict'),
       ('rule-0',  str(self.rule1))
       ('rule-1',  str(self.rule2))
-      ('first(rule-0)', '[%s]' % (', '.join([str(e) for e in rule1_first])))
-      ('first(rule-1)', '[%s]' % (', '.join([str(e) for e in rule2_first])))
-      ('first(rule-0) ∩ first(rule-1)', '[%s]' % (', '.join(sorted(list(rule1_first.intersection(rule2_first))))))
-    ]
-    return '{\n%s\n}' % (',\n'.join(['  "%s": %s' % (k,v) for k,v in x]))
+      ('first(rule-0)', [e.string for e in rule1_first])
+      ('first(rule-1)', [e.string for e in rule2_first])
+      ('first(rule-0) ∩ first(rule-1)', [x.string for x in sorted(list(rule1_first.intersection(rule2_first)))])
+    ]), indent=2)
 
   def __str__( self ):
     rule1_first = self.grammar.ruleFirst(self.rule1)
@@ -113,13 +120,12 @@ class FirstFollowConflict(Conflict):
     self.followN = followN
 
   def toJson(self):
-    x = [
-      ('type', '"FirstFirstConflict"'),
-      ('first(%s)' % (self.N), '[%s]' % (', '.join(sorted([str(e) for e in self.firstN])))),
-      ('follow(%s)' % (self.N), '[%s]' % (', '.join(sorted([str(e) for e in self.followN])))),
-      ('first(%s) ∩ follow(%s)' % (self.N, self.N), '[%s]' % (', '.join(sorted([str(z) for z in self.firstN.intersection(self.followN)]))))
-    ]
-    return '{\n%s\n}' % (',\n'.join(['  "%s": %s' % (k,v) for k,v in x]))
+    return json.dumps(OrderedDict([
+      ('type', 'FirstFollowConflict'),
+      ('first(%s)' % (self.N), sorted([e.string for e in self.firstN])),
+      ('follow(%s)' % (self.N), sorted([e.string for e in self.followN])),
+      ('first(%s) ∩ follow(%s)' % (self.N, self.N), sorted([z.string for z in self.firstN.intersection(self.followN)]))
+    ]), indent=2)
 
   def __str__( self ):
     string = ' -- FIRST/FOLLOW conflict --\n'

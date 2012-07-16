@@ -7,7 +7,7 @@ from {{grammar.name}}_Parser import {{grammar.name}}_Parser
 
 def getParser(name):
   {% for grammar in grammars %}
-  if name == {{grammar.name}}:
+  if name == '{{grammar.name}}':
     return {{grammar.name}}_Parser()
   {% endfor %}
   raise Exception('Invalid grammar name: {}'.format(name))
@@ -22,16 +22,20 @@ if __name__ == '__main__':
   parser = getParser(grammar)
   
   tokens = []
-  tokenRegex = re.compile(r'<(\S+) \[(\S+) line (\d+), col (\d+)\]>')
+  tokenRegex = re.compile(r'<(\S+) \[(\S+)\s+(\S+\s+)?line (\d+), col (\d+)\]>')
   for line in sys.stdin:
     match = tokenRegex.match(line)
+
+    if not match:
+      raise Exception('Malformed token: {0}'.format(line))
+
     try:
       tokens.append(Terminal(
         parser.terminals[match.group(1)],
         match.group(1),
         match.group(2),
-        int(match.group(3)),
-        int(match.group(4))
+        int(match.group(4)),
+        int(match.group(5))
       ))
     except AttributeError as error:
       sys.stderr.write( str(error) + "\n" )
@@ -46,5 +50,6 @@ if __name__ == '__main__':
     else:
       print(ParseTreePrettyPrintable(parsetree))
     
-  except SyntaxError as e:
-    print(e)
+  except SyntaxError as error:
+    sys.stderr.write( str(error) + "\n" )
+    sys.exit(-1)

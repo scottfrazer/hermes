@@ -103,7 +103,7 @@ def getParseTree(grammar, testCaseDir):
   templateWriter.write([grammar], tmpDir, addMain=True)
 
   try:
-    runCmd = 'python ParserMain.py grammar parsetree < tokens'
+    runCmd = 'python ParserMain.py grammar parsetree < tokens 2>&1'
     return subprocess.check_output(runCmd, shell=True, stderr=None, cwd=tmpDir).decode('utf-8').strip()
   except subprocess.CalledProcessError as exception:
     return exception.output.decode('utf-8').strip()
@@ -119,7 +119,7 @@ def getAst(grammar, testCaseDir):
   templateWriter.write([grammar], tmpDir, addMain=True)
 
   try:
-    runCmd = 'python ParserMain.py grammar ast < tokens'
+    runCmd = 'python ParserMain.py grammar ast < tokens 2>&1'
     return subprocess.check_output(runCmd, shell=True, stderr=None, cwd=tmpDir).decode('utf-8').strip()
   except subprocess.CalledProcessError as exception:
     return exception.output.decode('utf-8').strip()
@@ -233,6 +233,7 @@ def load_tests(loader, tests, pattern):
     if os.path.exists(path):
       contents = open(path).read()
       if len(contents):
+        expected = json.loads(contents)
         for k,v in expected.items():
           suite.addTest(HermesConflictTest(testDirectory, k, contents, '\n'.join([x.toJson() for x in grammar.conflicts])))
     else:

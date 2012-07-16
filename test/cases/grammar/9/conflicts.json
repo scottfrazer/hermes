@@ -1,6 +1,15 @@
 {
-  "type": "FirstFirstConflict",
-  "first(_gen0)": ['a', 'b', 'rparen', ε],
-  "follow(_gen0)": ['rparen'],
-  "first(_gen0) ∩ follow(_gen0)": ['rparen']
+  "type": "FirstFollowConflict", 
+  "first(_gen0)": [
+    "a", 
+    "b", 
+    "rparen", 
+    "\u03b5"
+  ], 
+  "follow(_gen0)": [
+    "rparen"
+  ], 
+  "first(_gen0) \u2229 follow(_gen0)": [
+    "rparen"
+  ]
 }
