@@ -1,4 +1,0 @@
-To create the parser source code for any of these tests, run this command in the test directory:
-
-hermes generate grammar.zgr --add-main --tokens=`python -c "print(','.join(filter(lambda x:x, open('tokens').read().split('\n'))))"`
-

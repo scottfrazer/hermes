@@ -1,5 +1,5 @@
 class Terminal:
-  def __init__(self, id, str, resource, line, col):
+  def __init__(self, id, str, source_string, resource, line, col):
     self.__dict__.update(locals())
   def getId(self):
     return self.id

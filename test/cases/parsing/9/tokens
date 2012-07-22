@@ -1,11 +1,13 @@
-<a [test.c line 0, col 0]>
-<add [test.c line 0, col 0]>
-<b [test.c line 0, col 0]>
-<comma [test.c line 0, col 0]>
-<identifier [test.c line 0, col 0]>
-<eq [test.c line 0, col 0]>
-<a [test.c line 0, col 0]>
-<sub [test.c line 0, col 0]>
-<b [test.c line 0, col 0]>
-<mul [test.c line 0, col 0]>
-<a [test.c line 0, col 0]>
+[
+  {"terminal": "a", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "add", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "b", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "comma", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "identifier", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "eq", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "a", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "sub", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "b", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "mul", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "a", "line": 0, "col": 0, "resource": "tokens", "source_string": ""}
+]
