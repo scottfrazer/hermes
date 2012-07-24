@@ -6,7 +6,6 @@ from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
 from hermes.GrammarCodeGenerator import FactoryFactory as TemplateFactoryFactory
 from hermes.GrammarCodeGenerator import TemplateWriter
 from hermes.Morpheme import NonTerminal
-
 directory = 'test/cases'
 
 class terminal:
@@ -144,8 +143,8 @@ def runCParser(grammar, testCaseDir, arg):
   try:
     compileCmd = 'gcc -o parser {sources} -g -Wall -pedantic -ansi -std=c99 2>/dev/null'.format(sources=' '.join(cSourceFiles))
     subprocess.check_call(compileCmd, cwd=tmpDir, shell=True, stderr=None)
-  except subprocess.CalledProcessError:
-    pass
+  except subprocess.CalledProcessError as error:
+    return error.output.decode('utf-8').strip()
 
   try:
     runCmd = './parser grammar {type} < tokens'.format(type=arg)

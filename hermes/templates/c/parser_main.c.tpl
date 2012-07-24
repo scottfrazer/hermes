@@ -39,16 +39,18 @@ static TOKEN_FIELD_E str_to_token_field(char * str) {
   else return TOKEN_FIELD_INVALID_E;
 }
 
-static char * strdup(const char *str)
+static char * strdup2(const char *str)
 {
-    int n = strlen(str) + 1;
-    char *dup = malloc(n);
-    if(dup)
-    {
-        strcpy(dup, str);
-    }
-    return dup;
+  int n = strlen(str) + 1;
+  char *dup = malloc(n);
+  if(dup)
+  {
+    strcpy(dup, str);
+  }
+  return dup;
 }
+
+#define strdup strdup2
 
 /* Start JSON parsing code */
 
