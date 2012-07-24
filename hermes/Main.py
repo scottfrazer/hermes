@@ -47,7 +47,7 @@ def Cli():
   parser.add_argument('-l', '--language',
               required = False,
               default='python',
-              choices=['c', 'python'],
+              choices=['c', 'java', 'python'],
               help = 'Language to generate the parser in.')
 
   parser.add_argument('-p', '--pretty-print',
@@ -130,7 +130,7 @@ def Cli():
       sys.stderr.write("Error: Directory not writable\n")
       sys.exit(-1)
 
-    templateFactory = TemplateFactoryFactory().create(language=cli.language.lower())
+    templateFactory = TemplateFactoryFactory().create(outputLanguage=cli.language.lower())
     templateWriter = TemplateWriter(templateFactory)
     templateWriter.write(grammars, cli.directory, addMain=cli.add_main)
 
