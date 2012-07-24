@@ -662,3 +662,4 @@ free_ast( ABSTRACT_SYNTAX_TREE_T * ast )
     free(ast);
   }
 }
+

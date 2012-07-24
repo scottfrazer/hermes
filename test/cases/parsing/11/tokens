@@ -1,16 +1,18 @@
-<a [test.c line 0, col 0]>
-<comma [test.c line 0, col 0]>
-<identifier [test.c line 0, col 0]>
-<lparen [test.c line 0, col 0]>
-<rparen [test.c line 0, col 0]>
-<comma [test.c line 0, col 0]>
-<lparen_cast [test.c line 0, col 0]>
-<int [test.c line 0, col 0]>
-<rparen [test.c line 0, col 0]>
-<lbrace [test.c line 0, col 0]>
-<item [test.c line 0, col 0]>
-<comma [test.c line 0, col 0]>
-<item [test.c line 0, col 0]>
-<comma [test.c line 0, col 0]>
-<item [test.c line 0, col 0]>
-<rbrace [test.c line 0, col 0]>
+[
+  {"terminal": "a", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "comma", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "identifier", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "lparen", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "rparen", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "comma", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "lparen_cast", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "int", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "rparen", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "lbrace", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "item", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "comma", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "item", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "comma", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "item", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "rbrace", "line": 0, "col": 0, "resource": "tokens", "source_string": ""}
+]

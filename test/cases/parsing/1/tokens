@@ -1,3 +1,5 @@
-<a [test.c line 0, col 0]>
-<b [test.c line 0, col 0]>
-<semi [test.c line 0, col 0]>
+[
+  {"terminal": "a", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "b", "line": 0, "col": 0, "resource": "tokens", "source_string": ""},
+  {"terminal": "semi", "line": 0, "col": 0, "resource": "tokens", "source_string": ""}
+]
