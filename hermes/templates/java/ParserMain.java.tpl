@@ -1,62 +1,87 @@
+import org.json.*;
+import java.io.*;
+import java.nio.*;
+import java.nio.channels.FileChannel;
+import java.nio.charset.Charset;
+
 class ParserMain {
 
-  private static Parser getParser(String name) {
-    {% for grammar in grammars %}
-    if ( name == "{{grammar.name}}") {
-      return {{grammar.name}}_Parser();
+  private static String readStdin() throws IOException {
+    InputStreamReader stream = new InputStreamReader(System.in, "utf-8");
+    char buffer[] = new char[System.in.available()];
+    try {
+      stream.read(buffer, 0, System.in.available());
+    } finally {
+      stream.close();
     }
-    {% endfor %}
-    throw new Exception("Invalid grammar name: {}".format(name));
+    return new String(buffer);
   }
 
-  public static void main(String[] args) {
+  private static String readFile(String path) throws IOException {
+    FileInputStream stream = new FileInputStream(new File(path));
+    try {
+      FileChannel fc = stream.getChannel();
+      MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
+      /* Instead of using default, pass in a decoder. */
+      return Charset.defaultCharset().decode(bb).toString();
+    }
+    finally {
+      stream.close();
+    }
+  }
+
+  private static Parser getParser(String name) throws Exception {
+    {% for grammar in grammars %}
+    if (name.equals("{{grammar.name}}")) {
+      return new {{grammar.name[0].upper() + grammar.name[1:]}}Parser();
+    }
+    {% endfor %}
+    throw new Exception("Invalid grammar name: " + name);
+  }
+
+  public static void main(String args[]) {
     final String grammars = "{{','.join([grammar.name for grammar in grammars])}}";
 
     if ( args.length < 2 ) {
-      System.out.println("Usage: {} <{}> <parsetree,ast>".format(args[0], grammars));
+      System.out.println("Usage: ParserMain <" + grammars + "> <parsetree,ast>");
       System.exit(-1);
     }
 
-    String grammar = args[1].toLowerCase()
-    Parser parser = getParser(grammar)
-
-    in_tokens = json.loads(sys.stdin.read())
-    tokens = new ArrayList<Terminal>(); 
-
-    for (token in in_tokens) {
-      for (key in ["terminal", "line", "col", "resource", "source_string"]) {
-        if (key not in token.keys()) {
-          throw new Exception('Malformed token (missing key {0}): {1}'.format(key, json.dumps(token)));
-        }
-      }
-
-      try {
-        tokens.add(new Terminal(
-          parser.terminals[token['terminal']],
-          token['terminal'],
-          token['source_string'],
-          token['resource'],
-          token['line'],
-          token['col']
-        ))
-      } catch (Exception e) {
-        System.err.println(e);
-        System.exit(-1);
-      }
-    }
-
-    tokens = TokenStream(tokens)
+    final String grammar = args[0].toLowerCase();
 
     try {
-      parsetree = parser.parse( tokens )
-      if ( args.length > 2 and args[2] == "ast" ) {
-        ast = parsetree.toAst()
-        print(AstPrettyPrintable(ast))
-      } else {
-        print(ParseTreePrettyPrintable(parsetree))
+      Parser parser = getParser(grammar);
+      TerminalMap terminals = parser.getTerminalMap();
+      TokenStream tokens = new TokenStream(terminals);
+      
+      //String contents = readStdin();
+      String contents = readFile("/Users/scott/projects/hermes/test/cases/parsing/6/tokens");
+      JSONArray arr = new JSONArray(contents);
+
+      for ( int i = 0; i < arr.length(); i++ ) {
+        JSONObject token = arr.getJSONObject(i);
+
+        tokens.add(new Terminal(
+          terminals.get(token.getString("terminal")),
+          token.getString("terminal"),
+          token.getString("source_string"),
+          token.getString("resource"),
+          token.getInt("line"),
+          token.getInt("col")
+        ));
+
       }
-    } catch (Exception as error) {
-      System.err.println(error);
+
+      ParseTreeNode parsetree = parser.parse(tokens);
+      if ( args.length > 2 && args[1] == "ast" ) {
+        AstNode ast = parsetree.toAst();
+        System.out.println(ast.toPrettyString());
+      } else {
+        System.out.println(parsetree.toPrettyString());
+      }
+
+    } catch (Exception e) {
+      System.err.println(e);
       System.exit(-1);
     }
   }

@@ -1,5 +1,4 @@
-public interface ParseTreeNode {
-  public AstNode toAst();
+interface AstNode {
   public String toString();
   public String toPrettyString();
   public String toPrettyString(int indent);

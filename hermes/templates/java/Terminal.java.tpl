@@ -1,4 +1,7 @@
-class Terminal
+import java.util.Formatter;
+import java.util.Locale;
+
+class Terminal implements AstNode, ParseTreeNode
 {
   private int id;
   private String terminal_str;
@@ -43,7 +46,17 @@ class Terminal
   public String toString() {
     StringBuilder sb = new StringBuilder();
     Formatter formatter = new Formatter(sb, Locale.US);
-    formatter.format("{\"terminal\": \"%s\", \"line\": %d, \"col\": %d, \"resource\": \"%s\", \"source_string\": \"%s\"}", this.getTerminalStr(), this.getLine(), this.getColumn(), this.getResource(), this.getgetBase64SourceString());
+    formatter.format("{\"terminal\": \"%s\", \"line\": %d, \"col\": %d, \"resource\": \"%s\", \"source_string\": \"%s\"}", this.getTerminalStr(), this.getLine(), this.getColumn(), this.getResource(), this.getBase64SourceString());
     return formatter.toString();
   }
+
+  public String toPrettyString() {
+    return "";
+  }
+
+  public String toPrettyString(int indent) {
+    return "";
+  }
+
+  public AstNode toAst() { return this; }
 }

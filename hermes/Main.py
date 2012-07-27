@@ -121,7 +121,7 @@ def Cli():
       analyzer.analyze( theme=theme )
 
   if cli.action == 'generate':
-    cli.directory = os.path.abspath(cli.directory)
+    cli.directory = os.path.abspath(os.path.expanduser(cli.directory))
 
     if not os.path.isdir( cli.directory ):
       sys.stderr.write("Error: Directory doesn't exist\n")

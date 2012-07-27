@@ -107,6 +107,8 @@ class GrammarTemplate(Template):
 
   def getFilename(self):
     return self.grammar.name + '_' + os.path.basename(self.template[:-4])
+  def getPrefix(self):
+    return self.grammar.name + '_'
   def render(self):
     templates_dir = resource_filename(__name__, 'templates')
     loader = moody.make_loader(templates_dir)
@@ -118,7 +120,7 @@ class GrammarTemplate(Template):
       grammar=self.grammar,
       LL1Nonterminals=LL1Nonterminals,
       nonAbstractTerminals=self.grammar.getSimpleTerminals(),
-      prefix=self.grammar.name + '_',
+      prefix=self.getPrefix(),
     )
 
     linereduce = re.compile('^[ \t]*$', re.M)
@@ -137,7 +139,16 @@ class PythonMainTemplate(MainTemplate):
   template = 'python/ParserMain.py.tpl'
 
 class JavaTemplate(GrammarTemplate):
-  template = 'java/Parser.java.tpl'
+  template = 'java/ParserTemplate.java.tpl'
+  def getFilename(self):
+    return self.getPrefix() + "Parser.java"
+  def getPrefix(self):
+    prefix = self.grammar.name.lower()
+    prefix = prefix[0].upper() + prefix[1:]
+    return prefix 
+
+class JavaUtilityTemplate(CommonTemplate):
+  template = 'java/Utility.java.tpl'
 
 class JavaTerminalTemplate(CommonTemplate):
   template = 'java/Terminal.java.tpl'
@@ -154,14 +165,29 @@ class JavaAstTransformSubstitutionTemplate(CommonTemplate):
 class JavaAstTransformNodeCreatorTemplate(CommonTemplate):
   template = 'java/AstTransformNodeCreator.java.tpl'
 
+class JavaAstNodeTemplate(CommonTemplate):
+  template = 'java/AstNode.java.tpl'
+
 class JavaAstListTemplate(CommonTemplate):
   template = 'java/AstList.java.tpl'
 
 class JavaAstTemplate(CommonTemplate):
   template = 'java/Ast.java.tpl'
 
+class JavaParseTreeNodeTemplate(CommonTemplate):
+  template = 'java/ParseTreeNode.java.tpl'
+
 class JavaParseTreeTemplate(CommonTemplate):
   template = 'java/ParseTree.java.tpl'
+
+class JavaParserTemplate(CommonTemplate):
+  template = 'java/Parser.java.tpl'
+
+class JavaExpressionParserTemplate(CommonTemplate):
+  template = 'java/ExpressionParser.java.tpl'
+
+class JavaTerminalMapTemplate(CommonTemplate):
+  template = 'java/TerminalMap.java.tpl'
 
 class JavaAstPrettyPrintableTemplate(CommonTemplate):
   template = 'java/AstPrettyPrintable.java.tpl'
@@ -219,13 +245,19 @@ class JavaTemplateFactory:
   def create(self, grammars, addMain=False):
     templates = [
       JavaTerminalTemplate(),
+      JavaUtilityTemplate(),
       JavaNonTerminalTemplate(),
       JavaAstTransformTemplate(),
       JavaAstTransformSubstitutionTemplate(),
       JavaAstTransformNodeCreatorTemplate(),
       JavaAstListTemplate(),
       JavaAstTemplate(),
+      JavaAstNodeTemplate(),
       JavaParseTreeTemplate(),
+      JavaParserTemplate(),
+      JavaExpressionParserTemplate(),
+      JavaTerminalMapTemplate(),
+      JavaParseTreeNodeTemplate(),
       JavaAstPrettyPrintableTemplate(),
       JavaParseTreePrettyPrintableTemplate(),
       JavaSyntaxErrorTemplate(),

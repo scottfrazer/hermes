@@ -1,100 +1,177 @@
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
 class ParseTree implements ParseTreeNode {
 
   private NonTerminal nonterminal;
   private ArrayList<ParseTreeNode> children;
 
+  private boolean isExpr, isNud, isPrefix, isInfix, isExprNud;
+  private int nudMorphemeCount;
+  private Terminal listSeparator;
+  private String list;
+  private AstTransform astTransform;
+
   ParseTree(NonTerminal nonterminal) {
     this.nonterminal = nonterminal;
     this.children = new ArrayList<ParseTreeNode>();
-    this.astTransform = None
+    this.astTransform = null;
     this.isExpr = false;
     this.isNud = false;
     this.isPrefix = false;
     this.isInfix = false;
     this.isExprNud = false;
     this.nudMorphemeCount = 0;
-    this.listSeparator = None;
+    this.listSeparator = null;
     this.list = "";
   }
 
-  public void add(tree) {
+  public void setExpr(boolean value) { this.isExpr = value; }
+  public void setNud(boolean value) { this.isNud = value; }
+  public void setPrefix(boolean value) { this.isPrefix = value; }
+  public void setInfix(boolean value) { this.isInfix = value; }
+  public void setExprNud(boolean value) { this.isExprNud = value; }
+  public void setAstTransformation(AstTransform value) { this.astTransform = value; }
+  public void setNudMorphemeCount(int value) { this.nudMorphemeCount = value; }
+  public void setList(String value) { this.list = value; }
+  public void setListSeparator(Terminal value) { this.listSeparator = value; }
+
+  public int getNudMorphemeCount() { return this.nudMorphemeCount; }
+  public List<ParseTreeNode> getChildren() { return this.children; }
+  public boolean isInfix() { return this.isInfix; }
+  public boolean isPrefix() { return this.isPrefix; }
+  public boolean isExpr() { return this.isExpr; }
+  public boolean isNud() { return this.isNud; }
+  public boolean isExprNud() { return this.isExprNud; }
+
+  public void add(ParseTreeNode tree) {
     this.children.add(tree);
   }
 
-  public Ast toAst() {
-    if ( this.list == "slist" or this.list == "nlist" ) {
-      if ( this.children.size() == 0 ) {
-        return new AstList();
-      }
-      offset = 1 if this.children[0] == this.listSeparator else 0
-      r = AstList([this.children[offset].toAst()])
-      r.extend(this.children[offset+1].toAst())
-      return r
-    } else if ( this.list == "tlist" ) {
-      if len(this.children) == 0:
-        return AstList()
-      r = AstList([this.children[0].toAst()])
-      r.extend(this.children[2].toAst())
-      return r
-    } else if ( this.list == "mlist" ) {
-      r = AstList()
-      if len(this.children) == 0:
-        return r
-      lastElement = len(this.children) - 1
-      for i in range(lastElement):
-        r.append(this.children[i].toAst())
-      r.extend(this.children[lastElement].toAst())
-      return r
-    } else if ( this.isExpr ) {
-      if isinstance(this.astTransform, AstTransformSubstitution) {
-        return this.children[this.astTransform.idx].toAst()
-      } else if isinstance(this.astTransform, AstTransformNodeCreator) {
-        parameters = {}
-        for name, idx in this.astTransform.parameters.items() {
-          if ( idx == '$' ) {
-            child = this.children[0]
-          } else if ( isinstance(this.children[0], ParseTree) && this.children[0].isNud && !this.children[0].isPrefix and && !this.isExprNud and && !this.isInfix ) {
-            if ( idx < this.children[0].nudMorphemeCount ) {
-              child = this.children[0].children[idx]
-            } else {
-              index = idx - this.children[0].nudMorphemeCount + 1
-              child = this.children[index]
-            }
-          } else if ( len(this.children) == 1 and not isinstance(this.children[0], ParseTree) and not isinstance(this.children[0], list) ) {
-            return this.children[0];
-          } else {
-            child = this.children[idx];
-          }
+  private boolean isCompoundNud() {
+    if ( this.children.size() > 0 && this.children.get(0) instanceof ParseTree ) {
+      ParseTree child = (ParseTree) this.children.get(0);
 
-          parameters[name] = child.toAst();
-        }
-        return Ast(this.astTransform.name, parameters)
-      }
-    } else {
-      if (isinstance(this.astTransform, AstTransformSubstitution) {
-        return this.children[this.astTransform.idx].toAst();
-      } else if (isinstance(this.astTransform, AstTransformNodeCreator)) {
-        parameters = {name: this.children[idx].toAst() for name, idx in this.astTransform.parameters.items()};
-        return Ast(this.astTransform.name, parameters);
-      } else if (len(this.children)) {
-        return this.children[0].toAst();
-      } else {
-        return None;
+      if ( child.isNud() && !child.isPrefix() && !this.isExprNud() && !this.isInfix() ) {
+        return true;
       }
     }
+    return false;
+  }
+
+  public AstNode toAst() {
+    if ( this.list == "slist" || this.list == "nlist" ) {
+      int offset = (this.children.size() > 0 && this.children.get(0) == this.listSeparator) ? 1 : 0;
+      AstList astList = new AstList();
+
+      if ( this.children.size() == 0 ) {
+        return astList;
+      }
+
+      astList.add(this.children.get(offset).toAst());
+      astList.addAll((AstList) this.children.get(offset + 1).toAst());
+      return astList;
+    } else if ( this.list == "tlist" ) {
+      AstList astList = new AstList();
+
+      if ( this.children.size() == 0 ) {
+        return astList;
+      }
+  
+      astList.add(this.children.get(0).toAst());
+      astList.addAll((AstList) this.children.get(2).toAst());
+      return astList;
+    } else if ( this.list == "mlist" ) {
+      AstList astList = new AstList();
+      int lastElement = this.children.size() - 1;
+
+      if ( this.children.size() == 0 ) {
+        return astList;
+      }
+
+      for (int i = 0; i < this.children.size(); i++) {
+        astList.add(this.children.get(i).toAst());
+      }
+
+      astList.addAll((AstList) this.children.get(this.children.size() - 1).toAst());
+      return astList;
+    } else if ( this.isExpr ) {
+      if ( this.astTransform instanceof AstTransformSubstitution ) {
+        AstTransformSubstitution astSubstitution = (AstTransformSubstitution) astTransform;
+        return this.children.get(astSubstitution.getIndex()).toAst();
+      } else if ( this.astTransform instanceof AstTransformNodeCreator ) {
+        AstTransformNodeCreator astNodeCreator = (AstTransformNodeCreator) this.astTransform;
+        Map<String, AstNode> parameters = new HashMap<String, AstNode>();
+        ParseTreeNode child;
+        for ( final Map.Entry<String, Integer> parameter : astNodeCreator.getParameters().entrySet() ) {
+
+          String name = parameter.getKey();
+          int index = parameter.getValue().intValue();
+
+          if ( index == '$' ) {
+            child = this.children.get(0);
+          } else if ( this.isCompoundNud() ) {
+
+            ParseTree firstChild = (ParseTree) this.children.get(0);
+
+            if ( index < firstChild.getNudMorphemeCount() ) {
+              child = firstChild.getChildren().get(index);
+            } else {
+              index = index - firstChild.getNudMorphemeCount() + 1;
+              child = this.children.get(index);
+            }
+          } else if ( this.children.size() == 1 && !(this.children.get(0) instanceof ParseTree) && !(this.children.get(0) instanceof List) ) {
+            // TODO: I don't think this should ever be called
+            child = this.children.get(0);
+          } else {
+            child = this.children.get(index);
+          }
+
+          parameters.put(name, child.toAst());
+        }
+        return new Ast(astNodeCreator.getName(), parameters);
+      }
+    } else {
+      if (this.astTransform instanceof AstTransformSubstitution) {
+        AstTransformSubstitution astSubstitution = (AstTransformSubstitution) astTransform;
+
+        return this.children.get(astSubstitution.getIndex()).toAst();
+      } else if (this.astTransform instanceof AstTransformNodeCreator) {
+        AstTransformNodeCreator astNodeCreator = (AstTransformNodeCreator) this.astTransform;
+
+        HashMap<String, AstNode> evaluatedParameters = new HashMap<String, AstNode>();
+        for ( Map.Entry<String, Integer> baseParameter : astNodeCreator.getParameters().entrySet() ) {
+          String name = baseParameter.getKey();
+          int index2 = baseParameter.getValue().intValue();
+          evaluatedParameters.put(name, this.children.get(index2).toAst());
+        }
+
+        return new Ast(astNodeCreator.getName(), evaluatedParameters);
+      } else if (this.children.size() != 0) {
+        return this.children.get(0).toAst();
+      } else {
+        return null;
+      }
+    }
+    return null;
   }
 
   public String toString() {
-    children = []
-    for ( child in this.children) {
-      if isinstance(child, list) {
-        children.append('[' + ', '.join([str(a) for a in child]) + ']');
-      } else {
-        children.append(str(child));
-      }
+    ArrayList<String> children = new ArrayList<String>();
+    for (ParseTreeNode child : this.children) {
+      children.add(child.toString());
     }
-    return '(' + str(this.nonterminal) + ': ' + ', '.join(children) + ')'
+    return "(" + this.nonterminal.getString() + ": " + Utility.join(children, ", ") + ")";
   }
+
+  public String toPrettyString() {
+    return "";
+  }
+
+  public String toPrettyString(int indent) {
+    return "";
+  }
+
 }
