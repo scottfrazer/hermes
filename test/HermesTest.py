@@ -72,6 +72,59 @@ class HermesPythonAbstractSyntaxTreeTest(HermesTest):
   def runTest(self):
     self.assertEqual(self.expected, getAst(self.grammar, self.testCaseDir), 'expected ASTs to match (test %s)' % (self.testCaseDir))
 
+class HermesJavaTest(HermesTest):
+  def runJavaParser(self, grammar, testCaseDir, arg):
+    tmpDir = tempfile.mkdtemp()
+    shutil.copy(os.path.join(testCaseDir, 'tokens'), tmpDir)
+    shutil.copytree(os.path.join(testCaseDir, '..', 'javacp', 'org'), os.path.join(tmpDir, 'org'))
+    templateFactory = TemplateFactoryFactory().create('java')
+    templateWriter = TemplateWriter(templateFactory)
+    templateWriter.write([grammar], tmpDir, addMain=True)
+
+    javaSourceFiles = list(filter(lambda filename: filename.endswith('.java'), os.listdir(tmpDir)))
+
+    try:
+      compileCmd = 'javac *.java'
+      subprocess.check_call(compileCmd, cwd=tmpDir, shell=True, stderr=None)
+    except subprocess.CalledProcessError as error:
+      print(tmpDir)
+      print(testCaseDir)
+      return error.output.decode('utf-8').strip()
+
+    try:
+      runCmd = 'java ParserMain grammar {type} < tokens'.format(type=arg)
+      return subprocess.check_output(runCmd, shell=True, stderr=None, cwd=tmpDir).decode('utf-8').strip()
+    except subprocess.CalledProcessError as exception:
+      return exception.output.decode('utf-8').strip()
+    finally:
+      shutil.rmtree(tmpDir)
+
+class HermesJavaParseTreeTest(HermesJavaTest):
+
+  def __init__(self, testCaseDir=None, grammar=None, expected=None):
+    super().__init__()
+    self.__dict__.update(locals())
+    self.maxDiff = None
+
+  def getJavaParseTree(self):
+    return self.runJavaParser(self.grammar, self.testCaseDir, 'parsetree')
+
+  def runTest(self):
+    self.assertEqual(self.expected, self.getJavaParseTree(), 'expected parse trees to match (test %s)' % (self.testCaseDir))
+
+class HermesJavaAbstractSyntaxTreeTest(HermesJavaTest):
+
+  def __init__(self, testCaseDir=None, grammar=None, expected=None):
+    super().__init__()
+    self.__dict__.update(locals())
+    self.maxDiff = None
+
+  def getJavaAst(self):
+    return self.runJavaParser(self.grammar, self.testCaseDir, 'ast')
+
+  def runTest(self):
+    self.assertEqual(self.expected, self.getJavaAst(), 'expected ASTs to match (test %s)' % (self.testCaseDir))
+
 class HermesCTest(HermesTest):
   def runCParser(self, grammar, testCaseDir, arg):
     tmpDir = tempfile.mkdtemp()
@@ -95,7 +148,6 @@ class HermesCTest(HermesTest):
       return exception.output.decode('utf-8').strip()
     finally:
       shutil.rmtree(tmpDir)
-
 
 class HermesCParseTreeTest(HermesCTest):
 
@@ -196,6 +248,7 @@ def load_tests(loader, tests, pattern):
       if len(expectedParseTree):
         suite.addTest(HermesPythonParseTreeTest(testDirectory, grammar, expectedParseTree))
         suite.addTest(HermesCParseTreeTest(testDirectory, grammar, expectedParseTree))
+        suite.addTest(HermesJavaParseTreeTest(testDirectory, grammar, expectedParseTree))
     else:
       fp = open(path, 'w')
       fp.write(getParseTree(grammar, testDirectory))
@@ -207,6 +260,7 @@ def load_tests(loader, tests, pattern):
       expectedAst = open(path).read().strip()
       suite.addTest(HermesPythonAbstractSyntaxTreeTest(testDirectory, grammar, expectedAst))
       suite.addTest(HermesCAbstractSyntaxTreeTest(testDirectory, grammar, expectedAst))
+      suite.addTest(HermesJavaAbstractSyntaxTreeTest(testDirectory, grammar, expectedAst))
     else:
       fp = open(path, 'w')
       fp.write(getAst(grammar, testDirectory))

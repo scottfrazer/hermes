@@ -138,7 +138,7 @@ class {{prefix}}Parser implements Parser {
           {% if isinstance(rule.ast, AstSpecification) %}
         Map<String, Integer> parameters = new HashMap<String, Integer>();
             {% for key, value in rule.ast.parameters.items() %}
-        parameters.put("{{key}}", {{value}});
+        parameters.put("{{key}}", {{"(int) '$'" if value == '$' else value}});
             {% endfor %}
         tree.setAstTransformation(new AstTransformNodeCreator("{{rule.ast.name}}", parameters));
           {% elif isinstance(rule.ast, AstTranslation) %}
@@ -186,7 +186,7 @@ class {{prefix}}Parser implements Parser {
           {% if isinstance(rule.ast, AstSpecification) %}
         Map<String, Integer> parameters = new HashMap<String, Integer>();
             {% for key, value in rule.ast.parameters.items() %}
-        parameters.put("{{key}}", {{value}});
+        parameters.put("{{key}}", {{"(int) '$'" if value == '$' else value}});
             {% endfor %}
         tree.setAstTransformation(new AstTransformNodeCreator("{{rule.ast.name}}", parameters));
           {% elif isinstance(rule.ast, AstTranslation) %}
@@ -282,8 +282,12 @@ class {{prefix}}Parser implements Parser {
       {% endif %}
 
       {% if nonterminal.empty %}
-    if ( current != null && ({{' || '.join(['current.getId() == ' + str(a.id) for a in grammar.follow[nonterminal]])}}) ) {
-      return tree;
+    if ( current != null ) {
+      {% if len(grammar.follow[nonterminal]) %}
+      if ({{' || '.join(['current.getId() == ' + str(a.id) for a in grammar.follow[nonterminal]])}}) {
+        return tree;
+      }
+      {% endif %}
     }
       {% endif %}
 
@@ -308,7 +312,7 @@ class {{prefix}}Parser implements Parser {
         {% elif isinstance(rule.ast, AstSpecification) %}
       Map<String, Integer> parameters = new HashMap<String, Integer>();
           {% for key, value in rule.ast.parameters.items() %}
-      parameters.put("{{key}}", {{value}});
+      parameters.put("{{key}}", {{"(int) '$'" if value == '$' else value}});
           {% endfor %}
       tree.setAstTransformation(new AstTransformNodeCreator("{{rule.ast.name}}", parameters));
         {% else %}
@@ -345,7 +349,7 @@ class {{prefix}}Parser implements Parser {
           {% elif isinstance(rule.ast, AstSpecification) %}
       Map<String, Integer> parameters = new HashMap<String, Integer>();
             {% for key, value in rule.ast.parameters.items() %}
-      parameters.put("{{key}}", {{value}});
+      parameters.put("{{key}}", {{"(int) '$'" if value == '$' else value}});
             {% endfor %}
       tree.setAstTransformation(new AstTransformNodeCreator("{{rule.ast.name}}", parameters));
           {% else %}
