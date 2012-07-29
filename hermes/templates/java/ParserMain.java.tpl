@@ -54,8 +54,7 @@ class ParserMain {
       TerminalMap terminals = parser.getTerminalMap();
       TokenStream tokens = new TokenStream(terminals);
       
-      //String contents = readStdin();
-      String contents = readFile("/Users/scott/projects/hermes/test/cases/parsing/6/tokens");
+      String contents = readStdin();
       JSONArray arr = new JSONArray(contents);
 
       for ( int i = 0; i < arr.length(); i++ ) {
