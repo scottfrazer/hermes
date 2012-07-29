@@ -2,6 +2,7 @@ import java.util.Map;
 import java.util.LinkedList;
 import java.util.Formatter;
 import java.util.Locale;
+import java.util.ArrayList;
 
 class Ast implements AstNode {
 
@@ -32,7 +33,8 @@ class Ast implements AstNode {
     for (final Map.Entry<String, AstNode> attribute : this.attributes.entrySet()) {
       final String name = attribute.getKey();
       final AstNode node = attribute.getValue();
-      attributes.add(name + "=" + node.toString());
+      final String nodeStr = (node == null) ? "None" : node.toString();
+      attributes.add(name + "=" + nodeStr);
     }
 
     formatter.format("(%s: %s)", this.name, Utility.join(attributes, ", "));
@@ -40,10 +42,18 @@ class Ast implements AstNode {
   }
 
   public String toPrettyString() {
-    return "";
+    return toPrettyString(0);
   }
 
   public String toPrettyString(int indent) {
-    return "";
+    String spaces = Utility.getIndentString(indent);
+
+    ArrayList<String> children = new ArrayList<String>();
+    for( Map.Entry<String, AstNode> attribute : this.attributes.entrySet() ) {
+      String valueString = attribute.getValue() == null ? "None" : attribute.getValue().toPrettyString(indent + 2).trim();
+      children.add(spaces + "  " + attribute.getKey() + "=" + valueString);
+    }
+
+    return spaces + "(" + this.name + ":\n" + Utility.join(children, ",\n") + "\n" + spaces + ")";
   }
 }

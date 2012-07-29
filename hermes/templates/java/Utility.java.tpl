@@ -14,4 +14,12 @@ class Utility {
     }
     return builder.toString();
   }
+
+  public static String getIndentString(int spaces) {
+    StringBuilder sb = new StringBuilder();
+    for(int i = 0; i < spaces; i++) {
+      sb.append(' ');
+    }
+    return sb.toString();
+  }
 }

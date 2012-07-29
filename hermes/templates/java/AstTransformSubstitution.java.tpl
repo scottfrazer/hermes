@@ -11,7 +11,7 @@ class AstTransformSubstitution implements AstTransform {
   }
 
   public String toString() {
-    return "$" + Integer.toString(this.index);
+    return "AstSubstitution: $" + Integer.toString(this.index);
   }
 
 }

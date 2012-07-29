@@ -47,6 +47,9 @@ class ParseTree implements ParseTreeNode {
   public boolean isExprNud() { return this.isExprNud; }
 
   public void add(ParseTreeNode tree) {
+    if (this.children == null) {
+      this.children = new ArrayList<ParseTreeNode>();
+    }
     this.children.add(tree);
   }
 
@@ -134,12 +137,17 @@ class ParseTree implements ParseTreeNode {
         return new Ast(astNodeCreator.getName(), parameters);
       }
     } else {
-      if (this.astTransform instanceof AstTransformSubstitution) {
-        AstTransformSubstitution astSubstitution = (AstTransformSubstitution) astTransform;
+      AstTransformSubstitution defaultAction = new AstTransformSubstitution(0);
+      AstTransform action = this.astTransform != null ? this.astTransform : defaultAction;
+
+      if (this.children.size() == 0) return null;
+
+      if (action instanceof AstTransformSubstitution) {
+        AstTransformSubstitution astSubstitution = (AstTransformSubstitution) action;
 
         return this.children.get(astSubstitution.getIndex()).toAst();
-      } else if (this.astTransform instanceof AstTransformNodeCreator) {
-        AstTransformNodeCreator astNodeCreator = (AstTransformNodeCreator) this.astTransform;
+      } else if (action instanceof AstTransformNodeCreator) {
+        AstTransformNodeCreator astNodeCreator = (AstTransformNodeCreator) action;
 
         HashMap<String, AstNode> evaluatedParameters = new HashMap<String, AstNode>();
         for ( Map.Entry<String, Integer> baseParameter : astNodeCreator.getParameters().entrySet() ) {
@@ -149,10 +157,6 @@ class ParseTree implements ParseTreeNode {
         }
 
         return new Ast(astNodeCreator.getName(), evaluatedParameters);
-      } else if (this.children.size() != 0) {
-        return this.children.get(0).toAst();
-      } else {
-        return null;
       }
     }
     return null;
@@ -167,11 +171,24 @@ class ParseTree implements ParseTreeNode {
   }
 
   public String toPrettyString() {
-    return "";
+    return toPrettyString(0);
   }
 
   public String toPrettyString(int indent) {
-    return "";
+
+    if (this.children.size() == 0) {
+      return "(" + this.nonterminal.toString() + ": )";
+    }
+
+    String spaces = Utility.getIndentString(indent);
+
+    ArrayList<String> children = new ArrayList<String>();
+    for ( ParseTreeNode node : this.children ) {
+      String sub = node.toPrettyString(indent + 2).trim();
+      children.add(spaces + "  " +  sub);
+    }
+    
+    return spaces + "(" + this.nonterminal.toString() + ":\n" + Utility.join(children, ",\n") + "\n" + spaces + ")";
   }
 
 }

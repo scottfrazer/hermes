@@ -24,7 +24,7 @@ class AstTransformNodeCreator implements AstTransform {
     for (final Map.Entry<String, Integer> entry : this.parameters.entrySet()) {
       items.add(entry.getKey() + "=$" + entry.getValue().toString());
     }
-    return this.name + "( " + Utility.join(items, ", ") + " )";
+    return "AstNodeCreator: " + this.name + "( " + Utility.join(items, ", ") + " )";
   }
 
 }

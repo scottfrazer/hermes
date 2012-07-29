@@ -104,8 +104,7 @@ class {{prefix}}Parser implements Parser {
         left.setNud(true);
       }
 
-      Terminal current = this.tokens.current();
-      while (current != null && rbp < getInfixBp(current.getId())) {
+      while (this.tokens.current() != null && rbp < getInfixBp(this.tokens.current().getId())) {
         left = this.led(left);
       }
 
@@ -185,9 +184,9 @@ class {{prefix}}Parser implements Parser {
         // {{led[0]}}
 
           {% if isinstance(rule.ast, AstSpecification) %}
-        Map parameters = new HashMap<String, String>();
+        Map<String, Integer> parameters = new HashMap<String, Integer>();
             {% for key, value in rule.ast.parameters.items() %}
-        parameters.put("{{key}}", "{{value}}");
+        parameters.put("{{key}}", {{value}});
             {% endfor %}
         tree.setAstTransformation(new AstTransformNodeCreator("{{rule.ast.name}}", parameters));
           {% elif isinstance(rule.ast, AstTranslation) %}
@@ -307,9 +306,9 @@ class {{prefix}}Parser implements Parser {
         {% if isinstance(rule.ast, AstTranslation) %}
       tree.setAstTransformation(new AstTransformSubstitution({{rule.ast.idx}}));
         {% elif isinstance(rule.ast, AstSpecification) %}
-      Map parameters = new HashMap<String, String>();
+      Map<String, Integer> parameters = new HashMap<String, Integer>();
           {% for key, value in rule.ast.parameters.items() %}
-      parameters.put("{{key}}", "{{value}}");
+      parameters.put("{{key}}", {{value}});
           {% endfor %}
       tree.setAstTransformation(new AstTransformNodeCreator("{{rule.ast.name}}", parameters));
         {% else %}
@@ -344,9 +343,9 @@ class {{prefix}}Parser implements Parser {
           {% if isinstance(rule.ast, AstTranslation) %}
       tree.setAstTransformation(new AstTransformSubstitution({{rule.ast.idx}}));
           {% elif isinstance(rule.ast, AstSpecification) %}
-      Map parameters = new HashMap<String, String>();
+      Map<String, Integer> parameters = new HashMap<String, Integer>();
             {% for key, value in rule.ast.parameters.items() %}
-      parameters.put("{{key}}", "{{value}}");
+      parameters.put("{{key}}", {{value}});
             {% endfor %}
       tree.setAstTransformation(new AstTransformNodeCreator("{{rule.ast.name}}", parameters));
           {% else %}

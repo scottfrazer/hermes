@@ -73,7 +73,7 @@ class ParserMain {
       }
 
       ParseTreeNode parsetree = parser.parse(tokens);
-      if ( args.length > 2 && args[1] == "ast" ) {
+      if ( args.length > 1 && args[1].equals("ast") ) {
         AstNode ast = parsetree.toAst();
         System.out.println(ast.toPrettyString());
       } else {
@@ -82,6 +82,7 @@ class ParserMain {
 
     } catch (Exception e) {
       System.err.println(e);
+      e.printStackTrace();
       System.exit(-1);
     }
   }

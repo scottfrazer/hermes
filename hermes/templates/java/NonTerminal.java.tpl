@@ -16,4 +16,8 @@ class NonTerminal {
     return this.string;
   }
 
+  public String toString() {
+    return this.string;
+  }
+
 }
