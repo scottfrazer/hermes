@@ -1,12 +1,13 @@
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 class AstTransformNodeCreator implements AstTransform {
 
   private String name;
-  private Map<String, Integer> parameters;
+  private LinkedHashMap<String, Integer> parameters;
 
-  AstTransformNodeCreator(String name, Map<String, Integer> parameters) {
+  AstTransformNodeCreator(String name, LinkedHashMap<String, Integer> parameters) {
     this.name = name;
     this.parameters = parameters;
   }

@@ -55,7 +55,8 @@ class Terminal implements AstNode, ParseTreeNode
   }
 
   public String toPrettyString(int indent) {
-    return this.getTerminalStr();
+    String spaces = Utility.getIndentString(indent);
+    return spaces + this.getTerminalStr();
   }
 
   public AstNode toAst() { return this; }

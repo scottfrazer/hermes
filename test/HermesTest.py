@@ -92,7 +92,7 @@ class HermesJavaTest(HermesTest):
       return error.output.decode('utf-8').strip()
 
     try:
-      runCmd = 'java ParserMain grammar {type} < tokens'.format(type=arg)
+      runCmd = 'java ParserMain grammar {type} 2>&1 <tokens'.format(type=arg)
       return subprocess.check_output(runCmd, shell=True, stderr=None, cwd=tmpDir).decode('utf-8').strip()
     except subprocess.CalledProcessError as exception:
       return exception.output.decode('utf-8').strip()

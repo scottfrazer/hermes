@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.List;
+import java.util.LinkedHashMap;
 
 class ParseTree implements ParseTreeNode {
 
@@ -87,6 +87,14 @@ class ParseTree implements ParseTreeNode {
       astList.addAll((AstList) this.children.get(2).toAst());
       return astList;
     } else if ( this.list == "mlist" ) {
+      /*r = AstList()
+      if len(self.children) == 0:
+        return r
+      lastElement = len(self.children) - 1
+      for i in range(lastElement):
+        r.append(self.children[i].toAst())
+      r.extend(self.children[lastElement].toAst())
+      return r*/
       AstList astList = new AstList();
       int lastElement = this.children.size() - 1;
 
@@ -94,7 +102,7 @@ class ParseTree implements ParseTreeNode {
         return astList;
       }
 
-      for (int i = 0; i < this.children.size(); i++) {
+      for (int i = 0; i < lastElement; i++) {
         astList.add(this.children.get(i).toAst());
       }
 
@@ -106,7 +114,7 @@ class ParseTree implements ParseTreeNode {
         return this.children.get(astSubstitution.getIndex()).toAst();
       } else if ( this.astTransform instanceof AstTransformNodeCreator ) {
         AstTransformNodeCreator astNodeCreator = (AstTransformNodeCreator) this.astTransform;
-        Map<String, AstNode> parameters = new HashMap<String, AstNode>();
+        LinkedHashMap<String, AstNode> parameters = new LinkedHashMap<String, AstNode>();
         ParseTreeNode child;
         for ( final Map.Entry<String, Integer> parameter : astNodeCreator.getParameters().entrySet() ) {
 
@@ -149,7 +157,7 @@ class ParseTree implements ParseTreeNode {
       } else if (action instanceof AstTransformNodeCreator) {
         AstTransformNodeCreator astNodeCreator = (AstTransformNodeCreator) action;
 
-        HashMap<String, AstNode> evaluatedParameters = new HashMap<String, AstNode>();
+        LinkedHashMap<String, AstNode> evaluatedParameters = new LinkedHashMap<String, AstNode>();
         for ( Map.Entry<String, Integer> baseParameter : astNodeCreator.getParameters().entrySet() ) {
           String name = baseParameter.getKey();
           int index2 = baseParameter.getValue().intValue();

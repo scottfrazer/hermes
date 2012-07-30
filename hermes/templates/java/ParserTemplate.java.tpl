@@ -4,6 +4,8 @@
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 
 import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 class {{prefix}}Parser implements Parser {
 
@@ -136,7 +138,7 @@ class {{prefix}}Parser implements Parser {
       {{'if' if i == 0 else 'else if'}} ( {{' || '.join(['current.getId() == ' + str(x.id) for x in exprGrammar.ruleFirst(rule)])}} ) {
 
           {% if isinstance(rule.ast, AstSpecification) %}
-        Map<String, Integer> parameters = new HashMap<String, Integer>();
+        LinkedHashMap<String, Integer> parameters = new LinkedHashMap<String, Integer>();
             {% for key, value in rule.ast.parameters.items() %}
         parameters.put("{{key}}", {{"(int) '$'" if value == '$' else value}});
             {% endfor %}
@@ -184,7 +186,7 @@ class {{prefix}}Parser implements Parser {
         // {{led[0]}}
 
           {% if isinstance(rule.ast, AstSpecification) %}
-        Map<String, Integer> parameters = new HashMap<String, Integer>();
+        LinkedHashMap<String, Integer> parameters = new LinkedHashMap<String, Integer>();
             {% for key, value in rule.ast.parameters.items() %}
         parameters.put("{{key}}", {{"(int) '$'" if value == '$' else value}});
             {% endfor %}
@@ -239,7 +241,7 @@ class {{prefix}}Parser implements Parser {
     this.tokens = tokens;
     ParseTree tree = this.parse_{{str(grammar.start).lower()}}();
     if (this.tokens.current() != null) {
-      throw new SyntaxError("Finished parsing without consuming all tokens\nCurrent token is " + this.tokens.current());
+      throw new SyntaxError("Finished parsing without consuming all tokens.");
     }
     return tree;
   }
@@ -310,7 +312,7 @@ class {{prefix}}Parser implements Parser {
         {% if isinstance(rule.ast, AstTranslation) %}
       tree.setAstTransformation(new AstTransformSubstitution({{rule.ast.idx}}));
         {% elif isinstance(rule.ast, AstSpecification) %}
-      Map<String, Integer> parameters = new HashMap<String, Integer>();
+      LinkedHashMap<String, Integer> parameters = new LinkedHashMap<String, Integer>();
           {% for key, value in rule.ast.parameters.items() %}
       parameters.put("{{key}}", {{"(int) '$'" if value == '$' else value}});
           {% endfor %}
@@ -347,7 +349,7 @@ class {{prefix}}Parser implements Parser {
           {% if isinstance(rule.ast, AstTranslation) %}
       tree.setAstTransformation(new AstTransformSubstitution({{rule.ast.idx}}));
           {% elif isinstance(rule.ast, AstSpecification) %}
-      Map<String, Integer> parameters = new HashMap<String, Integer>();
+      LinkedHashMap<String, Integer> parameters = new LinkedHashMap<String, Integer>();
             {% for key, value in rule.ast.parameters.items() %}
       parameters.put("{{key}}", {{"(int) '$'" if value == '$' else value}});
             {% endfor %}
