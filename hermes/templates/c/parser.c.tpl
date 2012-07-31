@@ -50,6 +50,17 @@ static int {{prefix}}table[{{len(grammar.nonterminals)}}][{{len(nonAbstractTermi
 };
 
 /* Index with rule ID */
+static PARSETREE_TO_AST_CONVERSION_TYPE_E {{prefix}}nud_ast_types[{{len(grammar.expandedRules)}}] = {
+  {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
+    {% if isinstance(rule, ExprRule) and isinstance(rule.nudAst, AstSpecification) %}
+  AST_CREATE_OBJECT, /* ({{rule.id}}) {{rule}} */
+    {% else %}
+  AST_RETURN_INDEX, /* ({{rule.id}}) {{rule}} */
+    {% endif %}
+  {% endfor %}
+};
+
+/* Index with rule ID */
 static PARSETREE_TO_AST_CONVERSION_TYPE_E {{prefix}}ast_types[{{len(grammar.expandedRules)}}] = {
   {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
     {% if isinstance(rule.ast, AstSpecification) %}
@@ -58,6 +69,17 @@ static PARSETREE_TO_AST_CONVERSION_TYPE_E {{prefix}}ast_types[{{len(grammar.expa
   AST_RETURN_INDEX, /* ({{rule.id}}) {{rule}} */
     {% endif %}
   {% endfor %}
+};
+
+static AST_CREATE_OBJECT_INIT {{prefix}}nud_ast_objects[] = {
+  {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
+    {% if isinstance(rule, ExprRule) and rule.nudAst and isinstance(rule.nudAst, AstSpecification) %}
+      {% for i, key in enumerate(rule.nudAst.parameters.keys()) %}
+  { {{rule.id}}, "{{rule.nudAst.name}}", "{{key}}", {{rule.nudAst.parameters[key] if rule.nudAst.parameters[key] != '$' else "'$'"}} },
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+  {0}
 };
 
 static AST_CREATE_OBJECT_INIT {{prefix}}ast_objects[] = {
@@ -74,6 +96,12 @@ static AST_CREATE_OBJECT_INIT {{prefix}}ast_objects[] = {
 static int {{prefix}}ast_index[{{len(grammar.expandedRules)}}] = {
   {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
   {{rule.ast.idx if isinstance(rule.ast, AstTranslation) else 0}},
+  {% endfor %}
+};
+
+static int {{prefix}}nud_ast_index[{{len(grammar.expandedRules)}}] = {
+  {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
+  {{rule.nudAst.idx if isinstance(rule, ExprRule) and isinstance(rule.nudAst, AstTranslation) else 0}},
   {% endfor %}
 };
 
@@ -157,7 +185,7 @@ get_default_ast_converter()
 }
 
 static PARSETREE_TO_AST_CONVERSION_T *
-get_ast_converter(int rule_id)
+_get_ast_converter(int rule_id, PARSETREE_TO_AST_CONVERSION_TYPE_E * ast_types, AST_CREATE_OBJECT_INIT * ast_objects, int * ast_index)
 {
   PARSETREE_TO_AST_CONVERSION_T * converter = NULL;
   AST_OBJECT_SPECIFICATION_T * ast_object_spec;
@@ -166,13 +194,13 @@ get_ast_converter(int rule_id)
   int i, j, nattrs;
 
   converter = calloc(1, sizeof(PARSETREE_TO_AST_CONVERSION_T));
-  conversion_type = {{prefix}}ast_types[rule_id];
+  conversion_type = ast_types[rule_id];
 
   /* Create map (rule_id -> PARSETREE_TO_AST_CONVERSION_T) if it doesn't exist.  Then return result */
   if (conversion_type == AST_RETURN_INDEX)
   {
     ast_return_index = calloc(1, sizeof(AST_RETURN_INDEX_T));
-    ast_return_index->index = {{prefix}}ast_index[rule_id];
+    ast_return_index->index = ast_index[rule_id];
     converter->type = AST_RETURN_INDEX;
     converter->object = (PARSE_TREE_TO_AST_CONVERSION_U *) ast_return_index;
   }
@@ -180,22 +208,22 @@ get_ast_converter(int rule_id)
   if (conversion_type == AST_CREATE_OBJECT)
   {
     ast_object_spec = calloc(1, sizeof(AST_OBJECT_SPECIFICATION_T));
-    for ( i = 0, nattrs = 0; {{prefix}}ast_objects[i].name != NULL; i++ )
+    for ( i = 0, nattrs = 0; ast_objects[i].name != NULL; i++ )
     {
-      if ( {{prefix}}ast_objects[i].rule_id == rule_id )
+      if ( ast_objects[i].rule_id == rule_id )
         nattrs += 1;
     }
 
     ast_object_spec->attrs = calloc(nattrs, sizeof(AST_OBJECT_ATTR_T));
     ast_object_spec->nattrs = nattrs;
 
-    for ( i = 0, j = 0; {{prefix}}ast_objects[i].name != NULL; i++ )
+    for ( i = 0, j = 0; ast_objects[i].name != NULL; i++ )
     {
-      if ( {{prefix}}ast_objects[i].rule_id == rule_id )
+      if ( ast_objects[i].rule_id == rule_id )
       {
-        ast_object_spec->name = {{prefix}}ast_objects[i].name;
-        ast_object_spec->attrs[j].name = {{prefix}}ast_objects[i].attr;
-        ast_object_spec->attrs[j].index = {{prefix}}ast_objects[i].index;
+        ast_object_spec->name = ast_objects[i].name;
+        ast_object_spec->attrs[j].name = ast_objects[i].attr;
+        ast_object_spec->attrs[j].index = ast_objects[i].index;
         j += 1;
       }
     }
@@ -204,6 +232,18 @@ get_ast_converter(int rule_id)
   }
 
   return converter;
+}
+
+static PARSETREE_TO_AST_CONVERSION_T *
+get_nud_ast_converter(int rule_id)
+{
+  return _get_ast_converter(rule_id, &{{prefix}}nud_ast_types[0], &{{prefix}}nud_ast_objects[0], &{{prefix}}nud_ast_index[0]);
+}
+
+static PARSETREE_TO_AST_CONVERSION_T *
+get_ast_converter(int rule_id)
+{
+  return _get_ast_converter(rule_id, &{{prefix}}ast_types[0], &{{prefix}}ast_objects[0], &{{prefix}}nud_ast_index[0]);
 }
 
 {% for exprGrammar in grammar.exprgrammars %}
@@ -258,7 +298,8 @@ nud_{{name}}(PARSER_CONTEXT_T * ctx)
     {% if len(ruleFirstSet) and not isOptional %}
   if ( {{' || '.join(['current == %d' % (x.id) for x in ruleFirstSet])}} )
   {
-    tree->ast_converter = get_ast_converter({{rule.id}});
+    // {{rule}}
+    tree->ast_converter = get_nud_ast_converter({{rule.id}});
     tree->nchildren = {{len(rule.nudProduction)}};
     tree->children = calloc(tree->nchildren, sizeof(PARSE_TREE_NODE_T));
     tree->nudMorphemeCount = {{len(rule.nudProduction)}};

@@ -137,14 +137,16 @@ class {{prefix}}Parser implements Parser {
         {% if len(ruleFirstSet) and not isOptional %}
       {{'if' if i == 0 else 'else if'}} ( {{' || '.join(['current.getId() == ' + str(x.id) for x in exprGrammar.ruleFirst(rule)])}} ) {
 
-          {% if isinstance(rule.ast, AstSpecification) %}
+          {% py ast = rule.nudAst if rule.nudAst else rule.ast %}
+        // ({{rule.id}}) {{'nud' if rule.nudAst else 'normal'}} {{rule}}
+          {% if isinstance(ast, AstSpecification) %}
         LinkedHashMap<String, Integer> parameters = new LinkedHashMap<String, Integer>();
-            {% for key, value in rule.ast.parameters.items() %}
+            {% for key, value in ast.parameters.items() %}
         parameters.put("{{key}}", {{"(int) '$'" if value == '$' else value}});
             {% endfor %}
-        tree.setAstTransformation(new AstTransformNodeCreator("{{rule.ast.name}}", parameters));
-          {% elif isinstance(rule.ast, AstTranslation) %}
-        tree.setAstTransformation(new AstTransformSubstitution({{rule.ast.idx}}));
+        tree.setAstTransformation(new AstTransformNodeCreator("{{ast.name}}", parameters));
+          {% elif isinstance(ast, AstTranslation) %}
+        tree.setAstTransformation(new AstTransformSubstitution({{ast.idx}}));
           {% endif %}
 
         tree.setNudMorphemeCount({{len(rule.nudProduction)}});

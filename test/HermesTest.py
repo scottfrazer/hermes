@@ -87,8 +87,7 @@ class HermesJavaTest(HermesTest):
       compileCmd = 'javac *.java'
       subprocess.check_call(compileCmd, cwd=tmpDir, shell=True, stderr=None)
     except subprocess.CalledProcessError as error:
-      print(tmpDir)
-      print(testCaseDir)
+      shutil.rmtree(tmpDir)
       return error.output.decode('utf-8').strip()
 
     try:
@@ -139,6 +138,7 @@ class HermesCTest(HermesTest):
       compileCmd = 'gcc -o parser {sources} -g -Wall -pedantic -ansi -std=c99 2>/dev/null'.format(sources=' '.join(cSourceFiles))
       subprocess.check_call(compileCmd, cwd=tmpDir, shell=True, stderr=None)
     except subprocess.CalledProcessError as error:
+      shutil.rmtree(tmpDir)
       return error.output.decode('utf-8').strip()
 
     try:

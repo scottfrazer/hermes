@@ -87,14 +87,6 @@ class ParseTree implements ParseTreeNode {
       astList.addAll((AstList) this.children.get(2).toAst());
       return astList;
     } else if ( this.list == "mlist" ) {
-      /*r = AstList()
-      if len(self.children) == 0:
-        return r
-      lastElement = len(self.children) - 1
-      for i in range(lastElement):
-        r.append(self.children[i].toAst())
-      r.extend(self.children[lastElement].toAst())
-      return r*/
       AstList astList = new AstList();
       int lastElement = this.children.size() - 1;
 
