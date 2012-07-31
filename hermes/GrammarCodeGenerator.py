@@ -189,12 +189,6 @@ class JavaExpressionParserTemplate(CommonTemplate):
 class JavaTerminalMapTemplate(CommonTemplate):
   template = 'java/TerminalMap.java.tpl'
 
-class JavaAstPrettyPrintableTemplate(CommonTemplate):
-  template = 'java/AstPrettyPrintable.java.tpl'
-
-class JavaParseTreePrettyPrintableTemplate(CommonTemplate):
-  template = 'java/ParseTreePrettyPrintable.java.tpl'
-
 class JavaSyntaxErrorTemplate(CommonTemplate):
   template = 'java/SyntaxError.java.tpl'
 
@@ -258,8 +252,6 @@ class JavaTemplateFactory:
       JavaExpressionParserTemplate(),
       JavaTerminalMapTemplate(),
       JavaParseTreeNodeTemplate(),
-      JavaAstPrettyPrintableTemplate(),
-      JavaParseTreePrettyPrintableTemplate(),
       JavaSyntaxErrorTemplate(),
       JavaTokenStreamTemplate()
     ]
