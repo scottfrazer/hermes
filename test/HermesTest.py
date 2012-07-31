@@ -84,7 +84,7 @@ class HermesJavaTest(HermesTest):
     javaSourceFiles = list(filter(lambda filename: filename.endswith('.java'), os.listdir(tmpDir)))
 
     try:
-      compileCmd = 'javac *.java'
+      compileCmd = 'javac *.java 2>/dev/null'
       subprocess.check_call(compileCmd, cwd=tmpDir, shell=True, stderr=None)
     except subprocess.CalledProcessError as error:
       shutil.rmtree(tmpDir)
