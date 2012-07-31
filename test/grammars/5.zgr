@@ -25,7 +25,7 @@
         "_expr := 'subtract' + _expr -> UMinus( arg=$1 )",
         "_expr := {'lsquare' + list(_expr, 'comma') + 'rsquare'} -> ListDecl( items=$1 )",
         "_expr := {'lbrace' + list(_expr, 'comma') + 'rbrace'} -> SetDecl( items=$1 )",
-        "_expr := {'lparen' + _expr + 'rparen'} -> $1",
+        "_expr := {'lparen' + _expr + 'rparen' -> $1}",
         "_expr := {'identifier'} | {'number'}"
       ]
     }

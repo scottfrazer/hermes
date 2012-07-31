@@ -6,7 +6,6 @@ from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
 from hermes.GrammarCodeGenerator import FactoryFactory as TemplateFactoryFactory
 from hermes.GrammarCodeGenerator import TemplateWriter
 from hermes.Morpheme import NonTerminal
-
 directory = 'test/cases'
 
 class terminal:
@@ -73,26 +72,109 @@ class HermesPythonAbstractSyntaxTreeTest(HermesTest):
   def runTest(self):
     self.assertEqual(self.expected, getAst(self.grammar, self.testCaseDir), 'expected ASTs to match (test %s)' % (self.testCaseDir))
 
-class HermesCParseTreeTest(HermesTest):
+class HermesJavaTest(HermesTest):
+  def runJavaParser(self, grammar, testCaseDir, arg):
+    tmpDir = tempfile.mkdtemp()
+    shutil.copy(os.path.join(testCaseDir, 'tokens'), tmpDir)
+    shutil.copytree(os.path.join(testCaseDir, '..', 'javacp', 'org'), os.path.join(tmpDir, 'org'))
+    templateFactory = TemplateFactoryFactory().create('java')
+    templateWriter = TemplateWriter(templateFactory)
+    templateWriter.write([grammar], tmpDir, addMain=True)
+
+    javaSourceFiles = list(filter(lambda filename: filename.endswith('.java'), os.listdir(tmpDir)))
+
+    try:
+      compileCmd = 'javac *.java'
+      subprocess.check_call(compileCmd, cwd=tmpDir, shell=True, stderr=None)
+    except subprocess.CalledProcessError as error:
+      shutil.rmtree(tmpDir)
+      return error.output.decode('utf-8').strip()
+
+    try:
+      runCmd = 'java ParserMain grammar {type} 2>&1 <tokens'.format(type=arg)
+      return subprocess.check_output(runCmd, shell=True, stderr=None, cwd=tmpDir).decode('utf-8').strip()
+    except subprocess.CalledProcessError as exception:
+      return exception.output.decode('utf-8').strip()
+    finally:
+      shutil.rmtree(tmpDir)
+
+class HermesJavaParseTreeTest(HermesJavaTest):
 
   def __init__(self, testCaseDir=None, grammar=None, expected=None):
     super().__init__()
     self.__dict__.update(locals())
     self.maxDiff = None
 
+  def getJavaParseTree(self):
+    return self.runJavaParser(self.grammar, self.testCaseDir, 'parsetree')
+
   def runTest(self):
-    tree = getCParseTree(self.grammar, self.testCaseDir)
+    self.assertEqual(self.expected, self.getJavaParseTree(), 'expected parse trees to match (test %s)' % (self.testCaseDir))
+
+class HermesJavaAbstractSyntaxTreeTest(HermesJavaTest):
+
+  def __init__(self, testCaseDir=None, grammar=None, expected=None):
+    super().__init__()
+    self.__dict__.update(locals())
+    self.maxDiff = None
+
+  def getJavaAst(self):
+    return self.runJavaParser(self.grammar, self.testCaseDir, 'ast')
+
+  def runTest(self):
+    self.assertEqual(self.expected, self.getJavaAst(), 'expected ASTs to match (test %s)' % (self.testCaseDir))
+
+class HermesCTest(HermesTest):
+  def runCParser(self, grammar, testCaseDir, arg):
+    tmpDir = tempfile.mkdtemp()
+    shutil.copy(os.path.join(testCaseDir, 'tokens'), tmpDir)
+    templateFactory = TemplateFactoryFactory().create('c')
+    templateWriter = TemplateWriter(templateFactory)
+    templateWriter.write([grammar], tmpDir, addMain=True)
+
+    cSourceFiles = list(filter(lambda x: x != 'tokens', os.listdir(tmpDir)))
+
+    try:
+      compileCmd = 'gcc -o parser {sources} -g -Wall -pedantic -ansi -std=c99 2>/dev/null'.format(sources=' '.join(cSourceFiles))
+      subprocess.check_call(compileCmd, cwd=tmpDir, shell=True, stderr=None)
+    except subprocess.CalledProcessError as error:
+      shutil.rmtree(tmpDir)
+      return error.output.decode('utf-8').strip()
+
+    try:
+      runCmd = './parser grammar {type} < tokens'.format(type=arg)
+      return subprocess.check_output(runCmd, shell=True, stderr=None, cwd=tmpDir).decode('utf-8').strip()
+    except subprocess.CalledProcessError as exception:
+      return exception.output.decode('utf-8').strip()
+    finally:
+      shutil.rmtree(tmpDir)
+
+class HermesCParseTreeTest(HermesCTest):
+
+  def __init__(self, testCaseDir=None, grammar=None, expected=None):
+    super().__init__()
+    self.__dict__.update(locals())
+    self.maxDiff = None
+
+  def getCParseTree(self):
+    return self.runCParser(self.grammar, self.testCaseDir, 'parsetree')
+
+  def runTest(self):
+    tree = self.getCParseTree()
     self.assertEqual(self.expected, tree, 'expected parse trees to match (test %s)' % (self.testCaseDir))
 
-class HermesCAbstractSyntaxTreeTest(HermesTest):
+class HermesCAbstractSyntaxTreeTest(HermesCTest):
 
   def __init__(self, testCaseDir=None, grammar=None, expected=None):
     super().__init__()
     self.__dict__.update(locals())
     self.maxDiff = None
 
+  def getCAst(self):
+    return self.runCParser(self.grammar, self.testCaseDir, 'ast')
+
   def runTest(self):
-    self.assertEqual(self.expected, getCAst(self.grammar, self.testCaseDir), 'expected ASTs to match (test %s)' % (self.testCaseDir))
+    self.assertEqual(self.expected, self.getCAst(), 'expected ASTs to match (test %s)' % (self.testCaseDir))
 
 def getParseTree(grammar, testCaseDir):
   tmpDir = tempfile.mkdtemp()
@@ -126,34 +208,6 @@ def getAst(grammar, testCaseDir):
   finally:
     shutil.rmtree(tmpDir)
 
-def getCParseTree(grammar, testCaseDir):
-  return runCParser(grammar, testCaseDir, 'parsetree')
-
-def getCAst(grammar, testCaseDir):
-  return runCParser(grammar, testCaseDir, 'ast')
-
-def runCParser(grammar, testCaseDir, arg):
-  tmpDir = tempfile.mkdtemp()
-  shutil.copy(os.path.join(testCaseDir, 'tokens'), tmpDir)
-  templateFactory = TemplateFactoryFactory().create('c')
-  templateWriter = TemplateWriter(templateFactory)
-  templateWriter.write([grammar], tmpDir, addMain=True)
-
-  cSourceFiles = list(filter(lambda x: x != 'tokens', os.listdir(tmpDir)))
-
-  try:
-    compileCmd = 'gcc -o parser {sources} -g -Wall -pedantic -ansi -std=c99 2>/dev/null'.format(sources=' '.join(cSourceFiles))
-    subprocess.check_call(compileCmd, cwd=tmpDir, shell=True, stderr=None)
-  except subprocess.CalledProcessError:
-    pass
-
-  try:
-    runCmd = './parser grammar {type} < tokens'.format(type=arg)
-    return subprocess.check_output(runCmd, shell=True, stderr=None, cwd=tmpDir).decode('utf-8').strip()
-  except subprocess.CalledProcessError as exception:
-    return exception.output.decode('utf-8').strip()
-  finally:
-    shutil.rmtree(tmpDir)
 
 def getPythonParser(grammar):
   global hermesparser
@@ -194,6 +248,7 @@ def load_tests(loader, tests, pattern):
       if len(expectedParseTree):
         suite.addTest(HermesPythonParseTreeTest(testDirectory, grammar, expectedParseTree))
         suite.addTest(HermesCParseTreeTest(testDirectory, grammar, expectedParseTree))
+        suite.addTest(HermesJavaParseTreeTest(testDirectory, grammar, expectedParseTree))
     else:
       fp = open(path, 'w')
       fp.write(getParseTree(grammar, testDirectory))
@@ -205,6 +260,7 @@ def load_tests(loader, tests, pattern):
       expectedAst = open(path).read().strip()
       suite.addTest(HermesPythonAbstractSyntaxTreeTest(testDirectory, grammar, expectedAst))
       suite.addTest(HermesCAbstractSyntaxTreeTest(testDirectory, grammar, expectedAst))
+      suite.addTest(HermesJavaAbstractSyntaxTreeTest(testDirectory, grammar, expectedAst))
     else:
       fp = open(path, 'w')
       fp.write(getAst(grammar, testDirectory))

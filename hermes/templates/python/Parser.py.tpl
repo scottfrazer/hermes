@@ -74,11 +74,11 @@ class {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
 
       {% if len(ruleFirstSet) and not isOptional %}
     {{'if' if i == 0 else 'elif'}} current.getId() in [{{', '.join([str(x.id) for x in exprGrammar.ruleFirst(rule)])}}]:
-
-        {% if isinstance(rule.ast, AstSpecification) %}
-      tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', {{rule.ast.parameters}})
-        {% elif isinstance(rule.ast, AstTranslation) %}
-      tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
+      # {{rule}}
+        {% if isinstance(rule.nudAst, AstSpecification) %}
+      tree.astTransform = AstTransformNodeCreator('{{rule.nudAst.name}}', {{rule.nudAst.parameters}})
+        {% elif isinstance(rule.nudAst, AstTranslation) %}
+      tree.astTransform = AstTransformSubstitution({{rule.nudAst.idx}})
         {% endif %}
 
       tree.nudMorphemeCount = {{len(rule.nudProduction)}}

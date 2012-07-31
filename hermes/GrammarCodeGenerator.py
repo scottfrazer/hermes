@@ -107,6 +107,8 @@ class GrammarTemplate(Template):
 
   def getFilename(self):
     return self.grammar.name + '_' + os.path.basename(self.template[:-4])
+  def getPrefix(self):
+    return self.grammar.name + '_'
   def render(self):
     templates_dir = resource_filename(__name__, 'templates')
     loader = moody.make_loader(templates_dir)
@@ -118,7 +120,7 @@ class GrammarTemplate(Template):
       grammar=self.grammar,
       LL1Nonterminals=LL1Nonterminals,
       nonAbstractTerminals=self.grammar.getSimpleTerminals(),
-      prefix=self.grammar.name + '_',
+      prefix=self.getPrefix(),
     )
 
     linereduce = re.compile('^[ \t]*$', re.M)
@@ -136,6 +138,72 @@ class PythonCommonTemplate(CommonTemplate):
 class PythonMainTemplate(MainTemplate):
   template = 'python/ParserMain.py.tpl'
 
+class JavaTemplate(GrammarTemplate):
+  template = 'java/ParserTemplate.java.tpl'
+  def getFilename(self):
+    return self.getPrefix() + "Parser.java"
+  def getPrefix(self):
+    prefix = self.grammar.name.lower()
+    prefix = prefix[0].upper() + prefix[1:]
+    return prefix 
+
+class JavaUtilityTemplate(CommonTemplate):
+  template = 'java/Utility.java.tpl'
+
+class JavaTerminalTemplate(CommonTemplate):
+  template = 'java/Terminal.java.tpl'
+
+class JavaNonTerminalTemplate(CommonTemplate):
+  template = 'java/NonTerminal.java.tpl'
+
+class JavaAstTransformTemplate(CommonTemplate):
+  template = 'java/AstTransform.java.tpl'
+
+class JavaAstTransformSubstitutionTemplate(CommonTemplate):
+  template = 'java/AstTransformSubstitution.java.tpl'
+
+class JavaAstTransformNodeCreatorTemplate(CommonTemplate):
+  template = 'java/AstTransformNodeCreator.java.tpl'
+
+class JavaAstNodeTemplate(CommonTemplate):
+  template = 'java/AstNode.java.tpl'
+
+class JavaAstListTemplate(CommonTemplate):
+  template = 'java/AstList.java.tpl'
+
+class JavaAstTemplate(CommonTemplate):
+  template = 'java/Ast.java.tpl'
+
+class JavaParseTreeNodeTemplate(CommonTemplate):
+  template = 'java/ParseTreeNode.java.tpl'
+
+class JavaParseTreeTemplate(CommonTemplate):
+  template = 'java/ParseTree.java.tpl'
+
+class JavaParserTemplate(CommonTemplate):
+  template = 'java/Parser.java.tpl'
+
+class JavaExpressionParserTemplate(CommonTemplate):
+  template = 'java/ExpressionParser.java.tpl'
+
+class JavaTerminalMapTemplate(CommonTemplate):
+  template = 'java/TerminalMap.java.tpl'
+
+class JavaAstPrettyPrintableTemplate(CommonTemplate):
+  template = 'java/AstPrettyPrintable.java.tpl'
+
+class JavaParseTreePrettyPrintableTemplate(CommonTemplate):
+  template = 'java/ParseTreePrettyPrintable.java.tpl'
+
+class JavaSyntaxErrorTemplate(CommonTemplate):
+  template = 'java/SyntaxError.java.tpl'
+
+class JavaTokenStreamTemplate(CommonTemplate):
+  template = 'java/TokenStream.java.tpl'
+
+class JavaMainTemplate(MainTemplate):
+  template = 'java/ParserMain.java.tpl'
+
 class CHeaderTemplate(GrammarTemplate):
   template = 'c/parser.h.tpl'
   
@@ -152,13 +220,17 @@ class CMainSourceTemplate(MainTemplate):
   template = 'c/parser_main.c.tpl'
 
 class FactoryFactory:
-  def create(self, language):
-    if language == 'python':
-      return PythonTemplateFactory();
-    elif language == 'c':
-      return CTemplateFactory()
-    else:
-      raise Exception('invalid language')
+  def create(self, outputLanguage):
+    templates = {
+      'python': PythonTemplateFactory,
+      'c': CTemplateFactory,
+      'java': JavaTemplateFactory
+    }
+
+    for (language, templateClass) in templates.items():
+      if language == outputLanguage:
+        return templateClass()
+    raise Exception('invalid language')
 
 class PythonTemplateFactory:
   def create(self, grammars, addMain=False):
@@ -167,6 +239,34 @@ class PythonTemplateFactory:
       templates.extend([PythonTemplate(grammar)])
     if addMain:
       templates.append(PythonMainTemplate(grammars))
+    return templates
+
+class JavaTemplateFactory:
+  def create(self, grammars, addMain=False):
+    templates = [
+      JavaTerminalTemplate(),
+      JavaUtilityTemplate(),
+      JavaNonTerminalTemplate(),
+      JavaAstTransformTemplate(),
+      JavaAstTransformSubstitutionTemplate(),
+      JavaAstTransformNodeCreatorTemplate(),
+      JavaAstListTemplate(),
+      JavaAstTemplate(),
+      JavaAstNodeTemplate(),
+      JavaParseTreeTemplate(),
+      JavaParserTemplate(),
+      JavaExpressionParserTemplate(),
+      JavaTerminalMapTemplate(),
+      JavaParseTreeNodeTemplate(),
+      JavaAstPrettyPrintableTemplate(),
+      JavaParseTreePrettyPrintableTemplate(),
+      JavaSyntaxErrorTemplate(),
+      JavaTokenStreamTemplate()
+    ]
+    for grammar in grammars:
+      templates.extend([JavaTemplate(grammar)])
+    if addMain:
+      templates.append(JavaMainTemplate(grammars))
     return templates
 
 class CTemplateFactory:
