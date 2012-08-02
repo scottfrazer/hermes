@@ -30,17 +30,17 @@ class LL1MacroExpander:
     self.list_cache = {}
     self.tlist_cache = {}
   
-  def tlist( self, nonterminal, terminator ):
+  def tlist( self, morpheme, terminator ):
     rules = []
 
-    key = tuple([str(nonterminal).lower(), str(terminator).lower()])
+    key = tuple([str(morpheme).lower(), str(terminator).lower()])
     if key in self.tlist_cache:
       return (self.tlist_cache[key][0].nonterminal, self.tlist_cache[key])
     
     nt0 = self.nonTerminalParser.parse( self.nextName() )
     nt0.generated = True
     empty = self.terminalParser.parse('_empty')
-    rules = [ MacroGeneratedRule(nt0, Production( [nonterminal, terminator, nt0] )), \
+    rules = [ MacroGeneratedRule(nt0, Production( [morpheme, terminator, nt0] )), \
               MacroGeneratedRule(nt0, Production( [empty] )) ]
     self.tlist_cache[key] = rules
     return (rules[0].nonterminal, rules)
@@ -372,17 +372,23 @@ class tListMacroParser(MacroParser):
     self.__dict__.update(locals())
   
   def parse(self, string, expand=True):
-    (nonterminal, terminator) = pad(2, string[6:-1].split(','))
-    if not nonterminal or not terminator:
-      raise Exception('bah, bad')
+    (morpheme, terminator) = pad(2, string[6:-1].split(','))
+
+    if morpheme[0] == morpheme[-1] == "'":
+      morpheme = self.terminalParser.parse(morpheme)
+    else:
+      morpheme = self.nonTerminalParser.parse(morpheme)
+
     terminator = self.terminalParser.parse(terminator.replace("'", ''))
-    nonterminal = self.nonTerminalParser.parse(nonterminal)
+
+    if not morpheme or not terminator:
+      raise Exception('tlist(): need a morpheme and a terminator')
 
     (start, rules) = (None, None)
     if expand:
-      (start, rules) = self.macroExpander.tlist( nonterminal, terminator )
+      (start, rules) = self.macroExpander.tlist( morpheme, terminator )
 
-    macro = TerminatedListMacro( nonterminal, terminator, start, rules)
+    macro = TerminatedListMacro( morpheme, terminator, start, rules)
 
     if rules:
       for rule in rules:
