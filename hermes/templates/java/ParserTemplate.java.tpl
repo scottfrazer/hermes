@@ -1,6 +1,6 @@
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
-{% from hermes.Macro import SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro %}
+{% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 
 import java.util.*;
@@ -275,7 +275,7 @@ class {{prefix}}Parser implements Parser {
 
       {% if isinstance(nonterminal.macro, SeparatedListMacro) %}
     tree.setList("slist");
-      {% elif isinstance(nonterminal.macro, NonterminalListMacro) %}
+      {% elif isinstance(nonterminal.macro, MorphemeListMacro) %}
     tree.setList("nlist");
       {% elif isinstance(nonterminal.macro, TerminatedListMacro) %}
     tree.setList("tlist");

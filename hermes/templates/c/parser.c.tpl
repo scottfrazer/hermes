@@ -1,6 +1,6 @@
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
-{% from hermes.Macro import SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro %}
+{% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 #include <stdio.h>
 #include <stdlib.h>
@@ -419,7 +419,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 
     {% if isinstance(nonterminal.macro, SeparatedListMacro) %}
   tree->list = "slist";
-    {% elif isinstance(nonterminal.macro, NonterminalListMacro) %}
+    {% elif isinstance(nonterminal.macro, MorphemeListMacro) %}
   tree->list = "nlist";
     {% elif isinstance(nonterminal.macro, TerminatedListMacro) %}
   tree->list = "tlist";

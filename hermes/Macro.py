@@ -39,14 +39,14 @@ class TerminatedListMacro(LL1ListMacro):
   def __repr__( self ):
     return '<tlist (%s, %s)>' % (str(self.nonterminal), str(self.terminator))
 
-class NonterminalListMacro(LL1ListMacro):
-  def __init__( self, nonterminal, start_nt=None, rules=None ):
+class MorphemeListMacro(LL1ListMacro):
+  def __init__( self, morpheme, start_nt=None, rules=None ):
     self.__dict__.update(locals())
     self.finishTerminals = {}
     if start_nt:
       self.start_nt.setMacro(self)
   def __repr__( self ):
-    return '<list (%s)>' % (str(self.nonterminal))
+    return '<list (%s)>' % (str(self.morpheme))
 
 class SeparatedListMacro(LL1ListMacro):
   def __init__( self, nonterminal, separator, start_nt=None, rules=None ):

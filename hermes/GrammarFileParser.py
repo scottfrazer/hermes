@@ -4,7 +4,7 @@ from hermes.Morpheme import NonTerminal, Terminal, EmptyString
 from hermes.Grammar import CompositeGrammar, LL1GrammarFactory, ExpressionGrammarFactory
 from hermes.Grammar import Rule, ExprRule, MacroGeneratedRule, Production, AstSpecification, AstTranslation
 from hermes.Grammar import InfixOperator, PrefixOperator, MixfixOperator
-from hermes.Macro import SeparatedListMacro, NonterminalListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro
+from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro
 from hermes.Logger import Factory as LoggerFactory
 
 moduleLogger = LoggerFactory().getModuleLogger(__name__)
@@ -72,15 +72,16 @@ class LL1MacroExpander:
     self.list_cache[key] = rules
     return (rules[0].nonterminal, rules)
   
-  def nlist( self, nonterminal ):
+  def nlist( self, morpheme ):
     rules = []
-    key = tuple([str(nonterminal).lower(), str(None).lower()])
+    key = tuple([str(morpheme).lower(), str(None).lower()])
     if key in self.list_cache:
       return (self.list_cache[key][0].nonterminal, self.list_cache[key])
     nt0 = self.nonTerminalParser.parse( self.nextName() )
     nt0.generated = True
     empty = self.terminalParser.parse('_empty')
-    rules = [ MacroGeneratedRule(nt0, Production( [nonterminal, nt0] )), \
+
+    rules = [ MacroGeneratedRule(nt0, Production( [morpheme, nt0] )), \
               MacroGeneratedRule(nt0, Production( [empty] )) ]
     self.list_cache[key] = rules
     return (rules[0].nonterminal, rules)
@@ -348,13 +349,17 @@ class nListMacroParser(MacroParser):
     self.__dict__.update(locals())
   
   def parse(self, string, expand=True):
-    nonterminal = self.nonTerminalParser.parse(string[5:-1])
-
+    morpheme_str = string[5:-1]
+    if morpheme_str[0] == morpheme_str[-1] == "'":
+      morpheme = self.terminalParser.parse(morpheme_str)
+    else:
+      morpheme = self.nonTerminalParser.parse(morpheme_str)
+    
     (start, rules) = (None, None)
     if expand:
-      (start, rules) = self.macroExpander.nlist( nonterminal )
+      (start, rules) = self.macroExpander.nlist( morpheme )
 
-    macro = NonterminalListMacro( nonterminal, start, rules )
+    macro = MorphemeListMacro( morpheme, start, rules )
 
     if rules:
       for rule in rules:

@@ -5,7 +5,7 @@ from hermes.Morpheme import EndOfStream
 from hermes.Morpheme import NonTerminal
 from hermes.Morpheme import Morpheme, AbstractTerminal
 from hermes.Conflict import FirstFirstConflict, FirstFollowConflict, ListFirstFollowConflict, NudConflict, LedConflict, UndefinedNonterminalConflict, UnusedNonterminalWarning
-from hermes.Macro import ListMacro, LL1ListMacro, SeparatedListMacro, NonterminalListMacro
+from hermes.Macro import ListMacro, LL1ListMacro, SeparatedListMacro, MorphemeListMacro
 from hermes.Logger import Factory as LoggerFactory
 
 moduleLogger = LoggerFactory().getModuleLogger(__name__)
@@ -215,7 +215,7 @@ class FirstFollowCalculator:
     r = set()
     addEpsilon = True
     for m in P.morphemes:
-      if isinstance(m, NonterminalListMacro) or isinstance(m, SeparatedListMacro):
+      if isinstance(m, MorphemeListMacro) or isinstance(m, SeparatedListMacro):
         m = m.start_nt
       toks = self.first[m].difference({grammar._empty})
       if len(toks) > 0:
@@ -474,7 +474,7 @@ class Grammar:
     r = set()
     addEpsilon = True
     for m in P.morphemes:
-      if isinstance(m, NonterminalListMacro) or isinstance(m, SeparatedListMacro):
+      if isinstance(m, MorphemeListMacro) or isinstance(m, SeparatedListMacro):
         m = m.start_nt
       toks = self.first[m].difference({self._empty})
       if len(toks) > 0:
@@ -692,8 +692,8 @@ class LL1Grammar(Grammar):
           if intersection != set():
             self.conflicts.append( FirstFirstConflict(NR[x], NR[y], self) )
     for macro in self.macros:
-      if isinstance(macro, NonterminalListMacro):
-        if self.first[macro.nonterminal].intersection(self.follow[macro]) != set():
+      if isinstance(macro, MorphemeListMacro):
+        if self.first[macro.morpheme].intersection(self.follow[macro]) != set():
           self.conflicts.append( ListFirstFollowConflict(macro, self.first[macro.nonterminal], self.follow[macro]) )
     return self.conflicts
   def str(self, theme=None):
