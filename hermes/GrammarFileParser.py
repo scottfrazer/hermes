@@ -86,10 +86,10 @@ class LL1MacroExpander:
     self.list_cache[key] = rules
     return (rules[0].nonterminal, rules)
   
-  def mlist( self, nonterminal, minimum ):
+  def mlist( self, morpheme, minimum ):
     rules = []
 
-    key = tuple([str(nonterminal).lower(), str(minimum).lower()])
+    key = tuple([str(morpheme).lower(), str(minimum).lower()])
     if key in self.list_cache:
       return (self.list_cache[key][0].nonterminal, self.list_cache[key])
 
@@ -97,10 +97,10 @@ class LL1MacroExpander:
     nt1 = self.nonTerminalParser.parse( self.nextName() )
     nt0.generated = nt1.generated = True
     empty = self.terminalParser.parse('_empty')
-    prod = [nonterminal for x in range(minimum)]
+    prod = [morpheme for x in range(minimum)]
     prod.append(nt1)
     rules = [ MacroGeneratedRule(nt0, Production( prod )), \
-              MacroGeneratedRule(nt1, Production( [nonterminal, nt1] )), \
+              MacroGeneratedRule(nt1, Production( [morpheme, nt1] )), \
               MacroGeneratedRule(nt1, Production( [empty] )) ]
     if minimum == 0:
       rules.append( MacroGeneratedRule(nt0, Production( [empty] )) )
@@ -395,17 +395,26 @@ class mListMacroParser(MacroParser):
     self.__dict__.update(locals())
   
   def parse(self, string, expand=True):
-    (nonterminal, minimum) = pad(2, string[6:-1].split(','))
-    if not nonterminal or not minimum:
-      raise Exception('bah, bad')
-    minimum = int(minimum.replace("'", ''))
-    nonterminal = self.nonTerminalParser.parse(nonterminal)
+    (morpheme, minimum) = pad(2, string[6:-1].split(','))
+
+    try:
+      minimum = int(minimum)
+    except ValueError:
+      raise Exception('mlist(): minimum value needs to be an integer.')
+
+    if morpheme[0] == morpheme[-1] == "'":
+      morpheme = self.terminalParser.parse(morpheme)
+    else:
+      morpheme = self.nonTerminalParser.parse(morpheme)
+
+    if not morpheme or not minimum:
+      raise Exception('mlist(): macro needs to specify a morpheme and a minimum repeat value.')
 
     (start, rules) = (None, None)
     if expand:
-      (start, rules) = self.macroExpander.mlist( nonterminal, minimum )
+      (start, rules) = self.macroExpander.mlist( morpheme, minimum )
 
-    macro = MinimumListMacro( nonterminal, minimum, start, rules)
+    macro = MinimumListMacro( morpheme, minimum, start, rules)
 
     # TODO: I'm setting the .macro attribute because I need it to 
     # determine how to make the AST for the resulting parsetree.  
