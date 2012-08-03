@@ -45,11 +45,10 @@ class LL1MacroExpander:
     self.tlist_cache[key] = rules
     return (rules[0].nonterminal, rules)
   
-  def slist( self, nonterminal, separator, minimum ):
+  def slist( self, morpheme, separator, minimum ):
     rules = []
-
     separator.isSeparator = True
-    key = tuple([str(nonterminal).lower(), str(separator).lower()])
+    key = tuple([str(morpheme).lower(), str(separator).lower()])
     if key in self.list_cache:
       return (self.list_cache[key][0].nonterminal, self.list_cache[key])
     
@@ -58,14 +57,14 @@ class LL1MacroExpander:
     nt0.generated = nt1.generated = True
     empty = self.terminalParser.parse('_empty')
     if minimum > 0:
-      items = [nonterminal] * (2*minimum-1)
+      items = [morpheme] * (2*minimum-1)
       for x in filter(lambda x: x % 2 == 1, range(2 * minimum - 1)): # all odd numbers in range
         items[x] = separator
       items.append(nt1)
     else:
-      items = [nonterminal, nt1]
+      items = [morpheme, nt1]
     rules = [ MacroGeneratedRule(nt0, Production( items )), \
-              MacroGeneratedRule(nt1, Production( [separator, nonterminal, nt1] )), \
+              MacroGeneratedRule(nt1, Production( [separator, morpheme, nt1] )), \
               MacroGeneratedRule(nt1, Production( [empty] )) ]
     if minimum == 0:
       rules.append( MacroGeneratedRule(nt0, Production( [empty] )) )
@@ -107,16 +106,16 @@ class LL1MacroExpander:
     self.list_cache[key] = rules
     return (rules[0].nonterminal, rules)
   
-  def optional( self, nonterminal ):
+  def optional( self, morpheme ):
     rules = []
 
-    key = tuple([str(nonterminal).lower(), str(None).lower()])
+    key = tuple([str(morpheme).lower(), str(None).lower()])
     if key in self.list_cache:
       return (self.list_cache[key][0].nonterminal, self.list_cache[key])
     nt0 = self.nonTerminalParser.parse( self.nextName() )
     nt0.generated = True
     empty = self.terminalParser.parse('_empty')
-    rules = [ MacroGeneratedRule(nt0, Production( [nonterminal] )), \
+    rules = [ MacroGeneratedRule(nt0, Production( [morpheme] )), \
               MacroGeneratedRule(nt0, Production( [empty] )) ]
     self.list_cache[key] = rules
     return (rules[0].nonterminal, rules)
@@ -324,19 +323,23 @@ class sListMacroParser(MacroParser):
     self.__dict__.update(locals())
   
   def parse(self, string, expand=True):
-    (nonterminal, separator, minimum) = pad(3, string[5:-1].split(','))
-    if not nonterminal or not separator:
-      raise Exception('bah you did things wrong: %s' %(string))
+    (morpheme, separator, minimum) = pad(3, string[5:-1].split(','))
+    if not morpheme or not separator:
+      raise Exception('slist() needs morpheme and separator.')
 
-    nonterminal = self.nonTerminalParser.parse(nonterminal)
+    if morpheme[0] == morpheme[-1] == "'":
+      morpheme = self.terminalParser.parse(morpheme)
+    else:
+      morpheme = self.nonTerminalParser.parse(morpheme)
+
     separator = self.terminalParser.parse(separator.replace("'", ''))
     minimum = int(minimum) if minimum else 0
 
     (start, rules) = (None, None)
     if expand:
-      (start, rules) = self.macroExpander.slist( nonterminal, separator, minimum )
+      (start, rules) = self.macroExpander.slist( morpheme, separator, minimum )
 
-    macro = SeparatedListMacro( nonterminal, separator, start, rules )
+    macro = SeparatedListMacro( morpheme, separator, start, rules )
 
     if rules:
       for rule in rules:
@@ -437,13 +440,17 @@ class optionalMacroParser(MacroParser):
     self.__dict__.update(locals())
   
   def parse(self, string, expand=True):
-    nonterminal = self.nonTerminalParser.parse(string[9:-1])
+    morpheme = string[9:-1]
+    if morpheme[0] == morpheme[-1] == "'":
+      morpheme = self.terminalParser.parse(morpheme)
+    else:
+      morpheme = self.nonTerminalParser.parse(morpheme)
 
     (start, rules) = (None, None)
     if expand:
-      (start, rules) = self.macroExpander.optional( nonterminal )
+      (start, rules) = self.macroExpander.optional( morpheme )
 
-    macro = OptionalMacro( nonterminal, start, rules )
+    macro = OptionalMacro( morpheme, start, rules )
 
     if rules:
       for rule in rules:
