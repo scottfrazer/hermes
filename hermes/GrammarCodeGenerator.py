@@ -195,6 +195,12 @@ class JavaSyntaxErrorTemplate(CommonTemplate):
 class JavaTokenStreamTemplate(CommonTemplate):
   template = 'java/TokenStream.java.tpl'
 
+class JavaSourceCodeTemplate(CommonTemplate):
+  template = 'java/SourceCode.java.tpl'
+
+class JavaSyntaxErrorFormatterTemplate(CommonTemplate):
+  template = 'java/SyntaxErrorFormatter.java.tpl'
+
 class JavaMainTemplate(MainTemplate):
   template = 'java/ParserMain.java.tpl'
 
@@ -253,7 +259,9 @@ class JavaTemplateFactory:
       JavaTerminalMapTemplate(),
       JavaParseTreeNodeTemplate(),
       JavaSyntaxErrorTemplate(),
-      JavaTokenStreamTemplate()
+      JavaTokenStreamTemplate(),
+      JavaSourceCodeTemplate(),
+      JavaSyntaxErrorFormatterTemplate(),
     ]
     for grammar in grammars:
       templates.extend([JavaTemplate(grammar)])

@@ -11,6 +11,9 @@ class {{prefix}}Parser implements Parser {
 
   private TokenStream tokens;
   private HashMap<String, ExpressionParser> expressionParsers;
+  private SyntaxErrorFormatter syntaxErrorFormatter;
+  private Map<String, TerminalId[]> first;
+  private Map<String, TerminalId[]> follow;
 
   /* table[nonterminal][terminal] = rule */
   private static final int[][] table = {
@@ -93,11 +96,12 @@ class {{prefix}}Parser implements Parser {
       }
     }
 
-    public ParseTree parse(TokenStream tokens) throws SyntaxError {
+    public ParseTree parse(TokenStream tokens, SyntaxErrorFormatter syntaxErrorFormatter) throws SyntaxError {
+      this.syntaxErrorFormatter = syntaxErrorFormatter;
       return this.parse(tokens, 0);
     }
 
-    public ParseTree parse(TokenStream tokens, int rbp) throws SyntaxError {
+    public ParseTree parse(TokenStream tokens, int rbp, SyntaxErrorFormatter syntaxErrorFormatter) throws SyntaxError {
       this.tokens = tokens;
       ParseTree left = this.nud();
 
@@ -153,7 +157,7 @@ class {{prefix}}Parser implements Parser {
 
           {% for morpheme in rule.nudProduction.morphemes %}
             {% if isinstance(morpheme, Terminal) %}
-        tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}.id()) );
+        tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}.id(), this.syntaxErrorFormatter));
             {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
               {% if isinstance(rule.operator, PrefixOperator) %}
         tree.add( parse_{{rule.nonterminal.string.lower()}}( this.getPrefixBp({{rule.operator.operator.id}}) ) );
@@ -208,7 +212,7 @@ class {{prefix}}Parser implements Parser {
 
           {% for morpheme in led %}
             {% if isinstance(morpheme, Terminal) %}
-        tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}.id()) );
+        tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}.id(), this.syntaxErrorFormatter));
             {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
         modifier = {{1 if rule.operator.operator.id in exprGrammar.precedence and exprGrammar.precedence[rule.operator.operator.id] == 'right' else 0}};
               {% if isinstance(rule.operator, InfixOperator) %}
@@ -233,17 +237,30 @@ class {{prefix}}Parser implements Parser {
 
   {{prefix}}Parser() {
     this.expressionParsers = new HashMap<String, ExpressionParser>();
+    this.first = new HashMap<String, TerminalId[]>();
+    this.follow = new HashMap<String, TerminalId[]>();
+    ArrayList<TerminalId> list;
+
+    {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
+    this.first.put("{{nonterminal.string.lower()}}", { {{', '.join(["TerminalId.TERMINAL_" + t.string.upper() for t in grammar.first[nonterminal] if t in nonAbstractTerminals])}} });
+    {% endfor %}
+
+    {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
+    this.follow.put("{{nonterminal.string.lower()}}", { {{', '.join(["TerminalId.TERMINAL_" + t.string.upper() for t in grammar.follow[nonterminal] if t in nonAbstractTerminals])}} });
+    {% endfor %}
   }
 
   public TerminalMap getTerminalMap() {
     return new {{prefix}}TerminalMap(TerminalId.values());
   }
 
-  public ParseTree parse(TokenStream tokens) throws SyntaxError {
+  public ParseTree parse(TokenStream tokens, SyntaxErrorFormatter syntaxErrorFormatter) throws SyntaxError {
     this.tokens = tokens;
+    this.syntaxErrorFormatter = syntaxErrorFormatter;
     ParseTree tree = this.parse_{{str(grammar.start).lower()}}();
     if (this.tokens.current() != null) {
-      throw new SyntaxError("Finished parsing without consuming all tokens.");
+      StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+      throw new SyntaxError(this.syntaxErrorFormatter.excess_tokens(stack[1].getMethodName(), this.tokens.current()));
     }
     return tree;
   }
@@ -299,7 +316,8 @@ class {{prefix}}Parser implements Parser {
       {% if nonterminal.empty or grammar._empty in grammar.first[nonterminal] %}
       return tree;
       {% else %}
-      throw new SyntaxError("Error: unexpected end of file");
+      StackTraceElement[] stack = Thread.currentThread().getStackTrace();
+      throw new SyntaxError(this.syntaxErrorFormatter.unexpected_eof(stack[1].getMethodName(), null));
       {% endif %}
     }
     
@@ -326,7 +344,7 @@ class {{prefix}}Parser implements Parser {
         {% for index, morpheme in enumerate(rule.production.morphemes) %}
 
           {% if isinstance(morpheme, Terminal) %}
-      next = this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}.id());
+      next = this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}.id(), this.syntaxErrorFormatter);
       tree.add(next);
             {% if isinstance(nonterminal.macro, SeparatedListMacro) and index == 0 %}
       tree.setListSeparator(next);
@@ -363,7 +381,7 @@ class {{prefix}}Parser implements Parser {
           {% for morpheme in rule.production.morphemes %}
 
             {% if isinstance(morpheme, Terminal) %}
-      tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}.id()) );
+      tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}.id(), this.syntaxErrorFormatter) );
             {% endif %}
 
             {% if isinstance(morpheme, NonTerminal) %}
@@ -376,10 +394,7 @@ class {{prefix}}Parser implements Parser {
       {% endfor %}
 
       {% if not nonterminal.empty %}
-    Formatter formatter = new Formatter(new StringBuilder(), Locale.US);
-    StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-    formatter.format("Error: Unexpected symbol (%s) when parsing %s", current, stack[0].getMethodName());
-    throw new SyntaxError(formatter.toString());
+    throw new SyntaxError(this.syntaxErrorFormatter.unexpected_symbol("{{nonterminal.string.lower()}}", current, new ArrayList<Integer>()));
       {% else %}
     return tree;
       {% endif %}
