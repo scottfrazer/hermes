@@ -1,27 +1,32 @@
 import org.json.*;
 import java.io.*;
 import java.util.List;
+import java.util.ArrayList;
 
 class ParserMain {
 
   private static class DefaultSyntaxErrorFormatter implements SyntaxErrorFormatter {
 
     private TerminalMap map;
-
-    DefaultSyntaxErrorFormatter(TerminalMap map) {
+   
+    public void setTerminalMap(TerminalMap map) {
       this.map = map;
     }
-    
+
     public String unexpected_eof(String method, List<Integer> expected) {
       return "Error: unexpected end of file";
     }
 
     public String excess_tokens(String method, Terminal terminal) {
-      return "Finished parsing without consuming all tokens";
+      return "Finished parsing without consuming all tokens.";
     }
 
     public String unexpected_symbol(String method, Terminal actual, List<Integer> expected) {
-      return "Unexpected symbol (" + actual.getTerminalStr() + ") when parsing " + method;
+      ArrayList<String> expected_terminals = new ArrayList<String>();
+      for ( Integer e : expected ) {
+        expected_terminals.add(this.map.get(e.intValue()));
+      }
+      return "Unexpected symbol when parsing " + method + ".  Expected " + Utility.join(expected_terminals, ", ") + ", got " + actual.getTerminalStr() + ".";
     }
 
     public String no_more_tokens(String method, int expecting) {
@@ -34,10 +39,10 @@ class ParserMain {
 
   }
 
-  private static Parser getParser(String name) throws Exception {
+  private static Parser getParser(String name, SyntaxErrorFormatter error_formatter) throws Exception {
     {% for grammar in grammars %}
     if (name.equals("{{grammar.name}}")) {
-      return new {{grammar.name[0].upper() + grammar.name[1:]}}Parser();
+      return new {{grammar.name[0].upper() + grammar.name[1:]}}Parser(error_formatter);
     }
     {% endfor %}
     throw new Exception("Invalid grammar name: " + name);
@@ -54,9 +59,11 @@ class ParserMain {
     final String grammar = args[0].toLowerCase();
 
     try {
-      Parser parser = getParser(grammar);
+      DefaultSyntaxErrorFormatter error_formatter = new DefaultSyntaxErrorFormatter();
+      Parser parser = getParser(grammar, error_formatter);
       TerminalMap terminals = parser.getTerminalMap();
       TokenStream tokens = new TokenStream(terminals);
+      error_formatter.setTerminalMap(terminals);
       
       String contents = Utility.readStdin();
       JSONArray arr = new JSONArray(contents);
@@ -75,7 +82,7 @@ class ParserMain {
 
       }
 
-      ParseTreeNode parsetree = parser.parse(tokens, new DefaultSyntaxErrorFormatter(terminals));
+      ParseTreeNode parsetree = parser.parse(tokens);
 
       if ( args.length > 1 && args[1].equals("ast") ) {
         AstNode ast = parsetree.toAst();

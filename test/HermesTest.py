@@ -87,6 +87,7 @@ class HermesJavaTest(HermesTest):
       compileCmd = 'javac *.java 2>/dev/null'
       subprocess.check_call(compileCmd, cwd=tmpDir, shell=True, stderr=None)
     except subprocess.CalledProcessError as error:
+      print('FAILED TO COMPILE', testCaseDir)
       shutil.rmtree(tmpDir)
       return error.output.decode('utf-8').strip()
 
