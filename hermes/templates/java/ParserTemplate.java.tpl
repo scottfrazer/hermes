@@ -261,7 +261,7 @@ class {{prefix}}Parser implements Parser {
     String rule;
     
     {% for nonterminal in grammar.nonterminals %}
-    this.nonterminal_rules.put("{{nonterminal.string.lower()}}", new ArrayList());
+    this.nonterminal_rules.put("{{nonterminal.string.lower()}}", new ArrayList<String>());
     {% endfor %}
 
     {% for rule in grammar.getExpandedRules() %}
