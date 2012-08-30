@@ -5,8 +5,7 @@ import os
 from setuptools import setup, find_packages
 
 version = '1.0.0'
-README = os.path.join(os.path.dirname(__file__), 'README')
-long_description = open(README).read()
+long_description = 'LL(1) parser generator with expression parsing support' 
 
 setup(
   name='Hermes',

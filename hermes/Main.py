@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import sys, os, argparse
+import sys, os, argparse, pkg_resources
 from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
 from hermes.GrammarAnalyzer import GrammarAnalyzer
 from hermes.GrammarCodeGenerator import FactoryFactory as TemplateFactoryFactory
@@ -29,6 +29,10 @@ def Cli():
               metavar = 'GRAMMAR',
               nargs = '+',
               help = 'Grammar file')
+
+  parser.add_argument('--version',
+              action='version',
+              version=str(pkg_resources.get_distribution('hermes')))
 
   parser.add_argument('-D', '--debug',
               required = False,
