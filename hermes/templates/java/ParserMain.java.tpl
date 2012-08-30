@@ -7,13 +7,7 @@ class ParserMain {
 
   private static class DefaultSyntaxErrorFormatter implements SyntaxErrorFormatter {
 
-    private TerminalMap map;
-   
-    public void setTerminalMap(TerminalMap map) {
-      this.map = map;
-    }
-
-    public String unexpected_eof(String method, List<Integer> expected) {
+    public String unexpected_eof(String method, List<TerminalIdentifier> expected, List<String> nt_rules) {
       return "Error: unexpected end of file";
     }
 
@@ -21,16 +15,16 @@ class ParserMain {
       return "Finished parsing without consuming all tokens.";
     }
 
-    public String unexpected_symbol(String method, Terminal actual, List<Integer> expected) {
+    public String unexpected_symbol(String method, Terminal actual, List<TerminalIdentifier> expected, String rule) {
       ArrayList<String> expected_terminals = new ArrayList<String>();
-      for ( Integer e : expected ) {
-        expected_terminals.add(this.map.get(e.intValue()));
+      for ( TerminalIdentifier e : expected ) {
+        expected_terminals.add(e.string());
       }
       return "Unexpected symbol when parsing " + method + ".  Expected " + Utility.join(expected_terminals, ", ") + ", got " + actual.getTerminalStr() + ".";
     }
 
-    public String no_more_tokens(String method, int expecting) {
-      return "No more tokens.  Expecting " + this.map.get(expecting);
+    public String no_more_tokens(String method, TerminalIdentifier expecting) {
+      return "No more tokens.  Expecting " + expecting.string();
     }
 
     public String invalid_terminal(String method, Terminal invalid) {
@@ -62,8 +56,7 @@ class ParserMain {
       DefaultSyntaxErrorFormatter error_formatter = new DefaultSyntaxErrorFormatter();
       Parser parser = getParser(grammar, error_formatter);
       TerminalMap terminals = parser.getTerminalMap();
-      TokenStream tokens = new TokenStream(terminals);
-      error_formatter.setTerminalMap(terminals);
+      TokenStream tokens = new TokenStream();
       
       String contents = Utility.readStdin();
       JSONArray arr = new JSONArray(contents);

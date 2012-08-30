@@ -186,6 +186,9 @@ class JavaParserTemplate(CommonTemplate):
 class JavaExpressionParserTemplate(CommonTemplate):
   template = 'java/ExpressionParser.java.tpl'
 
+class JavaTerminalIdentifierTemplate(CommonTemplate):
+  template = 'java/TerminalIdentifier.java.tpl'
+
 class JavaTerminalMapTemplate(CommonTemplate):
   template = 'java/TerminalMap.java.tpl'
 
@@ -261,6 +264,7 @@ class JavaTemplateFactory:
       JavaSyntaxErrorTemplate(),
       JavaTokenStreamTemplate(),
       JavaSourceCodeTemplate(),
+      JavaTerminalIdentifierTemplate(),
       JavaSyntaxErrorFormatterTemplate(),
     ]
     for grammar in grammars:

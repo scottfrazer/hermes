@@ -6,14 +6,17 @@
 import java.util.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Arrays;
 
 class {{prefix}}Parser implements Parser {
 
   private TokenStream tokens;
   private HashMap<String, ExpressionParser> expressionParsers;
   private SyntaxErrorFormatter syntaxErrorFormatter;
-  private Map<String, TerminalId[]> first;
-  private Map<String, TerminalId[]> follow;
+  private Map<String, TerminalIdentifier[]> first;
+  private Map<String, TerminalIdentifier[]> follow;
+  private Map<String, List<String>> nonterminal_rules;
+  private Map<Integer, String> rules;
 
   /* table[nonterminal][terminal] = rule */
   private static final int[][] table = {
@@ -23,7 +26,7 @@ class {{prefix}}Parser implements Parser {
     {% endfor %}
   };
 
-  public enum TerminalId {
+  public enum TerminalId implements TerminalIdentifier {
   {% for index, terminal in enumerate(nonAbstractTerminals) %}
     TERMINAL_{{terminal.string.upper()}}({{terminal.id}}, "{{terminal.string}}"){{',' if index!=len(nonAbstractTerminals)-1 else ';'}}
   {% endfor %}
@@ -67,9 +70,17 @@ class {{prefix}}Parser implements Parser {
     private HashMap<Integer, Integer> infixBp, prefixBp;
     private TokenStream tokens;
     private SyntaxErrorFormatter syntaxErrorFormatter;
+    private Map<String, List<String>> nonterminal_rules;
+    private Map<Integer, String> rules;
 
-    {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}(SyntaxErrorFormatter syntaxErrorFormatter) {
+    {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}(
+        SyntaxErrorFormatter syntaxErrorFormatter,
+        Map<String, List<String>> nonterminal_rules,
+        Map<Integer, String> rules
+    ) {
       this.syntaxErrorFormatter = syntaxErrorFormatter;
+      this.rules = rules;
+      this.nonterminal_rules = nonterminal_rules;
       this.infixBp = new HashMap<Integer, Integer>();
       this.prefixBp = new HashMap<Integer, Integer>();
 
@@ -104,6 +115,8 @@ class {{prefix}}Parser implements Parser {
 
     public ParseTree parse(TokenStream tokens, int rbp) throws SyntaxError {
       this.tokens = tokens;
+      this.tokens.setSyntaxErrorFormatter(this.syntaxErrorFormatter);
+      this.tokens.setTerminalMap(this.getTerminalMap());
       ParseTree left = this.nud();
 
       if ( left instanceof ParseTree ) {
@@ -158,7 +171,7 @@ class {{prefix}}Parser implements Parser {
 
           {% for morpheme in rule.nudProduction.morphemes %}
             {% if isinstance(morpheme, Terminal) %}
-        tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}.id(), this.syntaxErrorFormatter));
+        tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}, "{{exprGrammar.nonterminal.string.lower()}}", this.rules.get({{rule.id}})));
             {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
               {% if isinstance(rule.operator, PrefixOperator) %}
         tree.add( parse_{{rule.nonterminal.string.lower()}}( this.getPrefixBp({{rule.operator.operator.id}}) ) );
@@ -213,7 +226,7 @@ class {{prefix}}Parser implements Parser {
 
           {% for morpheme in led %}
             {% if isinstance(morpheme, Terminal) %}
-        tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}.id(), this.syntaxErrorFormatter));
+        tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}, "{{exprGrammar.nonterminal.string.lower()}}", this.rules.get({{rule.id}})) );
             {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
         modifier = {{1 if rule.operator.operator.id in exprGrammar.precedence and exprGrammar.precedence[rule.operator.operator.id] == 'right' else 0}};
               {% if isinstance(rule.operator, InfixOperator) %}
@@ -239,19 +252,35 @@ class {{prefix}}Parser implements Parser {
   {{prefix}}Parser(SyntaxErrorFormatter syntaxErrorFormatter) {
     this.syntaxErrorFormatter = syntaxErrorFormatter; 
     this.expressionParsers = new HashMap<String, ExpressionParser>();
-    this.first = new HashMap<String, TerminalId[]>();
-    this.follow = new HashMap<String, TerminalId[]>();
+    this.first = new HashMap<String, TerminalIdentifier[]>();
+    this.follow = new HashMap<String, TerminalIdentifier[]>();
+    this.nonterminal_rules = new HashMap<String, List<String>>();
+    this.rules = new HashMap<Integer, String>();
+
     ArrayList<TerminalId> list;
+    String rule;
+    
+    {% for nonterminal in grammar.nonterminals %}
+    this.nonterminal_rules.put("{{nonterminal.string.lower()}}", new ArrayList());
+    {% endfor %}
+
+    {% for rule in grammar.getExpandedRules() %}
+    rule = "{{rule}}";
+    this.nonterminal_rules.get("{{rule.nonterminal.string.lower()}}").add(rule);
+    this.rules.put(new Integer({{rule.id}}), rule);
+    {% endfor %}
 
     {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
-      {% py xTerminals = set(["TerminalId.TERMINAL_" + t.string.upper() for t in grammar.first[nonterminal]]) %}
+      {% py xTerminals = set(grammar.first[nonterminal]) %}
       {% py xTerminals = xTerminals.intersection(nonAbstractTerminals) %}
+      {% py xTerminals = set("TerminalId.TERMINAL_" + t.string.upper() for t in xTerminals) %}
     this.first.put("{{nonterminal.string.lower()}}", new TerminalId[] { {{', '.join([t for t in xTerminals])}} });
     {% endfor %}
 
     {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
-      {% py xTerminals = set(["TerminalId.TERMINAL_" + t.string.upper() for t in grammar.follow[nonterminal]]) %}
+      {% py xTerminals = set(grammar.follow[nonterminal]) %}
       {% py xTerminals = xTerminals.intersection(nonAbstractTerminals) %}
+      {% py xTerminals = set("TerminalId.TERMINAL_" + t.string.upper() for t in xTerminals) %}
     this.follow.put("{{nonterminal.string.lower()}}", new TerminalId[] { {{', '.join([t for t in xTerminals])}} });
     {% endfor %}
   }
@@ -262,6 +291,9 @@ class {{prefix}}Parser implements Parser {
 
   public ParseTree parse(TokenStream tokens) throws SyntaxError {
     this.tokens = tokens;
+    this.tokens.setSyntaxErrorFormatter(this.syntaxErrorFormatter);
+    this.tokens.setTerminalMap(this.getTerminalMap());
+
     ParseTree tree = this.parse_{{str(grammar.start).lower()}}();
     if (this.tokens.current() != null) {
       StackTraceElement[] stack = Thread.currentThread().getStackTrace();
@@ -321,8 +353,13 @@ class {{prefix}}Parser implements Parser {
       {% if nonterminal.empty or grammar._empty in grammar.first[nonterminal] %}
       return tree;
       {% else %}
-      StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-      throw new SyntaxError(this.syntaxErrorFormatter.unexpected_eof(stack[1].getMethodName(), null));
+
+      throw new SyntaxError(this.syntaxErrorFormatter.unexpected_eof(
+        "{{nonterminal.string.lower()}}",
+        Arrays.asList(this.first.get("{{nonterminal.string.lower()}}")),
+        this.nonterminal_rules.get("{{nonterminal.string.lower()}}")
+      ));
+
       {% endif %}
     }
     
@@ -349,7 +386,7 @@ class {{prefix}}Parser implements Parser {
         {% for index, morpheme in enumerate(rule.production.morphemes) %}
 
           {% if isinstance(morpheme, Terminal) %}
-      next = this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}.id(), this.syntaxErrorFormatter);
+      next = this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}, "{{nonterminal.string.lower()}}", this.rules.get({{rule.id}}));
       tree.add(next);
             {% if isinstance(nonterminal.macro, SeparatedListMacro) and index == 0 %}
       tree.setListSeparator(next);
@@ -386,7 +423,7 @@ class {{prefix}}Parser implements Parser {
           {% for morpheme in rule.production.morphemes %}
 
             {% if isinstance(morpheme, Terminal) %}
-      tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}.id(), this.syntaxErrorFormatter) );
+      tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}, "{{nonterminal.string.lower()}}", this.rules.get({{rule.id}})) );
             {% endif %}
 
             {% if isinstance(morpheme, NonTerminal) %}
@@ -399,7 +436,14 @@ class {{prefix}}Parser implements Parser {
       {% endfor %}
 
       {% if not nonterminal.empty %}
-    throw new SyntaxError(this.syntaxErrorFormatter.unexpected_symbol("{{nonterminal.string.lower()}}", current, new ArrayList<Integer>()));
+
+    List<TerminalIdentifier> terminals = Arrays.asList(this.first.get("{{nonterminal.string.lower()}}"));
+    throw new SyntaxError(this.syntaxErrorFormatter.unexpected_symbol(
+      "{{nonterminal.string.lower()}}",
+      current, 
+      Arrays.asList(this.first.get("{{nonterminal.string.lower()}}")),
+      this.rules.get({{rule.id}})
+    ));
       {% else %}
     return tree;
       {% endif %}
@@ -414,7 +458,11 @@ class {{prefix}}Parser implements Parser {
   public ParseTree parse_{{exprGrammar.nonterminal.string.lower()}}(int rbp) throws SyntaxError {
     String name = "{{exprGrammar.nonterminal.string.lower()}}";
     if ( !this.expressionParsers.containsKey(name) ) {
-      this.expressionParsers.put(name, new {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}(this.syntaxErrorFormatter));
+      this.expressionParsers.put(name, new {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}(
+        this.syntaxErrorFormatter,
+        this.nonterminal_rules,
+        this.rules
+      ));
     }
     return this.expressionParsers.get(name).parse(this.tokens, rbp);
   }
