@@ -22,7 +22,7 @@ def Cli():
               epilog = '(c) 2011-2012 Scott Frazer')
 
   parser.add_argument('action',
-              choices = ['analyze', 'generate', 'parse'],
+              choices = ['analyze', 'generate'],
               help = 'Parser Generator Actions')
 
   parser.add_argument('grammar',
@@ -35,25 +35,16 @@ def Cli():
               action='store_true',
               help = 'Open the floodgates')
 
-  parser.add_argument('-s', '--start',
-              required = False,
-              help = 'The start symbol of the grammar.  Defaults to \'s\'')
-
   parser.add_argument('-d', '--directory',
               required=False,
               default='.',
-              help='output file for parser generation')
+              help='Directory to write generated code to')
 
   parser.add_argument('-l', '--language',
               required = False,
               default='python',
               choices=['c', 'java', 'python'],
-              help = 'Language to generate the parser in.')
-
-  parser.add_argument('-p', '--pretty-print',
-              action='store_true',
-              default=False,
-              help = 'Pretty prints all data structures.')
+              help = 'Language for generated parser')
 
   parser.add_argument('-c', '--color',
               required = False,
@@ -63,12 +54,7 @@ def Cli():
   parser.add_argument('-m', '--add-main',
               required = False,
               action = 'store_true',
-              help = 'If this is specified, a main() function will be generated in the source code.  The tokens will be set to the -t option.')
-
-  parser.add_argument('-a', '--ast',
-              required = False,
-              action = 'store_true',
-              help = 'When used with the parse sub-command, the parse tree will be converted to an AST and printed out.')
+              help = 'If this is specified, a main() function will be generated in the source code.')
 
   cli = parser.parse_args()
   logger = LoggerFactory().initialize(cli.debug)
@@ -82,33 +68,15 @@ def Cli():
     if not os.path.isfile( grammar ):
       sys.stderr.write("Error: Grammar file doesn't exist\n")
       sys.exit(-1)
-    try:
-      name = grammar[:grammar.index('.')]
-    except ValueError:
-      name = grammar
-    grammars.append( fp.parse( name, open(grammar), cli.start ) )
 
-  class terminal:
-    def __init__(self, id, string):
-      self.__dict__.update(locals())
+    name = os.path.basename(grammar)
 
-  class token:
-    def __init__(self, terminal, lineno=0, colno=0, source_string=''):
-      self.__dict__.update(locals())
-
-  # TODO: get rid of --tokens altogether
-  tokens = []
-  if False and cli.tokens:
-    tokens = cli.tokens.lower().split(',')
-    tokens = list(map(lambda x: token(terminal(grammar.getTerminal(x), x)), tokens))
-    terminals = list(map(lambda x: x.string, grammar.terminals))
-    error = False
-    for token in tokens:
-      if token.terminal.string not in terminals:
-        sys.stderr.write("Error: Token '%s' not recognized\n" %(terminal))
-        error = True
-    if error:
+    if not name.endswith('.zgr'):
+      sys.stderr.write("Error: Grammar file must have .zgr extension\n")
       sys.exit(-1)
+
+    name = name[:-4]
+    grammars.append( fp.parse(name, open(grammar)) )
 
   if cli.color:
     theme = TerminalColorTheme(AnsiStylizer())
@@ -133,34 +101,6 @@ def Cli():
     templateFactory = TemplateFactoryFactory().create(outputLanguage=cli.language.lower())
     templateWriter = TemplateWriter(templateFactory)
     templateWriter.write(grammars, cli.directory, addMain=cli.add_main)
-
-  if cli.action == 'parse':
-    f = 'hermesparser.py'
-
-    template = PythonTemplate()
-    code = template.render(grammar, addMain=cli.add_main, initialTokens=tokens)
-
-    fp = open(f, 'w')
-    fp.write(code)
-    fp.close()
-
-    sys.path.append('.')
-    import hermesparser
-    parser = hermesparser.Parser()
-    terminals = list(map(lambda x: hermesparser.Terminal(parser.terminals[x]), terminals))
-    parsetree = parser.parse(terminals)
-    if not cli.ast:
-      parsetree = hermesparser.ParseTreePrettyPrintable(parsetree) if cli.pretty_print else parsetree
-      print(parsetree)
-    else:
-      ast = parsetree.toAst()
-      ast = hermesparser.AstPrettyPrintable(ast) if cli.pretty_print else ast
-      if isinstance(ast, list):
-        print('[%s]' % (', '.join([str(x) for x in ast])))
-      else:
-        print(ast)
-    if os.path.isfile(f):
-      os.remove(f)
 
 if __name__ == '__main__':
     Cli()
