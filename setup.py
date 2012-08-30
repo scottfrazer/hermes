@@ -4,7 +4,7 @@ distribute_setup.use_setuptools()
 import os
 from setuptools import setup, find_packages
 
-version = '1.0.0b'
+version = '1.0.0'
 README = os.path.join(os.path.dirname(__file__), 'README')
 long_description = open(README).read()
 
