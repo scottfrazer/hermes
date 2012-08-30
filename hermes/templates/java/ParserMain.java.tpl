@@ -20,10 +20,10 @@ class ParserMain {
       for ( TerminalIdentifier e : expected ) {
         expected_terminals.add(e.string());
       }
-      return "Unexpected symbol when parsing " + method + ".  Expected " + Utility.join(expected_terminals, ", ") + ", got " + actual.getTerminalStr() + ".";
+      return "Unexpected symbol when parsing parse_" + method + ".  Expected " + Utility.join(expected_terminals, ", ") + ", got " + actual.getTerminalStr() + ".";
     }
 
-    public String no_more_tokens(String method, TerminalIdentifier expecting) {
+    public String no_more_tokens(String method, TerminalIdentifier expecting, Terminal last) {
       return "No more tokens.  Expecting " + expecting.string();
     }
 
