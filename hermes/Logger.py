@@ -6,10 +6,14 @@ class Factory:
       mode = logging.DEBUG
     else:
       mode = logging.WARNING
+
     logger = logging.getLogger('hermes')
     logger.setLevel( mode )
-    fileLogger = logging.FileHandler('hermes.log')
-    fileLogger.setLevel( mode )
+
+    if debug:
+      fileLogger = logging.FileHandler('hermes.log')
+      fileLogger.setLevel( mode )
+
     stdoutLogger = logging.StreamHandler()
     stdoutLogger.setLevel( mode )
     formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s')
@@ -18,7 +22,7 @@ class Factory:
     logger.addHandler(stdoutLogger)
     return logger
   def getProgramLogger(self):
-    return logging.getLogger('cast')
+    return logging.getLogger('hermes')
   def getModuleLogger(self, module):
     return logging.getLogger('%s' % (module))
   def getClassLogger(self, module, className):
