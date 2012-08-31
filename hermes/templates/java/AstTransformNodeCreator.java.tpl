@@ -1,8 +1,12 @@
+{% if package %}
+package {{package}};
+{% endif %}
+
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
-class AstTransformNodeCreator implements AstTransform {
+public class AstTransformNodeCreator implements AstTransform {
 
   private String name;
   private LinkedHashMap<String, Integer> parameters;

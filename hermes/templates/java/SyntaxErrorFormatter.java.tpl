@@ -1,6 +1,10 @@
+{% if package %}
+package {{package}};
+{% endif %}
+
 import java.util.List;
 
-interface SyntaxErrorFormatter {
+public interface SyntaxErrorFormatter {
 
   /* Called when the parser runs out of tokens but isn't finished parsing. */
   String unexpected_eof(String method, List<TerminalIdentifier> expected, List<String> nt_rules);

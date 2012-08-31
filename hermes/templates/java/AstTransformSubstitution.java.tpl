@@ -1,4 +1,8 @@
-class AstTransformSubstitution implements AstTransform {
+{% if package %}
+package {{package}};
+{% endif %}
+
+public class AstTransformSubstitution implements AstTransform {
 
   private int index;
 

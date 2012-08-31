@@ -1,4 +1,8 @@
-class NonTerminal {
+{% if package %}
+package {{package}};
+{% endif %}
+
+public class NonTerminal {
 
   private int id;
   private String string;

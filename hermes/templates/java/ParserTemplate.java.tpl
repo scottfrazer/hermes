@@ -1,3 +1,7 @@
+{% if package %}
+package {{package}};
+{% endif %}
+
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
 {% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro %}
@@ -8,7 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Arrays;
 
-class {{prefix}}Parser implements Parser {
+public class {{prefix}}Parser implements Parser {
 
   private TokenStream tokens;
   private HashMap<String, ExpressionParser> expressionParsers;

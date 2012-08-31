@@ -50,6 +50,10 @@ def Cli():
               choices=['c', 'java', 'python'],
               help = 'Language for generated parser')
 
+  parser.add_argument('--java-package',
+              required = False,
+              help = 'If generating Java code, this is the package.')
+
   parser.add_argument('-c', '--color',
               required = False,
               action = 'store_true',
@@ -104,7 +108,7 @@ def Cli():
 
     templateFactory = TemplateFactoryFactory().create(outputLanguage=cli.language.lower())
     templateWriter = TemplateWriter(templateFactory)
-    templateWriter.write(grammars, cli.directory, addMain=cli.add_main)
+    templateWriter.write(grammars, cli.directory, addMain=cli.add_main, javaPackage=cli.java_package)
 
 if __name__ == '__main__':
     Cli()

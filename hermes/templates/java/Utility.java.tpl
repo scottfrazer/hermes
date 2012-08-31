@@ -1,3 +1,7 @@
+{% if package %}
+package {{package}};
+{% endif %}
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.io.IOException;
@@ -9,7 +13,7 @@ import java.nio.*;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 
-class Utility {
+public class Utility {
   public static String join(Collection<?> s, String delimiter) {
     StringBuilder builder = new StringBuilder();
     Iterator iter = s.iterator();

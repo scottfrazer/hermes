@@ -1,3 +1,7 @@
+{% if package %}
+package {{package}};
+{% endif %}
+
 public interface ParseTreeNode {
   public AstNode toAst();
   public String toString();

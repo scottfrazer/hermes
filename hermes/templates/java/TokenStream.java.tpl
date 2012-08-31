@@ -1,9 +1,13 @@
+{% if package %}
+package {{package}};
+{% endif %}
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Formatter;
 import java.util.Locale;
 
-class TokenStream extends ArrayList<Terminal> {
+public class TokenStream extends ArrayList<Terminal> {
 
   private int index;
   private TerminalMap terminals;

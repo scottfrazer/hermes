@@ -1,9 +1,13 @@
+{% if package %}
+package {{package}};
+{% endif %}
+
 import org.json.*;
 import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 
-class ParserMain {
+public class ParserMain {
 
   private static class DefaultSyntaxErrorFormatter implements SyntaxErrorFormatter {
 

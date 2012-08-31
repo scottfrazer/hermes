@@ -1,6 +1,10 @@
+{% if package %}
+package {{package}};
+{% endif %}
+
 import java.util.ArrayList;
 
-class AstList extends ArrayList<AstNode> implements AstNode {
+public class AstList extends ArrayList<AstNode> implements AstNode {
 
   public String toString() {
     return "[" + Utility.join(this, ", ") + "]";

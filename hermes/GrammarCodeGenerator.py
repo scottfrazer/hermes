@@ -17,13 +17,14 @@ class MainTemplate(Template):
     self.__dict__.update(locals())
   def getFilename(self):
     return os.path.basename(self.template[:-4])
-  def render(self):
+  def render(self, javaPackage=None):
     templates_dir = resource_filename(__name__, 'templates')
     loader = moody.make_loader(templates_dir)
 
     code = loader.render(
       self.template,
       grammars=self.grammars,
+      package=javaPackage
     )
 
     linereduce = re.compile('^[ \t]*$', re.M)
@@ -37,12 +38,13 @@ class CommonTemplate(Template):
     super().__init__()
   def getFilename(self):
     return os.path.basename(self.template[:-4])
-  def render(self):
+  def render(self, javaPackage=None):
     templates_dir = resource_filename(__name__, 'templates')
     loader = moody.make_loader(templates_dir)
 
     code = loader.render(
-      self.template
+      self.template,
+      package=javaPackage
     )
 
     linereduce = re.compile('^[ \t]*$', re.M)
@@ -109,7 +111,7 @@ class GrammarTemplate(Template):
     return self.grammar.name + '_' + os.path.basename(self.template[:-4])
   def getPrefix(self):
     return self.grammar.name + '_'
-  def render(self):
+  def render(self, javaPackage=None):
     templates_dir = resource_filename(__name__, 'templates')
     loader = moody.make_loader(templates_dir)
     self._prepare(self.grammar)
@@ -121,6 +123,7 @@ class GrammarTemplate(Template):
       LL1Nonterminals=LL1Nonterminals,
       nonAbstractTerminals=self.grammar.getSimpleTerminals(),
       prefix=self.getPrefix(),
+      package=javaPackage
     )
 
     linereduce = re.compile('^[ \t]*$', re.M)
@@ -285,9 +288,9 @@ class CTemplateFactory:
 class TemplateWriter:
   def __init__(self, templateFactory):
     self.__dict__.update(locals())
-  def write(self, grammars, directory, addMain=False):
+  def write(self, grammars, directory, addMain=False, javaPackage=None):
     templates = self.templateFactory.create(grammars, addMain)
     for template in templates:
-      code = template.render() 
+      code = template.render(javaPackage=javaPackage) 
       with open(os.path.join(directory, template.getFilename()), 'w') as fp:
         fp.write(code)

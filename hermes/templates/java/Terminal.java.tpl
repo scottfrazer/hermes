@@ -1,7 +1,11 @@
+{% if package %}
+package {{package}};
+{% endif %}
+
 import java.util.Formatter;
 import java.util.Locale;
 
-class Terminal implements AstNode, ParseTreeNode
+public class Terminal implements AstNode, ParseTreeNode
 {
   private int id;
   private String terminal_str;
