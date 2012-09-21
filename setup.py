@@ -4,7 +4,7 @@ distribute_setup.use_setuptools()
 import os
 from setuptools import setup, find_packages
 
-version = '1.0.1'
+version = '1.0.2'
 long_description = 'LL(1) parser generator with expression parsing support' 
 
 setup(
