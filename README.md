@@ -3,7 +3,7 @@ Hermes Parser Generator
 
 Hermes is a parser generator for LL(1) grammars with extensions to parse expressions. 
 
-[![Continuous Integration status](https://secure.travis-ci.org/travis-ci/travis-lint.png)](http://travis-ci.org/travis-ci/travis-lint)
+[![Build Status](https://secure.travis-ci.org/scottfrazer/hermes.png)](http://travis-ci.org/scottfrazer/hermes)
 
 Pre-requisites
 --------------
