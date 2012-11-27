@@ -14,7 +14,7 @@ public class Terminal implements AstNode, ParseTreeNode
   private int line;
   private int col;
 
-  Terminal(int id, String terminal_str, String source_string, String resource, int line, int col) {
+  public Terminal(int id, String terminal_str, String source_string, String resource, int line, int col) {
     this.id = id;
     this.terminal_str = terminal_str;
     this.source_string = source_string;

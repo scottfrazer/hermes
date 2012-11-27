@@ -253,7 +253,7 @@ public class {{prefix}}Parser implements Parser {
   }
   {% endfor %}
 
-  {{prefix}}Parser(SyntaxErrorFormatter syntaxErrorFormatter) {
+  public {{prefix}}Parser(SyntaxErrorFormatter syntaxErrorFormatter) {
     this.syntaxErrorFormatter = syntaxErrorFormatter; 
     this.expressionParsers = new HashMap<String, ExpressionParser>();
     this.first = new HashMap<String, TerminalIdentifier[]>();

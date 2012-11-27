@@ -13,12 +13,12 @@ public class TokenStream extends ArrayList<Terminal> {
   private TerminalMap terminals;
   private SyntaxErrorFormatter syntaxErrorFormatter;
 
-  TokenStream(List<Terminal> terminals) {
+  public TokenStream(List<Terminal> terminals) {
     super(terminals);
     reset();
   }
 
-  TokenStream() {
+  public TokenStream() {
     reset();
   }
 

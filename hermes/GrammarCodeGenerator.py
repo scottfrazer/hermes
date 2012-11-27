@@ -4,6 +4,13 @@ from hermes.Logger import Factory as LoggerFactory
 from collections import OrderedDict
 
 moduleLogger = LoggerFactory().getModuleLogger(__name__)
+def underscore_to_camelcase(value):
+  def camelcase(): 
+    while True:
+      yield str.capitalize
+
+  c = camelcase()
+  return "".join(next(c)(x) if x else '_' for x in value.split("_"))
 
 class Template:
   def __init__(self):
@@ -146,9 +153,7 @@ class JavaTemplate(GrammarTemplate):
   def getFilename(self):
     return self.getPrefix() + "Parser.java"
   def getPrefix(self):
-    prefix = self.grammar.name.lower()
-    prefix = prefix[0].upper() + prefix[1:]
-    return prefix 
+    return underscore_to_camelcase(self.grammar.name.lower())
 
 class JavaUtilityTemplate(CommonTemplate):
   template = 'java/Utility.java.tpl'
