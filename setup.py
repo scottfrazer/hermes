@@ -8,7 +8,7 @@ version = '1.1'
 long_description = 'LL(1) parser generator with expression parsing support' 
 
 setup(
-  name='Hermes',
+  name='hermes-parser',
   version=version,
   description=long_description,
   author='Scott Frazer',
