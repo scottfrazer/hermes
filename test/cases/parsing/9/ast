@@ -1,17 +1,17 @@
 (Program:
   statements=[
     (Add:
-      rhs=b,
-      lhs=a
+      lhs=a,
+      rhs=b
     ),
     (Assign:
       var=identifier,
       val=(Subtract:
+        lhs=a,
         rhs=(Multiply:
-          rhs=a,
-          lhs=b
-        ),
-        lhs=a
+          lhs=b,
+          rhs=a
+        )
       )
     )
   ]

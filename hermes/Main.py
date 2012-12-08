@@ -6,7 +6,7 @@ from hermes.GrammarAnalyzer import GrammarAnalyzer
 from hermes.GrammarCodeGenerator import FactoryFactory as TemplateFactoryFactory
 from hermes.GrammarCodeGenerator import TemplateWriter
 from hermes.Logger import Factory as LoggerFactory
-from hermes.Theme import AnsiStylizer, TerminalDefaultTheme, TerminalColorTheme
+from hermes.Theme import TerminalDefaultTheme, TerminalColorTheme
 
 def Cli():
 
@@ -32,7 +32,7 @@ def Cli():
 
   parser.add_argument('--version',
               action='version',
-              version=str(pkg_resources.get_distribution('hermes')))
+              version=str(pkg_resources.get_distribution('hermes-parser')))
 
   parser.add_argument('-D', '--debug',
               required = False,
@@ -86,12 +86,13 @@ def Cli():
     name = name[:-4]
     grammars.append( fp.parse(name, open(grammar)) )
 
-  if cli.color:
-    theme = TerminalColorTheme(AnsiStylizer())
-  else:
-    theme = TerminalDefaultTheme()
-
   if cli.action == 'analyze':
+
+    if cli.color:
+      theme = TerminalColorTheme()
+    else:
+      theme = TerminalDefaultTheme()
+
     for grammar in grammars:
       analyzer = GrammarAnalyzer(grammar)
       analyzer.analyze( theme=theme )

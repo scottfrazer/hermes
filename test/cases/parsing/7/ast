@@ -1,42 +1,42 @@
 (Program:
   statements=[
     (Assign:
+      lhs=identifier,
       rhs=(Assign:
-        rhs=n,
-        lhs=identifier
-      ),
-      lhs=identifier
+        lhs=identifier,
+        rhs=n
+      )
     ),
     (For:
       decl=(Assign:
-        rhs=n,
-        lhs=identifier
-      ),
-      body=(Assign:
-        rhs=(Add:
-          rhs=(Multiply:
-            rhs=(Power:
-              rhs=s,
-              lhs=n
-            ),
-            lhs=identifier
-          ),
-          lhs=n
-        ),
-        lhs=identifier
+        lhs=identifier,
+        rhs=n
       ),
       cond=None,
       iter=(Assign:
+        lhs=identifier,
         rhs=(Add:
-          rhs=n,
-          lhs=s
-        ),
-        lhs=identifier
+          lhs=s,
+          rhs=n
+        )
+      ),
+      body=(Assign:
+        lhs=identifier,
+        rhs=(Add:
+          lhs=n,
+          rhs=(Multiply:
+            lhs=identifier,
+            rhs=(Power:
+              lhs=n,
+              rhs=s
+            )
+          )
+        )
       )
     ),
     (Add:
-      rhs=identifier,
-      lhs=identifier
+      lhs=identifier,
+      rhs=identifier
     )
   ]
 )

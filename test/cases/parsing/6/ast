@@ -12,25 +12,25 @@
         var=identifier,
         val=n
       ),
-      body=(Assign:
-        var=identifier,
-        val=(Add:
-          rhs=(Divide:
-            rhs=s,
-            lhs=(Multiply:
-              rhs=n,
-              lhs=s
-            )
-          ),
-          lhs=n
-        )
-      ),
       cond=None,
       iter=(Assign:
         var=identifier,
         val=(Add:
-          rhs=n,
-          lhs=s
+          lhs=s,
+          rhs=n
+        )
+      ),
+      body=(Assign:
+        var=identifier,
+        val=(Add:
+          lhs=n,
+          rhs=(Divide:
+            lhs=(Multiply:
+              lhs=s,
+              rhs=n
+            ),
+            rhs=s
+          )
         )
       )
     )

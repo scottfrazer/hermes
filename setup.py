@@ -18,7 +18,7 @@ setup(
   package_data={'hermes': ['templates/python/*.tpl', 'templates/java/*.tpl', 'templates/c/*.tpl']},
   install_requires=[
     "moody-templates>=0.9",
-    "xtermcolor==1.0.1"
+    "xtermcolor==1.2"
   ],
   entry_points={
   'console_scripts': [

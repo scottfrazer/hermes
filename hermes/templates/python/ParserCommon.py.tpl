@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 class Terminal:
   def __init__(self, id, str, source_string, resource, line, col):
     self.__dict__.update(locals())
@@ -85,7 +87,7 @@ class ParseTree():
       if isinstance(self.astTransform, AstTransformSubstitution):
         return self.children[self.astTransform.idx].toAst()
       elif isinstance(self.astTransform, AstTransformNodeCreator):
-        parameters = {}
+        parameters = OrderedDict()
         for name, idx in self.astTransform.parameters.items():
           if idx == '$':
             child = self.children[0]
@@ -110,7 +112,9 @@ class ParseTree():
       if isinstance(self.astTransform, AstTransformSubstitution):
         return self.children[self.astTransform.idx].toAst()
       elif isinstance(self.astTransform, AstTransformNodeCreator):
-        parameters = {name: self.children[idx].toAst() for name, idx in self.astTransform.parameters.items()}
+        parameters = OrderedDict()
+        for name, idx in self.astTransform.parameters.items():
+          parameters[name] = self.children[idx].toAst()
         return Ast(self.astTransform.name, parameters)
       elif len(self.children):
         return self.children[0].toAst()

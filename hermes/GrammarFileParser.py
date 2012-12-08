@@ -258,7 +258,7 @@ class AstParser(Parser):
       return AstTranslation(0)
     if '(' in string:
       (node, values) = string.replace(')', '').split('(')
-      parameters = {}
+      parameters = OrderedDict()
       if len(values):
         for param in values.split(','):
           (name, value) = param.split('=')
