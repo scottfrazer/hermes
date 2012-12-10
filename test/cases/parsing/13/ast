@@ -7,16 +7,16 @@
       name=b
     ),
     (Mul:
+      l=number,
       r=(FuncCall:
+        name=identifier,
         params=[
           (Add:
-            r=number,
-            l=number
+            l=number,
+            r=number
           )
-        ],
-        name=identifier
-      ),
-      l=number
+        ]
+      )
     )
   ]
 )

@@ -1,4 +1,5 @@
 import sys, inspect
+from collections import OrderedDict
 from ParserCommon import *
 
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
@@ -76,7 +77,12 @@ class {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
     {{'if' if i == 0 else 'elif'}} current.getId() in [{{', '.join([str(x.id) for x in exprGrammar.ruleFirst(rule)])}}]:
       # {{rule}}
         {% if isinstance(rule.nudAst, AstSpecification) %}
-      tree.astTransform = AstTransformNodeCreator('{{rule.nudAst.name}}', {{rule.nudAst.parameters}})
+      astParameters = OrderedDict([
+          {% for k,v in rule.nudAst.parameters.items() %}
+        ('{{k}}', {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %}),
+          {% endfor %}
+      ])
+      tree.astTransform = AstTransformNodeCreator('{{rule.nudAst.name}}', astParameters)
         {% elif isinstance(rule.nudAst, AstTranslation) %}
       tree.astTransform = AstTransformSubstitution({{rule.nudAst.idx}})
         {% endif %}
@@ -116,7 +122,12 @@ class {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
     {{'if' if len(seen)==0 else 'else if'}} current.getId() == {{led[0].id}}: # {{led[0]}}
 
         {% if isinstance(rule.ast, AstSpecification) %}
-      tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', {{rule.ast.parameters}})
+      astParameters = OrderedDict([
+          {% for k,v in rule.ast.parameters.items() %}
+        ('{{k}}', {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %}),
+          {% endfor %}
+      ])
+      tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', astParameters)
         {% elif isinstance(rule.ast, AstTranslation) %}
       tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
         {% endif %}
@@ -260,7 +271,12 @@ class {{prefix}}Parser:
         {% if isinstance(rule.ast, AstTranslation) %}
       tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
         {% elif isinstance(rule.ast, AstSpecification) %}
-      tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', {{rule.ast.parameters}})
+      astParameters = OrderedDict([
+          {% for k,v in rule.ast.parameters.items() %}
+        ('{{k}}', {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %}),
+          {% endfor %}
+      ])
+      tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', astParameters)
         {% else %}
       tree.astTransform = AstTransformSubstitution(0)
         {% endif %}
@@ -294,7 +310,12 @@ class {{prefix}}Parser:
           {% if isinstance(rule.ast, AstTranslation) %}
       tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
           {% elif isinstance(rule.ast, AstSpecification) %}
-      tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', {{rule.ast.parameters}})
+      astParameters = OrderedDict([
+          {% for k,v in rule.ast.parameters.items() %}
+        ('{{k}}', {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %}),
+          {% endfor %}
+      ])
+      tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', astParameters)
           {% else %}
       tree.astTransform = AstTransformSubstitution(0)
           {% endif %}
