@@ -1,4 +1,4 @@
-import xtermcolor
+from xtermcolor import colorize
 
 class Theme:
   def rule(self, string):
@@ -47,7 +47,7 @@ class TerminalDefaultTheme(Theme):
     return string + '\n'
 
 class TerminalColorTheme(Theme):
-  def __init__(self, ansiStylizer):
+  def __init__(self):
     self.__dict__.update(locals())
   def rule(self, string):
     return string
@@ -85,6 +85,6 @@ class TerminalColorTheme(Theme):
     return string
   def astSpecification(self, string):
     return colorize(string, ansi=13)
-  def _boxed(self, string, color):
+  def _boxed(self, string, ansi):
     line = '+%s+' % (''.join(['-' for i in range(len(string)+2)]))
-    return colorize('%s\n| %s |\n%s\n\n' % (line, string, line), ansi=color)
+    return colorize('%s\n| %s |\n%s\n\n' % (line, string, line), ansi=ansi)
