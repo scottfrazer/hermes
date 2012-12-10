@@ -91,7 +91,7 @@ Grammar rules can be combined for brevity:
 ```
 N := 'a'
 N := 'b'
-``
+```
 
 Is the same as:
 
