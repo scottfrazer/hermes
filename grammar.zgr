@@ -1,0 +1,28 @@
+{
+  "ll1": {
+    "start": "grammar",
+    "rules": [
+      "grammar := 'lsquare' + list(body_element) + 'rsquare' + 'user_functions'",
+      "body_element := 'body_hint' + body_element_sub",
+      "body_element_sub := list(alias) | lexer | parser",
+      "lexer := 'lexer' + 'lbrace' + 'rbrace'",
+      "parser := parser_ll1 | parser_expression",
+      "parser_ll1 := 'parser_ll1' + 'lbrace' + list(ll1_rule) + 'rbrace'",
+      "ll1_rule := optional('asterisk') + 'nonterminal' + 'equals' + ll1_rule_lhs + 'newline'",
+      "ll1_rule_lhs := parser | list(morpheme)",
+      "parser_expression := 'parser_expression' + 'lbrace' + list(expression_rule) + 'rbrace'",
+      "expression_rule := 'lparen' + expression_precedence + 'rparen' + 'nonterminal' + 'equals' + expression_rule_lhs + 'newline'",
+      "expression_precedence := binding_power_marker + 'colon' + associativity",
+      "binding_power_marker := 'asterisk' | 'dash'",
+      "associativity := 'left' | 'right' | 'unary'",
+      "expression_rule_lhs := parser | list(expression_morpheme) + optional(ast_transformation)",
+      "expression_morpheme := morpheme | 'expression_divider'",
+      "morpheme := 'terminal' | 'nonterminal' | macro",
+      "ast_transformation := 'arrow' + 'identifier' + 'lparen' + list(ast_parameter, 'comma') + 'rparen'",
+      "ast_parameter := 'identifier' + 'equals' + 'nonterminal'",
+      "macro := 'identifier' + 'lparen' + list(macro_parameter, 'comma') + 'rparen'",
+      "macro_parameter := 'nonterminal' | 'terminal'",
+      "alias := 'alias_string' + 'arrow' + 'terminal' + 'newline'"
+    ]
+  }
+}
