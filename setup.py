@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = '1.2'
+version = '2.0'
 long_description = 'LL(1) parser generator with expression parsing support' 
 
 setup(
