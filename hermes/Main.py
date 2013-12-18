@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import sys, os, argparse, pkg_resources
 from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
 from hermes.GrammarAnalyzer import GrammarAnalyzer
@@ -14,55 +12,52 @@ def Cli():
 
   # Version 3.2 required for argparse
   if ver.major < 3 or (ver.major == 3 and ver.minor < 2):
-    print("Python 3.2+ required. %d.%d.%d installed" %(ver.major, ver.minor, ver.micro))
+    print("Python 3.2+ required. {}.{}.{} installed".format(ver.major, ver.minor, ver.micro))
     sys.exit(-1)
 
-  parser = argparse.ArgumentParser(
-              description = 'Hermes Parser Generator',
-              epilog = '(c) 2011-2012 Scott Frazer')
+  command_help = {
+    "analyze": "Analyze a grammer, find conflicts, and print out first/follow sets",
+    "generate": "Generate the code for a parser"
+  }
 
-  parser.add_argument('action',
-              choices = ['analyze', 'generate'],
-              help = 'Parser Generator Actions')
+  parser = argparse.ArgumentParser(description='Hermes Parser Generator', epilog='(c) 2011-2013 Scott Frazer')
+  parser.add_argument(
+    '--version', action='version', version=str(pkg_resources.get_distribution('hermes-parser'))
+  )
+  parser.add_argument(
+    '-D', '--debug', required=False, action='store_true', help='Open the floodgates'
+  )
+  parser.add_argument(
+    '-c', '--color', required=False, action='store_true', help='Colorized output!'
+  )
 
-  parser.add_argument('grammar',
-              metavar = 'GRAMMAR',
-              nargs = '+',
-              help = 'Grammar file')
+  subparsers = parser.add_subparsers(help='Parser Generator Actions', dest='action')
+  commands = {}
 
-  parser.add_argument('--version',
-              action='version',
-              version=str(pkg_resources.get_distribution('hermes-parser')))
-
-  parser.add_argument('-D', '--debug',
-              required = False,
-              action='store_true',
-              help = 'Open the floodgates')
-
-  parser.add_argument('-d', '--directory',
-              required=False,
-              default='.',
-              help='Directory to write generated code to')
-
-  parser.add_argument('-l', '--language',
-              required = False,
-              default='python',
-              choices=['c', 'java', 'python'],
-              help = 'Language for generated parser')
-
-  parser.add_argument('--java-package',
-              required = False,
-              help = 'If generating Java code, this is the package.')
-
-  parser.add_argument('-c', '--color',
-              required = False,
-              action = 'store_true',
-              help = 'Prints things in color!  For the colorblind, this is a no-op.')
-
-  parser.add_argument('-m', '--add-main',
-              required = False,
-              action = 'store_true',
-              help = 'If this is specified, a main() function will be generated in the source code.')
+  commands['analyze'] = subparsers.add_parser(
+    'analyze', description=command_help['analyze'], help=command_help['analyze']
+  )
+  commands['generate'] = subparsers.add_parser(
+    'generate', description=command_help['generate'], help=command_help['generate']
+  )
+  commands['generate'].add_argument(
+    '--name', help='The name of the module'
+  )
+  commands['generate'].add_argument(
+    'grammar', metavar='GRAMMAR', nargs='+', help='Grammar file'
+  )
+  commands['generate'].add_argument(
+    '-d', '--directory', required=False, default='.', help='Directory to write generated code to'
+  )
+  commands['generate'].add_argument(
+    '-l', '--language', required=False, default='python', choices=['c', 'java', 'python'], help = 'Language for generated parser'
+  )
+  commands['generate'].add_argument(
+    '--java-package', required=False, help='If generating Java code, this is the package.'
+  )
+  commands['generate'].add_argument(
+    '-m', '--add-main', required=False, action='store_true', help='If this is specified, a main() function will be generated in the source code.'
+  )
 
   cli = parser.parse_args()
   logger = LoggerFactory().initialize(cli.debug)
