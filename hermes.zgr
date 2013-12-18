@@ -1,0 +1,105 @@
+[
+  lexer {
+    r'\[' -> default_lsquare(:lsquare),
+    r'\s+' -> null,
+    r'.*' {dotall} -> :user_functions
+
+    mode<definitions> {
+      r'\]' -> definitions_rsquare(:rsquare),
+      r'lexer' -> definitions_lexer(:lexer),
+      r'parser\s*<\s*[lL][lL]1\s*>' -> definitions_parser(:parser_ll1),
+      r'{' -> :lbrace,
+      r'}' -> :rbrace,
+      r'\s+' -> null,
+    },
+
+    mode<lexer> {
+      r'mode' -> :mode,
+      r'null' -> null,
+      r'([^\']|\\\')*' -> :regex,
+      r'->' -> :arrow,
+      r':[a-zA-Z]+' -> :terminal,
+      r'[a-zA-Z]+' -> :identifier,
+      r'{' -> lexer_lbrace(:lbrace),
+      r'}' -> lexer_rbrace(:rbrace),
+      r'<' -> :langle,
+      r'>' -> :rangle,
+      r'\(' -> :lparen,
+      r'\)' -> :rparen,
+      r':' -> :colon,
+      r'\s+' -> null
+    },
+
+    mode<parser> {
+      r'{' -> parser_lbrace(:lbrace),
+      r'}' -> parser_rbrace(:rbrace),
+      r'\(' -> :lparen,
+      r'\)' -> :rparen,
+      r',' -> :comma,
+      r'->' -> :arrow,
+      r'=' -> :equals,
+      r'\*' -> :asterisk,
+      r'null' -> :null,
+      r':[a-z]+' -> :terminal,
+      r'\$[a-z0-9]+(?=\s*=\s*null)' -> parser_null_rule_hint(:nonterminal),
+      r'\$[a-z0-9]+(?=\s*=\s*parser)' -> parser_subparser_hint(:nonterminal),
+      r'\$[a-z0-9]+(?=\s*=)' -> parser_rule_hint(:nonterminal),
+      r'\$[a-z0-9]+' -> :nonterminal,
+      r'parser\s*<\s*expression\s*>' -> parser_expression(:parser_expression),
+      r'[a-zA-Z]+' -> :identifier,
+      r'\s+' -> null
+    },
+
+    mode<expression> {
+      r'{' -> parser_lbrace(:lbrace),
+      r'}' -> parser_rbrace(:rbrace),
+      r':(?=\s*[a-z]+\s*\))' -> :colon,
+      r':[a-z]+' -> :terminal,
+      r'\$[a-z0-9]+' -> :nonterminal,
+      r'\(' -> :lparen,
+      r'\)' -> :rparen,
+      r'\*' -> :asterisk,
+      r',' -> :comma,
+      r':' -> :colon,
+      r'=' -> :equals,
+      r'->' -> :arrow,
+      r'left' -> :left,
+      r'right' -> :right,
+      r'unary' -> :unary,
+      r'<:>' -> :expression_divider,
+      r'[a-zA-Z]+' -> :identifier,
+      r'\s+' -> null
+    }
+  }
+  
+  parser<ll1> {
+    $grammar =:lsquare + list(body_element) :rsquare :user_functions -> Grammar(body=$1, code=$3)
+    $body_element = :body_element_hint + $body_element_sub -> $1
+    $body_element_sub = $lexer | $parser
+    $lexer = :lexer :lbrace + list($lexer_atom) :rbrace -> Lexer(atoms=$2)
+    $lexer_atom = $lexer_regex | $lexer_mode
+    $lexer_regex = :regex :arrow $lexer_target -> Regex(regex=$0, onmatch=$2)
+    $lexer_target = :terminal -> Terminal(name=$0)
+    $lexer_target = :function -> FunctionCall(name=$0)
+    $lexer_target = :null -> Null()
+    $lexer_mode = :mode :langle :identifier :rangle :lbrace + list($lexer_atom) :rbrace -> Mode(name=$2, atoms=$5)
+    $parser = $parser_ll1 | $parser_expression
+    parser_ll1 = :parser_ll1 :lbrace list($ll1_rule) :rbrace -> Parser(rules=$2)
+    ll1_rule = :ll1_rule_hint :nonterminal :equals list($morpheme) optional($ast_transform) -> Rule(optional=$0, nonterminal=$2, production=$3, ast=$4)
+    $ll1_rule = :ll1_null_rule_hint :nonterminal :equals :null -> NullRule(nonterminal=$1)
+    $ll1_rule = :subparser_hint :nonterminal :equals $parser -> SubParser(nonterminal=$1, parser=$3)
+    $parser_expression = :parser_expression :lbrace list($expression_rule) :rbrace -> ExpressionParser(rules=$2)
+    $expression_rule = :lparen $precedence :rparen :nonterminal :equals + list($expression_morpheme) + optional(ast_transform) -> ExpressionRule(precedence=$1, nonterminal=$3, production=$5, ast=$6)
+    $precedence = $binding_power_marker :colon $associativity -> Precedence(marker=$0, associativity=$2)
+    $binding_power_marker = :asterisk | :dash
+    $associativity = :left | :right | :unary
+    $expression_morpheme = $morpheme | :expression_divider
+    $morpheme = :terminal | :nonterminal | $macro
+    $ast_transform =:arrow :identifier :lparen list($ast_parameter, :comma) :rparen -> AstTransformation(name=$1, parameters=$3)
+    $ast_parameter =:identifier :equals :nonterminal -> AstParameter(name=$0, index=$2)
+    $macro =:identifier :lparen list($macro_parameter, :comma) :rparen -> Macro(name=$0, parameters=$2)
+    $macro_parameter =:nonterminal | :terminal"
+  }
+]
+
+this is some code
