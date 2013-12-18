@@ -1,0 +1,21 @@
+[
+  lexer {
+    r'[a-z]+' -> :y
+    mode<include> {
+      r'' -> :x
+    }
+  }
+  
+  parser<ll1> {
+    $start = $a
+    $a = :x :y $a
+    $a = :y :x $a list($x, :s) -> Ast(a=$0, b=$1, c=$2)
+    $a = null
+    $e = parser<expression> {
+      (*:left) $e = $e :plus $e -> Add(l=$0, r=$2)
+      (*:unary) $e = :dash $e -> UMinus(arg=$1)
+    }
+  }
+]
+
+this is some code
