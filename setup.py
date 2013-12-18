@@ -1,8 +1,4 @@
-import distribute_setup
-distribute_setup.use_setuptools()
-
-import os
-from setuptools import setup, find_packages
+from setuptools import setup
 
 version = '1.2'
 long_description = 'LL(1) parser generator with expression parsing support' 
@@ -17,8 +13,8 @@ setup(
   package_dir={'hermes': 'hermes'},
   package_data={'hermes': ['templates/python/*.tpl', 'templates/java/*.tpl', 'templates/c/*.tpl']},
   install_requires=[
-    "moody-templates>=0.9",
-    "xtermcolor==1.2.1"
+    "moody-templates",
+    "xtermcolor"
   ],
   entry_points={
   'console_scripts': [
