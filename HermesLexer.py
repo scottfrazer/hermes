@@ -1,4 +1,6 @@
 import re
+import sys
+import base64
 from xtermcolor import colorize
 
 def default_action(context, mode, match, terminal):
@@ -116,24 +118,38 @@ class HermesLexer:
             col = len(match_lines[-1]) + 1
         return (line, col)
 
-    def parse(self, string):
-      (mode, line, col) = ('default', 1, 1)
-      context = {'lexer_brace': 0, 'grammar_brace': 0, 'parser_brace': 0}
-      while len(string):
-          (tokens, match, mode) = self.next(string, mode, context)
-          string = string[len(match):]
-          if tokens is not None:
-              for token in tokens:
-                  token.line = line
-                  token.col = col
-                  print('token --> [{}] [{}, {}] [{}] [{}] [{}]'.format(
-                      colorize(token.terminal, ansi=9), colorize(str(token.line), ansi=5), colorize(str(token.col), ansi=5),
-                      colorize(token.match, ansi=3), colorize(mode, ansi=4), colorize(str(context), ansi=13)
-                  ))
-              (line, col) = self.update_line_col(match, line, col)
-          else:
-              print('No match found')
-              return
+    def parse(self, string, debug=False):
+        (mode, line, col) = ('default', 1, 1)
+        context = {'lexer_brace': 0, 'grammar_brace': 0, 'parser_brace': 0}
+        parsed_tokens = []
+        while len(string):
+            (tokens, match, mode) = self.next(string, mode, context)
+            string = string[len(match):]
+            if tokens is not None:
+                for token in tokens:
+                    token.line = line
+                    token.col = col
+                    source_string_base64 = base64.b64encode(token.match.encode('utf-8')).decode('ascii')
+                    parsed_tokens.append('{{"terminal": "{}", "line": {}, "col": {}, "resource": "", "source_string": "{}"}}'.format(
+                        token.terminal,
+                        token.line,
+                        token.col,
+                        source_string_base64
+                    ))
+                    if debug:
+                        print('token --> [{}] [{}, {}] [{}] [{}] [{}]'.format(
+                            colorize(token.terminal, ansi=9),
+                            colorize(str(token.line), ansi=5),
+                            colorize(str(token.col), ansi=5),
+                            colorize(token.match, ansi=3),
+                            colorize(mode, ansi=4),
+                            colorize(str(context), ansi=13)
+                        ))
+                (line, col) = self.update_line_col(match, line, col)
+            else:
+                print('No match found')
+                return
+        return parsed_tokens
 
     def next(self, string, mode, context):
         for (regex, terminal, function) in self.regex[mode]:
@@ -146,4 +162,12 @@ class HermesLexer:
 
 lexer = HermesLexer()
 with open('hermes.zgr') as fp:
-    lexer.parse(fp.read())
+    debug = False
+    tokens = lexer.parse(fp.read(), debug)
+    if not debug:
+        if len(tokens) == 0:
+            print('[]')
+        else:
+            sys.stdout.write('[\n    ')
+            sys.stdout.write(',\n    '.join(tokens))
+            sys.stdout.write('\n]')
