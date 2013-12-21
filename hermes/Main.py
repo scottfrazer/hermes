@@ -37,6 +37,9 @@ def Cli():
   commands['analyze'] = subparsers.add_parser(
     'analyze', description=command_help['analyze'], help=command_help['analyze']
   )
+  commands['analyze'].add_argument(
+    'grammar', metavar='GRAMMAR', nargs='+', help='Grammar file'
+  )
   commands['generate'] = subparsers.add_parser(
     'generate', description=command_help['generate'], help=command_help['generate']
   )
