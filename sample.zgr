@@ -1,4 +1,4 @@
-[
+grammar {
   lexer {
     r'[a-z]+' -> :y
     mode<include> {
@@ -16,6 +16,6 @@
       (*:unary) $e = :dash $e -> UMinus(arg=$1)
     }
   }
-]
+}
 
 this is some code

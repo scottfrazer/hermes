@@ -2,7 +2,7 @@
   "ll1": {
     "start": "grammar",
     "rules": [
-      "grammar := 'lsquare' + list(body_element) + 'rsquare' + 'user_functions' -> Grammar(body=$1, code=$3)",
+      "grammar := 'grammar' + 'lbrace' + list(body_element) + 'rbrace' + 'code' -> Grammar(body=$1, code=$3)",
       "body_element := 'body_element_hint' + body_element_sub -> $1",
       "body_element_sub := lexer | parser",
       "lexer := 'lexer' + 'lbrace' + list(lexer_atom) + 'rbrace' -> Lexer(atoms=$2)",
