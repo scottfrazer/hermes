@@ -113,7 +113,7 @@ class HermesLexer:
         if len(match_lines) == 1:
             col += len(match_lines[0])
         else:
-            col = len(match_lines[-1])
+            col = len(match_lines[-1]) + 1
         return (line, col)
 
     def parse(self, string):
