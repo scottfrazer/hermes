@@ -3,7 +3,7 @@
     "start": "grammar",
     "rules": [
       "grammar := 'grammar' + 'lbrace' + list(body_element) + 'rbrace' + 'code' -> Grammar(body=$1, code=$3)",
-      "body_element := 'body_element_hint' + body_element_sub -> $1",
+      "body_element := body_element_sub",
       "body_element_sub := lexer | parser",
       "lexer := 'lexer' + 'lbrace' + list(lexer_atom) + 'rbrace' -> Lexer(atoms=$2)",
       "lexer_atom := lexer_regex | lexer_mode",
@@ -14,7 +14,7 @@
       "lexer_mode := 'mode' + 'langle' + 'identifier' + 'rangle' + 'lbrace' + list(lexer_atom) + 'rbrace' -> Mode(name=$2, atoms=$5)",
       "parser := parser_ll1 | parser_expression",
       "parser_ll1 := 'parser_ll1' + 'lbrace' + list(ll1_rule) + 'rbrace' -> Parser(rules=$2)",
-      "ll1_rule := 'll1_rule_hint' +  'nonterminal' + 'equals' + list(morpheme) + optional(ast_transform) -> Rule(optional=$0, nonterminal=$2, production=$3, ast=$4)",
+      "ll1_rule := 'll1_rule_hint' +  'nonterminal' + 'equals' + list(morpheme) + optional(ast_transform) -> Rule(nonterminal=$1, production=$3, ast=$4)",
       "ll1_rule := 'll1_null_rule_hint' +  'nonterminal' + 'equals' + 'null' -> NullRule(nonterminal=$1)",
       "ll1_rule := 'subparser_hint' +  'nonterminal' + 'equals' + parser -> SubParser(nonterminal=$1, parser=$3)",
       "parser_expression := 'parser_expression' + 'lbrace' + list(expression_rule) + 'rbrace' -> ExpressionParser(rules=$2)",
