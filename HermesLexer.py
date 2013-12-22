@@ -81,7 +81,6 @@ class HermesLexer:
             (re.compile(r'}'), "lbrace", parser_rbrace),
             (re.compile(r'\|'), "pipe", None),
             (re.compile(r'='), "equals", None),
-            (re.compile(r'list'), "list", None),
             (re.compile(r'\('), "lparen", None),
             (re.compile(r'\)'), "rparen", None),
             (re.compile(r','), "comma", None),
