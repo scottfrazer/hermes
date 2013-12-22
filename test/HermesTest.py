@@ -133,7 +133,7 @@ class HermesCTest(HermesTest):
     templateWriter = TemplateWriter(templateFactory)
     templateWriter.write([grammar], tmpDir, addMain=True)
 
-    cSourceFiles = list(filter(lambda x: x != 'tokens', os.listdir(tmpDir)))
+    cSourceFiles = list(filter(lambda x: x.endswith('.c'), os.listdir(tmpDir)))
 
     try:
       compileCmd = 'gcc -o parser {sources} -g -Wall -pedantic -ansi -std=c99 2>/dev/null'.format(sources=' '.join(cSourceFiles))
