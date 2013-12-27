@@ -1,6 +1,7 @@
 import re
 import sys
 import base64
+import argparse
 from xtermcolor import colorize
 
 def default_action(context, mode, match, terminal):
@@ -37,6 +38,9 @@ def parser_rbrace(context, mode, match, terminal):
     context['parser_brace'] -= 1
     mode = 'grammar' if context['parser_brace'] == 0 else mode
     return default_action(context, mode, match, terminal)
+def parser_rule_start(context, mode, match, terminal):
+    tokens = [Token('', 'll1_rule_hint'), Token(match, terminal)]
+    return (tokens, mode, context) 
 def grammar_lbrace(context, mode, match, terminal):
     context['grammar_brace'] += 1
     return default_action(context, mode, match, terminal)
@@ -59,14 +63,15 @@ class HermesLexer:
         'grammar': [
             (re.compile(r'\s+'), None, None),
             (re.compile(r'{'), "lbrace", grammar_lbrace),
-            (re.compile(r'}'), "lbrace", grammar_rbrace),
+            (re.compile(r'}'), "rbrace", grammar_rbrace),
             (re.compile(r'lexer'), "lexer", lexer_start),
             (re.compile(r'parser\s*<\s*ll1\s*>'), "parser_ll1", parser_ll1_start),
         ],
         'lexer': [
             (re.compile(r'\s+'), None, None),
             (re.compile(r'{'), "lbrace", lexer_lbrace),
-            (re.compile(r'}'), "lbrace", lexer_rbrace),
+            (re.compile(r'}'), "rbrace", lexer_rbrace),
+            (re.compile(r"null"), "null", None),
             (re.compile(r'\('), "lparen", None),
             (re.compile(r'\)'), "rparen", None),
             (re.compile(r"r'(\\\'|[^\'])*'"), "regex", None),
@@ -78,7 +83,7 @@ class HermesLexer:
         'parser_ll1': [
             (re.compile(r'\s+'), None, None),
             (re.compile(r'{'), "lbrace", parser_lbrace),
-            (re.compile(r'}'), "lbrace", parser_rbrace),
+            (re.compile(r'}'), "rbrace", parser_rbrace),
             (re.compile(r'\|'), "pipe", None),
             (re.compile(r'='), "equals", None),
             (re.compile(r'\('), "lparen", None),
@@ -87,6 +92,7 @@ class HermesLexer:
             (re.compile(r'->'), "arrow", None),
             (re.compile(r'parser\s*<\s*expression\s*>'), "parser_expr", parser_expr_start),
             (re.compile(r":[a-zA-Z][a-zA-Z0-9_]+"), "terminal", None),
+            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]+(?=\s*\=)'), "nonterminal", parser_rule_start),
             (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]+'), "nonterminal", None),
             (re.compile(r'\$[0-9]+'), "nonterminal_reference", None),
             (re.compile(r'[a-zA-Z][a-zA-Z0-9_]+'), "identifier", None),
@@ -96,7 +102,7 @@ class HermesLexer:
             (re.compile(r'\([\*-]:(left|right|unary)\)'), "binding", None),
             (re.compile(r'='), "equals", None),
             (re.compile(r'{'), "lbrace", parser_lbrace),
-            (re.compile(r'}'), "lbrace", parser_rbrace),
+            (re.compile(r'}'), "rbrace", parser_rbrace),
             (re.compile(r'\('), "lparen", None),
             (re.compile(r'\)'), "rparen", None),
             (re.compile(r','), "comma", None),
@@ -161,9 +167,11 @@ class HermesLexer:
 
 lexer = HermesLexer()
 with open('hermes.zgr') as fp:
-    debug = False
-    tokens = lexer.parse(fp.read(), debug)
-    if not debug:
+    parser = argparse.ArgumentParser(description='Hermes Grammar Lexer')
+    parser.add_argument('--debug', action='store_true')
+    cli = parser.parse_args()
+    tokens = lexer.parse(fp.read(), cli.debug)
+    if not cli.debug:
         if len(tokens) == 0:
             print('[]')
         else:
