@@ -221,7 +221,7 @@ class {{prefix}}Parser:
     if not currentToken:
       raise SyntaxError( 'No more tokens.  Expecting %s' % (self.terminals[terminalId]) )
     if currentToken.getId() != terminalId:
-      raise SyntaxError( 'Unexpected symbol when parsing %s.  Expected %s, got %s.' %(whosdaddy(), self.terminals[terminalId], currentToken if currentToken else 'None') )
+      raise SyntaxError( 'Unexpected symbol (line %d, col %d) when parsing %s.  Expected %s, got %s.' %(currentToken.line, currentToken.col, whosdaddy(), self.terminals[terminalId], currentToken) )
 
     nextToken = self.tokens.advance()
     if nextToken and not self.isTerminal(nextToken.getId()):
@@ -335,7 +335,7 @@ class {{prefix}}Parser:
       {% endfor %}
 
       {% if not nonterminal.empty %}
-    raise SyntaxError('Error: Unexpected symbol (%s) when parsing %s' % (current, whoami()))
+    raise SyntaxError('Error: Unexpected symbol (%s) on line %d, column %d when parsing %s' % (current, current.line, current.col, whoami()))
       {% else %}
     return tree
       {% endif %}
