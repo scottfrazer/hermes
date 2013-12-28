@@ -1,74 +1,63 @@
 grammar {
   lexer {
-    r'\[' -> default_lsquare(:lsquare)
+    r'\grammar' -> grammar_start(:grammar)
     r'\s+' -> null
-    r'.*' {dotall} -> :user_functions
+    r'.*' {dotall} -> :code
 
-    mode<definitions> {
-      r'\]' -> definitions_rsquare(:rsquare)
-      r'lexer' -> definitions_lexer(:lexer)
-      r'parser\s*<\s*[lL][lL]1\s*>' -> definitions_parser(:parser_ll1)
-      r'{' -> :lbrace
-      r'}' -> :rbrace
+    mode<grammar> {
       r'\s+' -> null
+      r'{' -> grammar_lbrace(:lbrace)
+      r'}' -> grammar_rbrace(:rbrace)
+      r'lexer' -> lexer_start(:lexer)
+      r'parser\s*<\s*ll1\s*>' -> parser_ll1_start(:parser_ll1)
     }
 
     mode<lexer> {
-      r'mode' -> :mode
-      r'null' -> null
-      r'([^\']|\\\')*' -> :regex
-      r'->' -> :arrow
-      r':[a-zA-Z]+' -> :terminal
-      r'[a-zA-Z]+' -> :identifier
+      r'\s+' -> null
       r'{' -> lexer_lbrace(:lbrace)
       r'}' -> lexer_rbrace(:rbrace)
-      r'<' -> :langle
-      r'>' -> :rangle
-      r'\(' -> :lparen
-      r'\)' -> :rparen
-      r':' -> :colon
-      r'\s+' -> null
-    }
-
-    mode<parser> {
-      r'{' -> parser_lbrace(:lbrace)
-      r'}' -> parser_rbrace(:rbrace)
-      r'\(' -> :lparen
-      r'\)' -> :rparen
-      r',' -> :comma
-      r'->' -> :arrow
-      r'=' -> :equals
-      r'\*' -> :asterisk
       r'null' -> :null
-      r':[a-z]+' -> :terminal
-      r'\$[a-z0-9]+(?=\s*=\s*null)' -> parser_null_rule_hint(:nonterminal)
-      r'\$[a-z0-9]+(?=\s*=\s*parser)' -> parser_subparser_hint(:nonterminal)
-      r'\$[a-z0-9]+(?=\s*=)' -> parser_rule_hint(:nonterminal)
-      r'\$[a-z0-9]+' -> :nonterminal
-      r'parser\s*<\s*expression\s*>' -> parser_expression(:parser_expression)
-      r'[a-zA-Z]+' -> :identifier
-      r'\s+' -> null
-    }
-
-    mode<expression> {
-      r'{' -> parser_lbrace(:lbrace)
-      r'}' -> parser_rbrace(:rbrace)
-      r':(?=\s*[a-z]+\s*\))' -> :colon
-      r':[a-z]+' -> :terminal
-      r'\$[a-z0-9]+' -> :nonterminal
       r'\(' -> :lparen
       r'\)' -> :rparen
-      r'\*' -> :asterisk
-      r',' -> :comma
-      r':' -> :colon
-      r'=' -> :equals
+      r'r\'(\\\'|[^\'])*\'' -> :regex
       r'->' -> :arrow
-      r'left' -> :left
-      r'right' -> :right
-      r'unary' -> :unary
-      r'<:>' -> :expression_divider
-      r'[a-zA-Z]+' -> :identifier
+      r':[a-zA-Z][a-zA-Z0-9_]*' -> :terminal
+      r'mode<[a-zA-Z0-9_]+>' -> parse_mode(:mode)
+      r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
+    }
+
+    mode<parser_ll1> {
       r'\s+' -> null
+      r'{' -> parser_lbrace(:lbrace)
+      r'}' -> parser_rbrace(:rbrace)
+      r'\|' -> :pipe
+      r'=' -> :equals
+      r'\(' -> :lparen
+      r'\)' -> :rparen
+      r',' -> :comma
+      r'->' -> :arrow
+      r'parser\s*<\s*expression\s*>' -> parser_expr_start(:parser_expr)
+      r':[a-zA-Z][a-zA-Z0-9_]*' -> :terminal
+      r'\$[a-zA-Z][a-zA-Z0-9_]*(?=\s*\=)' -> parser_rule_start(:nonterminal)
+      r'\$[a-zA-Z][a-zA-Z0-9_]*' -> :nonterminal
+      r'\$[0-9]+' -> :nonterminal_reference
+      r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
+    }
+
+    mode<parser_expr> {
+      r'\s+' -> null
+      r'\([\*-]:(left|right|unary)\)' -> :binding
+      r'=' -> :equals
+      r'{' -> parser_lbrace(:lbrace)
+      r'}' -> parser_rbrace(:rbrace)
+      r'\(' -> :lparen
+      r'\)' -> :rparen
+      r',' -> :comma
+      r'->' -> :arrow
+      r':[a-zA-Z][a-zA-Z0-9_]*' -> :terminal
+      r'\$[a-zA-Z][a-zA-Z0-9_]*' -> :nonterminal
+      r'\$[0-9]+' -> :nonterminal_reference
+      r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
     }
   }
   
