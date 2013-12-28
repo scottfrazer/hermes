@@ -95,10 +95,10 @@ grammar {
     $associativity = :left | :right | :unary
     $expression_morpheme = $morpheme | :expression_divider
     $morpheme = :terminal | :nonterminal | $macro
-    $ast_transform =:arrow :identifier :lparen list($ast_parameter, :comma) :rparen -> AstTransformation(name=$1, parameters=$3)
-    $ast_parameter =:identifier :equals :nonterminal -> AstParameter(name=$0, index=$2)
-    $macro =:identifier :lparen list($macro_parameter, :comma) :rparen -> Macro(name=$0, parameters=$2)
-    $macro_parameter =:nonterminal | :terminal
+    $ast_transform = :arrow :identifier :lparen list($ast_parameter, :comma) :rparen -> AstTransformation(name=$1, parameters=$3)
+    $ast_parameter = :identifier :equals :nonterminal -> AstParameter(name=$0, index=$2)
+    $macro = :identifier :lparen list($macro_parameter, :comma) :rparen -> Macro(name=$0, parameters=$2)
+    $macro_parameter = :nonterminal | :terminal
   }
 }
 
