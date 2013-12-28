@@ -95,8 +95,44 @@ grammar {
   }
 }
 
-this is some code
-
-def function():
-  # some stuff
-  pass
+def grammar_start(context, mode, match, terminal):
+    return default_action(context, 'grammar', match, terminal)
+def lexer_start(context, mode, match, terminal):
+    return default_action(context, 'lexer', match, terminal)
+def parser_ll1_start(context, mode, match, terminal):
+    return default_action(context, 'parser_ll1', match, terminal)
+def parser_expr_start(context, mode, match, terminal):
+    return default_action(context, 'parser_expr', match, terminal)
+def parse_mode(context, mode, match, terminal):
+    identifier = match.replace('mode', '').replace('<', '').replace('>', '').strip()
+    tokens = [
+        Token('mode', 'mode'),
+        Token('<', 'langle'),
+        Token(identifier, 'identifier'),
+        Token('>', 'rangle'),
+    ]
+    return (tokens, mode, context)
+def lexer_lbrace(context, mode, match, terminal):
+    context['lexer_brace'] += 1
+    return default_action(context, mode, match, terminal)
+def lexer_rbrace(context, mode, match, terminal):
+    context['lexer_brace'] -= 1
+    mode = 'grammar' if context['lexer_brace'] == 0 else mode
+    return default_action(context, mode, match, terminal)
+def parser_lbrace(context, mode, match, terminal):
+    context['parser_brace'] += 1
+    return default_action(context, mode, match, terminal)
+def parser_rbrace(context, mode, match, terminal):
+    context['parser_brace'] -= 1
+    mode = 'grammar' if context['parser_brace'] == 0 else mode
+    return default_action(context, mode, match, terminal)
+def parser_rule_start(context, mode, match, terminal):
+    tokens = [Token('', 'll1_rule_hint'), Token(match, terminal)]
+    return (tokens, mode, context) 
+def grammar_lbrace(context, mode, match, terminal):
+    context['grammar_brace'] += 1
+    return default_action(context, mode, match, terminal)
+def grammar_rbrace(context, mode, match, terminal):
+    context['grammar_brace'] -= 1
+    mode = 'default' if context['parser_brace'] == 0 else mode
+    return default_action(context, mode, match, terminal)
