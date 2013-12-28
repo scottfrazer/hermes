@@ -76,9 +76,9 @@ class HermesLexer:
             (re.compile(r'\)'), "rparen", None),
             (re.compile(r"r'(\\\'|[^\'])*'"), "regex", None),
             (re.compile(r"->"), "arrow", None),
-            (re.compile(r":[a-zA-Z][a-zA-Z0-9_]+"), "terminal", None),
+            (re.compile(r":[a-zA-Z][a-zA-Z0-9_]*"), "terminal", None),
             (re.compile(r"mode<[a-zA-Z0-9_]+>"), "mode", parse_mode),
-            (re.compile(r'[a-zA-Z_]+'), "identifier", None),
+            (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), "identifier", None),
         ],
         'parser_ll1': [
             (re.compile(r'\s+'), None, None),
@@ -91,11 +91,11 @@ class HermesLexer:
             (re.compile(r','), "comma", None),
             (re.compile(r'->'), "arrow", None),
             (re.compile(r'parser\s*<\s*expression\s*>'), "parser_expr", parser_expr_start),
-            (re.compile(r":[a-zA-Z][a-zA-Z0-9_]+"), "terminal", None),
-            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]+(?=\s*\=)'), "nonterminal", parser_rule_start),
-            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]+'), "nonterminal", None),
+            (re.compile(r":[a-zA-Z][a-zA-Z0-9_]*"), "terminal", None),
+            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*(?=\s*\=)'), "nonterminal", parser_rule_start),
+            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*'), "nonterminal", None),
             (re.compile(r'\$[0-9]+'), "nonterminal_reference", None),
-            (re.compile(r'[a-zA-Z][a-zA-Z0-9_]+'), "identifier", None),
+            (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), "identifier", None),
         ],
         'parser_expr': [
             (re.compile(r'\s+'), None, None),
@@ -107,10 +107,10 @@ class HermesLexer:
             (re.compile(r'\)'), "rparen", None),
             (re.compile(r','), "comma", None),
             (re.compile(r'->'), "arrow", None),
-            (re.compile(r":[a-zA-Z][a-zA-Z0-9_]+"), "terminal", None),
-            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]+'), "nonterminal", None),
+            (re.compile(r":[a-zA-Z][a-zA-Z0-9_]*"), "terminal", None),
+            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*'), "nonterminal", None),
             (re.compile(r'\$[0-9]+'), "nonterminal_reference", None),
-            (re.compile(r'[a-zA-Z_]+'), "identifier", None),
+            (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), "identifier", None),
         ]
     }
 
@@ -129,6 +129,9 @@ class HermesLexer:
         parsed_tokens = []
         while len(string):
             (tokens, match, mode) = self.next(string, mode, context)
+            if len(match) == 0:
+                print('No match found')
+                return
             string = string[len(match):]
             if tokens is not None:
                 for token in tokens:
@@ -163,7 +166,7 @@ class HermesLexer:
                 function = function if function else default_action
                 (tokens, mode, context) = function(context, mode, match.group(0), terminal)
                 return (tokens, match.group(0), mode)
-        return (None, None, mode)
+        return ([], '', mode)
 
 lexer = HermesLexer()
 with open('hermes.zgr') as fp:
