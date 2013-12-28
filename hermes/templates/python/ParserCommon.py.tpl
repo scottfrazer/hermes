@@ -7,10 +7,8 @@ class Terminal:
     return self.id
   def toAst(self):
     return self
-  def toString(self):
-    return self.str
   def __str__(self):
-    return self.str
+    return self.str 
 
 class NonTerminal():
   def __init__(self, id, str):
@@ -170,7 +168,7 @@ class AstPrettyPrintable:
       string += '\n%s]' % (indentStr)
       return string
     elif isinstance(ast, Terminal):
-      return '%s%s' % (indentStr, colored(ast.toString(), 9))
+      return '%s%s' % (indentStr, colored(str(ast), 9))
     else:
       return '%s%s' % (indentStr, colored(str(ast), 9))
 
@@ -194,7 +192,7 @@ class ParseTreePrettyPrintable:
       string += '\n%s)' % (indentStr)
       return string
     elif isinstance(parsetree, Terminal):
-      return '%s%s' % (indentStr, colored(parsetree.toString(), 9))
+      return '%s%s' % (indentStr, colored(str(parsetree), 9))
     else:
       return '%s%s' % (indentStr, colored(parsetree, 9))
 
