@@ -3,6 +3,8 @@ import sys
 import base64
 import argparse
 from xtermcolor import colorize
+from ParserCommon import Terminal
+from hermes.parser.grammar_Parser import grammar_Parser
 
 def default_action(context, mode, match, terminal):
     tokens = [Token(match, terminal)] if terminal else []
@@ -138,11 +140,13 @@ class HermesLexer:
                     token.line = line
                     token.col = col
                     source_string_base64 = base64.b64encode(token.match.encode('utf-8')).decode('ascii')
-                    parsed_tokens.append('{{"terminal": "{}", "line": {}, "col": {}, "resource": "", "source_string": "{}"}}'.format(
+                    parsed_tokens.append(Terminal(
+                        grammar_Parser.terminals[token.terminal],
                         token.terminal,
+                        token.match.encode('utf-8'),
+                        '',
                         token.line,
-                        token.col,
-                        source_string_base64
+                        token.col
                     ))
                     if debug:
                         print('token --> [{}] [{}, {}] [{}] [{}] [{}]'.format(
@@ -168,12 +172,23 @@ class HermesLexer:
                 return (tokens, match.group(0), mode)
         return ([], '', mode)
 
-lexer = HermesLexer()
-with open('hermes.zgr') as fp:
+def lex(path, debug=False):
+    with open(file_path) as fp:
+        lexer = HermesLexer()
+        return lexer.parse(fp.read(), debug)
+
+def lex_fp(fp, debug=False):
+    contents = fp.read()
+    fp.close()
+    lexer = HermesLexer()
+    return lexer.parse(contents, debug)
+
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Hermes Grammar Lexer')
     parser.add_argument('--debug', action='store_true')
+    parser.add_argument('grammar')
     cli = parser.parse_args()
-    tokens = lexer.parse(fp.read(), cli.debug)
+    tokens = lex(cli.grammar)
     if not cli.debug:
         if len(tokens) == 0:
             print('[]')
