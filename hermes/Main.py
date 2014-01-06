@@ -34,11 +34,17 @@ def Cli():
   subparsers = parser.add_subparsers(help='Parser Generator Actions', dest='action')
   commands = {}
 
+  commands['dev'] = subparsers.add_parser(
+    'dev'
+  )
   commands['analyze'] = subparsers.add_parser(
     'analyze', description=command_help['analyze'], help=command_help['analyze']
   )
   commands['analyze'].add_argument(
     'grammar', metavar='GRAMMAR', nargs='+', help='Grammar file'
+  )
+  commands['analyze'].add_argument(
+    '--dev', required=False, action='store_true'
   )
   commands['generate'] = subparsers.add_parser(
     'generate', description=command_help['generate'], help=command_help['generate']
@@ -68,6 +74,22 @@ def Cli():
 
   factory = HermesParserFactory()
   fp = GrammarFileParser(factory.create())
+
+  if cli.action == 'dev':
+    old = {
+      'parser': GrammarFileParser(HermesParserFactory().create()),
+      'file': 'grammar.zgr',
+      'name': 'grammar'
+    }
+    new = {
+      'parser': GrammarFileParser(HermesParserFactory().create()),
+      'file': 'hermes.zgr',
+      'name': 'hermes'
+    }
+    old['parser'].parse(old['name'], open(old['file']))
+    new['parser'].parse_new(new['name'], open(new['file']))
+    print('dev')
+    sys.exit(-1)
 
   grammars = []
   for grammar in cli.grammar:
