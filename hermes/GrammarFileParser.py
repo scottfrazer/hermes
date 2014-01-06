@@ -529,6 +529,185 @@ class HermesParserFactory:
     astParser = AstParser(nParser, tParser)
     return ExprRuleParser(exprAtomParser, astParser)
 
+class GrammarFactoryNew:
+  def create(self, ast):
+    from hermes.parser.ParserCommon import AstPrettyPrintable
+
+    self.next_id = 0
+
+    terminals = {
+      '_empty': EmptyString(-1)
+    }
+    for terminal in self.walk_ast_terminal(ast, 'terminal'):
+      name = terminal.source_string
+      if name not in terminals:
+        terminals[name] = Terminal(name, len(terminals))
+
+    nonterminals = {}
+    for nonterminal in self.walk_ast_terminal(ast, 'nonterminal'):
+      name = nonterminal.source_string
+      if name not in nonterminals:
+        nonterminals[name] = NonTerminal(name, len(nonterminals))
+
+    macros = {}
+    for macro in self.walk_ast(ast, 'Macro'):
+      macro_string = self.macro_ast_to_string(macro)
+      print(AstPrettyPrintable(macro, color=True))
+      if macro.getAttr('name').source_string == 'list' and len(macro.getAttr('parameters')) == 2:
+        (start, rules) = self.slist(macro, terminals, nonterminals)
+      elif macro.getAttr('name').source_string == 'tlist':
+        (start, rules) = self.slist(macro, terminals, nonterminals)
+      elif macro.getAttr('name').source_string == 'list' and len(macro.getAttr('parameters')) == 1:
+        (start, rules) = self.nlist(macro, terminals, nonterminals)
+      elif macro.getAttr('name').source_string == 'mlist':
+        (start, rules) = self.mlist(macro, terminals, nonterminals)
+      elif macro.getAttr('name').source_string == 'optional':
+        (start, rules) = self.optional(macro, terminals, nonterminals)
+      for rule in rules:
+        print(rule)
+    #for rule in self.walk_ast(ast, 'Rule'):
+    #  print(AstPrettyPrintable(rule, color=True))
+
+    #print(AstPrettyPrintable(ast, color=True))
+    #print(AstPrettyPrintable(ast.getAttr('body')[0], color=True))
+    #print(AstPrettyPrintable(ast.getAttr('body')[1], color=True))
+
+  def macro_ast_to_string(self, ast):
+    return '{}({})'.format(ast.getAttr('name').source_string, ','.join([self.morpheme_to_string(x) for x in ast.getAttr('parameters')]))
+
+  def morpheme_to_string(self, morpheme):
+    return ':' + morpheme.source_string if morpheme.str == 'terminal' else '$' + morpheme.source_string
+
+  def get_morpheme_from_lexer_token(self, token, terminals, nonterminals):
+    if token.str == 'nonterminal':
+      return nonterminals[token.source_string]
+    if token.str == 'terminal':
+      return terminals[token.source_string]
+
+  def next_name(self):
+    nt = '_gen' + str(self.next_id)
+    self.next_id += 1
+    return nt
+
+  def mlist( self, ast, terminals, nonterminals ):
+    morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
+    nt0 = NonTerminal( self.next_name(), len(nonterminals), generated=True)
+    nonterminals[nt0.string] = nt0
+    nt1 = NonTerminal( self.next_name(), len(nonterminals), generated=True)
+    nonterminals[nt0.string] = nt1
+    empty = terminals['_empty']
+
+    prod = [morpheme for x in range(minimum)]
+    prod.append(nt1)
+    rules = [
+      MacroGeneratedRule(nt0, Production( prod )),
+      MacroGeneratedRule(nt1, Production( [morpheme, nt1] )),
+      MacroGeneratedRule(nt1, Production( [empty] ))
+    ]
+    if minimum == 0:
+      rules.append( MacroGeneratedRule(nt0, Production( [empty] )) )
+    return (nt0, rules)
+
+  def optional( self, ast, terminals, nonterminals ):
+    morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
+    nt0 = NonTerminal( self.next_name(), len(nonterminals), generated=True)
+    nonterminals[nt0.string] = nt0
+    empty = terminals['_empty']
+    rules = [
+      MacroGeneratedRule(nt0, Production( [morpheme] )),
+      MacroGeneratedRule(nt0, Production( [empty] ))
+    ]
+    return (nt0, rules)
+
+  def nlist( self, ast, terminals, nonterminals ):
+    morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
+    nt0 = NonTerminal( self.next_name(), len(nonterminals), generated=True)
+    nonterminals[nt0.string] = nt0
+    empty = terminals['_empty']
+
+    rules = [
+      MacroGeneratedRule(nt0, Production( [morpheme, nt0] )),
+      MacroGeneratedRule(nt0, Production( [empty] ))
+    ]
+
+    return (nt0, rules)
+
+  def slist( self, ast, terminals, nonterminals ):
+    empty = terminals['_empty']
+    morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
+    separator = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[1], terminals, nonterminals)
+    separator.isSeparator = True
+
+    minimum = 0
+    if len(ast.getAttr('parameters')) == 3:
+       minimum = int(ast.getAttr('parameters')[2].source_string)
+
+    nt0 = NonTerminal( self.next_name(), len(nonterminals), generated=True)
+    nonterminals[nt0.string] = nt0
+    nt1 = NonTerminal( self.next_name(), len(nonterminals), generated=True)
+    nonterminals[nt1.string] = nt1
+
+    if minimum > 0:
+      items = [morpheme] * (2*minimum-1)
+      for x in filter(lambda x: x % 2 == 1, range(2 * minimum - 1)): # all odd numbers in range
+        items[x] = separator
+      items.append(nt1)
+    else:
+      items = [morpheme, nt1]
+
+    rules = [
+        MacroGeneratedRule(nt0, Production( items )),
+        MacroGeneratedRule(nt1, Production( [separator, morpheme, nt1] )),
+        MacroGeneratedRule(nt1, Production( [empty] ))
+    ]
+
+    if minimum == 0:
+      rules.append( MacroGeneratedRule(nt0, Production( [empty] )) )
+
+    return (nt0, rules)
+
+  def tlist( self, ast, terminals, nonterminals ):
+    start = NonTerminal( self.next_name(), len(nonterminals), generated=True )
+    nonterminals[start.string] = start
+    empty = terminals['_empty']
+    morpheme = terminals[ast.getAttr('parameters')[0].source_string]
+    terminator = terminals[ast.getAttr('parameters')[1].source_string]
+    rules = [
+        MacroGeneratedRule(start, Production( [morpheme, terminator, start] )),
+        MacroGeneratedRule(start, Production( [empty] ))
+    ]
+    return (start, rules)
+
+  def walk_ast_terminal(self, ast, terminal):
+    from hermes.parser.ParserCommon import Ast, AstList
+    from hermes.parser.HermesLexer import HermesTerminal
+    nodes = []
+    if isinstance(ast, HermesTerminal) and ast.str == terminal:
+      return [ast]
+    if not isinstance(ast, Ast): return nodes
+    for key, sub in ast.attributes.items():
+      if isinstance(sub, HermesTerminal) and sub.str == terminal:
+        nodes.append(sub)
+      elif isinstance(sub, Ast):
+        nodes.extend(self.walk_ast_terminal(sub, terminal))
+      elif isinstance(sub, AstList):
+        for ast1 in sub:
+          nodes.extend(self.walk_ast_terminal(ast1, terminal))
+    return nodes
+
+  def walk_ast(self, ast, node_name):
+    from hermes.parser.ParserCommon import Ast, AstList
+    nodes = []
+    if not isinstance(ast, Ast): return nodes
+    if ast.name == node_name: nodes.append(ast)
+    for key, sub in ast.attributes.items():
+      if isinstance(sub, Ast):
+        nodes.extend(self.walk_ast(sub, node_name))
+      elif isinstance(sub, AstList):
+        for ast in sub:
+          nodes.extend(self.walk_ast(ast, node_name))
+    return nodes
+
 class GrammarFileParser:
   def __init__( self, hermesParser ):
     self.hermesParser = hermesParser
@@ -593,7 +772,18 @@ class GrammarFileParser:
     json['global']['terminals'] = set(self.hermesParser.getTerminals())
     json['global']['macros'] = set(self.hermesParser.getMacros())
     return json
-  
+
+
+  def parse_new(self, name, fp, start=None):
+    from hermes.parser.grammar_Parser import grammar_Parser
+    from hermes.parser.ParserCommon import TokenStream
+    from hermes.parser.HermesLexer import lex_fp
+    tokens = TokenStream(lex_fp(fp))
+    parser = grammar_Parser()
+    tree = parser.parse(tokens)
+    ast = tree.toAst()
+    grammar = GrammarFactoryNew().create(ast)
+
   def parse( self, name, fp, start=None ):
     contents = json.load(fp)
     fp.close()
@@ -603,7 +793,6 @@ class GrammarFileParser:
 
     normalized = self.normalize(contents)
     start = self.hermesParser.parseNonTerminal(start) if start else contents['ll1']['start']
-
     ll1Grammar = ll1GrammarFactory.create(
       name,
       normalized['global']['nonterminals'], \

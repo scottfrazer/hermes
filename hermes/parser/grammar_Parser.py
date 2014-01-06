@@ -1,6 +1,6 @@
 import sys, inspect
 from collections import OrderedDict
-from ParserCommon import *
+from hermes.parser.ParserCommon import *
 def whoami():
   return inspect.stack()[1][3]
 def whosdaddy():
