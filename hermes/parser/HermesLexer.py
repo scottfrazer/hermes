@@ -3,12 +3,20 @@ import sys
 import base64
 import argparse
 from xtermcolor import colorize
-from ParserCommon import Terminal
+from hermes.parser.ParserCommon import Terminal
 from hermes.parser.grammar_Parser import grammar_Parser
+
+class HermesTerminal(Terminal):
+  def __str__(self):
+    return '<{} (line {} col {}) `{}`>'.format(self.str, self.line, self.col, self.source_string)
 
 def default_action(context, mode, match, terminal):
     tokens = [Token(match, terminal)] if terminal else []
     return (tokens, mode, context)
+def normalize_morpheme(morpheme):
+    return morpheme.lstrip(':').lstrip('$')
+def morpheme(context, mode, match, terminal):
+    return default_action(context, mode, normalize_morpheme(match), terminal)
 def grammar_start(context, mode, match, terminal):
     return default_action(context, 'grammar', match, terminal)
 def lexer_start(context, mode, match, terminal):
@@ -41,7 +49,7 @@ def parser_rbrace(context, mode, match, terminal):
     mode = 'grammar' if context['parser_brace'] == 0 else mode
     return default_action(context, mode, match, terminal)
 def parser_rule_start(context, mode, match, terminal):
-    tokens = [Token('', 'll1_rule_hint'), Token(match, terminal)]
+    tokens = [Token('', 'll1_rule_hint'), Token(normalize_morpheme(match), terminal)]
     return (tokens, mode, context) 
 def grammar_lbrace(context, mode, match, terminal):
     context['grammar_brace'] += 1
@@ -78,7 +86,7 @@ class HermesLexer:
             (re.compile(r'\)'), "rparen", None),
             (re.compile(r"r'(\\\'|[^\'])*'"), "regex", None),
             (re.compile(r"->"), "arrow", None),
-            (re.compile(r":[a-zA-Z][a-zA-Z0-9_]*"), "terminal", None),
+            (re.compile(r":[a-zA-Z][a-zA-Z0-9_]*"), "terminal", morpheme),
             (re.compile(r"mode<[a-zA-Z0-9_]+>"), "mode", parse_mode),
             (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), "identifier", None),
         ],
@@ -93,10 +101,10 @@ class HermesLexer:
             (re.compile(r','), "comma", None),
             (re.compile(r'->'), "arrow", None),
             (re.compile(r'parser\s*<\s*expression\s*>'), "parser_expr", parser_expr_start),
-            (re.compile(r":[a-zA-Z][a-zA-Z0-9_]*"), "terminal", None),
+            (re.compile(r":[a-zA-Z][a-zA-Z0-9_]*"), "terminal", morpheme),
             (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*(?=\s*\=)'), "nonterminal", parser_rule_start),
-            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*'), "nonterminal", None),
-            (re.compile(r'\$[0-9]+'), "nonterminal_reference", None),
+            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*'), "nonterminal", morpheme),
+            (re.compile(r'\$[0-9]+'), "nonterminal_reference", morpheme),
             (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), "identifier", None),
         ],
         'parser_expr': [
@@ -109,9 +117,9 @@ class HermesLexer:
             (re.compile(r'\)'), "rparen", None),
             (re.compile(r','), "comma", None),
             (re.compile(r'->'), "arrow", None),
-            (re.compile(r":[a-zA-Z][a-zA-Z0-9_]*"), "terminal", None),
-            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*'), "nonterminal", None),
-            (re.compile(r'\$[0-9]+'), "nonterminal_reference", None),
+            (re.compile(r":[a-zA-Z][a-zA-Z0-9_]*"), "terminal", morpheme),
+            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*'), "nonterminal", morpheme),
+            (re.compile(r'\$[0-9]+'), "nonterminal_reference", morpheme),
             (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), "identifier", None),
         ]
     }
@@ -140,10 +148,10 @@ class HermesLexer:
                     token.line = line
                     token.col = col
                     source_string_base64 = base64.b64encode(token.match.encode('utf-8')).decode('ascii')
-                    parsed_tokens.append(Terminal(
+                    parsed_tokens.append(HermesTerminal(
                         grammar_Parser.terminals[token.terminal],
                         token.terminal,
-                        token.match.encode('utf-8'),
+                        token.match,
                         '',
                         token.line,
                         token.col

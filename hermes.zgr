@@ -21,7 +21,7 @@ grammar {
       r'\)' -> :rparen
       r'r\'(\\\'|[^\'])*\'' -> :regex
       r'->' -> :arrow
-      r':[a-zA-Z][a-zA-Z0-9_]*' -> :terminal
+      r':[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:terminal)
       r'mode<[a-zA-Z0-9_]+>' -> parse_mode(:mode)
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
     }
@@ -37,10 +37,10 @@ grammar {
       r',' -> :comma
       r'->' -> :arrow
       r'parser\s*<\s*expression\s*>' -> parser_expr_start(:parser_expr)
-      r':[a-zA-Z][a-zA-Z0-9_]*' -> :terminal
+      r':[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:terminal)
       r'\$[a-zA-Z][a-zA-Z0-9_]*(?=\s*\=)' -> parser_rule_start(:nonterminal)
-      r'\$[a-zA-Z][a-zA-Z0-9_]*' -> :nonterminal
-      r'\$[0-9]+' -> :nonterminal_reference
+      r'\$[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:nonterminal)
+      r'\$[0-9]+' -> morpheme(:nonterminal_reference)
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
     }
 
@@ -54,9 +54,9 @@ grammar {
       r'\)' -> :rparen
       r',' -> :comma
       r'->' -> :arrow
-      r':[a-zA-Z][a-zA-Z0-9_]*' -> :terminal
-      r'\$[a-zA-Z][a-zA-Z0-9_]*' -> :nonterminal
-      r'\$[0-9]+' -> :nonterminal_reference
+      r':[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:terminal)
+      r'\$[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:nonterminal)
+      r'\$[0-9]+' -> morpheme(:nonterminal_reference)
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
     }
   }
@@ -95,6 +95,10 @@ grammar {
   }
 }
 
+def normalize_morpheme(morpheme):
+    return morpheme.lstrip(':').lstrip('$')
+def morpheme(context, mode, match, terminal):
+    return default_action(context, mode, normalize_morpheme(match), terminal)
 def grammar_start(context, mode, match, terminal):
     return default_action(context, 'grammar', match, terminal)
 def lexer_start(context, mode, match, terminal):
@@ -127,7 +131,7 @@ def parser_rbrace(context, mode, match, terminal):
     mode = 'grammar' if context['parser_brace'] == 0 else mode
     return default_action(context, mode, match, terminal)
 def parser_rule_start(context, mode, match, terminal):
-    tokens = [Token('', 'll1_rule_hint'), Token(match, terminal)]
+    tokens = [Token('', 'll1_rule_hint'), Token(normalize_morpheme(match), terminal)]
     return (tokens, mode, context) 
 def grammar_lbrace(context, mode, match, terminal):
     context['grammar_brace'] += 1
