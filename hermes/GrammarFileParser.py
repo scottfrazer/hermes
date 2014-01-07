@@ -554,16 +554,17 @@ class GrammarFactoryNew:
       macro_string = self.macro_ast_to_string(macro)
       print(AstPrettyPrintable(macro, color=True))
       if macro.getAttr('name').source_string == 'list' and len(macro.getAttr('parameters')) == 2:
-        (start, rules) = self.slist(macro, terminals, nonterminals)
-      elif macro.getAttr('name').source_string == 'tlist':
-        (start, rules) = self.slist(macro, terminals, nonterminals)
+        macro = self.slist(macro, terminals, nonterminals)
       elif macro.getAttr('name').source_string == 'list' and len(macro.getAttr('parameters')) == 1:
-        (start, rules) = self.nlist(macro, terminals, nonterminals)
+        macro = self.nlist(macro, terminals, nonterminals)
+      elif macro.getAttr('name').source_string == 'tlist':
+        macro = self.slist(macro, terminals, nonterminals)
       elif macro.getAttr('name').source_string == 'mlist':
-        (start, rules) = self.mlist(macro, terminals, nonterminals)
+        macro = self.mlist(macro, terminals, nonterminals)
       elif macro.getAttr('name').source_string == 'optional':
-        (start, rules) = self.optional(macro, terminals, nonterminals)
-      for rule in rules:
+        macro = self.optional(macro, terminals, nonterminals)
+      print(macro)
+      for rule in macro.rules:
         print(rule)
     #for rule in self.walk_ast(ast, 'Rule'):
     #  print(AstPrettyPrintable(rule, color=True))
@@ -584,17 +585,17 @@ class GrammarFactoryNew:
     if token.str == 'terminal':
       return terminals[token.source_string]
 
-  def next_name(self):
-    nt = '_gen' + str(self.next_id)
+  def generate_nonterminal(self, nonterminals):
+    name = '_gen' + str(self.next_id)
     self.next_id += 1
+    nt = NonTerminal(name, len(nonterminals), generated=True)
+    nonterminals[nt.string] = nt
     return nt
 
   def mlist( self, ast, terminals, nonterminals ):
     morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
-    nt0 = NonTerminal( self.next_name(), len(nonterminals), generated=True)
-    nonterminals[nt0.string] = nt0
-    nt1 = NonTerminal( self.next_name(), len(nonterminals), generated=True)
-    nonterminals[nt0.string] = nt1
+    nt0 = self.generate_nonterminal(nonterminals)
+    nt1 = self.generate_nonterminal(nonterminals)
     empty = terminals['_empty']
 
     prod = [morpheme for x in range(minimum)]
@@ -606,23 +607,21 @@ class GrammarFactoryNew:
     ]
     if minimum == 0:
       rules.append( MacroGeneratedRule(nt0, Production( [empty] )) )
-    return (nt0, rules)
+    return MinimumListMacro(morpheme, nt0, rules)
 
   def optional( self, ast, terminals, nonterminals ):
     morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
-    nt0 = NonTerminal( self.next_name(), len(nonterminals), generated=True)
-    nonterminals[nt0.string] = nt0
+    nt0 = self.generate_nonterminal(nonterminals)
     empty = terminals['_empty']
     rules = [
       MacroGeneratedRule(nt0, Production( [morpheme] )),
       MacroGeneratedRule(nt0, Production( [empty] ))
     ]
-    return (nt0, rules)
+    return OptionalMacro(morpheme, nt0, rules)
 
   def nlist( self, ast, terminals, nonterminals ):
     morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
-    nt0 = NonTerminal( self.next_name(), len(nonterminals), generated=True)
-    nonterminals[nt0.string] = nt0
+    nt0 = self.generate_nonterminal(nonterminals)
     empty = terminals['_empty']
 
     rules = [
@@ -630,7 +629,7 @@ class GrammarFactoryNew:
       MacroGeneratedRule(nt0, Production( [empty] ))
     ]
 
-    return (nt0, rules)
+    return MorphemeListMacro(morpheme, nt0, rules)
 
   def slist( self, ast, terminals, nonterminals ):
     empty = terminals['_empty']
@@ -642,10 +641,8 @@ class GrammarFactoryNew:
     if len(ast.getAttr('parameters')) == 3:
        minimum = int(ast.getAttr('parameters')[2].source_string)
 
-    nt0 = NonTerminal( self.next_name(), len(nonterminals), generated=True)
-    nonterminals[nt0.string] = nt0
-    nt1 = NonTerminal( self.next_name(), len(nonterminals), generated=True)
-    nonterminals[nt1.string] = nt1
+    nt0 = self.generate_nonterminal(nonterminals)
+    nt1 = self.generate_nonterminal(nonterminals)
 
     if minimum > 0:
       items = [morpheme] * (2*minimum-1)
@@ -664,19 +661,18 @@ class GrammarFactoryNew:
     if minimum == 0:
       rules.append( MacroGeneratedRule(nt0, Production( [empty] )) )
 
-    return (nt0, rules)
+    return SeparatedListMacro(morpheme, separator, nt0, rules)
 
   def tlist( self, ast, terminals, nonterminals ):
-    start = NonTerminal( self.next_name(), len(nonterminals), generated=True )
-    nonterminals[start.string] = start
+    nt0 = self.generate_nonterminal(nonterminals)
     empty = terminals['_empty']
     morpheme = terminals[ast.getAttr('parameters')[0].source_string]
     terminator = terminals[ast.getAttr('parameters')[1].source_string]
     rules = [
-        MacroGeneratedRule(start, Production( [morpheme, terminator, start] )),
-        MacroGeneratedRule(start, Production( [empty] ))
+        MacroGeneratedRule(nt0, Production( [morpheme, terminator, nt0] )),
+        MacroGeneratedRule(nt0, Production( [empty] ))
     ]
-    return (start, rules)
+    return TerminatedListMacro(morpheme, terminator, nt0, rules)
 
   def walk_ast_terminal(self, ast, terminal):
     from hermes.parser.ParserCommon import Ast, AstList
