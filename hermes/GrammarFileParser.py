@@ -7,6 +7,9 @@ from hermes.Grammar import InfixOperator, PrefixOperator, MixfixOperator
 from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro
 from hermes.Logger import Factory as LoggerFactory
 
+from hermes.parser.HermesLexer import HermesTerminal
+from hermes.parser.ParserCommon import Ast, AstList, AstPrettyPrintable
+
 moduleLogger = LoggerFactory().getModuleLogger(__name__)
 
 def pad( n, l ):
@@ -530,9 +533,8 @@ class HermesParserFactory:
     return ExprRuleParser(exprAtomParser, astParser)
 
 class GrammarFactoryNew:
-  def create(self, ast):
-    from hermes.parser.ParserCommon import AstPrettyPrintable
-
+  # TODO: I want to get rid of name and start parameters
+  def create(self, name, ast):
     self.next_id = 0
 
     terminals = {
@@ -552,7 +554,6 @@ class GrammarFactoryNew:
     macros = {}
     for macro in self.walk_ast(ast, 'Macro'):
       macro_string = self.macro_ast_to_string(macro)
-      print(AstPrettyPrintable(macro, color=True))
       if macro.getAttr('name').source_string == 'list' and len(macro.getAttr('parameters')) == 2:
         macro = self.slist(macro, terminals, nonterminals)
       elif macro.getAttr('name').source_string == 'list' and len(macro.getAttr('parameters')) == 1:
@@ -563,15 +564,67 @@ class GrammarFactoryNew:
         macro = self.mlist(macro, terminals, nonterminals)
       elif macro.getAttr('name').source_string == 'optional':
         macro = self.optional(macro, terminals, nonterminals)
-      print(macro)
-      for rule in macro.rules:
-        print(rule)
-    #for rule in self.walk_ast(ast, 'Rule'):
-    #  print(AstPrettyPrintable(rule, color=True))
+      macros[macro_string] = macro
+
+    rules = []
+    for rule_ast in self.walk_ast(ast, 'Rule'):
+      new_rules = self.parse_rule(rule_ast, terminals, nonterminals, macros)
+      rules.extend(new_rules) # Bill Maher!
+      print(AstPrettyPrintable(rule_ast, color=True))
+      for r in new_rules:
+        print(r)
+
+    ll1_grammar = LL1GrammarFactory().create(
+      name,
+      set(nonterminals.values()),
+      set(terminals.values()),
+      macros.values(),
+      set(rules),
+      nonterminals[rules[0].nonterminal.string] 
+    )
+
+    return ll1_grammar
 
     #print(AstPrettyPrintable(ast, color=True))
     #print(AstPrettyPrintable(ast.getAttr('body')[0], color=True))
     #print(AstPrettyPrintable(ast.getAttr('body')[1], color=True))
+  
+  def parse_rule(self, rule_ast, terminals, nonterminals, macros):
+    nonterminal = self.get_morpheme_from_lexer_token(rule_ast.getAttr('nonterminal'), terminals, nonterminals)
+    production_list_ast = rule_ast.getAttr('production')
+
+    rules = []
+    for production_ast in production_list_ast:
+      morphemes_list_ast = production_ast.getAttr('morphemes')
+      ast_ast = production_ast.getAttr('ast')
+      morphemes = []
+      for morpheme_ast in morphemes_list_ast:
+        if isinstance(morpheme_ast, HermesTerminal):
+          morpheme = self.get_morpheme_from_lexer_token(morpheme_ast, terminals, nonterminals)
+        elif isinstance(morpheme_ast, Ast) and morpheme_ast.name == 'Macro':
+          morpheme = macros[self.macro_ast_to_string(morpheme_ast)]
+        else:
+          raise Exception('Unknown AST element: ' + morpheme_ast)
+        morphemes.append(morpheme)
+      ast = self.parse_ast(ast_ast)
+      rules.append( Rule(nonterminal, Production(morphemes), id=0, root=0, ast=ast) )
+    return rules
+  
+  def parse_ast(self, ast_ast):
+    if ast_ast is None:
+      return AstTranslation(0)
+    elif isinstance(ast_ast, Ast) and ast_ast.name == 'AstTransformation':
+      node_name = ast_ast.getAttr('name').source_string
+      parameters = OrderedDict()
+      for parameter_ast in ast_ast.getAttr('parameters'):
+        name = parameter_ast.getAttr('name').source_string
+        index = parameter_ast.getAttr('index').source_string
+        parameters[name] = index
+      return AstSpecification(node_name, parameters)
+    elif isinstance(ast_ast, HermesTerminal) and ast_ast.str == 'nonterminal_reference':
+      return AstTranslation(int(ast_ast.source_string))
+    else:
+      raise Exception('parse_ast(): invalid AST: ' + ast_ast)
 
   def macro_ast_to_string(self, ast):
     return '{}({})'.format(ast.getAttr('name').source_string, ','.join([self.morpheme_to_string(x) for x in ast.getAttr('parameters')]))
@@ -675,8 +728,6 @@ class GrammarFactoryNew:
     return TerminatedListMacro(morpheme, terminator, nt0, rules)
 
   def walk_ast_terminal(self, ast, terminal):
-    from hermes.parser.ParserCommon import Ast, AstList
-    from hermes.parser.HermesLexer import HermesTerminal
     nodes = []
     if isinstance(ast, HermesTerminal) and ast.str == terminal:
       return [ast]
@@ -692,7 +743,6 @@ class GrammarFactoryNew:
     return nodes
 
   def walk_ast(self, ast, node_name):
-    from hermes.parser.ParserCommon import Ast, AstList
     nodes = []
     if not isinstance(ast, Ast): return nodes
     if ast.name == node_name: nodes.append(ast)
@@ -770,7 +820,7 @@ class GrammarFileParser:
     return json
 
 
-  def parse_new(self, name, fp, start=None):
+  def parse_new(self, name, fp):
     from hermes.parser.grammar_Parser import grammar_Parser
     from hermes.parser.ParserCommon import TokenStream
     from hermes.parser.HermesLexer import lex_fp
@@ -778,7 +828,9 @@ class GrammarFileParser:
     parser = grammar_Parser()
     tree = parser.parse(tokens)
     ast = tree.toAst()
-    grammar = GrammarFactoryNew().create(ast)
+    grammar = GrammarFactoryNew().create(name, ast)
+    expression_grammars = []
+    return CompositeGrammar(name, grammar, expression_grammars)
 
   def parse( self, name, fp, start=None ):
     contents = json.load(fp)
