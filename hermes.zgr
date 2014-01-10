@@ -21,7 +21,7 @@ grammar {
       r'\)' -> :rparen
       r'r\'(\\\'|[^\'])*\'' -> :regex
       r'->' -> :arrow
-      r':[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:terminal)
+      r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> morpheme(:terminal)
       r'mode<[a-zA-Z0-9_]+>' -> parse_mode(:mode)
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
     }
@@ -36,33 +36,35 @@ grammar {
       r'\)' -> :rparen
       r',' -> :comma
       r'->' -> :arrow
-      r'parser\s*<\s*expression\s*>' -> parser_expr_start(:parser_expr)
-      r':[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:terminal)
+      r'parser\s*<\s*expression\s*>' -> parser_expr_start(:parser_expression)
+      r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> morpheme(:terminal)
       r'\$[a-zA-Z][a-zA-Z0-9_]*(?=\s*\=)' -> parser_rule_start(:nonterminal)
       r'\$[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:nonterminal)
-      r'\$[0-9]+' -> morpheme(:nonterminal_reference)
+      r'\$([0-9]+|\$)' -> morpheme(:nonterminal_reference)
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
     }
 
     mode<parser_expr> {
       r'\s+' -> null
-      r'\([\*-]:(left|right|unary)\)' -> :binding
+      r'\([\*-]:(left|right|unary)\)' -> binding_power()
+      r'->' -> :arrow
+      r'<=>' -> :expression_divider
+      r'\|' -> :pipe
       r'=' -> :equals
       r'{' -> parser_lbrace(:lbrace)
       r'}' -> parser_rbrace(:rbrace)
       r'\(' -> :lparen
       r'\)' -> :rparen
       r',' -> :comma
-      r'->' -> :arrow
-      r':[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:terminal)
+      r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> morpheme(:terminal)
       r'\$[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:nonterminal)
-      r'\$[0-9]+' -> morpheme(:nonterminal_reference)
+      r'\$([0-9]+|\$)' -> morpheme(:nonterminal_reference)
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
     }
   }
   
   parser<ll1> {
-    $grammar = :grammar :lbrace list($body_element) :rbrace :code -> Grammar(body=$2, code=$4)
+    $grammar = :grammar :lbrace list($body_element) :rbrace optional(:code) -> Grammar(body=$2, code=$4)
     $body_element = $body_element_sub -> $1
     $body_element_sub = $lexer | $parser
     $lexer = :lexer :lbrace list($lexer_atom) :rbrace -> Lexer(atoms=$2)
@@ -80,7 +82,10 @@ grammar {
     $ll1_rule_rhs = :null -> NullProduction()
     $ll1_rule_rhs = $parser
     $parser_expression = :parser_expression :lbrace list($expression_rule) :rbrace -> ExpressionParser(rules=$2)
-    $expression_rule = :lparen $precedence :rparen :nonterminal :equals list($expression_morpheme) optional($ast_transform) -> ExpressionRule(precedence=$1, nonterminal=$3, production=$5, ast=$6)
+    $expression_rule = optional($binding_power) :expr_rule_hint :nonterminal :equals $expression_rule_rhs -> ExpressionRule(precedence=$0, nonterminal=$2, production=$4)
+    $expression_rule_rhs = list($expression_rule_single, :pipe)
+    $expression_rule_single = list($expression_morpheme) optional($ast_transform) -> Production(morphemes=$0, ast=$1)",
+    $binding_power = :lparen $precedence :rparen -> $1
     $precedence = $binding_power_marker :colon $associativity -> Precedence(marker=$0, associativity=$2)
     $binding_power_marker = :asterisk | :dash
     $associativity = :left | :right | :unary
@@ -95,6 +100,16 @@ grammar {
   }
 }
 
+def binding_power(context, mode, match, terminal):
+    (precedence, associativity) = match[1:-1].split(':')
+    tokens = [
+      Token('(', 'lparen'),
+      Token(precedence, 'asterisk' if precedence == '*' else 'dash'),
+      Token(':', 'colon'),
+      Token(associativity, associativity),
+      Token(')', 'rparen')
+    ]
+    return (tokens, mode, context)
 def normalize_morpheme(morpheme):
     return morpheme.lstrip(':').lstrip('$')
 def morpheme(context, mode, match, terminal):
