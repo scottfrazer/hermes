@@ -1,3 +1,5 @@
+# coding=utf-8
+
 import re, json
 from collections import OrderedDict
 from hermes.Morpheme import NonTerminal, Terminal, EmptyString

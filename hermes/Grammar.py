@@ -1,3 +1,5 @@
+# coding=utf-8
+
 from copy import copy
 from hermes.Morpheme import Terminal
 from hermes.Morpheme import EmptyString

@@ -37,5 +37,6 @@ setup(
     "Natural Language :: English",
     "Topic :: Software Development :: Code Generators",
     "Topic :: Software Development :: Compilers"
-  ]
+  ],
+  zip_safe=False
 )

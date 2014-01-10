@@ -1,3 +1,5 @@
+# coding=utf-8
+
 class Morpheme:
   def __init__(self, string, id=0):
     self.__dict__.update(locals())
