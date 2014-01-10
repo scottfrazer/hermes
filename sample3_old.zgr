@@ -1,0 +1,36 @@
+{
+  "ll1": {
+    "start": "start",
+    "rules": [
+      "start := list(statement, 'semi') -> Program(statements=$0) | '_empty'",
+      "statement := _expr | for",
+      "for := 'for' + 'lparen' + forsub + 'semi' + forsub + 'semi' + forsub + 'rparen' + 'lbrace' + forbody + 'rbrace' -> For( decl=$2, cond=$4, iter=$6, body=$9 )",
+      "forsub := _expr | '_empty'",
+      "forbody := statement + 'semi' + forbody | '_empty'"
+    ]
+  },
+  "expr": [
+    {
+      "nonterminal": "_expr",
+      "binding_power": [
+        {"associativity": "right", "terminals": ["eq"]},
+        {"associativity": "left", "terminals": ["add", "sub"]},
+        {"associativity": "left", "terminals": ["mul", "div"]},
+        {"associativity": "left", "terminals": ["power"]},
+        {"associativity": "left", "terminals": ["lparen"]},
+        {"associativity": "unary", "terminals": ["sub"]}
+      ],
+      "rules": [
+        "_expr := _expr + 'eq' + _expr",
+        "_expr := _expr + 'add' + _expr",
+        "_expr := _expr + 'sub' + _expr",
+        "_expr := _expr + 'mul' + _expr",
+        "_expr := _expr + 'div' + _expr",
+        "_expr := _expr + 'power' + _expr",
+        "_expr := 'sub' + _expr",
+        "_expr := {'n'} | {'s'} | {'i'}",
+        "_expr := {'i'} + {'lparen' + list(_expr, 'comma') + 'rparen'} -> FunctionCall(name=$$, params=$2)"
+      ]
+    }
+  ]
+}
