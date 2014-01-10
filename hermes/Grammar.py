@@ -170,7 +170,11 @@ class ExprRule:
     else:
       operatorString = ''
 
-    rule = "%s := {%s%s} + {%s} -> %s %s" % (self.nonterminal.str(theme), nudProduction, nudAstString, ledProduction, self.ast.str(theme), operatorString)
+    astString = self.ast.str(theme) if self.ast else ''
+
+    rule = "%s := {%s%s} + {%s} -> %s %s" % (
+        self.nonterminal.str(theme), nudProduction, nudAstString, ledProduction, astString, operatorString
+    )
     return theme.expressionRule(rule) if theme else rule
 
 class Operator:
@@ -510,7 +514,10 @@ class ExpressionGrammar(Grammar):
     super().__init__('expr', rules) # TODO: fix this first parameter
     self.__dict__.update(locals())
     self._assignIds()
-    self._computePrecedence()
+    if isinstance(precedence, dict):
+      self.computedPrecedence = precedence
+    else:
+      self._computePrecedence()
     (self.first, self.follow) = firstFollowCalc.compute(self)
     self._computeConflicts()
 

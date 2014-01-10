@@ -78,17 +78,18 @@ def Cli():
   if cli.action == 'dev':
     old = {
       'parser': GrammarFileParser(HermesParserFactory().create()),
-      'file': 'grammar.zgr',
+      'file': 'sample3_old.zgr',
       'name': 'grammar'
     }
     new = {
       'parser': GrammarFileParser(HermesParserFactory().create()),
-      'file': 'hermes.zgr',
+      'file': 'sample3_new.zgr',
       'name': 'hermes'
     }
-    old['parser'].parse(old['name'], open(old['file']))
-    new['parser'].parse_new(new['name'], open(new['file']))
-    print('dev')
+    grammar_old = old['parser'].parse(old['name'], open(old['file']))
+    grammar_new = new['parser'].parse_new(new['name'], open(new['file']))
+    analyzer = GrammarAnalyzer(grammar_new)
+    analyzer.analyze( theme=TerminalColorTheme() )
     sys.exit(-1)
 
   grammars = []

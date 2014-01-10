@@ -13,7 +13,8 @@ class NonTerminal(Morpheme):
   def str(self, theme=None):
     return self.__str__(theme)
   def __str__(self, theme=None):
-    return theme.nonterminal(self.string) if theme else self.string
+    nt_str = '$' + self.string
+    return theme.nonterminal(nt_str) if theme else nt_str
   def first(self):
     return 
 
@@ -26,7 +27,8 @@ class Terminal(Morpheme):
   def str(self, theme=None):
     return self.__str__(theme)
   def __str__(self, theme=None):
-    return theme.terminal("'" + self.string + "'") if theme else "'" + self.string + "'"
+    t_str = ':' + self.string
+    return theme.terminal(t_str) if theme else t_str
   def first(self):
     return {self}
 
