@@ -61,8 +61,39 @@ def parser_rbrace(context, mode, match, terminal):
 def parser_rule_start(context, mode, match, terminal):
     tokens = [Token('', 'll1_rule_hint'), Token(normalize_morpheme(match), terminal)]
     return (tokens, mode, context) 
+def infix_rule_start(context, mode, match, terminal):
+    nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
+    operator = normalize_morpheme(re.search(':[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
+    tokens = [
+        Token('', 'expr_rule_hint'),
+        Token(nonterminal, 'nonterminal'),
+        Token('=', 'equals'),
+        Token('', 'infix_rule_hint'),
+        Token(nonterminal, 'nonterminal'),
+        Token(operator, 'terminal'),
+        Token(nonterminal, 'nonterminal'),
+    ]
+    return (tokens, mode, context) 
+def prefix_rule_start(context, mode, match, terminal):
+    nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
+    operator = normalize_morpheme(re.search(':[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
+    tokens = [
+        Token('', 'expr_rule_hint'),
+        Token(nonterminal, 'nonterminal'),
+        Token('=', 'equals'),
+        Token('', 'prefix_rule_hint'),
+        Token(operator, 'terminal'),
+        Token(nonterminal, 'nonterminal'),
+    ]
+    return (tokens, mode, context) 
 def expr_rule_start(context, mode, match, terminal):
-    tokens = [Token('', 'expr_rule_hint'), Token(normalize_morpheme(match), terminal)]
+    nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
+    tokens = [
+        Token('', 'expr_rule_hint'),
+        Token(nonterminal, 'nonterminal'),
+        Token('=', 'equals'),
+        Token('', 'mixfix_rule_hint'),
+    ]
     return (tokens, mode, context) 
 def grammar_lbrace(context, mode, match, terminal):
     context['grammar_brace'] += 1
@@ -133,7 +164,9 @@ class HermesLexer:
             (re.compile(r'\)'), "rparen", None),
             (re.compile(r','), "comma", None),
             (re.compile(r":([a-zA-Z][a-zA-Z0-9_]*|_empty)"), "terminal", morpheme),
-            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*(?=\s*\=)'), "nonterminal", expr_rule_start),
+            (re.compile(r'(\$[a-zA-Z][a-zA-Z0-9_]*)[ \t]*=[ \t]*\1[ \t]+:[a-zA-Z][a-zA-Z0-9_]*[ \t]+\1(?![ \t]+(:|\$))'), "nonterminal", infix_rule_start),
+            (re.compile(r'(\$[a-zA-Z][a-zA-Z0-9_]*)[ \t]*=[ \t]*:[a-zA-Z][a-zA-Z0-9_]*[ \t]+\1(?![ \t](:|\$))'), "nonterminal", prefix_rule_start),
+            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*\s*='), "nonterminal", expr_rule_start),
             (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*'), "nonterminal", morpheme),
             (re.compile(r'\$([0-9]+|\$)'), "nonterminal_reference", morpheme),
             (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), "identifier", None),

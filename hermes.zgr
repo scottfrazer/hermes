@@ -57,6 +57,9 @@ grammar {
       r'\)' -> :rparen
       r',' -> :comma
       r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> morpheme(:terminal)
+      r'(\$[a-zA-Z][a-zA-Z0-9_]*)[ \t]*=[ \t]*\1[ \t]+:[a-zA-Z][a-zA-Z0-9_]*[ \t]+\1(?![ \t]+(:|\$))' -> infix_rule_start(:nonterminal)
+      r'(\$[a-zA-Z][a-zA-Z0-9_]*)[ \t]*=[ \t]*:[a-zA-Z][a-zA-Z0-9_]*[ \t]+\1(?![ \t](:|\$))' -> prefix_rule_start(:nonterminal)
+      r'\$[a-zA-Z][a-zA-Z0-9_]*\s*=' -> expr_rule_start(:nonterminal)
       r'\$[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:nonterminal)
       r'\$([0-9]+|\$)' -> morpheme(:nonterminal_reference)
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
@@ -70,8 +73,8 @@ grammar {
     $lexer = :lexer :lbrace list($lexer_atom) :rbrace -> Lexer(atoms=$2)
     $lexer_atom = $lexer_regex | $lexer_mode
     $lexer_regex = :regex optional($regex_options) :arrow $lexer_target -> Regex(regex=$0, onmatch=$3)
-    $lexer_target = :terminal -> Terminal(name=$0)
-    $lexer_target = :identifier :lparen :terminal :rparen -> LexerFunctionCall(name=$0, terminal=$2)
+    $lexer_target = :terminal
+    $lexer_target = :identifier :lparen optional(:terminal) :rparen -> LexerFunctionCall(name=$0, terminal=$2)
     $lexer_target = :null -> Null()
     $lexer_mode = :mode :langle :identifier :rangle :lbrace list($lexer_atom) :rbrace -> Mode(name=$2, atoms=$5)
     $parser = $parser_ll1 | $parser_expression
@@ -82,14 +85,16 @@ grammar {
     $ll1_rule_rhs = :null -> NullProduction()
     $ll1_rule_rhs = $parser
     $parser_expression = :parser_expression :lbrace list($expression_rule) :rbrace -> ExpressionParser(rules=$2)
-    $expression_rule = optional($binding_power) :expr_rule_hint :nonterminal :equals $expression_rule_rhs -> ExpressionRule(precedence=$0, nonterminal=$2, production=$4)
-    $expression_rule_rhs = list($expression_rule_single, :pipe)
-    $expression_rule_single = list($expression_morpheme) optional($ast_transform) -> Production(morphemes=$0, ast=$1)",
+    $expression_rule = optional($binding_power) :expr_rule_hint :nonterminal :equals $expression_rule_production -> ExpressionRule(precedence=$0, nonterminal=$2, production=$4)
+    $expression_rule_production = :mixfix_rule_hint $nud optional($led) optional($ast_transform) -> MixfixProduction(nud=$1, led=$2, ast=$3)
+    $expression_rule_production = :prefix_rule_hint list(:morpheme) optional($ast_transform) -> PrefixProduction(morphemes=$1, ast=$2)
+    $expression_rule_production = :infix_rule_hint list(:morpheme) optional($ast_transform) -> InfixProduction(morphemes=$1, ast=$2)
+    $nud = list(:morpheme)
+    $led = :expression_divider list(:morpheme) -> $1
     $binding_power = :lparen $precedence :rparen -> $1
     $precedence = $binding_power_marker :colon $associativity -> Precedence(marker=$0, associativity=$2)
     $binding_power_marker = :asterisk | :dash
     $associativity = :left | :right | :unary
-    $expression_morpheme = $morpheme | :expression_divider
     $morpheme = :terminal | :nonterminal | $macro
     $ast_transform = :arrow $ast_transform_sub -> $1
     $ast_transform_sub = :identifier :lparen list($ast_parameter, :comma) :rparen -> AstTransformation(name=$0, parameters=$2)
@@ -103,11 +108,11 @@ grammar {
 def binding_power(context, mode, match, terminal):
     (precedence, associativity) = match[1:-1].split(':')
     tokens = [
-      Token('(', 'lparen'),
-      Token(precedence, 'asterisk' if precedence == '*' else 'dash'),
-      Token(':', 'colon'),
-      Token(associativity, associativity),
-      Token(')', 'rparen')
+        Token('(', 'lparen'),
+        Token(precedence, 'asterisk' if precedence == '*' else 'dash'),
+        Token(':', 'colon'),
+        Token(associativity, associativity),
+        Token(')', 'rparen')
     ]
     return (tokens, mode, context)
 def normalize_morpheme(morpheme):
@@ -146,7 +151,41 @@ def parser_rbrace(context, mode, match, terminal):
     mode = 'grammar' if context['parser_brace'] == 0 else mode
     return default_action(context, mode, match, terminal)
 def parser_rule_start(context, mode, match, terminal):
-    tokens = [Token('', 'll1_rule_hint'), Token(normalize_morpheme(match), terminal)]
+    tokens = [Token('', 'll1_rule_hint'),Token(normalize_morpheme(match), terminal)]
+    return (tokens, mode, context) 
+def infix_rule_start(context, mode, match, terminal):
+    nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
+    operator = normalize_morpheme(re.search(':[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
+    tokens = [
+        Token('', 'expr_rule_hint'),
+        Token(nonterminal, 'nonterminal'),
+        Token('=', 'equals'),
+        Token('', 'infix_rule_hint'),
+        Token(nonterminal, 'nonterminal'),
+        Token(operator, 'terminal'),
+        Token(nonterminal, 'nonterminal'),
+    ]
+    return (tokens, mode, context) 
+def prefix_rule_start(context, mode, match, terminal):
+    nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
+    operator = normalize_morpheme(re.search(':[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
+    tokens = [
+        Token('', 'expr_rule_hint'),
+        Token(nonterminal, 'nonterminal'),
+        Token('=', 'equals'),
+        Token('', 'prefix_rule_hint'),
+        Token(operator, 'terminal'),
+        Token(nonterminal, 'nonterminal'),
+    ]
+    return (tokens, mode, context) 
+def expr_rule_start(context, mode, match, terminal):
+    nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
+    tokens = [
+        Token('', 'expr_rule_hint'),
+        Token(nonterminal, 'nonterminal'),
+        Token('=', 'equals'),
+        Token('', 'mixfix_rule_hint'),
+    ]
     return (tokens, mode, context) 
 def grammar_lbrace(context, mode, match, terminal):
     context['grammar_brace'] += 1

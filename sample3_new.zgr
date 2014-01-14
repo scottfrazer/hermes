@@ -14,7 +14,9 @@ grammar {
       (*:left) $e = $e :power $e -> Power( lhs=$0, rhs=$2 )
       (*:left) $e = :i <=> :lparen list($e, :comma) :rparen -> FunctionCall( name=$$, params=$2 )
       (*:unary) $e = :sub $e -> UMinus( arg=$1 )
-      $e = :n | :s | :i
+      $e = :n
+      $e = :s
+      $e = :i
     }
   }
 }
