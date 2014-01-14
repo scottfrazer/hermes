@@ -37,6 +37,12 @@ def Cli():
   commands['dev'] = subparsers.add_parser(
     'dev'
   )
+  commands['dev-ast'] = subparsers.add_parser(
+    'dev-ast'
+  )
+  commands['dev-ast'].add_argument(
+    'grammar', help='New-style grammar to show AST for'
+  )
   commands['analyze'] = subparsers.add_parser(
     'analyze', description=command_help['analyze'], help=command_help['analyze']
   )
@@ -75,6 +81,13 @@ def Cli():
   factory = HermesParserFactory()
   fp = GrammarFileParser(factory.create())
 
+  if cli.action == 'dev-ast':
+    from hermes.parser.ParserCommon import AstPrettyPrintable
+    parser = GrammarFileParser(HermesParserFactory().create())
+    ast = parser.get_ast('grammar', open(cli.grammar))
+    print(AstPrettyPrintable(ast, color=True))
+    sys.exit(-1)
+
   if cli.action == 'dev':
     old = {
       'parser': GrammarFileParser(HermesParserFactory().create()),
@@ -84,7 +97,7 @@ def Cli():
     new = {
       'parser': GrammarFileParser(HermesParserFactory().create()),
       'file': 'sample3_new.zgr',
-      'name': 'hermes'
+      'name': 'grammar'
     }
     grammar_old = old['parser'].parse(old['name'], open(old['file']))
     grammar_new = new['parser'].parse_new(new['name'], open(new['file']))

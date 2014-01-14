@@ -926,15 +926,17 @@ class GrammarFileParser:
     json['global']['macros'] = set(self.hermesParser.getMacros())
     return json
 
-
-  def parse_new(self, name, fp):
+  def get_ast(self, name, fp):
     from hermes.parser.grammar_Parser import grammar_Parser
     from hermes.parser.ParserCommon import TokenStream
     from hermes.parser.HermesLexer import lex_fp
     tokens = TokenStream(lex_fp(fp))
     parser = grammar_Parser()
     tree = parser.parse(tokens)
-    ast = tree.toAst()
+    return tree.toAst()
+
+  def parse_new(self, name, fp):
+    ast = self.get_ast(name, fp)
     return GrammarFactoryNew().create(name, ast)
 
   def parse( self, name, fp, start=None ):
