@@ -9,7 +9,7 @@ setup(
   description=long_description,
   author='Scott Frazer',
   author_email='scott.d.frazer@gmail.com',
-  packages=['hermes'],
+  packages=['hermes', 'hermes.parser'],
   package_dir={'hermes': 'hermes'},
   package_data={'hermes': ['templates/python/*.tpl', 'templates/java/*.tpl', 'templates/c/*.tpl']},
   install_requires=[
