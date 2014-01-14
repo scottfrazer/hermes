@@ -211,7 +211,7 @@ class {{prefix}}Parser:
   def parse(self, tokens):
     self.tokens = tokens
     self.start = '{{str(grammar.start).upper()}}'
-    tree = self.parse_{{str(grammar.start).lower()}}()
+    tree = self.parse_{{grammar.start.string.lower()}}()
     if self.tokens.current() != None:
       raise SyntaxError( 'Finished parsing without consuming all tokens.' )
     return tree
