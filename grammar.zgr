@@ -22,7 +22,7 @@
       "ll1_rule_rhs := parser",
       "parser_expression := 'parser_expression' + 'lbrace' + list(expression_rule) + 'rbrace' -> ExpressionParser(rules=$2)",
       "expression_rule := optional(binding_power) + 'expr_rule_hint' + 'nonterminal' + 'equals' + expression_rule_production -> ExpressionRule(precedence=$0, nonterminal=$2, production=$4)",
-      "expression_rule_production := 'mixfix_rule_hint' + nud + optional(led) + optional(ast_transform) -> MixfixProduction(nud=$1, led=$2, ast=$3)",
+      "expression_rule_production := 'mixfix_rule_hint' + nud + optional(ast_transform) + optional(led) + optional(ast_transform) -> MixfixProduction(nud=$1, nud_ast=$2, led=$3, ast=$4)",
       "expression_rule_production := 'prefix_rule_hint' + list(morpheme) + optional(ast_transform) -> PrefixProduction(morphemes=$1, ast=$2)",
       "expression_rule_production := 'infix_rule_hint' + list(morpheme) + optional(ast_transform) -> InfixProduction(morphemes=$1, ast=$2)",
       "nud := list(morpheme)",
