@@ -585,7 +585,7 @@ class GrammarFactoryNew:
       precedence_counter = 0
       for expression_rule_ast in expression_parser_ast.getAttr('production').getAttr('rules'):
         (operator, rules) = self.parse_expr_rule(expression_rule_ast, nonterminal, terminals, nonterminals, macros)
-        if expression_rule_ast.name == 'ExpressionOperatorRule':
+        if expression_rule_ast.getAttr('precedence') is not None:
           precedence_ast = expression_rule_ast.getAttr('precedence')
           if precedence_ast.getAttr('marker').str == 'asterisk':
             precedence_counter += 1000
@@ -620,43 +620,99 @@ class GrammarFactoryNew:
     #print(AstPrettyPrintable(ast.getAttr('body')[1], color=True))
 
   def parse_expr_rule(self, rule_ast, expr_nonterminal, terminals, nonterminals, macros):
+    print(AstPrettyPrintable(rule_ast, color=True))
     rules = []
     operator = None
 
-    if rule_ast.name == 'ExpressionOperatorRule':
+    if rule_ast.name == 'ExpressionRule':
       nonterminal = self.get_morpheme_from_lexer_token(rule_ast.getAttr('nonterminal'), terminals, nonterminals)
-      morphemes = rule_ast.getAttr('morphemes')
-      ast = rule_ast.getAttr('ast')
+      production = rule_ast.getAttr('production')
      
       if nonterminal != expr_nonterminal:
         raise Exception('parse_expr_rule(): Expecting rule nonterminal to match parser nonterminal')
 
-      if len(morphemes) == 3:
+      if production.name == 'InfixProduction':
+        morphemes = production.getAttr('morphemes')
+        ast = production.getAttr('ast')
+
+        if len(morphemes) != 3:
+          raise Exception('parse_expr_rule(): InfixProduction needs 3 morphemes')
+
         first = self.get_morpheme_from_lexer_token(morphemes[0], terminals, nonterminals)
         operator = self.get_morpheme_from_lexer_token(morphemes[1], terminals, nonterminals)
         third = self.get_morpheme_from_lexer_token(morphemes[2], terminals, nonterminals)
-        if first == third == expr_nonterminal and isinstance(operator, Terminal):
-          rules.append(ExprRule(
-            expr_nonterminal,
-            Production(),
-            Production([operator, expr_nonterminal]),
-            AstTranslation(0),
-            self.parse_ast(ast),
-            InfixOperator(operator)
-          ))
 
-      elif len(morphemes) == 2:
+        if not (first == third == expr_nonterminal):
+          raise Exception("parse_expr_rule(): first == third == expr_nonterminal")
+        if not isinstance(operator, Terminal):
+          raise Exception("parse_expr_rule(): operator needs to be a terminal")
+
+        rules.append(ExprRule(
+          expr_nonterminal,
+          Production([expr_nonterminal]),
+          Production([operator, expr_nonterminal]),
+          AstTranslation(0),
+          self.parse_ast(ast),
+          InfixOperator(operator)
+        ))
+
+      elif production.name == 'MixfixProduction':
+        nud_morphemes_ast = production.getAttr('nud')
+        led_morphemes_ast = production.getAttr('led')
+        led_ast = production.getAttr('ast')
+        nud_ast = production.getAttr('nud_ast')
+
+        nud_morphemes = []
+        if nud_morphemes_ast:
+          for nud_morpheme in nud_morphemes_ast:
+            if isinstance(nud_morpheme, Ast) and nud_morpheme.name == 'Macro':
+              macro = macros[self.macro_ast_to_string(nud_morpheme)]
+              nud_morphemes.append(macro.start_nt)
+            else:
+              nud_morphemes.append(self.get_morpheme_from_lexer_token(nud_morpheme, terminals, nonterminals))
+
+        led_morphemes = []
+        if led_morphemes_ast:
+          for led_morpheme in led_morphemes_ast:
+            if isinstance(led_morpheme, Ast) and led_morpheme.name == 'Macro':
+              macro = macros[self.macro_ast_to_string(led_morpheme)]
+              led_morphemes.append(macro.start_nt)
+            else:
+              led_morphemes.append(self.get_morpheme_from_lexer_token(led_morpheme, terminals, nonterminals))
+
+        operator = led_morphemes[0] if len(led_morphemes) else None
+        rules.append(ExprRule(
+          expr_nonterminal,
+          Production(nud_morphemes),
+          Production(led_morphemes),
+          self.parse_ast(nud_ast),
+          self.parse_ast(led_ast) if led_ast else None,
+          MixfixOperator(operator)
+        ))
+
+      elif production.name == 'PrefixProduction':
+        morphemes = production.getAttr('morphemes')
+        ast = production.getAttr('ast')
+
+        if len(morphemes) != 2:
+          raise Exception('parse_expr_rule(): InfixProduction needs 2 morphemes')
+
         operator = self.get_morpheme_from_lexer_token(morphemes[0], terminals, nonterminals)
-        second = self.get_morpheme_from_lexer_token(morphemes[1], terminals, nonterminals)
-        if second == expr_nonterminal and isinstance(operator, Terminal):
-          rules.append(ExprRule(
-            expr_nonterminal,
-            Production([operator, expr_nonterminal]),
-            Production(),
-            AstTranslation(0),
-            self.parse_ast(ast),
-            PrefixOperator(operator)
-          ))
+        operand = self.get_morpheme_from_lexer_token(morphemes[1], terminals, nonterminals)
+
+        if not operand == expr_nonterminal:
+          raise Exception("parse_expr_rule(): operand == expr_nonterminal")
+        if not isinstance(operator, Terminal):
+          raise Exception("parse_expr_rule(): operator needs to be a terminal")
+
+        rules.append(ExprRule(
+          expr_nonterminal,
+          Production([operator, expr_nonterminal]),
+          Production(),
+          AstTranslation(0),
+          self.parse_ast(ast),
+          InfixOperator(operator)
+        ))
 
       else:
         raise Exception("Improperly formatted rule")

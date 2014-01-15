@@ -172,7 +172,7 @@ class ExprRule:
 
     astString = self.ast.str(theme) if self.ast else ''
 
-    rule = "%s := {%s%s} + {%s} -> %s %s" % (
+    rule = "%s := %s%s <=> %s -> %s %s" % (
         self.nonterminal.str(theme), nudProduction, nudAstString, ledProduction, astString, operatorString
     )
     return theme.expressionRule(rule) if theme else rule
