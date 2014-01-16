@@ -535,7 +535,6 @@ class HermesParserFactory:
 class GrammarFactoryNew:
   # TODO: I want to get rid of name and start parameters
   def create(self, name, ast):
-    #print(AstPrettyPrintable(ast, color=True))
     self.next_id = 0
 
     terminals = {
@@ -613,14 +612,8 @@ class GrammarFactoryNew:
     )
 
     return CompositeGrammar(name, ll1_grammar, expression_grammars)
-    #return ll1_grammar
-
-    #print(AstPrettyPrintable(ast, color=True))
-    #print(AstPrettyPrintable(ast.getAttr('body')[0], color=True))
-    #print(AstPrettyPrintable(ast.getAttr('body')[1], color=True))
 
   def parse_expr_rule(self, rule_ast, expr_nonterminal, terminals, nonterminals, macros):
-    print(AstPrettyPrintable(rule_ast, color=True))
     rules = []
     operator = None
 
