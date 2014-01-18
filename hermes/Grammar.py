@@ -640,7 +640,7 @@ class LL1Grammar(Grammar):
   def __init__(self, name, nonterminals, terminals, macros, rules, start, firstFollowCalc):
     super().__init__(name, rules)
     self.__dict__.update(locals())
-    
+
     specials = {'_empty': EmptyString(-1), '_end': EndOfStream(-1)}
     for terminal in self.terminals:
       key = None

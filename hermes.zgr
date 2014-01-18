@@ -68,11 +68,12 @@ grammar {
   
   parser<ll1> {
     $grammar = :grammar :lbrace list($body_element) :rbrace optional(:code) -> Grammar(body=$2, code=$4)
-    $body_element = $body_element_sub -> $1
+    $body_element = $body_element_sub -> $0
     $body_element_sub = $lexer | $parser
     $lexer = :lexer :lbrace list($lexer_atom) :rbrace -> Lexer(atoms=$2)
     $lexer_atom = $lexer_regex | $lexer_mode
-    $lexer_regex = :regex optional($regex_options) :arrow $lexer_target -> Regex(regex=$0, onmatch=$3)
+    $lexer_regex = :regex optional($regex_options) :arrow $lexer_target -> Regex(regex=$0, options=$1, onmatch=$3)
+    $regex_options = :lbrace list(:identifier) :rbrace
     $lexer_target = :terminal
     $lexer_target = :identifier :lparen optional(:terminal) :rparen -> LexerFunctionCall(name=$0, terminal=$2)
     $lexer_target = :null -> Null()

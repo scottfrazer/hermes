@@ -541,15 +541,15 @@ class GrammarFactoryNew:
       '_empty': EmptyString(-1)
     }
     for terminal in self.walk_ast_terminal(ast, 'terminal'):
-      name = terminal.source_string
-      if name not in terminals:
-        terminals[name] = Terminal(name, len(terminals))
+      t_name = terminal.source_string
+      if t_name not in terminals:
+        terminals[t_name] = Terminal(t_name, len(terminals))
 
     nonterminals = {}
     for nonterminal in self.walk_ast_terminal(ast, 'nonterminal'):
-      name = nonterminal.source_string
-      if name not in nonterminals:
-        nonterminals[name] = NonTerminal(name, len(nonterminals))
+      nt_name = nonterminal.source_string
+      if nt_name not in nonterminals:
+        nonterminals[nt_name] = NonTerminal(nt_name, len(nonterminals))
 
     macros = {}
     for macro in self.walk_ast(ast, 'Macro'):
@@ -568,7 +568,10 @@ class GrammarFactoryNew:
 
     expression_parser_asts = []
     ll1_rules = []
+    start = None
     for rule_ast in self.walk_ast(ast, 'Rule'):
+      if start is None:
+        start = self.get_morpheme_from_lexer_token(rule_ast.getAttr('nonterminal'), terminals, nonterminals)
       production_ast = rule_ast.getAttr('production')
       if isinstance(production_ast, Ast) and production_ast.name == 'ExpressionParser':
         expression_parser_asts.append(rule_ast)
@@ -608,7 +611,7 @@ class GrammarFactoryNew:
       set(terminals.values()),
       macros.values(),
       set(ll1_rules),
-      nonterminals[ll1_rules[0].nonterminal.string] 
+      start 
     )
 
     return CompositeGrammar(name, ll1_grammar, expression_grammars)
@@ -870,7 +873,12 @@ class GrammarFactoryNew:
     if minimum == 0:
       rules.append( MacroGeneratedRule(nt0, Production( [empty] )) )
 
-    return SeparatedListMacro(morpheme, separator, nt0, rules)
+    macro = SeparatedListMacro(morpheme, separator, nt0, rules)
+
+    for rule in rules:
+      rule.nonterminal.macro = macro
+
+    return macro
 
   def tlist( self, ast, terminals, nonterminals ):
     nt0 = self.generate_nonterminal(nonterminals)
