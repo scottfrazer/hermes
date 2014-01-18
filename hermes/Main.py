@@ -40,6 +40,9 @@ def Cli():
   commands['dev-ast'] = subparsers.add_parser(
     'dev-ast'
   )
+  commands['dev-gen'] = subparsers.add_parser(
+    'dev-gen'
+  )
   commands['dev-ast'].add_argument(
     'grammar', help='New-style grammar to show AST for'
   )
@@ -101,8 +104,21 @@ def Cli():
     }
     grammar_old = old['parser'].parse(old['name'], open(old['file']))
     grammar_new = new['parser'].parse_new(new['name'], open(new['file']))
-    analyzer = GrammarAnalyzer(grammar_new)
-    analyzer.analyze( theme=TerminalColorTheme() )
+    analyzer_new = GrammarAnalyzer(grammar_new)
+    analyzer_new.analyze(theme=TerminalDefaultTheme(), file=open('new', 'w'))
+    analyzer_old = GrammarAnalyzer(grammar_old)
+    analyzer_old.analyze(theme=TerminalDefaultTheme(), file=open('old', 'w'))
+
+    templateFactory = TemplateFactoryFactory().create(outputLanguage='python')
+    templateWriter = TemplateWriter(templateFactory)
+    templateWriter.write([grammar_new], '.', addMain=True)
+    sys.exit(-1)
+
+  if cli.action == 'dev-gen':
+    grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('hermes', open('hermes.zgr'))
+    templateFactory = TemplateFactoryFactory().create(outputLanguage='python')
+    templateWriter = TemplateWriter(templateFactory)
+    templateWriter.write([grammar], '.', addMain=True)
     sys.exit(-1)
 
   grammars = []
