@@ -41,7 +41,7 @@ class EmptyString(AbstractTerminal):
   def str(self, theme=None):
     return self.__str__(theme)
   def __str__(self, theme=None):
-    return theme.emptyString('ε') if theme else 'ε'
+    return theme.emptyString(':_empty') if theme else ':_empty'
 
 class EndOfStream(AbstractTerminal):
   def __init__(self, id):

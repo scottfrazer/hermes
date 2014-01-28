@@ -1,6 +1,7 @@
-import sys, inspect
+import sys
+import inspect
 from collections import OrderedDict
-from ParserCommon import *
+from ..Common import *
 
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
@@ -9,14 +10,15 @@ from ParserCommon import *
 
 def whoami():
   return inspect.stack()[1][3]
+
 def whosdaddy():
   return inspect.stack()[2][3]
-def parse( iterator, entry ):
-  p = {{prefix}}Parser()
-  return p.parse(iterator, entry)
+
+def parse(tokens):
+  return Parser().parse(tokens)
 
 {% for exprGrammar in grammar.exprgrammars %}
-class {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
+class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
   def __init__(self, parent):
     self.__dict__.update(locals())
 
@@ -163,7 +165,7 @@ class {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
     return tree
 {% endfor %}
 
-class {{prefix}}Parser:
+class Parser:
   # Quark - finite string set maps one string to exactly one int, and vice versa
   terminals = {
   {% for terminal in nonAbstractTerminals %}
@@ -346,6 +348,6 @@ class {{prefix}}Parser:
   def parse_{{exprGrammar.nonterminal.string.lower()}}( self, rbp = 0):
     name = '{{exprGrammar.nonterminal.string.lower()}}'
     if name not in self.expressionParsers:
-      self.expressionParsers[name] = {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}(self)
+      self.expressionParsers[name] = ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}(self)
     return self.expressionParsers[name].parse(rbp)
   {% endfor %}

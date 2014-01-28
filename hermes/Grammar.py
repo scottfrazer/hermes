@@ -152,55 +152,44 @@ class ExprRule:
   def str(self, theme = None):
     return self.__str__(theme)
   def __str__(self, theme = None):
-    nudProduction = self.nudProduction.str(theme)
-    if not self.nudProduction or not len(self.nudProduction):
-      nudProduction = self.nonterminal.str(theme)
+    def ast_to_str(ast):
+      if isinstance(ast, AstTranslation) and ast.idx == 0:
+        return ''
+      return ' -> ' + self.ast.str(theme) if ast else ''
 
-    ledProduction = self.ledProduction.str(theme)
-    if not self.ledProduction or not len(self.ledProduction):
-      ledProduction = '_empty'
-
-    if isinstance(self.nudAst, AstTranslation) and self.nudAst.idx == 0:
-      nudAstString = ''
+    if isinstance(self.operator, InfixOperator):
+      string = '{nt} = {nt} {op} {nt}{ast}'.format(nt=self.nonterminal, op=self.operator.operator, ast=ast_to_str(self.ast))
+    elif isinstance(self.operator, PrefixOperator):
+      string = '{nt} = {op} {nt}{ast}'.format(nt=self.nonterminal, op=self.operator.operator, ast=ast_to_str(self.ast))
+    elif isinstance(self.operator, MixfixOperator):
+      led = ' <:> {}'.format(self.ledProduction.str(theme)) if len(self.ledProduction.morphemes) else ''
+      string = '{nt} = {nud}{nud_ast}{led}{ast}'.format(
+          nt=self.nonterminal, nud=self.nudProduction.str(theme), nud_ast=ast_to_str(self.nudAst), led=led, ast=ast_to_str(self.ast)
+      )
     else:
-      nudAstString = ' -> %s' % (self.nudAst.str(theme))
+      string = '{nt} = {nud}{ast}'.format(nt=self.nonterminal, nud=self.nudProduction.str(theme), ast=ast_to_str(self.ast))
 
-    if self.operator.operator:
-      operatorString = '<operator %s>' % (self.operator.str(theme))
-    else:
-      operatorString = ''
-
-    astString = self.ast.str(theme) if self.ast else ''
-
-    rule = "%s := %s%s <=> %s -> %s %s" % (
-        self.nonterminal.str(theme), nudProduction, nudAstString, ledProduction, astString, operatorString
-    )
-    return theme.expressionRule(rule) if theme else rule
+    return theme.expressionRule(string) if theme else string
 
 class Operator:
-  def __init__(self, operator, unary = False):
+  def __init__(self, operator, binding_power, associativity):
     self.__dict__.update(locals())
+  def str(self, theme=None):
+    return '<Operator {}, binding_power={}, associativity={}>'.format(self.operator, self.binding_power, self.associativity)
+  def __str__(self):
+    return self.str()
 
 class InfixOperator(Operator):
-  def str(self, theme = None):
-    return self.__str__(theme)
-  def __str__(self, theme = None):
-    string = 'infix %s' % (self.operator.str(theme))
-    return theme.infixOperator(string) if theme else string
+  def str(self, theme=None):
+    return "<Infix {}>".format(super(InfixOperator, self).str(theme))
 
 class PrefixOperator(Operator):
-  def str(self, theme = None):
-    return self.__str__(theme)
-  def __str__(self, theme = None):
-    string = 'prefix %s' % (self.operator.str(theme))
-    return theme.prefixOperator(string) if theme else string
+  def str(self, theme=None):
+    return "<Prefix {}>".format(super(PrefixOperator, self).str(theme))
 
 class MixfixOperator(Operator):
-  def str(self, theme = None):
-    return self.__str__(theme)
-  def __str__(self, theme = None):
-    string = 'mixfix %s' % (self.operator.str(theme))
-    return theme.mixfixOperator(string) if theme else string
+  def str(self, theme=None):
+    return "<Mixfix {}>".format(super(MixfixOperator, self).str(theme))
 
 class OperatorPrecedence:
   def __init__(self, terminal, precedence, associativity):
@@ -404,27 +393,33 @@ class ExpressionFirstFollowCalculator(FirstFollowCalculator):
         except IndexError:
           continue
 
+class Regex:
+  def __init__(self, regex, options, terminal, function=None):
+    self.__dict__.update(locals())
+
+class Lexer(dict):
+  def str(self, theme=None):
+    return ', '.join(self.keys())
+
 class Grammar:
   _empty = EmptyString(-1)
   _end = EndOfStream(-1)
-  terminals = []
-  nonterminals = []
-  rules = set()
-  expandedRules = set()
-  conflicts = []
+  rules = []
   start = None
   tLookup = None
   ntLookup = None
 
   def __init__(self, name, rules):
     self.__dict__.update(locals())
+    self.expandedRules = []
+    self.conflicts = []
+    self.nonterminals = []
+    self.terminals = []
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
-    
-    self.expandedRules = set()
+
     for expandedRuleSet in map(lambda x: x.expand(), rules.copy()):
-      # TODO: this could probably just be self.expandedRules.union(expandedRuleSet)
       for eRule in expandedRuleSet:
-        self.expandedRules = self.expandedRules.union({eRule})
+        self.expandedRules.append(eRule)
 
   def updateFirstFollow( self, first, follow ):
       (self.first, self.follow, changed) = self.firstFollowCalc.update(self, first, follow)
@@ -511,6 +506,8 @@ class NudLedContainer:
 
 class ExpressionGrammar(Grammar):
   def __init__(self, nonterminals, terminals, macros, rules, precedence, nonterminal, firstFollowCalc):
+    if not isinstance(rules, list):
+      raise Exception("Expression grammar expecting an ordered list of rules to express operator precedence.")
     super().__init__('expr', rules) # TODO: fix this first parameter
     self.__dict__.update(locals())
     self._assignIds()
@@ -703,23 +700,19 @@ class LL1Grammar(Grammar):
         if self.first[macro.morpheme].intersection(self.follow[macro]) != set():
           self.conflicts.append( ListFirstFollowConflict(macro, self.first[macro.nonterminal], self.follow[macro]) )
     return self.conflicts
-  def str(self, theme=None):
-    return self.__str__(theme)
-  def __str__(self, theme=None):
-    return ''
 
 class CompositeGrammar(Grammar):
-  def __init__( self, name, grammar, exprgrammars ):
+  def __init__( self, name, grammar, exprgrammars, lexer=Lexer() ):
     if not isinstance(exprgrammars, list):
       raise Exception('parameter 2 must be a list')
 
     self.start = grammar.start
 
-    rules = grammar.rules
-    expandedRules = grammar.expandedRules
+    rules = list(grammar.rules)
+    expandedRules = list(grammar.expandedRules)
     for exprgrammar in exprgrammars:
-      rules = rules.union(exprgrammar.rules)
-      expandedRules = expandedRules.union(exprgrammar.expandedRules)
+      rules.extend(exprgrammar.rules)
+      expandedRules.extend(exprgrammar.expandedRules)
 
     super().__init__(name, rules)
     self.__dict__.update(locals())
@@ -740,8 +733,8 @@ class CompositeGrammar(Grammar):
     for exprgrammar in self.exprgrammars:
       for macros in exprgrammar.macros:
         try:
-          self.rules = self.rules.union(macros.rules)
-          self.expandedRules = self.expandedRules.union(macros.rules)
+          self.rules.extend(macros.rules)
+          self.expandedRules.extend(macros.rules)
         except AttributeError:
           continue
       tokens = exprgrammar.first[exprgrammar.nonterminal]
@@ -842,7 +835,49 @@ class CompositeGrammar(Grammar):
     return self.__str__(theme)
 
   def __str__(self, theme=None):
-    return '<composite grammar %d>' % id(self)
+    lexer = ''
+    if self.lexer:
+      lexer = '  lexer {\n    '
+      if 'default' in self.lexer:
+        for regex in self.lexer['default']:
+          lexer += '\n    '.join(regex)
+      lexer = self.lexer.str(theme=theme)
+      lexer += '\n' if len(lexer) else ''
+
+    rules = []
+    for rule in self.grammar.rules:
+      if isinstance(rule, Rule) and not isinstance(rule, MacroGeneratedRule):
+        rules.append('    ' + str(rule))
+    parser = '  parser<ll1> {\n'
+    parser += '\n'.join(rules) + '\n'
+    for grammar in self.exprgrammars:
+      rules = []
+      counter = 0
+      for rule in grammar.rules:
+        if not isinstance(rule, MacroGeneratedRule):
+          precedence = ''
+          if rule.operator:
+            if rule.operator.binding_power > counter:
+              counter = rule.operator.binding_power
+              marker = '*'
+            else:
+              marker = '-'
+            precedence = '({}:{}) '.format(marker, rule.operator.associativity)
+          rules.append('      {}{}'.format(precedence, rule))
+      parser += '    {0} = grammar<expression> {{\n{1}\n    }}'.format(grammar.nonterminal.str(theme), '\n'.join(rules))
+    parser += '\n  }'
+
+    string = 'grammar {{\n{0}{1}\n}}'.format(
+        lexer, parser 
+    )
+    return string
+
+    rules = []
+    for grammar in self.exprgrammars:
+      for rule in grammar.rules:
+        rules.append(str(rule))
+      string += '\n    '.join(rules)
+    return string
   
   def getParseTable( self ):
     nonterminals  = {n.id: n for n in self.nonterminals}
@@ -856,8 +891,6 @@ class CompositeGrammar(Grammar):
         for rule in self.getExpandedLL1Rules(nonterminal):
           Fip = self._pfirst(rule.getProduction())
           if terminal in Fip or (self._empty in Fip and terminal in self.follow[nonterminal]):
-            if rule.nonterminal.string.lower() == 'parameter_declaration_sub_sub':
-              print('parameter_declaration_sub_sub: terminal:%s rule:%s' % (terminal, rule))
             next = rule
             break
         rules.append(next)

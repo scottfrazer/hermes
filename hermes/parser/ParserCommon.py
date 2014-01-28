@@ -7,7 +7,7 @@ class Terminal:
   def toAst(self):
     return self
   def __str__(self):
-    return self.str 
+    return '<{} (line {} col {}) `{}`>'.format(self.str, self.line, self.col, self.source_string)
 class NonTerminal():
   def __init__(self, id, str):
     self.__dict__.update(locals())

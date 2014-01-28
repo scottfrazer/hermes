@@ -4,6 +4,15 @@ from hermes.Logger import Factory as LoggerFactory
 from collections import OrderedDict
 
 moduleLogger = LoggerFactory().getModuleLogger(__name__)
+templates_dir = resource_filename(__name__, 'templates')
+loader = moody.make_loader(templates_dir)
+
+def remove_blank_lines(string):
+  linereduce = re.compile('^[ \t]*$', re.M)
+  string = linereduce.sub('', string)
+  string = re.sub('\n+', '\n', string)
+  return string
+
 def underscore_to_camelcase(value):
   def camelcase(): 
     while True:
@@ -22,42 +31,29 @@ class MainTemplate(Template):
   def __init__(self, grammars):
     super().__init__()
     self.__dict__.update(locals())
-  def getFilename(self):
+  def get_filename(self):
     return os.path.basename(self.template[:-4])
   def render(self, javaPackage=None):
-    templates_dir = resource_filename(__name__, 'templates')
-    loader = moody.make_loader(templates_dir)
-
     code = loader.render(
       self.template,
       grammars=self.grammars,
       package=javaPackage
     )
-
-    linereduce = re.compile('^[ \t]*$', re.M)
-    code = linereduce.sub('', code)
-    code = re.sub('\n+', '\n', code)
-    return code
     
+    return remove_blank_lines(code)
 
 class CommonTemplate(Template):
   def __init__(self):
     super().__init__()
-  def getFilename(self):
+  def get_filename(self):
     return os.path.basename(self.template[:-4])
   def render(self, javaPackage=None):
-    templates_dir = resource_filename(__name__, 'templates')
-    loader = moody.make_loader(templates_dir)
-
     code = loader.render(
       self.template,
       package=javaPackage
     )
 
-    linereduce = re.compile('^[ \t]*$', re.M)
-    code = linereduce.sub('', code)
-    code = re.sub('\n+', '\n', code)
-    return code
+    return remove_blank_lines(code)
     
 
 class GrammarTemplate(Template):
@@ -114,13 +110,11 @@ class GrammarTemplate(Template):
           nonterminal.empty = True
       nonterminal.rules = list(filter(lambda x: not x.empty, nonterminal.rules))
 
-  def getFilename(self):
+  def get_filename(self):
     return self.grammar.name + '_' + os.path.basename(self.template[:-4])
   def getPrefix(self):
     return self.grammar.name + '_'
   def render(self, javaPackage=None):
-    templates_dir = resource_filename(__name__, 'templates')
-    loader = moody.make_loader(templates_dir)
     self._prepare(self.grammar)
     LL1Nonterminals = [x for x in self.grammar.nonterminals if x not in map(lambda x: x.nonterminal, self.grammar.exprgrammars)]
 
@@ -133,24 +127,46 @@ class GrammarTemplate(Template):
       package=javaPackage
     )
 
-    linereduce = re.compile('^[ \t]*$', re.M)
-    code = linereduce.sub('', code)
-    code = re.sub('\n+', '\n', code)
-    return code
+    return remove_blank_lines(code)
 
+class LexerTemplate(Template):
+  def __init__(self, grammar):
+    super().__init__()
+    self.__dict__.update(locals())
+  def render(self, javaPackage=None):
+    code = loader.render(
+      self.template,
+      lexer=self.grammar.lexer
+    )
+    return remove_blank_lines(code)
 
-class PythonTemplate(GrammarTemplate):
+class PythonInitTemplate(CommonTemplate):
+  template = 'python/Init.py.tpl'
+  def __init__(self, grammar):
+    self.__dict__.update(locals())
+  def get_filename(self):
+    return self.grammar.name + '/__init__.py'
+  def render(self, **kwargs):
+    return loader.render(self.template)
+
+class PythonParserTemplate(GrammarTemplate):
   template = 'python/Parser.py.tpl'
+  def get_filename(self):
+    return self.grammar.name + '/Parser.py'
+
+class PythonLexerTemplate(LexerTemplate):
+  template = 'python/Lexer.py.tpl'
+  def get_filename(self):
+    return self.grammar.name + '/Lexer.py'
 
 class PythonCommonTemplate(CommonTemplate):
-  template = 'python/ParserCommon.py.tpl'
-
-class PythonMainTemplate(MainTemplate):
-  template = 'python/ParserMain.py.tpl'
+  template = 'python/Common.py.tpl'
+  def get_filename(self):
+    return 'Common.py'
 
 class JavaTemplate(GrammarTemplate):
   template = 'java/ParserTemplate.java.tpl'
-  def getFilename(self):
+  def get_filename(self):
     return self.getPrefix() + "Parser.java"
   def getPrefix(self):
     return underscore_to_camelcase(self.grammar.name.lower())
@@ -244,12 +260,12 @@ class FactoryFactory:
     raise Exception('invalid language')
 
 class PythonTemplateFactory:
-  def create(self, grammars, addMain=False):
+  def create(self, grammars, addMain):
     templates = [PythonCommonTemplate()]
     for grammar in grammars:
-      templates.extend([PythonTemplate(grammar)])
-    if addMain:
-      templates.append(PythonMainTemplate(grammars))
+      templates.extend([PythonParserTemplate(grammar)])
+      templates.extend([PythonLexerTemplate(grammar)])
+      templates.extend([PythonInitTemplate(grammar)])
     return templates
 
 class JavaTemplateFactory:
@@ -297,5 +313,8 @@ class TemplateWriter:
     templates = self.templateFactory.create(grammars, addMain)
     for template in templates:
       code = template.render(javaPackage=javaPackage) 
-      with open(os.path.join(directory, template.getFilename()), 'w') as fp:
+      subdir = os.path.join(directory, os.path.dirname(template.get_filename()))
+      if not os.path.isdir(subdir):
+        os.makedirs(subdir)
+      with open(os.path.join(directory, template.get_filename()), 'w') as fp:
         fp.write(code)

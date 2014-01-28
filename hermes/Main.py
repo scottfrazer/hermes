@@ -43,8 +43,14 @@ def Cli():
   commands['dev-gen'] = subparsers.add_parser(
     'dev-gen'
   )
+  commands['dev-cvt'] = subparsers.add_parser(
+    'dev-cvt'
+  )
   commands['dev-ast'].add_argument(
     'grammar', help='New-style grammar to show AST for'
+  )
+  commands['dev-cvt'].add_argument(
+    'grammar', help='Old-style grammar to convert'
   )
   commands['analyze'] = subparsers.add_parser(
     'analyze', description=command_help['analyze'], help=command_help['analyze']
@@ -84,10 +90,17 @@ def Cli():
   factory = HermesParserFactory()
   fp = GrammarFileParser(factory.create())
 
+  def get_grammar_name(cli):
+    if 'name' in cli and cli.name:
+      return cli.name
+    else:
+      base = os.path.basename(cli.grammar)
+      return base[:base.rfind('.')]
+
   if cli.action == 'dev-ast':
     from hermes.parser.ParserCommon import AstPrettyPrintable
     parser = GrammarFileParser(HermesParserFactory().create())
-    ast = parser.get_ast('grammar', open(cli.grammar))
+    ast = parser.get_ast(get_grammar_name(cli), open(cli.grammar))
     print(AstPrettyPrintable(ast, color=True))
     sys.exit(-1)
 
@@ -114,11 +127,18 @@ def Cli():
     templateWriter.write([grammar_new], '.', addMain=True)
     sys.exit(-1)
 
+  if cli.action == 'dev-cvt':
+    grammar_old = GrammarFileParser(HermesParserFactory().create()).parse(get_grammar_name(cli), open(cli.grammar))
+    print(grammar_old)
+    #grammar_new = GrammarFileParser(HermesParserFactory().create()).parse_new(get_grammar_name(cli), open(cli.grammar))
+    #print(grammar_new)
+    sys.exit(-1)
+
   if cli.action == 'dev-gen':
     grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('hermes', open('hermes.zgr'))
     templateFactory = TemplateFactoryFactory().create(outputLanguage='python')
     templateWriter = TemplateWriter(templateFactory)
-    templateWriter.write([grammar], '.', addMain=True)
+    templateWriter.write([grammar], 'gen', addMain=True)
     sys.exit(-1)
 
   grammars = []
