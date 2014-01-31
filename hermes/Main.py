@@ -128,8 +128,17 @@ def Cli():
     sys.exit(-1)
 
   if cli.action == 'dev-cvt':
-    grammar_old = GrammarFileParser(HermesParserFactory().create()).parse(get_grammar_name(cli), open(cli.grammar))
-    print(grammar_old)
+    for (root, _, files) in os.walk('test'):
+      for file in files:
+        if file.endswith('.zgr'):
+          grammar_path = os.path.join(root, file)
+          grammar_path_old = grammar_path + '.old'
+          shutil.copyfile(grammar_path, grammar_path_old)
+          print('{} -> {}'.format(grammar_path, grammar_path_old))
+          grammar_old = GrammarFileParser(HermesParserFactory().create()).parse('test', open(grammar_path))
+          with open(grammar_path, 'w') as fp:
+            fp.write(str(grammar_old))
+          print(grammar_old)
     #grammar_new = GrammarFileParser(HermesParserFactory().create()).parse_new(get_grammar_name(cli), open(cli.grammar))
     #print(grammar_new)
     sys.exit(-1)

@@ -999,6 +999,7 @@ class GrammarFileParser:
       json['expr'][i]['rules'] = flatten(list(map(self.hermesParser.parseExprRule, parser['rules'])))
 
       counter = 0
+      ordered_rules = []
       for binding_power in json['expr'][i]['binding_power']:
         counter += 1000
         for terminal in binding_power['terminals']:
@@ -1010,6 +1011,9 @@ class GrammarFileParser:
                 continue
               rule.operator.binding_power = counter
               rule.operator.associativity = binding_power['associativity']
+              ordered_rules.append(rule)
+      ordered_rules.extend([rule for rule in json['expr'][i]['rules'] if not rule.operator])
+      json['expr'][i]['rules'] = ordered_rules
 
     json['global'] = dict()
     json['global']['nonterminals'] = set(self.hermesParser.getNonTerminals())

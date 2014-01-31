@@ -56,7 +56,7 @@ class Rule:
 
     nonterminal = self.nonterminal.str(theme) if theme else str(self.nonterminal)
     production = self.production.str(theme) if theme else str(self.production)
-    rule = "%s := %s%s" % ( nonterminal, production, astString)
+    rule = "%s = %s%s" % ( nonterminal, production, astString)
     return theme.rule(rule) if theme else rule
   
   def getProduction(self):
@@ -546,6 +546,7 @@ class ExpressionGrammar(Grammar):
       return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
     return allRules 
 
+  # TODO: Get rid of this
   def _computePrecedence(self):
     counter = 1000
     self.computedPrecedence = {}
@@ -864,8 +865,8 @@ class CompositeGrammar(Grammar):
               marker = '-'
             precedence = '({}:{}) '.format(marker, rule.operator.associativity)
           rules.append('      {}{}'.format(precedence, rule))
-      parser += '    {0} = grammar<expression> {{\n{1}\n    }}'.format(grammar.nonterminal.str(theme), '\n'.join(rules))
-    parser += '\n  }'
+      parser += '    {0} = grammar<expression> {{\n{1}\n    }}\n'.format(grammar.nonterminal.str(theme), '\n'.join(rules))
+    parser += '  }'
 
     string = 'grammar {{\n{0}{1}\n}}'.format(
         lexer, parser 
