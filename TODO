@@ -27,6 +27,8 @@ public API for tree and ast:
     - tree.children(), tree.child(3)
     - ast.keys(), ast[name], name in ast, (dict?)
 
+4) Have error message if expression rule needs a binding power but is missing one.
+
 HPath syntax
 ============
 
