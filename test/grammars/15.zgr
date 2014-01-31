@@ -24,9 +24,11 @@
       "nonterminal": "_expr",
       "binding_power": [
         {"associativity": "right", "terminals": ["eq"]},
-        {"associativity": "left", "terminals": ["add", "sub"]},
-        {"associativity": "left", "terminals": ["mul", "div"]},
-        {"associativity": "unary", "terminals": ["sub"]}
+        {"associativity": "left", "terminals": ["union"]},
+        {"associativity": "left", "terminals": ["add", "subtract"]},
+        {"associativity": "left", "terminals": ["multiply", "divide"]},
+        {"associativity": "left", "terminals": ["lparen"]},
+        {"associativity": "unary", "terminals": ["subtract"]}
       ],
       "rules": [
         "_expr := _expr + 'union'+ _expr -> Union( lhs=$0, rhs=$2 )",

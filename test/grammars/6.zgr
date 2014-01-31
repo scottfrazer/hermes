@@ -13,7 +13,7 @@
       "binding_power": [
         {"associativity": "left", "terminals": ["add", "subtract"]},
         {"associativity": "left", "terminals": ["multiply", "divide"]},
-        {"associativity": "unary", "terminals": ["sub"]}
+        {"associativity": "unary", "terminals": ["subtract"]}
       ],
       "rules": [
         "_expr := _expr + 'multiply' + _expr",

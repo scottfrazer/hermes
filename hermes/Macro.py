@@ -46,7 +46,7 @@ class MorphemeListMacro(LL1ListMacro):
     if start_nt:
       self.start_nt.setMacro(self)
   def __repr__( self ):
-    return 'list({0})' % (str(self.morpheme))
+    return 'list({0})'.format(str(self.morpheme))
 
 class SeparatedListMacro(LL1ListMacro):
   def __init__( self, nonterminal, separator, start_nt, rules ):
