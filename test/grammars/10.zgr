@@ -1,15 +1,18 @@
-{
-  "ll1": {
-    "start": "start",
-    "rules": [
-      "start := list(statement)",
-      "statement := funcdef | classdef | 'a' | 'b'",
-      "funcdef := 'function' + 'identifier' + 'lparen' + list(param, 'comma') + 'rparen' + 'lbrace' + list(statement) + 'rbrace'",
-      "param := 'param1' | 'param2'",
-      "classdef := 'class' + 'identifier' + 'lbrace' + list(class_statement) + 'rbrace'",
-      "class_statement := 'private' + class_atom",
-      "class_statement := 'public' + class_atom",
-      "class_atom := funcdef | 'x' | 'y'"
-    ]
+grammar {
+  parser<ll1> {
+    $start = list($statement)
+    $statement = $funcdef
+    $statement = $classdef
+    $statement = :a
+    $statement = :b
+    $funcdef = :function :identifier :lparen list($param, :comma) :rparen :lbrace list($statement) :rbrace
+    $param = :param1
+    $param = :param2
+    $classdef = :class :identifier :lbrace list($class_statement) :rbrace
+    $class_statement = :private $class_atom
+    $class_statement = :public $class_atom
+    $class_atom = $funcdef
+    $class_atom = :x
+    $class_atom = :y
   }
 }

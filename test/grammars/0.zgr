@@ -1,9 +1,7 @@
-{
-  "ll1": {
-    "start": "start",
-    "rules": [
-      "Start := Sub + 'semi'",
-      "Sub := 'a' + Sub + 'b' | _empty"
-    ]
+grammar {
+  parser<ll1> {
+    $start = $sub :semi
+    $sub = :a $sub :b
+    $sub = :_empty
   }
 }

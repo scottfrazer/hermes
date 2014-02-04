@@ -1,9 +1,7 @@
-{
-  "ll1": {
-    "start": "S",
-    "rules": [
-      "S := A + 'c' + 'b'",
-      "A := 'c' | _empty"
-    ]
+grammar {
+  parser<ll1> {
+    $s = $a :c :b
+    $a = :c
+    $a = :_empty
   }
 }

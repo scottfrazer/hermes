@@ -1,8 +1,5 @@
-{
-  "ll1": {
-    "start": "start",
-    "rules": [
-      "start := list('a', 'comma', 1)"
-    ]
+grammar {
+  parser<ll1> {
+    $start = list(:a, :comma)
   }
 }

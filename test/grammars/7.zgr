@@ -1,37 +1,28 @@
-{
-  "ll1": {
-    "start": "start",
-    "rules": [
-      "start := list(sub, 'comma')",
-      "sub := item | _expr",
-      "item := 'b' | 'a'",
-      "type_name := 'int' | 'char'",
-      "comma_opt := 'comma' | _empty",
-      "initializer_list_item := 'item'"
-    ]
-  },
-  "expr": [
-    {
-      "nonterminal": "_expr",
-      "binding_power": [
-        {"associativity": "left", "terminals": ["add", "subtract"]},
-        {"associativity": "left", "terminals": ["multiply", "divide"]},
-        {"associativity": "left", "terminals": ["lbrace", "lparen"]},
-        {"associativity": "unary", "terminals": ["subtract"]}
-      ],
-      "rules": [
-        "_expr := _expr + 'multiply' + _expr",
-        "_expr := _expr + 'divide' + _expr",
-        "_expr := _expr + 'add' + _expr",
-        "_expr := _expr + 'subtract' + _expr",
-        "_expr := 'subtract' + _expr",
-        "_expr := {'lsquare' + list(_expr, 'comma') + 'rsquare'}",
-        "_expr := {'lbrace' + list(_expr, 'comma') + 'rbrace'}",
-        "_expr := {'identifier'} + {'lparen' + list(_expr, 'comma') + 'rparen'} -> FunctionCall( name=$$, params=$2 )",
-        "_expr := {'lparen_cast' + type_name + 'rparen' -> $1} + {'lbrace' + list(initializer_list_item, 'comma') + comma_opt + 'rbrace'} -> TypeInitializion( type=$1, initializer=$4 )",
-        "_expr := {'lparen' + _expr + 'rparen'}",
-        "_expr := {'identifier'} | {'number'}"
-      ]
+grammar {
+  parser<ll1> {
+    $start = list($sub, :comma)
+    $sub = $item
+    $sub = $e
+    $item = :b
+    $item = :a
+    $type_name = :int
+    $type_name = :char
+    $comma_opt = :comma
+    $comma_opt = :_empty
+    $initializer_list_item = :item
+    $e = parser<expression> {
+      (*:left) $e = $e :add $e
+      (-:left) $e = $e :subtract $e
+      (*:left) $e = $e :multiply $e
+      (-:left) $e = $e :divide $e
+      (*:left) $e = :lparen_cast $type_name :rparen -> TypeInitializion( type=$1, initializer=$4 ) <=> :lbrace list($initializer_list_item, :comma) $comma_opt :rbrace -> TypeInitializion( type=$1, initializer=$4 )
+      (-:left) $e = :identifier <=> :lparen list($e, :comma) :rparen -> FunctionCall( name=$$, params=$2 )
+      (*:unary) $e = :subtract $e
+      $e = :lsquare list($e, :comma) :rsquare
+      $e = :lbrace list($e, :comma) :rbrace
+      $e = :lparen $e :rparen
+      $e = :identifier
+      $e = :number
     }
-  ]
+  }
 }

@@ -1,9 +1,6 @@
-{
-  "ll1": {
-    "start": "s",
-    "rules": [
-      "S := mlist(T, 2)",
-      "T := 'nt'"
-    ]
+grammar {
+  parser<ll1> {
+    $s = mlist($t, 2)
+    $t = :nt
   }
 }

@@ -1,9 +1,6 @@
-{
-  "ll1": {
-    "start": "s",
-    "rules": [
-      "S := optional(T)",
-      "T := 'x'"
-    ]
+grammar {
+  parser<ll1> {
+    $s = optional($t)
+    $t = :x
   }
 }

@@ -1,9 +1,8 @@
-{
-  "ll1": {
-    "start": "s",
-    "rules": [
-      "S := list(T) | _empty",
-      "T := 'x' | 'y'"
-    ]
+grammar {
+  parser<ll1> {
+    $s = list($t)
+    $s = :_empty
+    $t = :x
+    $t = :y
   }
 }

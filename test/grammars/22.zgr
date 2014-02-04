@@ -1,8 +1,5 @@
-{
-  "ll1": {
-    "start": "start",
-    "rules": [
-      "start := optional('a')"
-    ]
+grammar {
+  parser<ll1> {
+    $start = optional(:a)
   }
 }

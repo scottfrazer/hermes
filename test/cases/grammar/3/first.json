@@ -1,10 +1,10 @@
 {
   "for": ["for"],
-  "forsub": ["sub", "n", "s", "ε", "_expr", "identifier"],
-  "forbody": ["sub", "for", "n", "s", "ε", "_expr", "identifier"],
-  "start": ["sub", "for", "n", "s", "ε", "_expr", "identifier"],
-  "statement": ["sub", "for", "n", "s", "_expr", "identifier"],
-  "_expr": ["s", "_expr", "sub", "identifier", "n"],
-  "_gen0": ["sub", "for", "n", "s", "ε", "_expr", "identifier"],
+  "forsub": ["sub", "n", "s", "ε", "e", "identifier"],
+  "forbody": ["sub", "for", "n", "s", "ε", "e", "identifier"],
+  "start": ["sub", "for", "n", "s", "ε", "e", "identifier"],
+  "statement": ["sub", "for", "n", "s", "e", "identifier"],
+  "e": ["s", "e", "sub", "identifier", "n"],
+  "_gen0": ["sub", "for", "n", "s", "ε", "e", "identifier"],
   "_gen1": ["ε", "semi"]
 }

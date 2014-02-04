@@ -1,34 +1,25 @@
-{
-  "ll1": {
-    "start": "start",
-    "rules": [
-      "start := list(statement, 'semi') -> Program(statements=$0) | _empty",
-      "statement := _expr | for",
-      "for := 'for' + 'lparen' + forsub + 'semi' + forsub + 'semi' + forsub + 'rparen' + 'lbrace' + forbody + 'rbrace' -> For( decl=$2, cond=$4, iter=$6, body=$9 )",
-      "forsub := _expr | _empty",
-      "forbody := statement + 'semi' + forbody | _empty"
-    ]
-  },
-  "expr": [
-    {
-      "nonterminal": "_expr",
-      "binding_power": [
-        {"associativity": "right", "terminals": ["eq"]},
-        {"associativity": "left", "terminals": ["add", "sub"]},
-        {"associativity": "left", "terminals": ["mul", "div"]},
-        {"associativity": "left", "terminals": ["power"]},
-        {"associativity": "unary", "terminals": ["sub"]}
-      ],
-      "rules": [
-        "_expr := _expr + 'eq'+ _expr -> Assign( lhs=$0, rhs=$2 )",
-        "_expr := _expr + 'add'+ _expr -> Add( lhs=$0, rhs=$2 )",
-        "_expr := _expr + 'mul' + _expr -> Multiply( lhs=$0, rhs=$2 )",
-        "_expr := _expr + 'sub'+ _expr -> Subtract( lhs=$0, rhs=$2 )",
-        "_expr := _expr + 'div' + _expr -> Divide( lhs=$0, rhs=$2 )",
-        "_expr := _expr + 'power' + _expr -> Power( lhs=$0, rhs=$2 )",
-        "_expr := 'sub'+ _expr -> UMinus( arg=$1 )",
-        "_expr := {'n'} | {'s'} | {'identifier'}"
-      ]
+grammar {
+  parser<ll1> {
+    $start = list($statement, :semi) -> Program( statements=$0 )
+    $start = :_empty
+    $statement = $e
+    $statement = $for
+    $for = :for :lparen $forsub :semi $forsub :semi $forsub :rparen :lbrace $forbody :rbrace -> For( decl=$2, cond=$4, iter=$6, body=$9 )
+    $forsub = $e
+    $forsub = :_empty
+    $forbody = $statement :semi $forbody
+    $forbody = :_empty
+    $e = parser<expression> {
+      (*:right) $e = $e :eq $e -> Assign( lhs=$0, rhs=$2 )
+      (*:left) $e = $e :add $e -> Add( lhs=$0, rhs=$2 )
+      (-:left) $e = $e :sub $e -> Subtract( lhs=$0, rhs=$2 )
+      (*:left) $e = $e :mul $e -> Multiply( lhs=$0, rhs=$2 )
+      (-:left) $e = $e :div $e -> Divide( lhs=$0, rhs=$2 )
+      (*:left) $e = $e :power $e -> Power( lhs=$0, rhs=$2 )
+      (*:unary) $e = :sub $e -> UMinus( arg=$1 )
+      $e = :n
+      $e = :s
+      $e = :identifier
     }
-  ]
+  }
 }

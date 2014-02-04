@@ -1,9 +1,8 @@
-{
-  "ll1": {
-    "start": "start",
-    "rules": [
-      "Start := 'lparen' + list(Item) + 'rparen'",
-      "Item := 'a' | 'b' | 'rparen'"
-    ]
+grammar {
+  parser<ll1> {
+    $start = :lparen list($item) :rparen
+    $item = :a
+    $item = :b
+    $item = :rparen
   }
 }

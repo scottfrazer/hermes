@@ -1,32 +1,22 @@
-{
-  "ll1": {
-    "start": "start",
-    "rules": [
-      "start := list(sub, 'comma')",
-      "sub := item | _expr",
-      "item := 'b' | 'a'"
-    ]
-  },
-  "expr": [
-    {
-      "nonterminal": "_expr",
-      "binding_power": [
-        {"associativity": "left", "terminals": ["add", "subtract"]},
-        {"associativity": "left", "terminals": ["multiply", "divide"]},
-        {"associativity": "unary", "terminals": ["subtract"]}
-      ],
-      "rules": [
-        "_expr := _expr + 'multiply' + _expr",
-        "_expr := _expr + 'divide' + _expr",
-        "_expr := _expr + 'add' + _expr",
-        "_expr := _expr + 'subtract' + _expr",
-        "_expr := 'subtract' + _expr",
-        "_expr := {'lsquare' + list(_expr, 'comma') + 'rsquare'}",
-        "_expr := {'lbrace' + list(_expr, 'comma') + 'rbrace'}",
-        "_expr := {'identifier' + 'lparen' + list(_expr, 'comma') + 'rparen'}",
-        "_expr := {'lparen' + _expr + 'rparen'}",
-        "_expr := {'identifier'} | {'number'}"
-      ]
+grammar {
+  parser<ll1> {
+    $start = list($sub, :comma)
+    $sub = $item
+    $sub = $e
+    $item = :b
+    $item = :a
+    $e = parser<expression> {
+      (*:left) $e = $e :add $e
+      (-:left) $e = $e :subtract $e
+      (*:left) $e = $e :multiply $e
+      (-:left) $e = $e :divide $e
+      (*:unary) $e = :subtract $e
+      $e = :lsquare list($e, :comma) :rsquare
+      $e = :lbrace list($e, :comma) :rbrace
+      $e = :identifier :lparen list($e, :comma) :rparen
+      $e = :lparen $e :rparen
+      $e = :identifier
+      $e = :number
     }
-  ]
+  }
 }

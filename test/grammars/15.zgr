@@ -1,48 +1,55 @@
-{
-  "ll1": {
-    "start": "program",
-    "rules": [
-      "program := list(statement) -> Program( statements=$0 ) | _empty",
-      "statement := funcdef | classdef | simple_statement",
-      "funcdef := 'function' + 'identifier' + 'lparen' + list(param, 'comma') + 'rparen' + 'lbrace' + list(statement) + 'rbrace' -> FuncDef( name=$1, params=$3, body=$6 )",
-      "param := 'identifier' -> param( name=$0 )",
-      "classdef := 'class' + 'identifier' + 'lbrace' + list(class_statement) + 'rbrace' -> class( name=$1, statements=$3 )",
-      "class_statement := 'private' + class_atom -> PrivateMember( body=$1 )",
-      "class_statement := 'public' + class_atom -> PublicMember( body=$1 )",
-      "class_atom := funcdef | 'identifier' + 'semicolon' -> ClassDecl( name=$0 )",
-      "simple_statement := import | for | if | terminated__expr",
-      "import := 'import' + 'identifier' + 'semicolon' -> Import( name=$1 )",
-      "for := 'for' + 'lparen' + _expr + 'semicolon' + _expr + 'semicolon' + _expr + 'rparen' + 'lbrace' + list(statement) + 'rbrace' -> for( init=$2, cond=$4, incr=$6, body=$9 )",
-      "if := 'if' + 'lparen' + _expr + 'rparen' + if_body -> If( cond=$2, body=$4 )",
-      "if_body := 'lbrace' + list(statement) + 'rbrace' -> $1",
-      "terminated__expr := _expr + 'semicolon' -> $0",
-      "token := 'semicolon' | 'minus' | 'multiply' | 'divide' | 'greater_than' | 'less_than' | 'greater_than_equal' | 'less_than_equal' | 'do' | 'while' | 'function' | 'equals' | 'string'"
-    ]
-  },
-  "expr": [
-    {
-      "nonterminal": "_expr",
-      "binding_power": [
-        {"associativity": "right", "terminals": ["eq"]},
-        {"associativity": "left", "terminals": ["union"]},
-        {"associativity": "left", "terminals": ["add", "subtract"]},
-        {"associativity": "left", "terminals": ["multiply", "divide"]},
-        {"associativity": "left", "terminals": ["lparen"]},
-        {"associativity": "unary", "terminals": ["subtract"]}
-      ],
-      "rules": [
-        "_expr := _expr + 'union'+ _expr -> Union( lhs=$0, rhs=$2 )",
-        "_expr := _expr + 'multiply' + _expr -> Multiply( lhs=$0, rhs=$2 )",
-        "_expr := _expr + 'divide' + _expr -> Divide( lhs=$0, rhs=$2 )",
-        "_expr := _expr + 'add' + _expr -> Add( lhs=$0, rhs=$2 )",
-        "_expr := _expr + 'subtract' + _expr -> Subtract( lhs=$0, rhs=$2 )",
-        "_expr := {'subtract' + _expr} -> UMinus( arg=$0 )",
-        "_expr := {'lsquare' + list(_expr, 'comma') + 'rsquare'} -> ListDecl( items=$1 )",
-        "_expr := {'lbrace' + list(_expr, 'comma') + 'rbrace'} -> SetDecl( items=$1 )",
-        "_expr := {'identifier'} + {'lparen' + list(_expr, 'comma') + 'rparen'} -> FuncCall( name=$0, parameters=$2 )",
-        "_expr := {'lparen' + _expr + 'rparen'} -> $1",
-        "_expr := {'identifier'} | {'octal_number'} | {'hexadecimal_number'} | {'decimal_number'} | {'binary_number'}"
-      ]
+grammar {
+  parser<ll1> {
+    $program = list($statement) -> Program( statements=$0 )
+    $program = :_empty
+    $statement = $funcdef
+    $statement = $classdef
+    $statement = $simple_statement
+    $funcdef = :function :identifier :lparen list($param, :comma) :rparen :lbrace list($statement) :rbrace -> FuncDef( name=$1, params=$3, body=$6 )
+    $param = :identifier -> param( name=$0 )
+    $classdef = :class :identifier :lbrace list($class_statement) :rbrace -> class( name=$1, statements=$3 )
+    $class_statement = :private $class_atom -> PrivateMember( body=$1 )
+    $class_statement = :public $class_atom -> PublicMember( body=$1 )
+    $class_atom = $funcdef
+    $class_atom = :identifier :semicolon -> ClassDecl( name=$0 )
+    $simple_statement = $import
+    $simple_statement = $for
+    $simple_statement = $if
+    $simple_statement = $terminated__expr
+    $import = :import :identifier :semicolon -> Import( name=$1 )
+    $for = :for :lparen $e :semicolon $e :semicolon $e :rparen :lbrace list($statement) :rbrace -> for( init=$2, cond=$4, incr=$6, body=$9 )
+    $if = :if :lparen $e :rparen $if_body -> If( cond=$2, body=$4 )
+    $if_body = :lbrace list($statement) :rbrace -> $1
+    $terminated__expr = $e :semicolon
+    $token = :semicolon
+    $token = :minus
+    $token = :multiply
+    $token = :divide
+    $token = :greater_than
+    $token = :less_than
+    $token = :greater_than_equal
+    $token = :less_than_equal
+    $token = :do
+    $token = :while
+    $token = :function
+    $token = :equals
+    $token = :string
+    $e = parser<expression> {
+      (*:left) $e = $e :union $e -> Union( lhs=$0, rhs=$2 )
+      (*:left) $e = $e :add $e -> Add( lhs=$0, rhs=$2 )
+      (-:left) $e = $e :subtract $e -> Subtract( lhs=$0, rhs=$2 )
+      (*:left) $e = $e :multiply $e -> Multiply( lhs=$0, rhs=$2 )
+      (-:left) $e = $e :divide $e -> Divide( lhs=$0, rhs=$2 )
+      (*:left) $e = :identifier <=> :lparen list($e, :comma) :rparen -> FuncCall( name=$0, parameters=$2 )
+      $e = :subtract $e -> UMinus( arg=$0 )
+      $e = :lsquare list($e, :comma) :rsquare -> ListDecl( items=$1 )
+      $e = :lbrace list($e, :comma) :rbrace -> SetDecl( items=$1 )
+      $e = :lparen $e :rparen -> $1
+      $e = :identifier
+      $e = :octal_number
+      $e = :hexadecimal_number
+      $e = :decimal_number
+      $e = :binary_number
     }
-  ]
+  }
 }

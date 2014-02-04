@@ -1,28 +1,15 @@
-{
-  "ll1": {
-    "start": "start",
-    "rules": [
-      "start := _expr"
-    ]
-  },
-  "expr": [
-    {
-      "nonterminal": "_expr",
-      "binding_power": [
-        {"associativity": "left", "terminals": ["add", "sub"]},
-        {"associativity": "left", "terminals": ["mul", "div"]},
-        {"associativity": "left", "terminals": ["lparen"]},
-        {"associativity": "unary", "terminals": ["sub"]}
-      ],
-      "rules": [
-        "_expr := _expr + 'mul' + _expr -> Multiply(left=$0, right=$2)",
-        "_expr := _expr + 'div' + _expr -> Divide(left=$0, right=$2)",
-        "_expr := _expr + 'add' + _expr -> Add(left=$0, right=$2)",
-        "_expr := _expr + 'sub' + _expr -> Subtract(left=$0, right=$2)",
-        "_expr := 'sub' + _expr -> UMinus( arg=$1 )",
-        "_expr := {'lparen' + _expr + 'rparen'} -> $1",
-        "_expr := {'identifier'} | {'number'}"
-      ]
+grammar {
+  parser<ll1> {
+    $start = $e
+    $e = parser<expression> {
+      (*:left) $e = $e :add $e -> Add( left=$0, right=$2 )
+      (-:left) $e = $e :sub $e -> Subtract( left=$0, right=$2 )
+      (*:left) $e = $e :mul $e -> Multiply( left=$0, right=$2 )
+      (-:left) $e = $e :div $e -> Divide( left=$0, right=$2 )
+      (*:unary) $e = :sub $e -> UMinus( arg=$1 )
+      $e = :lparen $e :rparen -> $1
+      $e = :identifier
+      $e = :number
     }
-  ]
+  }
 }
