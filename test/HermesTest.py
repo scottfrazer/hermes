@@ -241,7 +241,7 @@ def load_tests(loader, tests, pattern):
     grammarFile = os.path.join(testDirectory, 'grammar.zgr')
     tokensFile = os.path.join(testDirectory, 'tokens')
     grammarParser = GrammarFileParser(HermesParserFactory().create())
-    grammar = grammarParser.parse( 'grammar', open(grammarFile) )
+    grammar = grammarParser.parse_new( 'grammar', open(grammarFile) )
 
     path = os.path.join(testDirectory, 'parsetree')
     if os.path.exists(path):
@@ -276,7 +276,7 @@ def load_tests(loader, tests, pattern):
       continue
     testDirectory = os.path.join(grammarTestsDirectory, grammarTest)
     grammarParser = GrammarFileParser(HermesParserFactory().create())
-    grammar = grammarParser.parse( 'grammar', open(os.path.join(testDirectory, 'grammar.zgr')) )
+    grammar = grammarParser.parse_new( 'grammar', open(os.path.join(testDirectory, 'grammar.zgr')) )
     grammarFirst = dict()
     for k,v in grammar.first.items():
       if isinstance(k, NonTerminal):

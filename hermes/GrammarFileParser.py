@@ -561,8 +561,6 @@ class GrammarFactoryNew:
       lexer_ast = lexer_ast[0]
       lexer = self.parse_lexer(lexer_ast, terminals, nonterminals)
       lexer.code = ast.getAttr('code').source_string
-    else:
-      print('no lexer detected')
 
     macros = {}
     for macro in self.walk_ast(ast, 'Macro'):
@@ -829,6 +827,7 @@ class GrammarFactoryNew:
 
   def mlist( self, ast, terminals, nonterminals ):
     morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
+    minimum = int(ast.getAttr('parameters')[1].source_string)
     nt0 = self.generate_nonterminal(nonterminals)
     nt1 = self.generate_nonterminal(nonterminals)
     empty = terminals['_empty']
@@ -842,7 +841,7 @@ class GrammarFactoryNew:
     ]
     if minimum == 0:
       rules.append( MacroGeneratedRule(nt0, Production( [empty] )) )
-    return MinimumListMacro(morpheme, nt0, rules)
+    return MinimumListMacro(morpheme, minimum, nt0, rules)
 
   def optional( self, ast, terminals, nonterminals ):
     morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
