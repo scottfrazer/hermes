@@ -43,14 +43,20 @@ def Cli():
   commands['dev-gen'] = subparsers.add_parser(
     'dev-gen'
   )
+  commands['bootstrap'] = subparsers.add_parser(
+    'bootstrap'
+  )
   commands['dev-cvt'] = subparsers.add_parser(
     'dev-cvt'
   )
   commands['dev-ast'].add_argument(
     'grammar', help='New-style grammar to show AST for'
   )
+  commands['dev-gen'].add_argument(
+    'grammar', help='New-style grammar to show generate into gen/'
+  )
   commands['dev-cvt'].add_argument(
-    'grammar', help='Old-style grammar to convert'
+    '--undo', action="store_true", help='Undo conversion'
   )
   commands['analyze'] = subparsers.add_parser(
     'analyze', description=command_help['analyze'], help=command_help['analyze']
@@ -97,8 +103,19 @@ def Cli():
       base = os.path.basename(cli.grammar)
       return base[:base.rfind('.')]
 
+  if cli.action == 'bootstrap':
+    grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('hermes', open('hermes.zgr'))
+    templateFactory = TemplateFactoryFactory().create(outputLanguage='python')
+    templateWriter = TemplateWriter(templateFactory)
+    templateWriter.write([grammar], 'hermes/parser', addMain=True)
+    sys.exit(-1)
+
   if cli.action == 'dev-ast':
-    from hermes.parser.ParserCommon import AstPrettyPrintable
+    from hermes.parser.Common import AstPrettyPrintable
+    from hermes.parser.hermes import lex, parse
+    for t in lex(cli.grammar):
+      print(t)
+    #sys.exit(-1)
     parser = GrammarFileParser(HermesParserFactory().create())
     ast = parser.get_ast(get_grammar_name(cli), open(cli.grammar))
     print(AstPrettyPrintable(ast, color=True))
@@ -128,23 +145,38 @@ def Cli():
     sys.exit(-1)
 
   if cli.action == 'dev-cvt':
-    for (root, _, files) in os.walk('test'):
-      for file in files:
-        if file.endswith('.zgr'):
-          grammar_path = os.path.join(root, file)
-          grammar_path_old = grammar_path + '.old'
-          shutil.copyfile(grammar_path, grammar_path_old)
-          print('{} -> {}'.format(grammar_path, grammar_path_old))
-          grammar_old = GrammarFileParser(HermesParserFactory().create()).parse('test', open(grammar_path))
-          with open(grammar_path, 'w') as fp:
-            fp.write(str(grammar_old))
-          print(grammar_old)
+    import shutil, re
+    if cli.undo:
+      for (root, _, files) in os.walk('test'):
+        for file in files:
+          if file.endswith('.zgr.old'):
+            src = os.path.join(root, file)
+            dst = os.path.join(root, re.sub(r'\.old$', '', file))
+            shutil.move(src, dst)
+            print("Moved {} -> {}".format(src, dst))
+    else:
+      for (root, _, files) in os.walk('test'):
+        for file in files:
+          if file.endswith('.zgr'):
+            grammar_path = os.path.join(root, file)
+            if os.path.islink(grammar_path):
+              continue
+            grammar_path_old = grammar_path + '.old'
+            shutil.copyfile(grammar_path, grammar_path_old)
+            print('{} -> {}'.format(grammar_path, grammar_path_old))
+            try:
+              grammar_old = GrammarFileParser(HermesParserFactory().create()).parse('test', open(grammar_path))
+            except ValueError:
+              print("Skipping {}".format(grammar_path))
+              continue
+            with open(grammar_path, 'w') as fp:
+              fp.write(str(grammar_old))
     #grammar_new = GrammarFileParser(HermesParserFactory().create()).parse_new(get_grammar_name(cli), open(cli.grammar))
     #print(grammar_new)
     sys.exit(-1)
 
   if cli.action == 'dev-gen':
-    grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('hermes', open('hermes.zgr'))
+    grammar = GrammarFileParser(HermesParserFactory().create()).parse_new(get_grammar_name(cli), open(cli.grammar))
     templateFactory = TemplateFactoryFactory().create(outputLanguage='python')
     templateWriter = TemplateWriter(templateFactory)
     templateWriter.write([grammar], 'gen', addMain=True)

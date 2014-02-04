@@ -37,7 +37,7 @@
       "ast_transform_sub := 'nonterminal_reference'",
       "ast_parameter := 'identifier' + 'equals' + 'nonterminal_reference' -> AstParameter(name=$0, index=$2)",
       "macro := 'identifier' + 'lparen' + list(macro_parameter, 'comma') + 'rparen' -> Macro(name=$0, parameters=$2)",
-      "macro_parameter := 'nonterminal' | 'terminal'"
+      "macro_parameter := 'nonterminal' | 'terminal' | 'string' | 'integer'"
     ]
   }
 }

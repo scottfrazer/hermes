@@ -89,9 +89,9 @@ def lex(file_or_path, debug=False):
                 contents = fp.read()
         except FileNotFoundError:
             contents = file_or_path
-    elif isinstance(file_or_path, file):
-        contents = fp.read()
-        fp.close()
+    elif hasattr(file_or_path, 'read') and hasattr(file_or_path, 'close'):
+        contents = file_or_path.read()
+        file_or_path.close()
 
     lexer = HermesLexer()
     return TokenStream(lexer.lex(contents, debug))

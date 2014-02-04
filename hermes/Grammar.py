@@ -162,7 +162,7 @@ class ExprRule:
     elif isinstance(self.operator, PrefixOperator):
       string = '{nt} = {op} {nt}{ast}'.format(nt=self.nonterminal, op=self.operator.operator, ast=ast_to_str(self.ast))
     elif isinstance(self.operator, MixfixOperator):
-      led = ' <:> {}'.format(self.ledProduction.str(theme)) if len(self.ledProduction.morphemes) else ''
+      led = ' <=> {}'.format(self.ledProduction.str(theme)) if len(self.ledProduction.morphemes) else ''
       string = '{nt} = {nud}{nud_ast}{led}{ast}'.format(
           nt=self.nonterminal, nud=self.nudProduction.str(theme), nud_ast=ast_to_str(self.nudAst), led=led, ast=ast_to_str(self.ast)
       )
@@ -398,6 +398,7 @@ class Regex:
     self.__dict__.update(locals())
 
 class Lexer(dict):
+  code = ''
   def str(self, theme=None):
     return ', '.join(self.keys())
 
@@ -865,7 +866,7 @@ class CompositeGrammar(Grammar):
               marker = '-'
             precedence = '({}:{}) '.format(marker, rule.operator.associativity)
           rules.append('      {}{}'.format(precedence, rule))
-      parser += '    {0} = grammar<expression> {{\n{1}\n    }}\n'.format(grammar.nonterminal.str(theme), '\n'.join(rules))
+      parser += '    {0} = parser<expression> {{\n{1}\n    }}\n'.format(grammar.nonterminal.str(theme), '\n'.join(rules))
     parser += '  }'
 
     string = 'grammar {{\n{0}{1}\n}}'.format(

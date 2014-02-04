@@ -42,6 +42,8 @@ grammar {
       r'\$[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:nonterminal)
       r'\$([0-9]+|\$)' -> morpheme(:nonterminal_reference)
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
+      r'"[^"]+"' -> :string
+      r'[0-9]+' -> :integer
     }
 
     mode<parser_expr> {
@@ -63,6 +65,8 @@ grammar {
       r'\$[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:nonterminal)
       r'\$([0-9]+|\$)' -> morpheme(:nonterminal_reference)
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
+      r'"[^"]+"' -> :string
+      r'[0-9]+' -> :integer
     }
   }
   
@@ -88,10 +92,10 @@ grammar {
     $parser_expression = :parser_expression :lbrace list($expression_rule) :rbrace -> ExpressionParser(rules=$2)
     $expression_rule = optional($binding_power) :expr_rule_hint :nonterminal :equals $expression_rule_production -> ExpressionRule(precedence=$0, nonterminal=$2, production=$4)
     $expression_rule_production = :mixfix_rule_hint $nud optional($ast_transform) optional($led) optional($ast_transform) -> MixfixProduction(nud=$1, led=$2, ast=$3)
-    $expression_rule_production = :prefix_rule_hint list(:morpheme) optional($ast_transform) -> PrefixProduction(morphemes=$1, ast=$2)
-    $expression_rule_production = :infix_rule_hint list(:morpheme) optional($ast_transform) -> InfixProduction(morphemes=$1, ast=$2)
-    $nud = list(:morpheme)
-    $led = :expression_divider list(:morpheme) -> $1
+    $expression_rule_production = :prefix_rule_hint list($morpheme) optional($ast_transform) -> PrefixProduction(morphemes=$1, ast=$2)
+    $expression_rule_production = :infix_rule_hint list($morpheme) optional($ast_transform) -> InfixProduction(morphemes=$1, ast=$2)
+    $nud = list($morpheme)
+    $led = :expression_divider list($morpheme) -> $1
     $binding_power = :lparen $precedence :rparen -> $1
     $precedence = $binding_power_marker :colon $associativity -> Precedence(marker=$0, associativity=$2)
     $binding_power_marker = :asterisk | :dash
@@ -102,7 +106,7 @@ grammar {
     $ast_transform_sub = :nonterminal_reference
     $ast_parameter = :identifier :equals :nonterminal_reference -> AstParameter(name=$0, index=$2)
     $macro = :identifier :lparen list($macro_parameter, :comma) :rparen -> Macro(name=$0, parameters=$2)
-    $macro_parameter = :nonterminal | :terminal
+    $macro_parameter = :nonterminal | :terminal | :string | :integer
   }
 }
 

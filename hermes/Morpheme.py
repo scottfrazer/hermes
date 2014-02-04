@@ -13,7 +13,7 @@ class NonTerminal(Morpheme):
   def str(self, theme=None):
     return self.__str__(theme)
   def __str__(self, theme=None):
-    nt_str = '$' + self.string
+    nt_str = '$e' if self.string == '_expr' else '$' + self.string
     return theme.nonterminal(nt_str) if theme else nt_str
   def first(self):
     return 

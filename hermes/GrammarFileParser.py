@@ -7,8 +7,8 @@ from hermes.Grammar import InfixOperator, PrefixOperator, MixfixOperator, Operat
 from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro
 from hermes.Logger import Factory as LoggerFactory
 
-from hermes.parser.HermesLexer import Terminal as HermesTerminal
-from hermes.parser.ParserCommon import Ast, AstList, AstPrettyPrintable
+from hermes.parser.hermes.Lexer import Terminal as HermesTerminal
+from hermes.parser.Common import Ast, AstList, AstPrettyPrintable
 
 moduleLogger = LoggerFactory().getModuleLogger(__name__)
 
@@ -561,6 +561,8 @@ class GrammarFactoryNew:
       lexer_ast = lexer_ast[0]
       lexer = self.parse_lexer(lexer_ast, terminals, nonterminals)
       lexer.code = ast.getAttr('code').source_string
+    else:
+      print('no lexer detected')
 
     macros = {}
     for macro in self.walk_ast(ast, 'Macro'):
@@ -1022,12 +1024,8 @@ class GrammarFileParser:
     return json
 
   def get_ast(self, name, fp):
-    from hermes.parser.grammar_Parser import grammar_Parser
-    from hermes.parser.ParserCommon import TokenStream
-    from hermes.parser.HermesLexer import lex
-    tokens = TokenStream(lex(fp))
-    parser = grammar_Parser()
-    tree = parser.parse(tokens)
+    from hermes.parser.hermes import lex, parse
+    tree = parse(lex(fp))
     return tree.toAst()
 
   def parse_new(self, name, fp):

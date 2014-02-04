@@ -2,13 +2,11 @@ import re
 import sys
 import base64
 import argparse
-from hermes.parser.ParserCommon import Terminal, SyntaxError
-from hermes.parser.grammar_Parser import grammar_Parser as Parser
-
-### START USER CODE ###
+from ..Common import Terminal, SyntaxError, TokenStream
+from .Parser import Parser
+# START USER CODE
 def normalize_morpheme(morpheme):
     return morpheme.lstrip(':').lstrip('$')
-
 def binding_power(context, mode, match, terminal, line, col):
     (precedence, associativity) = match[1:-1].split(':')
     marker = 'asterisk' if precedence == '*' else 'dash'
@@ -100,79 +98,79 @@ def grammar_rbrace(context, mode, match, terminal, line, col):
     context['grammar_brace'] -= 1
     mode = 'default' if context['parser_brace'] == 0 else mode
     return default_action(context, mode, match, terminal, line, col)
-
-### END USER CODE ###
-
+# END USER CODE
 def default_action(context, mode, match, terminal, line, col):
     tokens = [Terminal(Parser.terminals[terminal], terminal, match, 'resource', line, col)] if terminal else []
     return (tokens, mode, context)
-
 class HermesLexer:
     regex = {
-        'default': [
-            (re.compile(r'\grammar'), "grammar", grammar_start),
-            (re.compile(r'\s+'), None, None),
-            (re.compile(r'.*', re.DOTALL), "code", None)
-        ],
-        'grammar': [
-            (re.compile(r'\s+'), None, None),
-            (re.compile(r'{'), "lbrace", grammar_lbrace),
-            (re.compile(r'}'), "rbrace", grammar_rbrace),
-            (re.compile(r'lexer'), "lexer", lexer_start),
-            (re.compile(r'parser\s*<\s*ll1\s*>'), "parser_ll1", parser_ll1_start),
-        ],
         'lexer': [
-            (re.compile(r'\s+'), None, None),
-            (re.compile(r'{'), "lbrace", lexer_lbrace),
-            (re.compile(r'}'), "rbrace", lexer_rbrace),
-            (re.compile(r"null"), "null", None),
-            (re.compile(r'\('), "lparen", None),
-            (re.compile(r'\)'), "rparen", None),
-            (re.compile(r"r'(\\\'|[^\'])*'"), "regex", None),
-            (re.compile(r"->"), "arrow", None),
-            (re.compile(r":([a-zA-Z][a-zA-Z0-9_]*|_empty)"), "terminal", morpheme),
-            (re.compile(r"mode<[a-zA-Z0-9_]+>"), "mode", parse_mode),
-            (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), "identifier", None),
+          (re.compile(r'\s+'), None, None),
+          (re.compile(r'{'), 'lbrace', lexer_lbrace),
+          (re.compile(r'}'), 'rbrace', lexer_rbrace),
+          (re.compile(r'null'), 'null', None),
+          (re.compile(r'\('), 'lparen', None),
+          (re.compile(r'\)'), 'rparen', None),
+          (re.compile(r'r\'(\\\'|[^\'])*\''), 'regex', None),
+          (re.compile(r'->'), 'arrow', None),
+          (re.compile(r':([a-zA-Z][a-zA-Z0-9_]*|_empty)'), 'terminal', morpheme),
+          (re.compile(r'mode<[a-zA-Z0-9_]+>'), 'mode', parse_mode),
+          (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), 'identifier', None),
         ],
         'parser_ll1': [
-            (re.compile(r'\s+'), None, None),
-            (re.compile(r'{'), "lbrace", parser_lbrace),
-            (re.compile(r'}'), "rbrace", parser_rbrace),
-            (re.compile(r'\|'), "pipe", None),
-            (re.compile(r'='), "equals", None),
-            (re.compile(r'\('), "lparen", None),
-            (re.compile(r'\)'), "rparen", None),
-            (re.compile(r','), "comma", None),
-            (re.compile(r'->'), "arrow", None),
-            (re.compile(r'parser\s*<\s*expression\s*>'), "parser_expression", parser_expr_start),
-            (re.compile(r":([a-zA-Z][a-zA-Z0-9_]*|_empty)"), "terminal", morpheme),
-            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*(?=\s*\=)'), "nonterminal", parser_rule_start),
-            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*'), "nonterminal", morpheme),
-            (re.compile(r'\$([0-9]+|\$)'), "nonterminal_reference", morpheme),
-            (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), "identifier", None),
+          (re.compile(r'\s+'), None, None),
+          (re.compile(r'{'), 'lbrace', parser_lbrace),
+          (re.compile(r'}'), 'rbrace', parser_rbrace),
+          (re.compile(r'\|'), 'pipe', None),
+          (re.compile(r'='), 'equals', None),
+          (re.compile(r'\('), 'lparen', None),
+          (re.compile(r'\)'), 'rparen', None),
+          (re.compile(r','), 'comma', None),
+          (re.compile(r'->'), 'arrow', None),
+          (re.compile(r'parser\s*<\s*expression\s*>'), 'parser_expression', parser_expr_start),
+          (re.compile(r':([a-zA-Z][a-zA-Z0-9_]*|_empty)'), 'terminal', morpheme),
+          (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*(?=\s*\=)'), 'nonterminal', parser_rule_start),
+          (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*'), 'nonterminal', morpheme),
+          (re.compile(r'\$([0-9]+|\$)'), 'nonterminal_reference', morpheme),
+          (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), 'identifier', None),
+          (re.compile(r'"[^"]+"'), 'string', None),
+          (re.compile(r'[0-9]+'), 'integer', None),
+        ],
+        'default': [
+          (re.compile(r'\grammar'), 'grammar', grammar_start),
+          (re.compile(r'\s+'), None, None),
+          (re.compile(r'.*', re.DOTALL), 'code', None),
         ],
         'parser_expr': [
-            (re.compile(r'\s+'), None, None),
-            (re.compile(r'\([\*-]:(left|right|unary)\)'), None, binding_power),
-            (re.compile(r'->'), "arrow", None),
-            (re.compile(r'<=>'), "expression_divider", None),
-            (re.compile(r'\|'), "pipe", None),
-            (re.compile(r'='), "equals", None),
-            (re.compile(r'{'), "lbrace", parser_lbrace),
-            (re.compile(r'}'), "rbrace", parser_rbrace),
-            (re.compile(r'\('), "lparen", None),
-            (re.compile(r'\)'), "rparen", None),
-            (re.compile(r','), "comma", None),
-            (re.compile(r":([a-zA-Z][a-zA-Z0-9_]*|_empty)"), "terminal", morpheme),
-            (re.compile(r'(\$[a-zA-Z][a-zA-Z0-9_]*)[ \t]*=[ \t]*\1[ \t]+:[a-zA-Z][a-zA-Z0-9_]*[ \t]+\1(?![ \t]+(:|\$))'), "nonterminal", infix_rule_start),
-            (re.compile(r'(\$[a-zA-Z][a-zA-Z0-9_]*)[ \t]*=[ \t]*:[a-zA-Z][a-zA-Z0-9_]*[ \t]+\1(?![ \t](:|\$))'), "nonterminal", prefix_rule_start),
-            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*\s*='), "nonterminal", expr_rule_start),
-            (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*'), "nonterminal", morpheme),
-            (re.compile(r'\$([0-9]+|\$)'), "nonterminal_reference", morpheme),
-            (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), "identifier", None),
-        ]
+          (re.compile(r'\s+'), None, None),
+          (re.compile(r'\([\*-]:(left|right|unary)\)'), None, binding_power),
+          (re.compile(r'->'), 'arrow', None),
+          (re.compile(r'<=>'), 'expression_divider', None),
+          (re.compile(r'\|'), 'pipe', None),
+          (re.compile(r'='), 'equals', None),
+          (re.compile(r'{'), 'lbrace', parser_lbrace),
+          (re.compile(r'}'), 'rbrace', parser_rbrace),
+          (re.compile(r'\('), 'lparen', None),
+          (re.compile(r'\)'), 'rparen', None),
+          (re.compile(r','), 'comma', None),
+          (re.compile(r':([a-zA-Z][a-zA-Z0-9_]*|_empty)'), 'terminal', morpheme),
+          (re.compile(r'(\$[a-zA-Z][a-zA-Z0-9_]*)[ \t]*=[ \t]*\1[ \t]+:[a-zA-Z][a-zA-Z0-9_]*[ \t]+\1(?![ \t]+(:|\$))'), 'nonterminal', infix_rule_start),
+          (re.compile(r'(\$[a-zA-Z][a-zA-Z0-9_]*)[ \t]*=[ \t]*:[a-zA-Z][a-zA-Z0-9_]*[ \t]+\1(?![ \t](:|\$))'), 'nonterminal', prefix_rule_start),
+          (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*\s*='), 'nonterminal', expr_rule_start),
+          (re.compile(r'\$[a-zA-Z][a-zA-Z0-9_]*'), 'nonterminal', morpheme),
+          (re.compile(r'\$([0-9]+|\$)'), 'nonterminal_reference', morpheme),
+          (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), 'identifier', None),
+          (re.compile(r'"[^"]+"'), 'string', None),
+          (re.compile(r'[0-9]+'), 'integer', None),
+        ],
+        'grammar': [
+          (re.compile(r'\s+'), None, None),
+          (re.compile(r'{'), 'lbrace', grammar_lbrace),
+          (re.compile(r'}'), 'rbrace', grammar_rbrace),
+          (re.compile(r'lexer'), 'lexer', lexer_start),
+          (re.compile(r'parser\s*<\s*ll1\s*>'), 'parser_ll1', parser_ll1_start),
+        ],
     }
-
     def _update_line_col(self, match, line, col):
         match_lines = match.split('\n')
         line += len(match_lines) - 1
@@ -181,7 +179,6 @@ class HermesLexer:
         else:
             col = len(match_lines[-1]) + 1
         return (line, col)
-
     def _unrecognized_token(self, string, line, col):
         lines = string.split('\n')
         bad_line = lines[line-1]
@@ -189,7 +186,6 @@ class HermesLexer:
             line, col, bad_line, ''.join([' ' for x in range(col-1)]) + '^'
         )
         raise SyntaxError(message)
-
     def _next(self, string, mode, context, line, col):
         for (regex, terminal, function) in self.regex[mode]:
             match = regex.match(string)
@@ -198,7 +194,6 @@ class HermesLexer:
                 (tokens, mode, context) = function(context, mode, match.group(0), terminal, line, col)
                 return (tokens, match.group(0), mode)
         return ([], '', mode)
-
     def lex(self, string, debug=False):
         (mode, line, col) = ('default', 1, 1)
         context = {'lexer_brace': 0, 'grammar_brace': 0, 'parser_brace': 0}
@@ -206,19 +201,13 @@ class HermesLexer:
         parsed_tokens = []
         while len(string):
             (tokens, match, mode) = self._next(string, mode, context, line, col)
-
             if len(match) == 0:
                 self._unrecognized_token(string_copy, line, col)
-
             string = string[len(match):]
-
             if tokens is None:
                 self._unrecognized_token(string_copy, line, col)
-
             parsed_tokens.extend(tokens)
-
             (line, col) = self._update_line_col(match, line, col)
-
             if debug:
                 for token in tokens:
                     print('token --> [{}] [{}, {}] [{}] [{}] [{}]'.format(
@@ -230,31 +219,29 @@ class HermesLexer:
                         colorize(str(context), ansi=13)
                     ))
         return parsed_tokens
-
 def lex(file_or_path, debug=False):
     if isinstance(file_or_path, str):
-        with open(file_or_path) as fp:
-            contents = fp.read()
+        try:
+            with open(file_or_path) as fp:
+                contents = fp.read()
+        except FileNotFoundError:
+            contents = file_or_path
     elif hasattr(file_or_path, 'read') and hasattr(file_or_path, 'close'):
         contents = file_or_path.read()
         file_or_path.close()
-
     lexer = HermesLexer()
-    return lexer.lex(contents, debug)
-
+    return TokenStream(lexer.lex(contents, debug))
 if __name__ == '__main__':
     cli_parser = argparse.ArgumentParser(description='Hermes Grammar Lexer')
     cli_parser.add_argument('--debug', action='store_true', help="Print lexical analysis progress to stdout, for debugging.")
     cli_parser.add_argument('--color', action='store_true', help="With --debug, use colorized output.  Requires xtermcolor.")
     cli_parser.add_argument('file')
     cli = cli_parser.parse_args()
-
     if cli.color:
         from xtermcolor import colorize
     else:
         def colorize(string, **kwargs):
             return string
-
     try:
         tokens = lex(cli.file, cli.debug)
         if not cli.debug:
@@ -264,7 +251,7 @@ if __name__ == '__main__':
                 serialized_tokens = []
                 for token in tokens:
                   serialized_tokens.append(
-                      '{{"terminal": "{}", "resource": "{}", "line": {}, "col": {}, "source_string": "{}"}}'.format(
+                      '\{\{"terminal": "{}", "resource": "{}", "line": {}, "col": {}, "source_string": "{}"\}\}'.format(
                           token.str, token.resource, token.line, token.col, base64.b64encode(token.source_string.encode('utf-8')).decode('utf-8')
                       )
                   )
