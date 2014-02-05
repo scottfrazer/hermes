@@ -1,4 +1,5 @@
 from copy import copy
+from collections import OrderedDict
 from hermes.Morpheme import Terminal
 from hermes.Morpheme import EmptyString
 from hermes.Morpheme import EndOfStream
@@ -50,13 +51,13 @@ class Rule:
     return self.__str__( theme )
 
   def __str__( self, theme = None ):
-    astString = ''
+    ast = ''
     if self.ast and not (isinstance(self.ast, AstTranslation) and self.ast.idx == 0):
-      astString = ' -> %s' % (self.ast.str(theme) if theme else self.ast)
+      ast = ' -> {0}'.format(self.ast.str(theme) if theme else self.ast)
 
     nonterminal = self.nonterminal.str(theme) if theme else str(self.nonterminal)
     production = self.production.str(theme) if theme else str(self.production)
-    rule = "%s = %s%s" % ( nonterminal, production, astString)
+    rule = "{0} = {1}{2}".format( nonterminal, production, ast)
     return theme.rule(rule) if theme else rule
   
   def getProduction(self):
@@ -418,9 +419,12 @@ class Grammar:
     self.terminals = []
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
 
-    for expandedRuleSet in map(lambda x: x.expand(), rules.copy()):
-      for eRule in expandedRuleSet:
-        self.expandedRules.append(eRule)
+    # Store in a str(rule) -> rule map to eliminate duplicate rules
+    expanded_rules = OrderedDict()
+    for rule in rules.copy():
+      for expanded_rule in rule.expand():
+        expanded_rules[str(expanded_rule)] = expanded_rule
+    self.expandedRules = list(expanded_rules.values())
 
   def updateFirstFollow( self, first, follow ):
       (self.first, self.follow, changed) = self.firstFollowCalc.update(self, first, follow)

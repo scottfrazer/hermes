@@ -130,8 +130,8 @@ class FirstFollowConflict(Conflict):
   def __str__( self ):
     string = ' -- FIRST/FOLLOW conflict --\n'
     string += 'Nonterminal %s has a first and follow set that overlap.\n\n' % (self.N)
-    string += "first(%s) = {%s}\n" % (self.N, ', '.join([str(e) for e in self.firstN]))
-    string += "follow(%s) = {%s}\n\n" % (self.N, ', '.join([str(e) for e in self.followN]))
+    string += "first(%s) = {%s}\n" % (self.N, ', '.join(sorted([str(e) for e in self.firstN])))
+    string += "follow(%s) = {%s}\n\n" % (self.N, ', '.join(sorted([str(e) for e in self.followN])))
     string += 'first(%s) ∩ follow(%s) = {%s}\n' % (self.N, self.N, ', '.join([str(e) for e in self.firstN.intersection(self.followN)]))
 
     return string

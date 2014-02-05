@@ -1,0 +1,25 @@
+(Grammar:
+  body=[
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<nonterminal (line 3 col 5) `start`>,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<identifier (line 3 col 14) `optional`>,
+                  parameters=[
+                    <terminal (line 3 col 23) `a`>
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        )
+      ]
+    )
+  ],
+  code=None
+)

@@ -1,0 +1,7 @@
+ -- FIRST/FOLLOW conflict --
+Nonterminal $a has a first and follow set that overlap.
+
+first($a) = {:_empty, :c}
+follow($a) = {:c}
+
+first($a) ∩ follow($a) = {:c}

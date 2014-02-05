@@ -1,0 +1,37 @@
+(Grammar:
+  body=[
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<nonterminal (line 3 col 5) `s`>,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<identifier (line 3 col 10) `mlist`>,
+                  parameters=[
+                    <nonterminal (line 3 col 16) `t`>,
+                    <integer (line 3 col 20) `2`>
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 4 col 5) `t`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 4 col 10) `nt`>
+              ],
+              ast=None
+            )
+          ]
+        )
+      ]
+    )
+  ],
+  code=None
+)

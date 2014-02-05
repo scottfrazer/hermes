@@ -1,0 +1,37 @@
+{
+    "$forsub": [
+        ":rparen", 
+        ":semi"
+    ], 
+    "$_gen1": [
+        "\u03c3"
+    ], 
+    "$_gen0": [
+        "\u03c3"
+    ], 
+    "$start": [
+        "\u03c3"
+    ], 
+    "$statement": [
+        ":semi", 
+        "\u03c3"
+    ], 
+    "$e": [
+        "\u03c3", 
+        ":mul", 
+        ":power", 
+        ":div", 
+        ":eq", 
+        ":semi", 
+        ":rparen", 
+        ":add", 
+        ":sub"
+    ], 
+    "$for": [
+        ":semi", 
+        "\u03c3"
+    ], 
+    "$forbody": [
+        ":rbrace"
+    ]
+}

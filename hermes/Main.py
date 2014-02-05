@@ -195,7 +195,7 @@ def Cli():
       sys.exit(-1)
 
     name = name[:-4]
-    grammars.append( fp.parse(name, open(grammar)) )
+    grammars.append( fp.parse_new(name, open(grammar)) )
 
   if cli.action == 'analyze':
 

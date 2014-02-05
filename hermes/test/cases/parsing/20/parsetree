@@ -1,0 +1,45 @@
+(program:
+  (block:
+    (block_const:
+      const,
+      (ident:
+        ident
+      ),
+      equal,
+      (number:
+        number
+      ),
+      (block_const1:
+        comma,
+        (ident:
+          ident
+        ),
+        equal,
+        (number:
+          number
+        )
+      )
+    ),
+    (block_var:
+      var,
+      (ident:
+        ident
+      ),
+      (block_var1:
+        comma,
+        (ident:
+          ident
+        )
+      ),
+      semi
+    ),
+    (block_proc: ),
+    (statement:
+      call,
+      (ident:
+        ident
+      )
+    )
+  ),
+  dot
+)

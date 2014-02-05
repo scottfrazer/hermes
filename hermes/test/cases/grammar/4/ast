@@ -1,0 +1,44 @@
+(Grammar:
+  body=[
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<nonterminal (line 3 col 5) `s`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 3 col 10) `a`>,
+                <terminal (line 3 col 13) `c`>,
+                <terminal (line 3 col 16) `b`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 4 col 5) `a`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 4 col 10) `c`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 5 col 5) `a`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 5 col 10) `_empty`>
+              ],
+              ast=None
+            )
+          ]
+        )
+      ]
+    )
+  ],
+  code=None
+)

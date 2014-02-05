@@ -1,0 +1,5 @@
+ -- NUD conflict -- 
+Terminal :identifier requires two different NUD() functions.  Cannot choose between these rules:
+
+(Rule-16) $e = :identifier :lparen $_gen2 :rparen
+(Rule-18) $e = :identifier

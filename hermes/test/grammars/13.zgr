@@ -1,0 +1,6 @@
+grammar {
+  parser<ll1> {
+    $s = optional($t)
+    $t = :x
+  }
+}

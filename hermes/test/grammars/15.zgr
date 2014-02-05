@@ -1,0 +1,55 @@
+grammar {
+  parser<ll1> {
+    $program = list($statement) -> Program( statements=$0 )
+    $program = :_empty
+    $statement = $funcdef
+    $statement = $classdef
+    $statement = $simple_statement
+    $funcdef = :function :identifier :lparen list($param, :comma) :rparen :lbrace list($statement) :rbrace -> FuncDef( name=$1, params=$3, body=$6 )
+    $param = :identifier -> param( name=$0 )
+    $classdef = :class :identifier :lbrace list($class_statement) :rbrace -> class( name=$1, statements=$3 )
+    $class_statement = :private $class_atom -> PrivateMember( body=$1 )
+    $class_statement = :public $class_atom -> PublicMember( body=$1 )
+    $class_atom = $funcdef
+    $class_atom = :identifier :semicolon -> ClassDecl( name=$0 )
+    $simple_statement = $import
+    $simple_statement = $for
+    $simple_statement = $if
+    $simple_statement = $terminated__expr
+    $import = :import :identifier :semicolon -> Import( name=$1 )
+    $for = :for :lparen $e :semicolon $e :semicolon $e :rparen :lbrace list($statement) :rbrace -> for( init=$2, cond=$4, incr=$6, body=$9 )
+    $if = :if :lparen $e :rparen $if_body -> If( cond=$2, body=$4 )
+    $if_body = :lbrace list($statement) :rbrace -> $1
+    $terminated__expr = $e :semicolon
+    $token = :semicolon
+    $token = :minus
+    $token = :multiply
+    $token = :divide
+    $token = :greater_than
+    $token = :less_than
+    $token = :greater_than_equal
+    $token = :less_than_equal
+    $token = :do
+    $token = :while
+    $token = :function
+    $token = :equals
+    $token = :string
+    $e = parser<expression> {
+      (*:left) $e = $e :union $e -> Union( lhs=$0, rhs=$2 )
+      (*:left) $e = $e :add $e -> Add( lhs=$0, rhs=$2 )
+      (-:left) $e = $e :subtract $e -> Subtract( lhs=$0, rhs=$2 )
+      (*:left) $e = $e :multiply $e -> Multiply( lhs=$0, rhs=$2 )
+      (-:left) $e = $e :divide $e -> Divide( lhs=$0, rhs=$2 )
+      (*:left) $e = :identifier <=> :lparen list($e, :comma) :rparen -> FuncCall( name=$0, parameters=$2 )
+      $e = :subtract $e -> UMinus( arg=$0 )
+      $e = :lsquare list($e, :comma) :rsquare -> ListDecl( items=$1 )
+      $e = :lbrace list($e, :comma) :rbrace -> SetDecl( items=$1 )
+      $e = :lparen $e :rparen -> $1
+      $e = :identifier
+      $e = :octal_number
+      $e = :hexadecimal_number
+      $e = :decimal_number
+      $e = :binary_number
+    }
+  }
+}

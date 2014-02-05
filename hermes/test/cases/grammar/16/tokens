@@ -1,0 +1,15 @@
+<grammar (line 1 col 1) `grammar`>
+<lbrace (line 1 col 9) `{`>
+<parser_ll1 (line 2 col 3) `parser<ll1>`>
+<lbrace (line 2 col 15) `{`>
+<ll1_rule_hint (line 3 col 5) ``>
+<nonterminal (line 3 col 5) `start`>
+<equals (line 3 col 12) `=`>
+<identifier (line 3 col 14) `mlist`>
+<lparen (line 3 col 19) `(`>
+<terminal (line 3 col 20) `a`>
+<comma (line 3 col 22) `,`>
+<integer (line 3 col 24) `4`>
+<rparen (line 3 col 25) `)`>
+<rbrace (line 4 col 3) `}`>
+<rbrace (line 5 col 1) `}`>

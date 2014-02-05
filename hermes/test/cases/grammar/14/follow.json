@@ -1,0 +1,207 @@
+{
+    "$add_op": [
+        ":gteq", 
+        ":dot", 
+        ":rparen", 
+        ":lparen", 
+        ":lteq", 
+        ":lt", 
+        ":ident", 
+        ":pound", 
+        ":semi", 
+        ":do", 
+        ":equal", 
+        ":then", 
+        ":minus", 
+        ":number", 
+        ":gt", 
+        ":plus", 
+        ":end"
+    ], 
+    "$block_var1": [
+        ":semi"
+    ], 
+    "$ident": [
+        ":gteq", 
+        ":dot", 
+        ":rparen", 
+        ":gt", 
+        ":lteq", 
+        ":assign", 
+        ":divide", 
+        ":pound", 
+        ":semi", 
+        ":times", 
+        ":do", 
+        ":then", 
+        ":comma", 
+        ":minus", 
+        ":equal", 
+        ":plus", 
+        ":end", 
+        ":lt"
+    ], 
+    "$term": [
+        ":gteq", 
+        ":dot", 
+        ":rparen", 
+        ":gt", 
+        ":lteq", 
+        ":lt", 
+        ":pound", 
+        ":semi", 
+        ":do", 
+        ":equal", 
+        ":minus", 
+        ":then", 
+        ":plus", 
+        ":end"
+    ], 
+    "$expression_sub1": [
+        ":gteq", 
+        ":dot", 
+        ":rparen", 
+        ":gt", 
+        ":equal", 
+        ":lteq", 
+        ":end", 
+        ":then", 
+        ":lt", 
+        ":pound", 
+        ":semi", 
+        ":do"
+    ], 
+    "$block_var": [
+        ":procedure"
+    ], 
+    "$term_sub1": [
+        ":gteq", 
+        ":dot", 
+        ":rparen", 
+        ":gt", 
+        ":lteq", 
+        ":lt", 
+        ":pound", 
+        ":semi", 
+        ":do", 
+        ":then", 
+        ":minus", 
+        ":equal", 
+        ":plus", 
+        ":end"
+    ], 
+    "$statement": [
+        ":end", 
+        ":semi", 
+        ":dot"
+    ], 
+    "$op": [
+        ":ident", 
+        ":number", 
+        ":minus", 
+        ":lparen", 
+        ":plus"
+    ], 
+    "$mul_op": [
+        ":gteq", 
+        ":dot", 
+        ":rparen", 
+        ":gt", 
+        ":lteq", 
+        ":divide", 
+        ":pound", 
+        ":semi", 
+        ":times", 
+        ":do", 
+        ":equal", 
+        ":minus", 
+        ":then", 
+        ":plus", 
+        ":end", 
+        ":lt"
+    ], 
+    "$block_proc": [
+        ":ident", 
+        ":call", 
+        ":while", 
+        ":begin", 
+        ":if"
+    ], 
+    "$statement_sub1": [
+        ":end"
+    ], 
+    "$factor": [
+        ":gteq", 
+        ":dot", 
+        ":rparen", 
+        ":gt", 
+        ":lteq", 
+        ":divide", 
+        ":pound", 
+        ":semi", 
+        ":times", 
+        ":do", 
+        ":then", 
+        ":minus", 
+        ":equal", 
+        ":plus", 
+        ":end", 
+        ":lt"
+    ], 
+    "$program": [
+        "\u03c3"
+    ], 
+    "$unary_add_op": [
+        ":ident", 
+        ":number", 
+        ":lparen"
+    ], 
+    "$expression": [
+        ":gteq", 
+        ":dot", 
+        ":rparen", 
+        ":gt", 
+        ":then", 
+        ":lteq", 
+        ":end", 
+        ":equal", 
+        ":lt", 
+        ":pound", 
+        ":semi", 
+        ":do"
+    ], 
+    "$block": [
+        ":semi", 
+        ":dot"
+    ], 
+    "$number": [
+        ":gteq", 
+        ":dot", 
+        ":times", 
+        ":gt", 
+        ":lteq", 
+        ":divide", 
+        ":pound", 
+        ":semi", 
+        ":var", 
+        ":do", 
+        ":rparen", 
+        ":equal", 
+        ":comma", 
+        ":minus", 
+        ":then", 
+        ":plus", 
+        ":end", 
+        ":lt"
+    ], 
+    "$block_const1": [
+        ":var"
+    ], 
+    "$condition": [
+        ":then", 
+        ":do"
+    ], 
+    "$block_const": [
+        ":var"
+    ]
+}

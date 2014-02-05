@@ -1,0 +1,56 @@
+(start:
+  (_gen0:
+    (sub:
+      (item:
+        a
+      )
+    ),
+    (_gen1:
+      comma,
+      (sub:
+        (item:
+          b
+        )
+      ),
+      (_gen1:
+        comma,
+        (sub:
+          (_expr:
+            lparen,
+            (_expr:
+              lparen,
+              (_expr:
+                (_expr:
+                  number
+                ),
+                multiply,
+                (_expr:
+                  (_expr:
+                    identifier
+                  ),
+                  lparen,
+                  (_gen2:
+                    (_expr:
+                      (_expr:
+                        number
+                      ),
+                      add,
+                      (_expr:
+                        number
+                      )
+                    ),
+                    (_gen3: )
+                  ),
+                  rparen
+                )
+              ),
+              rparen
+            ),
+            rparen
+          )
+        ),
+        (_gen1: )
+      )
+    )
+  )
+)

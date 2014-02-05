@@ -565,6 +565,8 @@ class GrammarFactoryNew:
     macros = {}
     for macro in self.walk_ast(ast, 'Macro'):
       macro_string = self.macro_ast_to_string(macro)
+      if macro_string in macros:
+        continue
       if macro.getAttr('name').source_string == 'list' and len(macro.getAttr('parameters')) == 2:
         macro = self.slist(macro, terminals, nonterminals)
       elif macro.getAttr('name').source_string == 'list' and len(macro.getAttr('parameters')) == 1:
