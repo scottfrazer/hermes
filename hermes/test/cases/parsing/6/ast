@@ -1,35 +1,35 @@
 (Program:
   statements=[
     (Assign:
-      var=identifier,
+      var=<identifier (line 0 col 0) ``>,
       val=(Assign:
-        var=identifier,
-        val=n
+        var=<identifier (line 0 col 0) ``>,
+        val=<n (line 0 col 0) ``>
       )
     ),
     (For:
       decl=(Assign:
-        var=identifier,
-        val=n
+        var=<identifier (line 0 col 0) ``>,
+        val=<n (line 0 col 0) ``>
       ),
       cond=None,
       iter=(Assign:
-        var=identifier,
+        var=<identifier (line 0 col 0) ``>,
         val=(Add:
-          lhs=s,
-          rhs=n
+          lhs=<s (line 0 col 0) ``>,
+          rhs=<n (line 0 col 0) ``>
         )
       ),
       body=(Assign:
-        var=identifier,
+        var=<identifier (line 0 col 0) ``>,
         val=(Add:
-          lhs=n,
+          lhs=<n (line 0 col 0) ``>,
           rhs=(Divide:
             lhs=(Multiply:
-              lhs=s,
-              rhs=n
+              lhs=<s (line 0 col 0) ``>,
+              rhs=<n (line 0 col 0) ``>
             ),
-            rhs=s
+            rhs=<s (line 0 col 0) ``>
           )
         )
       )

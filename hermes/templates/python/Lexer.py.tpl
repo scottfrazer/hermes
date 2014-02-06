@@ -97,7 +97,7 @@ def lex(file_or_path, debug=False):
     return TokenStream(lexer.lex(contents, debug))
 
 if __name__ == '__main__':
-    cli_parser = argparse.ArgumentParser(description='Hermes Grammar Lexer')
+    cli_parser = argparse.ArgumentParser(description='Grammar Lexer')
     cli_parser.add_argument('--debug', action='store_true', help="Print lexical analysis progress to stdout, for debugging.")
     cli_parser.add_argument('--color', action='store_true', help="With --debug, use colorized output.  Requires xtermcolor.")
     cli_parser.add_argument('file')

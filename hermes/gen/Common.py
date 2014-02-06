@@ -1,5 +1,4 @@
 from collections import OrderedDict
-
 class Terminal:
   def __init__(self, id, str, source_string, resource, line, col):
     self.__dict__.update(locals())
@@ -9,17 +8,14 @@ class Terminal:
     return self
   def __str__(self):
     return '<{} (line {} col {}) `{}`>'.format(self.str, self.line, self.col, self.source_string)
-
 class NonTerminal():
   def __init__(self, id, str):
     self.__dict__.update(locals())
     self.list = False
   def __str__(self):
     return self.str
-
 class AstTransform:
   pass
-
 class AstTransformSubstitution(AstTransform):
   def __init__(self, idx):
     self.__dict__.update(locals())
@@ -27,7 +23,6 @@ class AstTransformSubstitution(AstTransform):
     return '$' + str(self.idx)
   def __str__(self):
     return self.__repr__()
-
 class AstTransformNodeCreator(AstTransform):
   def __init__( self, name, parameters ):
     self.__dict__.update(locals())
@@ -35,14 +30,12 @@ class AstTransformNodeCreator(AstTransform):
     return self.name + '( ' + ', '.join(['%s=$%s' % (k,str(v)) for k,v in self.parameters.items()]) + ' )'
   def __str__(self):
     return self.__repr__()
-
 class AstList(list):
   def toAst(self):
     retval = []
     for ast in self:
       retval.append(ast.toAst())
     return retval
-
 class ParseTree():
   def __init__(self, nonterminal):
     self.__dict__.update(locals())
@@ -79,7 +72,7 @@ class ParseTree():
       lastElement = len(self.children) - 1
       for i in range(lastElement):
         r.append(self.children[i].toAst())
-      r.append(self.children[lastElement].toAst())
+      r.extend(self.children[lastElement].toAst())
       return r
     elif self.isExpr:
       if isinstance(self.astTransform, AstTransformSubstitution):
@@ -103,7 +96,6 @@ class ParseTree():
             return self.children[0]
           else:
             child = self.children[idx]
-
           parameters[name] = child.toAst()
         return Ast(self.astTransform.name, parameters)
     else:
@@ -126,7 +118,6 @@ class ParseTree():
       else:
         children.append(str(child))
     return '(' + str(self.nonterminal) + ': ' + ', '.join(children) + ')'
-
 class Ast():
   def __init__(self, name, attributes):
     self.__dict__.update(locals())
@@ -134,13 +125,10 @@ class Ast():
     return self.attributes[attr]
   def __str__(self):
     return '(%s: %s)' % (self.name, ', '.join('%s=%s'%(str(k), '[' + ', '.join([str(x) for x in v]) + ']' if isinstance(v, list) else str(v) ) for k,v in self.attributes.items()))
-
 def noColor(string, color):
   return string
-
 def termColor(string, intcolor):
   return "\033[38;5;%dm%s\033[0m" % (intcolor, string)
-
 class AstPrettyPrintable:
   def __init__(self, ast, color=False):
     self.__dict__.update(locals())
@@ -171,7 +159,6 @@ class AstPrettyPrintable:
       return '%s%s' % (indentStr, colored(str(ast), 9))
     else:
       return '%s%s' % (indentStr, colored(str(ast), 9))
-
 class ParseTreePrettyPrintable:
   def __init__(self, ast, color=False):
     self.__dict__.update(locals())
@@ -195,13 +182,11 @@ class ParseTreePrettyPrintable:
       return '%s%s' % (indentStr, colored(str(parsetree), 9))
     else:
       return '%s%s' % (indentStr, colored(parsetree, 9))
-
 class SyntaxError(Exception):
   def __init__(self, message):
     self.__dict__.update(locals())
   def __str__(self):
     return self.message
-
 class TokenStream(list):
   def __init__(self, arg=[]):
     super().__init__(arg)

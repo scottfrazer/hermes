@@ -1,15 +1,15 @@
 [
-  a,
+  <a (line 0 col 0) ``>,
   (FunctionCall:
-    name=identifier,
+    name=<identifier (line 0 col 0) ``>,
     params=[]
   ),
   (TypeInitializion:
-    type=int,
+    type=<int (line 0 col 0) ``>,
     initializer=[
-      item,
-      item,
-      item
+      <item (line 0 col 0) ``>,
+      <item (line 0 col 0) ``>,
+      <item (line 0 col 0) ``>
     ]
   )
 ]

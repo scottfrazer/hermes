@@ -351,3 +351,41 @@ class Parser:
       self.expressionParsers[name] = ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}(self)
     return self.expressionParsers[name].parse(rbp)
   {% endfor %}
+
+if __name__ == '__main__':
+    import argparse
+    import json
+
+    cli_parser = argparse.ArgumentParser(description='Grammar Parser')
+    cli_parser.add_argument('--color', action='store_true', help="Print output in terminal colors")
+    cli_parser.add_argument('--file')
+    cli_parser.add_argument('--out', default='ast', choices=['ast', 'parsetree'])
+    cli_parser.add_argument('--stdin', action='store_true')
+    cli = cli_parser.parse_args()
+
+    if (not cli.file and not cli.stdin) or (cli.file and cli.stdin):
+      sys.exit('Either --file=<path> or --stdin required, but not both')
+
+    cli.file = open(cli.file) if cli.file else sys.stdin
+    json_tokens = json.loads(cli.file.read())
+    cli.file.close()
+
+    tokens = TokenStream() 
+    for json_token in json_tokens:
+        tokens.append(Terminal(
+            Parser.terminals[json_token['terminal']],
+            json_token['terminal'],
+            json_token['source_string'],
+            json_token['resource'],
+            json_token['line'],
+            json_token['col']
+        ))
+
+    try:
+        tree = parse(tokens)
+        if cli.out == 'parsetree':
+          print(ParseTreePrettyPrintable(tree, color=cli.color))
+        else:
+          print(AstPrettyPrintable(tree.toAst(), color=cli.color))
+    except SyntaxError as error:
+        print(error)

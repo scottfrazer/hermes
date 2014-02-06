@@ -6,6 +6,7 @@ from ..Common import Terminal, SyntaxError, TokenStream
 from .Parser import Parser
 # START USER CODE
 def normalize_morpheme(morpheme):
+    if morpheme == '$$': return '$'
     return morpheme.lstrip(':').lstrip('$')
 def binding_power(context, mode, match, terminal, line, col):
     (precedence, associativity) = match[1:-1].split(':')

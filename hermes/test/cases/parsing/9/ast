@@ -1,16 +1,16 @@
 (Program:
   statements=[
     (Add:
-      lhs=a,
-      rhs=b
+      lhs=<a (line 0 col 0) ``>,
+      rhs=<b (line 0 col 0) ``>
     ),
     (Assign:
-      var=identifier,
+      var=<identifier (line 0 col 0) ``>,
       val=(Subtract:
-        lhs=a,
+        lhs=<a (line 0 col 0) ``>,
         rhs=(Multiply:
-          lhs=b,
-          rhs=a
+          lhs=<b (line 0 col 0) ``>,
+          rhs=<a (line 0 col 0) ``>
         )
       )
     )

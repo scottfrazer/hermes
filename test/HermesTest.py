@@ -209,23 +209,6 @@ def getAst(grammar, testCaseDir):
   finally:
     shutil.rmtree(tmpDir)
 
-
-def getPythonParser(grammar):
-  global hermesparser
-
-  templateFactory = TemplateFactoryFactory().create('python')
-  templateWriter = TemplateWriter(templateFactory)
-  templateWriter.write([grammar], '.', addMain=True)
-
-  try:
-    os.remove('__pycache__/hermesparser.cpython-32.pyc')
-  except OSError:
-    pass
-
-  hermesparser = imp.load_source('hermesparser', 'grammar_Parser.py')
-  parser = hermesparser.grammar_Parser()
-  return parser
-
 def load_tests(loader, tests, pattern):
   grammarTestsDirectory = os.path.join(directory, 'grammar')
   parsingTestsDirectory = os.path.join(directory, 'parsing')

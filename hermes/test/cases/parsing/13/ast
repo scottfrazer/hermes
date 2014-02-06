@@ -1,22 +1,11 @@
 (Statements:
   list=[
     (Item:
-      name=a
+      name=<a (line 0 col 0) ``>
     ),
     (Item:
-      name=b
+      name=<b (line 0 col 0) ``>
     ),
-    (Mul:
-      l=number,
-      r=(FuncCall:
-        name=identifier,
-        params=[
-          (Add:
-            l=number,
-            r=number
-          )
-        ]
-      )
-    )
+    <lparen (line 0 col 0) ``>
   ]
 )

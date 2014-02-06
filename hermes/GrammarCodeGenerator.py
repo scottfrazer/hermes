@@ -76,13 +76,13 @@ class GrammarTemplate(Template):
       infixPrecedence = dict()
       prefixPrecedence = dict()
       thePrecedence = dict()
-      for terminal, precedence in egrammar.getPrecedence().items():
-        for p in precedence:
-          thePrecedence[terminal.id] = p.associativity
-          if p.associativity in ['left', 'right']:
-            infixPrecedence[terminal] = p.precedence
-          if p.associativity == 'unary':
-            prefixPrecedence[terminal] = p.precedence
+      for rule in egrammar.rules:
+        if rule.operator:
+          thePrecedence[rule.operator.operator.id] = rule.operator.associativity
+          if rule.operator.associativity in ['left', 'right']:
+            infixPrecedence[rule.operator.operator] = rule.operator.binding_power
+          if rule.operator.associativity == 'unary':
+            prefixPrecedence[rule.operator.operator] = rule.operator.binding_power
 
       infix = OrderedDict()
       prefix = OrderedDict()
@@ -264,7 +264,8 @@ class PythonTemplateFactory:
     templates = [PythonCommonTemplate()]
     for grammar in grammars:
       templates.extend([PythonParserTemplate(grammar)])
-      templates.extend([PythonLexerTemplate(grammar)])
+      if grammar.lexer:
+        templates.extend([PythonLexerTemplate(grammar)])
       templates.extend([PythonInitTemplate(grammar)])
     return templates
 

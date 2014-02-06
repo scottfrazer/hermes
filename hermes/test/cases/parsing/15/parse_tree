@@ -1,0 +1,75 @@
+(start:
+  (_gen0:
+    (statement:
+      (funcdef:
+        <function (line 0 col 0) ``>,
+        <identifier (line 0 col 0) ``>,
+        <lparen (line 0 col 0) ``>,
+        (_gen1:
+          (param:
+            <param1 (line 0 col 0) ``>
+          ),
+          (_gen2:
+            <comma (line 0 col 0) ``>,
+            (param:
+              <param2 (line 0 col 0) ``>
+            ),
+            (_gen2: )
+          )
+        ),
+        <rparen (line 0 col 0) ``>,
+        <lbrace (line 0 col 0) ``>,
+        (_gen0:
+          (statement:
+            <a (line 0 col 0) ``>
+          ),
+          (_gen0:
+            (statement:
+              <b (line 0 col 0) ``>
+            ),
+            (_gen0:
+              (statement:
+                <a (line 0 col 0) ``>
+              ),
+              (_gen0:
+                (statement:
+                  <b (line 0 col 0) ``>
+                ),
+                (_gen0: )
+              )
+            )
+          )
+        ),
+        <rbrace (line 0 col 0) ``>
+      )
+    ),
+    (_gen0:
+      (statement:
+        (classdef:
+          <class (line 0 col 0) ``>,
+          <identifier (line 0 col 0) ``>,
+          <lbrace (line 0 col 0) ``>,
+          (_gen3:
+            (class_statement:
+              <private (line 0 col 0) ``>,
+              (class_atom:
+                <x (line 0 col 0) ``>
+              )
+            ),
+            (_gen3:
+              (class_statement:
+                <public (line 0 col 0) ``>,
+                (class_atom:
+                  <y (line 0 col 0) ``>
+                )
+              ),
+              (_gen3: )
+            )
+          ),
+          <rbrace (line 0 col 0) ``>
+        )
+      ),
+      (_gen0: )
+    )
+  )
+)
