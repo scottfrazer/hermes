@@ -888,7 +888,7 @@ void json_value_free (json_value * value)
 #define BUFFER_SIZE 256
 
 int
-read_stdin( char ** content )
+read_file( char ** content, FILE * fp )
 {
   int content_len = BUFFER_SIZE * 4;
   char buf[BUFFER_SIZE];
@@ -896,7 +896,7 @@ read_stdin( char ** content )
 
   *content = calloc(content_len + 1, sizeof(char));
 
-  while ( (bytes = fread(buf, sizeof(char), BUFFER_SIZE, stdin)) != 0 )
+  while ( (bytes = fread(buf, sizeof(char), BUFFER_SIZE, fp)) != 0 )
   {
     if (content_len - total_bytes_read < BUFFER_SIZE) {
       content_len *= 2;
@@ -911,44 +911,34 @@ read_stdin( char ** content )
   return total_bytes_read;
 }
 
-int
-main(int argc, char * argv[])
-{
-  PARSE_TREE_T * parse_tree;
-  PARSER_CONTEXT_T * ctx;
-  ABSTRACT_SYNTAX_TREE_T * abstract_syntax_tree;
-  TOKEN_LIST_T token_list;
-  char * str;
-  int i, j, rval;
+TOKEN_LIST_T *
+get_tokens(char * grammar, char * json_input, TOKEN_LIST_T * token_list) {
   TOKEN_T * tokens;
-  int ntokens;
-  char * grammars = "{{','.join([grammar.name for grammar in grammars])}}";
-  char * stdin_content;
-  int stdin_len;
+  TOKEN_T end_of_stream;
+  int i, j, ntokens;
   json_value * json;
   TOKEN_FIELD_E field, field_mask;
-  TOKEN_T end_of_stream;
+  int (*terminal_str_to_id)(const char *);
+
+  {% for grammar in grammars %}
+  if ( strcmp("{{grammar.name}}", grammar) == 0 ) {
+    terminal_str_to_id = {{grammar.name}}_str_to_morpheme;
+  }
+  {% endfor %}
 
   memset(&end_of_stream, 0, sizeof(TOKEN_T));
   end_of_stream.terminal = calloc(1, sizeof(TERMINAL_T));
   end_of_stream.terminal->id = -1;
 
-  if ( argc < 2 )
-  {
-    fprintf(stderr, "Usage: %s <%s> <parsetree,ast>\n", argv[0], grammars);
-    exit(-1);
-  }
-
-  stdin_len = read_stdin( &stdin_content );
-  json = json_parse(stdin_content);
+  json = json_parse(json_input);
 
   if ( json == NULL ) {
-    fprintf(stderr, "Invalid JSON input\n");
+    fprintf(stderr, "get_tokens(): Invalid JSON input\n");
     exit(-1);
   }
 
   if ( json->type != json_array ) {
-    fprintf(stderr, "JSON input should be an array of tokens\n");
+    fprintf(stderr, "get_tokens(): JSON input should be an array of tokens\n");
     exit(-1);
   }
 
@@ -963,7 +953,7 @@ main(int argc, char * argv[])
     token->terminal = calloc(1, sizeof(TERMINAL_T));
 
     if ( json_token->type != json_object ) {
-      fprintf(stderr, "JSON input should be an array of tokens\n");
+      fprintf(stderr, "get_tokens(): JSON input should be an array of tokens\n");
       exit(-1);
     }
 
@@ -978,7 +968,7 @@ main(int argc, char * argv[])
       } else if ( field & (TOKEN_FIELD_TERMINAL_E | TOKEN_FIELD_RESOURCE_E | TOKEN_FIELD_SOURCE_STRING_E) && (value == NULL || value->type != json_string) ) {
         fprintf(stderr, "'%s' field must have a string value", name); 
         exit(-1);
-      } else if ( field == TOKEN_FIELD_TERMINAL_E && grammar_str_to_morpheme(value->u.string.ptr) == -1 ) {
+      } else if ( field == TOKEN_FIELD_TERMINAL_E && terminal_str_to_id(value->u.string.ptr) == -1 ) {
         fprintf(stderr, "'%s' field does not have a valid terminal identifier (%s)", name, value->u.string.ptr); 
         exit(-1);
       } else if ( field & (TOKEN_FIELD_COL_E | TOKEN_FIELD_LINE_E) && (value == NULL || (value->type != json_string && value->type != json_integer)) ) {
@@ -1018,7 +1008,7 @@ main(int argc, char * argv[])
 
         case TOKEN_FIELD_TERMINAL_E:
           token->terminal->string = strdup((const char *) value->u.string.ptr);
-          token->terminal->id = grammar_str_to_morpheme(value->u.string.ptr);
+          token->terminal->id = terminal_str_to_id(value->u.string.ptr);
           break;
 
         case TOKEN_FIELD_RESOURCE_E:
@@ -1036,14 +1026,40 @@ main(int argc, char * argv[])
     }
   }
 
-  token_list.tokens = tokens;
-  token_list.ntokens = ntokens;
-  token_list.current = tokens[0].terminal->id;
-  token_list.current_index = -1;
+  token_list->tokens = tokens;
+  token_list->ntokens = ntokens;
+  token_list->current = tokens[0].terminal->id;
+  token_list->current_index = -1;
+  return token_list;
+}
+
+int
+main(int argc, char * argv[])
+{
+  PARSE_TREE_T * parse_tree;
+  PARSER_CONTEXT_T * ctx;
+  ABSTRACT_SYNTAX_TREE_T * abstract_syntax_tree;
+  TOKEN_LIST_T token_list;
+  char * str;
+  int i, j, rval;
+  char * grammars = "{{','.join([grammar.name for grammar in grammars])}}";
+  char * stdin_content;
+  int stdin_len;
+  FILE * fp;
+
+  if ( argc < 3 )
+  {
+    fprintf(stderr, "Usage: %s <%s> <parsetree,ast> <tokens_file>\n", argv[0], grammars);
+    exit(-1);
+  }
+
+  fp = fopen(argv[3], "r");  
+  stdin_len = read_file( &stdin_content, fp );
 
   do {
     {% for grammar in grammars %}
     if ( strcmp(argv[1], "{{grammar.name}}") == 0 ) {
+      get_tokens("{{grammar.name}}", stdin_content, &token_list);
       ctx = {{grammar.name}}_parser_init(&token_list);
       parse_tree = {{grammar.name}}_parse(&token_list, -1, ctx);
       abstract_syntax_tree = {{grammar.name}}_ast(parse_tree);

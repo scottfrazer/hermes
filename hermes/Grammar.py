@@ -59,7 +59,15 @@ class Rule:
     production = self.production.str(theme) if theme else str(self.production)
     rule = "{0} = {1}{2}".format( nonterminal, production, ast)
     return theme.rule(rule) if theme else rule
-  
+
+  def __eq__(self, other):
+    if str(other) == str(self):
+      return True
+    return False
+
+  def __hash__(self):
+    return hash(str(self))
+
   def getProduction(self):
     return self.production
 
@@ -156,7 +164,7 @@ class ExprRule:
     def ast_to_str(ast):
       if isinstance(ast, AstTranslation) and ast.idx == 0:
         return ''
-      return ' -> ' + self.ast.str(theme) if ast else ''
+      return ' -> ' + ast.str(theme) if ast else ''
 
     if isinstance(self.operator, InfixOperator):
       string = '{nt} = {nt} {op} {nt}{ast}'.format(nt=self.nonterminal, op=self.operator.operator, ast=ast_to_str(self.ast))
@@ -709,16 +717,19 @@ class LL1Grammar(Grammar):
 
 class CompositeGrammar(Grammar):
   def __init__( self, name, grammar, exprgrammars, lexer=Lexer() ):
-    if not isinstance(exprgrammars, list):
-      raise Exception('parameter 2 must be a list')
-
     self.start = grammar.start
 
-    rules = list(grammar.rules)
-    expandedRules = list(grammar.expandedRules)
-    for exprgrammar in exprgrammars:
-      rules.extend(exprgrammar.rules)
-      expandedRules.extend(exprgrammar.expandedRules)
+    rules = []
+    expandedRules = []
+    for rule in grammar.rules:
+      if rule not in rules: rules.append(rule)
+    for rule in grammar.expandedRules:
+      if rule not in expandedRules: expandedRules.append(rule)
+    for expr_grammar in exprgrammars:
+      for rule in expr_grammar.rules:
+        if rule not in rules: rules.append(rule)
+      for rule in expr_grammar.expandedRules:
+        if rule not in expandedRules: expandedRules.append(rule)
 
     super().__init__(name, rules)
     self.__dict__.update(locals())
@@ -738,11 +749,9 @@ class CompositeGrammar(Grammar):
 
     for exprgrammar in self.exprgrammars:
       for macros in exprgrammar.macros:
-        try:
-          self.rules.extend(macros.rules)
-          self.expandedRules.extend(macros.rules)
-        except AttributeError:
-          continue
+        for rule in macros.rules:
+          if rule not in self.rules: self.rules.append(rule)
+          if rule not in self.expandedRules: self.expandedRules.append(rule)
       tokens = exprgrammar.first[exprgrammar.nonterminal]
       grammar.first[exprgrammar.nonterminal] = grammar.first[exprgrammar.nonterminal].union(tokens)
       tokens = exprgrammar.follow[exprgrammar.nonterminal]
