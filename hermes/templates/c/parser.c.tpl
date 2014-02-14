@@ -131,7 +131,7 @@ advance(PARSER_CONTEXT_T * ctx)
   return token_list->current;
 }
 
-static TERMINAL_T *
+static TOKEN_T *
 expect(int terminal_id, PARSER_CONTEXT_T * ctx)
 {
   int current, next;
@@ -148,15 +148,18 @@ expect(int terminal_id, PARSER_CONTEXT_T * ctx)
   }
 
   current = token_list->tokens[token_list->current_index].terminal->id;
+  current_token = &token_list->tokens[token_list->current_index];
+
   if ( current != terminal_id )
   {
-    fmt = "Unexpected symbol when parsing %s.  Expected %s, got %s.";
-    message = calloc( strlen(fmt) + strlen({{prefix}}morpheme_to_str(terminal_id)) + strlen({{prefix}}morpheme_to_str(current)) + strlen(ctx->current_function) + 1, sizeof(char) );
-    sprintf(message, fmt, ctx->current_function, {{prefix}}morpheme_to_str(terminal_id), current != {{prefix.upper()}}TERMINAL_END_OF_STREAM ? {{prefix}}morpheme_to_str(current) : "(end of stream)");
+    char * token_string = (current != {{prefix.upper()}}TERMINAL_END_OF_STREAM) ?  token_to_string(current_token, 0, ctx) : strdup("(end of stream)");
+    fmt = "Unexpected symbol (line %d, col %d) when parsing %s.  Expected %s, got %s.";
+    message = calloc( strlen(fmt) + strlen({{prefix}}morpheme_to_str(terminal_id)) + strlen(token_string) + strlen(ctx->current_function) + 20, sizeof(char) );
+    sprintf(message, fmt, current_token->lineno, current_token->colno, ctx->current_function, {{prefix}}morpheme_to_str(terminal_id), token_string);
+    free(token_string);
     syntax_error(ctx, message);
   }
 
-  current_token = &token_list->tokens[token_list->current_index];
   next = advance(ctx);
 
   if ( next != {{prefix.upper()}}TERMINAL_END_OF_STREAM && !{{prefix.upper()}}IS_TERMINAL(next) )
@@ -167,7 +170,7 @@ expect(int terminal_id, PARSER_CONTEXT_T * ctx)
     syntax_error(ctx, message);
   }
 
-  return current_token->terminal;
+  return current_token;
 }
 
 static PARSETREE_TO_AST_CONVERSION_T *

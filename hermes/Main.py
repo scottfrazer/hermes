@@ -177,7 +177,7 @@ def Cli():
 
   if cli.action == 'dev-gen':
     grammar = GrammarFileParser(HermesParserFactory().create()).parse_new(get_grammar_name(cli), open(cli.grammar))
-    templateFactory = TemplateFactoryFactory().create(outputLanguage='python')
+    templateFactory = TemplateFactoryFactory().create(outputLanguage='c')
     templateWriter = TemplateWriter(templateFactory)
     templateWriter.write([grammar], 'gen', addMain=True)
     sys.exit(-1)

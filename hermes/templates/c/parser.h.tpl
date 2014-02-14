@@ -13,7 +13,7 @@ typedef enum {{prefix}}terminal_e {
 {% endfor %}
   {{prefix.upper()}}TERMINAL_END_OF_STREAM = -1
 
-} {{prefix.upper()}}TERMINAL_E;
+} ENUM_{{prefix.upper()}}TERMINAL;
 
 typedef enum {{prefix}}nonterminal_e {
 
@@ -22,7 +22,7 @@ typedef enum {{prefix}}nonterminal_e {
 {% endfor %}
   {{prefix.upper()}}NONTERMINAL_END_OF_STREAM = -1
 
-} {{prefix.upper()}}NONTERMINAL_E;
+} ENUM_{{prefix.upper()}}NONTERMINAL;
 
 #define {{prefix.upper()}}IS_TERMINAL(id) (0 <= id && id <= {{len(nonAbstractTerminals) - 1}})
 #define {{prefix.upper()}}IS_NONTERMINAL(id) ({{len(nonAbstractTerminals)}} <= id && id <= {{len(nonAbstractTerminals) + len(grammar.nonterminals) - 1}})

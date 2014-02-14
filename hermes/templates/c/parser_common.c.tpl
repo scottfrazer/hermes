@@ -234,11 +234,42 @@ __parsetree_node_to_ast_normal( PARSE_TREE_NODE_T * node )
   return ast;
 }
 
+int
+token_to_string_bytes(TOKEN_T * token, int indent, PARSER_CONTEXT_T * ctx) {
+  /* format: "<identifier (line 0 col 0) ``>" */
+  int source_string_len = token->source_string ? strlen(token->source_string) : 5;
+  return indent + 1 + strlen(ctx->morpheme_to_str(token->terminal->id)) + 7 + 5 + 5 + 5 + 3 + source_string_len + 2;
+}
+
+char *
+token_to_string(TOKEN_T * token, int indent, PARSER_CONTEXT_T * ctx)
+{
+  int bytes;
+  char * str, * indent_str = "";
+
+  bytes = token_to_string_bytes(token, indent, ctx);
+  bytes += 1; /* null byte */
+
+  if ( bytes == -1 )
+    return NULL;
+
+  str = calloc( bytes, sizeof(char) );
+
+  if ( indent )
+    indent_str = _get_indent_str(indent);
+
+  sprintf(str, "%s<%s (line %d col %d) `%s`>", indent_str, ctx->morpheme_to_str(token->terminal->id), token->lineno, token->colno, token->source_string);
+
+  if ( indent )
+    free(indent_str);
+
+  return str;
+}
+
 static int
 _parsetree_to_string_bytes( PARSE_TREE_NODE_T * node, int indent, PARSER_CONTEXT_T * ctx )
 {
   PARSE_TREE_T * tree;
-  TERMINAL_T * terminal;
   int bytes, i;
 
   if ( node->type == PARSE_TREE_NODE_TYPE_PARSETREE )
@@ -264,8 +295,7 @@ _parsetree_to_string_bytes( PARSE_TREE_NODE_T * node, int indent, PARSER_CONTEXT
   
   if ( node->type == PARSE_TREE_NODE_TYPE_TERMINAL )
   {
-    terminal = (TERMINAL_T *) node->object;
-    return strlen(ctx->morpheme_to_str(terminal->id));
+    return 2 + token_to_string_bytes( (TOKEN_T *) node->object, indent, ctx );
   }
 
   return -1;
@@ -275,12 +305,12 @@ static char *
 _parsetree_to_string( PARSE_TREE_NODE_T * node, int indent, PARSER_CONTEXT_T * ctx )
 {
   PARSE_TREE_T * tree;
-  TERMINAL_T * terminal;
+  TOKEN_T * token;
   char * str, * tmp, * indent_str;
   int bytes, i, len;
 
   bytes = _parsetree_to_string_bytes(node, indent, ctx);
-  bytes += 1; /* null bytes */
+  bytes += 1; /* null byte */
 
   if ( bytes == -1 )
     return NULL;
@@ -320,9 +350,7 @@ _parsetree_to_string( PARSE_TREE_NODE_T * node, int indent, PARSER_CONTEXT_T * c
 
   if ( node->type == PARSE_TREE_NODE_TYPE_TERMINAL )
   {
-    terminal = (TERMINAL_T *) node->object;
-    strcpy(str, ctx->morpheme_to_str(terminal->id));
-    return str;
+    return token_to_string((TOKEN_T *) node->object, 0, ctx);
   }
 
   return NULL;
@@ -332,7 +360,7 @@ static void
 _free_parse_tree( PARSE_TREE_NODE_T * node )
 {
   int i;
-  TERMINAL_T * terminal;
+  TOKEN_T * token;
   PARSE_TREE_T * tree;
   AST_OBJECT_SPECIFICATION_T * ast_object_spec;
 
@@ -367,7 +395,7 @@ _free_parse_tree( PARSE_TREE_NODE_T * node )
   if ( node->type == PARSE_TREE_NODE_TYPE_TERMINAL )
   {
     /* Terminals are provided by the user and don't need to be freed */
-    terminal = (TERMINAL_T *) node->object;
+    token = (TOKEN_T *) node->object;
   }
 }
 
@@ -376,7 +404,7 @@ _ast_to_string_bytes( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_
 {
   AST_OBJECT_T * ast_object;
   AST_LIST_T * ast_list, * list_node;
-  TERMINAL_T * terminal;
+  TOKEN_T * token;
   ABSTRACT_SYNTAX_TREE_T * child;
   char * attr;
   int i, bytes;
@@ -439,8 +467,7 @@ _ast_to_string_bytes( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_
 
   if ( node->type == AST_NODE_TYPE_TERMINAL )
   {
-    terminal = (TERMINAL_T *) node->object;
-    return initial_indent + strlen(ctx->morpheme_to_str(terminal->id));
+    return initial_indent + token_to_string_bytes( (TOKEN_T *) node->object, indent, ctx );
   }
 
   return 4; /* "None" */
@@ -451,7 +478,7 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_T * ct
 {
   AST_LIST_T * ast_list, * lnode;
   AST_OBJECT_T * ast_object;
-  TERMINAL_T * terminal;
+  TOKEN_T * token;
   char * str, * key, * value, * indent_str, * tmp;
   int bytes, i;
   int initial_indent = (indent < 0) ? 0 : indent;
@@ -523,14 +550,7 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_T * ct
 
   if ( node->type == AST_NODE_TYPE_TERMINAL )
   {
-    terminal = (TERMINAL_T *) node->object;
-    indent_str = "";
-    if ( initial_indent )
-      indent_str = _get_indent_str(indent);
-    sprintf(str, "%s%s", indent_str, ctx->morpheme_to_str(terminal->id));
-    if ( initial_indent )
-      free(indent_str);
-    return str;
+    return token_to_string((TOKEN_T *) node->object, indent, ctx);
   }
 
   strcpy(str, "None");

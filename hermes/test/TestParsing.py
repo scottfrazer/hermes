@@ -24,7 +24,7 @@ def test_all():
 
 # Utility
 
-def parse(test_dir, out):
+def parse_python(test_dir, out):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
     tokens_file = os.path.join(test_dir, 'tokens')
     grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('grammar', open(grammar_file))
@@ -40,6 +40,27 @@ def parse(test_dir, out):
     finally:
       shutil.rmtree(tmp_dir)
 
+def parser_c(test_dir, out):
+    grammar_file = os.path.join(test_dir, 'grammar.zgr')
+    tokens_file = os.path.join(test_dir, 'tokens')
+    grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('grammar', open(grammar_file))
+    template = TemplateWriter(TemplateFactoryFactory().create('c'))
+
+    tmp_dir = tempfile.mkdtemp()
+    try:
+        shutil.copy(tokens_file, tmp_dir)
+        template.write([grammar], tmp_dir, addMain=True)
+        c_files = list(filter(lambda x: x.endswith('.c'), os.listdir(tmp_dir)))
+        command = 'gcc -o parser {sources} -g -Wall -pedantic -ansi -std=c99 2>/dev/null'.format(sources=' '.join(c_files))
+        subprocess.check_call(command, cwd=tmp_dir, shell=True, stderr=None)
+        command = './parser grammar {type} tokens'.format(type=out)
+        return subprocess.check_output(command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
+    except subprocess.CalledProcessError as error:
+        return error.output.decode('utf-8').strip()
+    finally:
+        print(tmp_dir)
+        #shutil.rmtree(tmp_dir)
+
 # Tests
 
 def python_parse_tree(test_dir):
@@ -49,7 +70,7 @@ def python_parse_tree(test_dir):
             fp.write(parse(test_dir, 'parsetree'))
     with open(parse_tree_file) as fp:
         expected = fp.read()
-    actual = parse(test_dir, 'parsetree')
+    actual = parse_python(test_dir, 'parsetree')
     assert expected == actual
 
 def python_ast(test_dir):
@@ -59,11 +80,15 @@ def python_ast(test_dir):
             fp.write(parse(test_dir, 'ast'))
     with open(ast_file) as fp:
         expected = fp.read()
-    actual = parse(test_dir, 'ast')
+    actual = parse_python(test_dir, 'ast')
     assert expected == actual
 
 def c_parse_tree(test_dir):
-    raise SkipTest()
+    parse_tree_file = os.path.join(test_dir, 'parse_tree')
+    with open(parse_tree_file) as fp:
+        expected = fp.read()
+    actual = parser_c(test_dir, 'parsetree')
+    assert expected == actual
 
 def c_ast(test_dir):
     raise SkipTest()
