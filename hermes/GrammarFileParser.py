@@ -843,7 +843,13 @@ class GrammarFactoryNew:
     ]
     if minimum == 0:
       rules.append( MacroGeneratedRule(nt0, Production( [empty] )) )
-    return MinimumListMacro(morpheme, minimum, nt0, rules)
+
+    macro = MinimumListMacro(morpheme, minimum, nt0, rules)
+
+    for rule in rules:
+      rule.nonterminal.macro = macro
+
+    return macro
 
   def optional( self, ast, terminals, nonterminals ):
     morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
@@ -853,7 +859,13 @@ class GrammarFactoryNew:
       MacroGeneratedRule(nt0, Production( [morpheme] )),
       MacroGeneratedRule(nt0, Production( [empty] ))
     ]
-    return OptionalMacro(morpheme, nt0, rules)
+
+    macro = OptionalMacro(morpheme, nt0, rules)
+
+    for rule in rules:
+      rule.nonterminal.macro = macro
+
+    return macro
 
   def nlist( self, ast, terminals, nonterminals ):
     morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
@@ -865,7 +877,12 @@ class GrammarFactoryNew:
       MacroGeneratedRule(nt0, Production( [empty] ))
     ]
 
-    return MorphemeListMacro(morpheme, nt0, rules)
+    macro = MorphemeListMacro(morpheme, nt0, rules)
+
+    for rule in rules:
+      rule.nonterminal.macro = macro
+
+    return macro
 
   def slist( self, ast, terminals, nonterminals ):
     empty = terminals['_empty']
@@ -913,7 +930,13 @@ class GrammarFactoryNew:
         MacroGeneratedRule(nt0, Production( [morpheme, terminator, nt0] )),
         MacroGeneratedRule(nt0, Production( [empty] ))
     ]
-    return TerminatedListMacro(morpheme, terminator, nt0, rules)
+
+    macro = TerminatedListMacro(morpheme, terminator, nt0, rules)
+
+    for rule in rules:
+      rule.nonterminal.macro = macro
+
+    return macro 
 
   def walk_ast_terminal(self, ast, terminal, stop=False):
     nodes = []

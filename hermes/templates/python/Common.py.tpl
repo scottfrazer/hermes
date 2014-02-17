@@ -79,7 +79,7 @@ class ParseTree():
       lastElement = len(self.children) - 1
       for i in range(lastElement):
         r.append(self.children[i].toAst())
-      r.append(self.children[lastElement].toAst())
+      r.extend(self.children[lastElement].toAst())
       return r
     elif self.isExpr:
       if isinstance(self.astTransform, AstTransformSubstitution):
