@@ -1,107 +1,107 @@
 (start:
   (_gen0:
     (statement:
-      (_expr:
-        (_expr:
-          identifier
+      (e:
+        (e:
+          <identifier (line 0 col 0) ``>
         ),
-        eq,
-        (_expr:
-          (_expr:
-            identifier
+        <eq (line 0 col 0) ``>,
+        (e:
+          (e:
+            <identifier (line 0 col 0) ``>
           ),
-          eq,
-          (_expr:
-            n
+          <eq (line 0 col 0) ``>,
+          (e:
+            <n (line 0 col 0) ``>
           )
         )
       )
     ),
     (_gen1:
-      semi,
+      <semi (line 0 col 0) ``>,
       (statement:
         (for:
-          for,
-          lparen,
+          <for (line 0 col 0) ``>,
+          <lparen (line 0 col 0) ``>,
           (forsub:
-            (_expr:
-              (_expr:
-                identifier
+            (e:
+              (e:
+                <identifier (line 0 col 0) ``>
               ),
-              eq,
-              (_expr:
-                n
+              <eq (line 0 col 0) ``>,
+              (e:
+                <n (line 0 col 0) ``>
               )
             )
           ),
-          semi,
+          <semi (line 0 col 0) ``>,
           (forsub: ),
-          semi,
+          <semi (line 0 col 0) ``>,
           (forsub:
-            (_expr:
-              (_expr:
-                identifier
+            (e:
+              (e:
+                <identifier (line 0 col 0) ``>
               ),
-              eq,
-              (_expr:
-                (_expr:
-                  s
+              <eq (line 0 col 0) ``>,
+              (e:
+                (e:
+                  <s (line 0 col 0) ``>
                 ),
-                add,
-                (_expr:
-                  n
+                <add (line 0 col 0) ``>,
+                (e:
+                  <n (line 0 col 0) ``>
                 )
               )
             )
           ),
-          rparen,
-          lbrace,
+          <rparen (line 0 col 0) ``>,
+          <lbrace (line 0 col 0) ``>,
           (forbody:
             (statement:
-              (_expr:
-                (_expr:
-                  identifier
+              (e:
+                (e:
+                  <identifier (line 0 col 0) ``>
                 ),
-                eq,
-                (_expr:
-                  (_expr:
-                    n
+                <eq (line 0 col 0) ``>,
+                (e:
+                  (e:
+                    <n (line 0 col 0) ``>
                   ),
-                  add,
-                  (_expr:
-                    (_expr:
-                      identifier
+                  <add (line 0 col 0) ``>,
+                  (e:
+                    (e:
+                      <identifier (line 0 col 0) ``>
                     ),
-                    mul,
-                    (_expr:
-                      (_expr:
-                        n
+                    <mul (line 0 col 0) ``>,
+                    (e:
+                      (e:
+                        <n (line 0 col 0) ``>
                       ),
-                      power,
-                      (_expr:
-                        s
+                      <power (line 0 col 0) ``>,
+                      (e:
+                        <s (line 0 col 0) ``>
                       )
                     )
                   )
                 )
               )
             ),
-            semi,
+            <semi (line 0 col 0) ``>,
             (forbody: )
           ),
-          rbrace
+          <rbrace (line 0 col 0) ``>
         )
       ),
       (_gen1:
-        semi,
+        <semi (line 0 col 0) ``>,
         (statement:
-          (_expr:
-            (_expr:
-              identifier
+          (e:
+            (e:
+              <identifier (line 0 col 0) ``>
             ),
-            add,
-            (_expr:
-              identifier
+            <add (line 0 col 0) ``>,
+            (e:
+              <identifier (line 0 col 0) ``>
             )
           )
         ),

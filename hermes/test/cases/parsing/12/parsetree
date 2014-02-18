@@ -2,26 +2,26 @@
   (_gen0:
     (sub:
       (item:
-        a
+        <a (line 0 col 0) ``>
       )
     ),
     (_gen1:
-      comma,
+      <comma (line 0 col 0) ``>,
       (sub:
         (item:
-          b
+          <b (line 0 col 0) ``>
         )
       ),
       (_gen1:
-        comma,
+        <comma (line 0 col 0) ``>,
         (sub:
-          (_expr:
-            (_expr:
-              number
+          (e:
+            (e:
+              <number (line 0 col 0) ``>
             ),
-            add,
-            (_expr:
-              number
+            <add (line 0 col 0) ``>,
+            (e:
+              <number (line 0 col 0) ``>
             )
           )
         ),

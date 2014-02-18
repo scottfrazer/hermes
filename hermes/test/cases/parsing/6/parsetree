@@ -2,15 +2,15 @@
   (_gen0:
     (statement:
       (assignstatement:
-        identifier,
-        eq,
+        <identifier (line 0 col 0) ``>,
+        <eq (line 0 col 0) ``>,
         (assignstatementsub:
           (assignstatement:
-            identifier,
-            eq,
+            <identifier (line 0 col 0) ``>,
+            <eq (line 0 col 0) ``>,
             (assignstatementsub:
-              (_expr:
-                n
+              (e:
+                <n (line 0 col 0) ``>
               )
             )
           )
@@ -18,82 +18,82 @@
       )
     ),
     (_gen1:
-      comma,
+      <comma (line 0 col 0) ``>,
       (statement:
         (forstatement:
-          for,
-          lparen,
+          <for (line 0 col 0) ``>,
+          <lparen (line 0 col 0) ``>,
           (fordeclstatement:
             (complexexpression:
               (assignstatement:
-                identifier,
-                eq,
+                <identifier (line 0 col 0) ``>,
+                <eq (line 0 col 0) ``>,
                 (assignstatementsub:
-                  (_expr:
-                    n
+                  (e:
+                    <n (line 0 col 0) ``>
                   )
                 )
               )
             )
           ),
-          semi,
+          <semi (line 0 col 0) ``>,
           (forcondstatement: ),
-          semi,
+          <semi (line 0 col 0) ``>,
           (foriterstatement:
             (complexexpression:
               (assignstatement:
-                identifier,
-                eq,
+                <identifier (line 0 col 0) ``>,
+                <eq (line 0 col 0) ``>,
                 (assignstatementsub:
-                  (_expr:
-                    (_expr:
-                      s
+                  (e:
+                    (e:
+                      <s (line 0 col 0) ``>
                     ),
-                    add,
-                    (_expr:
-                      n
+                    <add (line 0 col 0) ``>,
+                    (e:
+                      <n (line 0 col 0) ``>
                     )
                   )
                 )
               )
             )
           ),
-          rparen,
-          lbrace,
+          <rparen (line 0 col 0) ``>,
+          <lbrace (line 0 col 0) ``>,
           (forbody:
             (statement:
               (assignstatement:
-                identifier,
-                eq,
+                <identifier (line 0 col 0) ``>,
+                <eq (line 0 col 0) ``>,
                 (assignstatementsub:
-                  (_expr:
-                    (_expr:
-                      n
+                  (e:
+                    (e:
+                      <n (line 0 col 0) ``>
                     ),
-                    add,
-                    (_expr:
-                      (_expr:
-                        (_expr:
-                          s
+                    <add (line 0 col 0) ``>,
+                    (e:
+                      (e:
+                        (e:
+                          <s (line 0 col 0) ``>
                         ),
-                        mul,
-                        (_expr:
-                          n
+                        <mul (line 0 col 0) ``>,
+                        (e:
+                          <n (line 0 col 0) ``>
                         )
                       ),
-                      div,
-                      (_expr:
-                        s
+                      <div (line 0 col 0) ``>,
+                      (e:
+                        <s (line 0 col 0) ``>
                       )
                     )
                   )
                 )
               )
             ),
-            semi,
+            <semi (line 0 col 0) ``>,
             (forbody: )
           ),
-          rbrace
+          <rbrace (line 0 col 0) ``>
         )
       ),
       (_gen1: )

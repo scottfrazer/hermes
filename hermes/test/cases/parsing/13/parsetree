@@ -2,51 +2,51 @@
   (_gen0:
     (sub:
       (item:
-        a
+        <a (line 0 col 0) ``>
       )
     ),
     (_gen1:
-      comma,
+      <comma (line 0 col 0) ``>,
       (sub:
         (item:
-          b
+          <b (line 0 col 0) ``>
         )
       ),
       (_gen1:
-        comma,
+        <comma (line 0 col 0) ``>,
         (sub:
-          (_expr:
-            lparen,
-            (_expr:
-              lparen,
-              (_expr:
-                (_expr:
-                  number
+          (e:
+            <lparen (line 0 col 0) ``>,
+            (e:
+              <lparen (line 0 col 0) ``>,
+              (e:
+                (e:
+                  <number (line 0 col 0) ``>
                 ),
-                multiply,
-                (_expr:
-                  (_expr:
-                    identifier
+                <multiply (line 0 col 0) ``>,
+                (e:
+                  (e:
+                    <identifier (line 0 col 0) ``>
                   ),
-                  lparen,
+                  <lparen (line 0 col 0) ``>,
                   (_gen2:
-                    (_expr:
-                      (_expr:
-                        number
+                    (e:
+                      (e:
+                        <number (line 0 col 0) ``>
                       ),
-                      add,
-                      (_expr:
-                        number
+                      <add (line 0 col 0) ``>,
+                      (e:
+                        <number (line 0 col 0) ``>
                       )
                     ),
                     (_gen3: )
                   ),
-                  rparen
+                  <rparen (line 0 col 0) ``>
                 )
               ),
-              rparen
+              <rparen (line 0 col 0) ``>
             ),
-            rparen
+            <rparen (line 0 col 0) ``>
           )
         ),
         (_gen1: )

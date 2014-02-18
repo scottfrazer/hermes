@@ -1,34 +1,34 @@
 (start:
   (_gen0:
     (statements:
-      (_expr:
-        (_expr:
-          a
+      (e:
+        (e:
+          <a (line 0 col 0) ``>
         ),
-        add,
-        (_expr:
-          b
+        <add (line 0 col 0) ``>,
+        (e:
+          <b (line 0 col 0) ``>
         )
       )
     ),
     (_gen1:
-      comma,
+      <comma (line 0 col 0) ``>,
       (statements:
         (assignstatement:
-          identifier,
-          eq,
-          (_expr:
-            (_expr:
-              a
+          <identifier (line 0 col 0) ``>,
+          <eq (line 0 col 0) ``>,
+          (e:
+            (e:
+              <a (line 0 col 0) ``>
             ),
-            sub,
-            (_expr:
-              (_expr:
-                b
+            <sub (line 0 col 0) ``>,
+            (e:
+              (e:
+                <b (line 0 col 0) ``>
               ),
-              mul,
-              (_expr:
-                a
+              <mul (line 0 col 0) ``>,
+              (e:
+                <a (line 0 col 0) ``>
               )
             )
           )

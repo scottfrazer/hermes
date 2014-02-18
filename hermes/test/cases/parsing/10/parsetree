@@ -1,23 +1,23 @@
 (start:
   (_gen0:
     (sub:
-      (_expr:
-        (_expr:
-          lparen_cast,
+      (e:
+        (e:
+          <lparen_cast (line 0 col 0) ``>,
           (type_name:
-            int
+            <int (line 0 col 0) ``>
           ),
-          rparen
+          <rparen (line 0 col 0) ``>
         ),
-        lbrace,
-        (_gen4:
+        <lbrace (line 0 col 0) ``>,
+        (_gen2:
           (initializer_list_item:
-            item
+            <item (line 0 col 0) ``>
           ),
-          (_gen5: )
+          (_gen3: )
         ),
         (comma_opt: ),
-        rbrace
+        <rbrace (line 0 col 0) ``>
       )
     ),
     (_gen1: )

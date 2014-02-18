@@ -1,15 +1,15 @@
 (start:
-  lparen,
+  <lparen (line 0 col 0) ``>,
   (_gen0:
     (item:
-      a
+      <a (line 0 col 0) ``>
     ),
     (_gen0:
       (item:
-        b
+        <b (line 0 col 0) ``>
       ),
       (_gen0: )
     )
   ),
-  rparen
+  <rparen (line 0 col 0) ``>
 )

@@ -1,12 +1,12 @@
 (start:
   (sub:
-    a,
+    <a (line 0 col 0) ``>,
     (sub:
-      a,
+      <a (line 0 col 0) ``>,
       (sub: ),
-      b
+      <b (line 0 col 0) `B`>
     ),
-    b
+    <b (line 0 col 0) `b`>
   ),
-  semi
+  <semi (line 0 col 0) ``>
 )

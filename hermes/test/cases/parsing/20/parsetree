@@ -1,45 +1,45 @@
 (program:
   (block:
     (block_const:
-      const,
+      <const (line 0 col 0) ``>,
       (ident:
-        ident
+        <ident (line 0 col 0) ``>
       ),
-      equal,
+      <equal (line 0 col 0) ``>,
       (number:
-        number
+        <number (line 0 col 0) ``>
       ),
       (block_const1:
-        comma,
+        <comma (line 0 col 0) ``>,
         (ident:
-          ident
+          <ident (line 0 col 0) ``>
         ),
-        equal,
+        <equal (line 0 col 0) ``>,
         (number:
-          number
+          <number (line 0 col 0) ``>
         )
       )
     ),
     (block_var:
-      var,
+      <var (line 0 col 0) ``>,
       (ident:
-        ident
+        <ident (line 0 col 0) ``>
       ),
       (block_var1:
-        comma,
+        <comma (line 0 col 0) ``>,
         (ident:
-          ident
+          <ident (line 0 col 0) ``>
         )
       ),
-      semi
+      <semi (line 0 col 0) ``>
     ),
     (block_proc: ),
     (statement:
-      call,
+      <call (line 0 col 0) ``>,
       (ident:
-        ident
+        <ident (line 0 col 0) ``>
       )
     )
   ),
-  dot
+  <dot (line 0 col 0) ``>
 )

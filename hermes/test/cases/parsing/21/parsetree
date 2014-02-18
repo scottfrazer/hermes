@@ -2,25 +2,25 @@
   (block:
     (block_const: ),
     (block_var:
-      var,
+      <var (line 0 col 0) ``>,
       (ident:
-        ident
+        <ident (line 0 col 0) ``>
       ),
       (block_var1: ),
-      semi
+      <semi (line 0 col 0) ``>
     ),
     (block_proc: ),
     (statement:
       (ident:
-        ident
+        <ident (line 0 col 0) ``>
       ),
-      assign,
+      <assign (line 0 col 0) ``>,
       (expression:
         (unary_add_op: ),
         (term:
           (factor:
             (number:
-              number
+              <number (line 0 col 0) ``>
             )
           ),
           (term_sub1: )
@@ -29,5 +29,5 @@
       )
     )
   ),
-  dot
+  <dot (line 0 col 0) ``>
 )

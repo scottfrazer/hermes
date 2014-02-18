@@ -2,53 +2,53 @@
   (_gen0:
     (sub:
       (item:
-        a
+        <a (line 0 col 0) ``>
       )
     ),
     (_gen1:
-      comma,
+      <comma (line 0 col 0) ``>,
       (sub:
-        (_expr:
-          (_expr:
-            identifier
+        (e:
+          (e:
+            <identifier (line 0 col 0) ``>
           ),
-          lparen,
-          (_gen2: ),
-          rparen
+          <lparen (line 0 col 0) ``>,
+          (_gen4: ),
+          <rparen (line 0 col 0) ``>
         )
       ),
       (_gen1:
-        comma,
+        <comma (line 0 col 0) ``>,
         (sub:
-          (_expr:
-            (_expr:
-              lparen_cast,
+          (e:
+            (e:
+              <lparen_cast (line 0 col 0) ``>,
               (type_name:
-                int
+                <int (line 0 col 0) ``>
               ),
-              rparen
+              <rparen (line 0 col 0) ``>
             ),
-            lbrace,
-            (_gen4:
+            <lbrace (line 0 col 0) ``>,
+            (_gen2:
               (initializer_list_item:
-                item
+                <item (line 0 col 0) ``>
               ),
-              (_gen5:
-                comma,
+              (_gen3:
+                <comma (line 0 col 0) ``>,
                 (initializer_list_item:
-                  item
+                  <item (line 0 col 0) ``>
                 ),
-                (_gen5:
-                  comma,
+                (_gen3:
+                  <comma (line 0 col 0) ``>,
                   (initializer_list_item:
-                    item
+                    <item (line 0 col 0) ``>
                   ),
-                  (_gen5: )
+                  (_gen3: )
                 )
               )
             ),
             (comma_opt: ),
-            rbrace
+            <rbrace (line 0 col 0) ``>
           )
         ),
         (_gen1: )
