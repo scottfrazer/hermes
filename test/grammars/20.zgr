@@ -1,5 +1,0 @@
-grammar {
-  parser<ll1> {
-    $start = tlist(:a, :semicolon)
-  }
-}

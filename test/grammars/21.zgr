@@ -1,5 +1,0 @@
-grammar {
-  parser<ll1> {
-    $start = list(:a, :comma)
-  }
-}
