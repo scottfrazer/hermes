@@ -24,7 +24,10 @@ public class ParserMain {
       for ( TerminalIdentifier e : expected ) {
         expected_terminals.add(e.string());
       }
-      return "Unexpected symbol when parsing parse_" + method + ".  Expected " + Utility.join(expected_terminals, ", ") + ", got " + actual.getTerminalStr() + ".";
+      return String.format(
+                "Unexpected symbol (line %d, col %d) when parsing parse_%s.  Expected %s, got %s.", 
+                actual.getLine(), actual.getColumn(), method, Utility.join(expected_terminals, ", "), actual.toPrettyString()
+             );
     }
 
     public String no_more_tokens(String method, TerminalIdentifier expecting, Terminal last) {

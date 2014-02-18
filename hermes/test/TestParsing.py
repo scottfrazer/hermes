@@ -61,16 +61,19 @@ def parser_c(test_dir, out):
         shutil.rmtree(tmp_dir)
 
 def parser_java(test_dir, out):
-    tmp_dir = tempfile.mkdtemp()
-    shutil.copy(os.path.join(test_dir, 'tokens'), tmp_dir)
-    shutil.copytree(os.path.join(test_dir, '..', 'javacp', 'org'), os.path.join(tmp_dir, 'org'))
+    grammar_file = os.path.join(test_dir, 'grammar.zgr')
+    tokens_file = os.path.join(test_dir, 'tokens')
+    grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('grammar', open(grammar_file))
     template = TemplateWriter(TemplateFactoryFactory().create('java'))
-    java_sources = list(filter(lambda filename: filename.endswith('.java'), os.listdir(tmp_dir)))
 
+    tmp_dir = tempfile.mkdtemp()
     try:
-        template.write([grammar], tmpDir, addMain=True)
+        shutil.copy(tokens_file, tmp_dir)
+        shutil.copytree(os.path.join(test_dir, '..', 'javacp', 'org'), os.path.join(tmp_dir, 'org'))
+        java_sources = list(filter(lambda filename: filename.endswith('.java'), os.listdir(tmp_dir)))
+        template.write([grammar], tmp_dir, addMain=True)
         compile_command = 'javac *.java 2>/dev/null'
-        subprocess.check_call(compile_command, cwd=tmpDir, shell=True, stderr=None)
+        subprocess.check_call(compile_command, cwd=tmp_dir, shell=True, stderr=None)
     except subprocess.CalledProcessError as error:
         print('Failed to compile Java parser: ', test_dir)
         print(error.output.decode('utf-8').strip())
@@ -110,8 +113,6 @@ def c_parse_tree(test_dir):
     with open(parse_tree_file) as fp:
         expected = fp.read()
     actual = parser_c(test_dir, 'parsetree')
-    print('actual', actual)
-    print('expected', expected)
     assert expected == actual
 
 def c_ast(test_dir):
@@ -122,7 +123,15 @@ def c_ast(test_dir):
     assert expected == actual
 
 def java_parse_tree(test_dir):
-    raise SkipTest()
+    ast_file = os.path.join(test_dir, 'parsetree')
+    with open(ast_file) as fp:
+        expected = fp.read()
+    actual = parser_java(test_dir, 'parsetree')
+    assert expected == actual
 
 def java_ast(test_dir):
-    raise SkipTest()
+    ast_file = os.path.join(test_dir, 'ast')
+    with open(ast_file) as fp:
+        expected = fp.read()
+    actual = parser_java(test_dir, 'ast')
+    assert expected == actual

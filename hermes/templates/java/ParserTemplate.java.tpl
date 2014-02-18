@@ -298,7 +298,7 @@ public class {{prefix}}Parser implements Parser {
     this.tokens.setSyntaxErrorFormatter(this.syntaxErrorFormatter);
     this.tokens.setTerminalMap(this.getTerminalMap());
 
-    ParseTree tree = this.parse_{{str(grammar.start).lower()}}();
+    ParseTree tree = this.parse_{{grammar.start.string.lower()}}();
     if (this.tokens.current() != null) {
       StackTraceElement[] stack = Thread.currentThread().getStackTrace();
       throw new SyntaxError(this.syntaxErrorFormatter.excess_tokens(stack[1].getMethodName(), this.tokens.current()));
