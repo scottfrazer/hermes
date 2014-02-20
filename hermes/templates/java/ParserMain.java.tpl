@@ -40,32 +40,23 @@ public class ParserMain {
 
   }
 
-  private static Parser getParser(String name, SyntaxErrorFormatter error_formatter) throws Exception {
-    {% for grammar in grammars %}
-    if (name.equals("{{grammar.name}}")) {
-      return new {{grammar.name[0].upper() + grammar.name[1:]}}Parser(error_formatter);
-    }
-    {% endfor %}
-    throw new Exception("Invalid grammar name: " + name);
+  private static Parser getParser(SyntaxErrorFormatter error_formatter) throws Exception {
+    return new {{grammar.name[0].upper() + grammar.name[1:]}}Parser(error_formatter);
   }
 
   public static void main(String args[]) {
-    final String grammars = "{{','.join([grammar.name for grammar in grammars])}}";
-
     if ( args.length < 2 ) {
-      System.out.println("Usage: ParserMain <" + grammars + "> <parsetree,ast>");
+      System.out.println("Usage: ParserMain <parsetree,ast> <tokens file>");
       System.exit(-1);
     }
 
-    final String grammar = args[0].toLowerCase();
-
     try {
       DefaultSyntaxErrorFormatter error_formatter = new DefaultSyntaxErrorFormatter();
-      Parser parser = getParser(grammar, error_formatter);
+      Parser parser = getParser(error_formatter);
       TerminalMap terminals = parser.getTerminalMap();
       TokenStream tokens = new TokenStream();
       
-      String contents = Utility.readStdin();
+      String contents = Utility.readFile(args[1]);
       JSONArray arr = new JSONArray(contents);
 
       for ( int i = 0; i < arr.length(); i++ ) {
@@ -84,7 +75,7 @@ public class ParserMain {
 
       ParseTreeNode parsetree = parser.parse(tokens);
 
-      if ( args.length > 1 && args[1].equals("ast") ) {
+      if ( args.length > 1 && args[0].equals("ast") ) {
         AstNode ast = parsetree.toAst();
         if ( ast != null ) {
           System.out.println(ast.toPrettyString());

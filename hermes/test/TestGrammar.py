@@ -1,6 +1,6 @@
 import os, json
 from nose.plugins.skip import SkipTest
-from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
+from hermes.GrammarParser import GrammarParser
 from hermes.Morpheme import NonTerminal
 from hermes.parser.hermes import parse, lex
 from hermes.parser.Common import ParseTreePrettyPrintable, AstPrettyPrintable
@@ -17,7 +17,7 @@ def test_all():
                 yield parse_tree, test_dir
                 yield ast, test_dir
             
-            grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('grammar', open(grammar_path))
+            grammar = GrammarParser().parse('grammar', open(grammar_path))
             if grammar.conflicts:
                 conflicts_path = os.path.join(test_dir, 'conflicts')
                 if not os.path.exists(conflicts_path):
@@ -81,7 +81,7 @@ def ast(test_dir):
 
 def first_sets(test_dir, nonterminal, terminals):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
-    grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('grammar', open(grammar_file))
+    grammar = GrammarParser().parse('grammar', open(grammar_file))
     grammar_first_sets = {str(k): [str(v1) for v1 in v] for k, v in grammar.first.items()}
     assert len(grammar_first_sets[nonterminal]) == len(terminals)
     for terminal in terminals:
@@ -89,7 +89,7 @@ def first_sets(test_dir, nonterminal, terminals):
 
 def follow_sets(test_dir, nonterminal, terminals):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
-    grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('grammar', open(grammar_file))
+    grammar = GrammarParser().parse('grammar', open(grammar_file))
     grammar_follow_sets = {str(k): [str(v1) for v1 in v] for k, v in grammar.follow.items()}
     assert len(grammar_follow_sets[nonterminal]) == len(terminals)
     for terminal in terminals:
@@ -98,14 +98,8 @@ def follow_sets(test_dir, nonterminal, terminals):
 def conflicts(test_dir):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
     conflicts_file = os.path.join(test_dir, 'conflicts')
-    grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('grammar', open(grammar_file))
+    grammar = GrammarParser().parse('grammar', open(grammar_file))
     with open(conflicts_file) as fp:
         expected = fp.read()
-    if expected != conflicts_to_string(grammar.conflicts):
-      print('<<<<<<<<<<<<<<<< ' + grammar_file)
-      print(expected)
-      print('================')
-      print(conflicts_to_string(grammar.conflicts))
-      print('>>>>>>>>>>>>>>>>')
     assert expected == conflicts_to_string(grammar.conflicts)
 

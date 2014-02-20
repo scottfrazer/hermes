@@ -77,6 +77,10 @@ static AST_CREATE_OBJECT_INIT {{prefix}}nud_ast_objects[] = {
       {% for i, key in enumerate(rule.nudAst.parameters.keys()) %}
   { {{rule.id}}, "{{rule.nudAst.name}}", "{{key}}", {{rule.nudAst.parameters[key] if rule.nudAst.parameters[key] != '$' else "'$'"}} },
       {% endfor %}
+
+      {% if not len(rule.nudAst.parameters) %}
+  { {{rule.id}}, "{{rule.nudAst.name}}", "", 0},
+      {% endif %}
     {% endif %}
   {% endfor %}
   {0}
@@ -88,6 +92,10 @@ static AST_CREATE_OBJECT_INIT {{prefix}}ast_objects[] = {
       {% for i, key in enumerate(rule.ast.parameters.keys()) %}
   { {{rule.id}}, "{{rule.ast.name}}", "{{key}}", {{rule.ast.parameters[key] if rule.ast.parameters[key] != '$' else "'$'"}} },
       {% endfor %}
+
+      {% if not len(rule.ast.parameters) %}
+  { {{rule.id}}, "{{rule.ast.name}}", "", 0},
+      {% endif %}
     {% endif %}
   {% endfor %}
   {0}

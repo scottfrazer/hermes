@@ -118,9 +118,9 @@ if __name__ == '__main__':
                 serialized_tokens = []
                 for token in tokens:
                   serialized_tokens.append(
-                      '\{\{"terminal": "{}", "resource": "{}", "line": {}, "col": {}, "source_string": "{}"\}\}'.format(
-                          token.str, token.resource, token.line, token.col, base64.b64encode(token.source_string.encode('utf-8')).decode('utf-8')
-                      )
+                      '{' + '"terminal": "{}", "resource": "{}", "line": {}, "col": {}, "source_string": "{}"'.format(
+                        token.str, token.resource, token.line, token.col, base64.b64encode(token.source_string.encode('utf-8')).decode('utf-8')
+                      ) + '}'
                   )
                 sys.stdout.write('[\n    ')
                 sys.stdout.write(',\n    '.join(serialized_tokens))

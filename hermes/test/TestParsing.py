@@ -4,10 +4,8 @@ import shutil
 import re
 import subprocess
 
-from hermes.GrammarCodeGenerator import FactoryFactory as TemplateFactoryFactory
-from hermes.GrammarCodeGenerator import TemplateWriter
-from hermes.GrammarFileParser import GrammarFileParser, HermesParserFactory
-from nose.plugins.skip import SkipTest
+from hermes.CodeGenerator import CodeGenerator
+from hermes.GrammarParser import GrammarParser
 
 base_dir = os.path.join(os.path.dirname(__file__), 'cases/parsing')
 
@@ -27,12 +25,11 @@ def test_all():
 def parse_python(test_dir, out):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
     tokens_file = os.path.join(test_dir, 'tokens')
-    grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('grammar', open(grammar_file))
+    grammar = GrammarParser().parse('grammar', open(grammar_file))
     tmp_dir = tempfile.mkdtemp()
     
     try:
-      template = TemplateWriter(TemplateFactoryFactory().create('python'))
-      template.write([grammar], tmp_dir)
+      CodeGenerator().generate(grammar, 'python', directory=tmp_dir)
       command = 'python -m {0}.grammar.Parser --file={1} --out={2} 2>&1'.format(os.path.basename(tmp_dir), os.path.abspath(tokens_file), out)
       return subprocess.check_output(command, shell=True, stderr=None, cwd=os.path.dirname(tmp_dir)).decode('utf-8').strip()
     except subprocess.CalledProcessError as exception:
@@ -43,17 +40,16 @@ def parse_python(test_dir, out):
 def parser_c(test_dir, out):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
     tokens_file = os.path.join(test_dir, 'tokens')
-    grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('grammar', open(grammar_file))
-    template = TemplateWriter(TemplateFactoryFactory().create('c'))
+    grammar = GrammarParser().parse('grammar', open(grammar_file))
 
     tmp_dir = tempfile.mkdtemp()
     try:
         shutil.copy(tokens_file, tmp_dir)
-        template.write([grammar], tmp_dir, addMain=True)
+        CodeGenerator().generate(grammar, 'c', directory=tmp_dir, add_main=True)
         c_files = list(filter(lambda x: x.endswith('.c'), os.listdir(tmp_dir)))
         command = 'gcc -o parser {sources} -g -Wall -pedantic -ansi -std=c99 2>/dev/null'.format(sources=' '.join(c_files))
         subprocess.check_call(command, cwd=tmp_dir, shell=True, stderr=None)
-        command = './parser grammar {type} tokens'.format(type=out)
+        command = './parser {type} tokens'.format(type=out)
         return subprocess.check_output(command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as error:
         return error.output.decode('utf-8').strip()
@@ -63,15 +59,14 @@ def parser_c(test_dir, out):
 def parser_java(test_dir, out):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
     tokens_file = os.path.join(test_dir, 'tokens')
-    grammar = GrammarFileParser(HermesParserFactory().create()).parse_new('grammar', open(grammar_file))
-    template = TemplateWriter(TemplateFactoryFactory().create('java'))
+    grammar = GrammarParser().parse('grammar', open(grammar_file))
 
     tmp_dir = tempfile.mkdtemp()
     try:
         shutil.copy(tokens_file, tmp_dir)
         shutil.copytree(os.path.join(test_dir, '..', 'javacp', 'org'), os.path.join(tmp_dir, 'org'))
         java_sources = list(filter(lambda filename: filename.endswith('.java'), os.listdir(tmp_dir)))
-        template.write([grammar], tmp_dir, addMain=True)
+        CodeGenerator().generate(grammar, 'java', directory=tmp_dir, add_main=True)
         compile_command = 'javac *.java 2>/dev/null'
         subprocess.check_call(compile_command, cwd=tmp_dir, shell=True, stderr=None)
     except subprocess.CalledProcessError as error:
@@ -80,12 +75,13 @@ def parser_java(test_dir, out):
         shutil.rmtree(tmp_dir)
 
     try:
-        run_command = 'java ParserMain grammar {type} 2>&1 <tokens'.format(type=out)
+        run_command = 'java ParserMain {type} tokens 2>&1'.format(type=out)
         return subprocess.check_output(run_command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as exception:
         return exception.output.decode('utf-8').strip()
     finally:
-        shutil.rmtree(tmp_dir)
+        print(tmp_dir)
+        #shutil.rmtree(tmp_dir)
 # Tests
 
 def python_parse_tree(test_dir):

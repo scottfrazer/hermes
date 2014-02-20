@@ -5,10 +5,7 @@
 #include <ctype.h>
 
 #include "parser_common.h"
-
-{% for grammar in grammars %}
 #include "{{grammar.name}}_parser.h"
-{% endfor %}
 
 #define STDIN_BUF_SIZE 1024
 
@@ -920,11 +917,9 @@ get_tokens(char * grammar, char * json_input, TOKEN_LIST_T * token_list) {
   TOKEN_FIELD_E field, field_mask;
   int (*terminal_str_to_id)(const char *);
 
-  {% for grammar in grammars %}
   if ( strcmp("{{grammar.name}}", grammar) == 0 ) {
     terminal_str_to_id = {{grammar.name}}_str_to_morpheme;
   }
-  {% endfor %}
 
   memset(&end_of_stream, 0, sizeof(TOKEN_T));
   end_of_stream.terminal = calloc(1, sizeof(TERMINAL_T));
@@ -1042,60 +1037,49 @@ main(int argc, char * argv[])
   TOKEN_LIST_T token_list;
   char * str;
   int i, j, rval;
-  char * grammars = "{{','.join([grammar.name for grammar in grammars])}}";
   char * stdin_content;
   int stdin_len;
   FILE * fp;
 
   if ( argc < 3 )
   {
-    fprintf(stderr, "Usage: %s <%s> <parsetree,ast> <tokens_file>\n", argv[0], grammars);
+    fprintf(stderr, "Usage: %s <parsetree,ast> <tokens_file>\n", argv[0]);
     exit(-1);
   }
 
-  fp = fopen(argv[3], "r");  
+  fp = fopen(argv[2], "r");  
   stdin_len = read_file( &stdin_content, fp );
 
-  do {
-    {% for grammar in grammars %}
-    if ( strcmp(argv[1], "{{grammar.name}}") == 0 ) {
-      get_tokens("{{grammar.name}}", stdin_content, &token_list);
-      ctx = {{grammar.name}}_parser_init(&token_list);
-      parse_tree = {{grammar.name}}_parse(&token_list, -1, ctx);
-      abstract_syntax_tree = {{grammar.name}}_ast(parse_tree);
+  get_tokens("{{grammar.name}}", stdin_content, &token_list);
+  ctx = {{grammar.name}}_parser_init(&token_list);
+  parse_tree = {{grammar.name}}_parse(&token_list, -1, ctx);
+  abstract_syntax_tree = {{grammar.name}}_ast(parse_tree);
 
-      if ( argc >= 3 && !strcmp(argv[2], "ast") ) {
-        str = ast_to_string(abstract_syntax_tree, ctx);
-      }
-      else {
-        str = parsetree_to_string(parse_tree, ctx);
-      }
+  if ( argc >= 3 && !strcmp(argv[1], "ast") ) {
+    str = ast_to_string(abstract_syntax_tree, ctx);
+  }
+  else {
+    str = parsetree_to_string(parse_tree, ctx);
+  }
 
-      free_parse_tree(parse_tree);
-      free_ast(abstract_syntax_tree);
+  free_parse_tree(parse_tree);
+  free_ast(abstract_syntax_tree);
 
-      if ( ctx->syntax_errors ) {
-        rval = 1;
-        printf("%s\n", ctx->syntax_errors->message);
-        /*for ( error = ctx->syntax_errors; error; error = error->next )
-        {
-          printf("%s\n", error->message);
-        }*/
-      }
-      else
-      {
-        rval = 0;
-        printf("%s", str);
-      }
+  if ( ctx->syntax_errors ) {
+    rval = 1;
+    printf("%s\n", ctx->syntax_errors->message);
+    /*for ( error = ctx->syntax_errors; error; error = error->next )
+    {
+      printf("%s\n", error->message);
+    }*/
+  }
+  else
+  {
+    rval = 0;
+    printf("%s", str);
+  }
 
-      {{grammar.name}}_parser_exit(ctx);
-      break;
-    }
-    {% endfor %}
-    fprintf(stderr, "Invalid grammar '%s', expected {'%s'}\n", argv[1], grammars);
-    exit(-1);
-
-  } while(0);
+  {{grammar.name}}_parser_exit(ctx);
 
   return rval;
 }
