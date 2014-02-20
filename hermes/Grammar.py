@@ -800,6 +800,13 @@ class CompositeGrammar(Grammar):
 
     self._assignIds()
 
+  def __getattr__(self, name):
+    if name == 'll1_nonterminals':
+      return [x for x in self.nonterminals if x not in [x.nonterminal for x in self.exprgrammars]]
+    if name == 'standard_terminals':
+      return self.getSimpleTerminals() 
+    return self.__dict__[name]
+
   def getExpressionTerminal(self, exprGrammar):
     return self.expressionTerminals[exprGrammar]
 

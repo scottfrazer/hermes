@@ -168,11 +168,11 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
 class Parser:
   # Quark - finite string set maps one string to exactly one int, and vice versa
   terminals = {
-  {% for terminal in nonAbstractTerminals %}
+  {% for terminal in grammar.standard_terminals %}
     {{terminal.id}}: '{{terminal.string}}',
   {% endfor %}
 
-  {% for terminal in nonAbstractTerminals %}
+  {% for terminal in grammar.standard_terminals %}
     '{{terminal.string.lower()}}': {{terminal.id}},
   {% endfor %}
   }
@@ -196,7 +196,7 @@ class Parser:
     {% endfor %}
   ]
 
-  {% for terminal in nonAbstractTerminals %}
+  {% for terminal in grammar.standard_terminals %}
   TERMINAL_{{terminal.string.upper()}} = {{terminal.id}}
   {% endfor %}
 
@@ -205,10 +205,10 @@ class Parser:
     self.expressionParsers = dict()
 
   def isTerminal(self, id):
-    return 0 <= id <= {{len(nonAbstractTerminals) - 1}}
+    return 0 <= id <= {{len(grammar.standard_terminals) - 1}}
 
   def isNonTerminal(self, id):
-    return {{len(nonAbstractTerminals)}} <= id <= {{len(nonAbstractTerminals) + len(grammar.nonterminals) - 1}}
+    return {{len(grammar.standard_terminals)}} <= id <= {{len(grammar.standard_terminals) + len(grammar.nonterminals) - 1}}
 
   def parse(self, tokens):
     self.tokens = tokens
@@ -231,11 +231,11 @@ class Parser:
 
     return currentToken
  
-  {% for nonterminal in LL1Nonterminals %}
+  {% for nonterminal in grammar.ll1_nonterminals %}
 
   def parse_{{nonterminal.string.lower()}}(self):
     current = self.tokens.current()
-    rule = self.table[{{nonterminal.id - len(nonAbstractTerminals)}}][current.getId()] if current else -1
+    rule = self.table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.getId()] if current else -1
     tree = ParseTree( NonTerminal({{nonterminal.id}}, self.nonterminals[{{nonterminal.id}}]))
 
       {% if isinstance(nonterminal.macro, SeparatedListMacro) %}

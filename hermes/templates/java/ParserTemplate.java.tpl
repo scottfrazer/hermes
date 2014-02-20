@@ -31,8 +31,8 @@ public class {{prefix}}Parser implements Parser {
   };
 
   public enum TerminalId implements TerminalIdentifier {
-  {% for index, terminal in enumerate(nonAbstractTerminals) %}
-    TERMINAL_{{terminal.string.upper()}}({{terminal.id}}, "{{terminal.string}}"){{',' if index!=len(nonAbstractTerminals)-1 else ';'}}
+  {% for index, terminal in enumerate(grammar.standard_terminals) %}
+    TERMINAL_{{terminal.string.upper()}}({{terminal.id}}, "{{terminal.string}}"){{',' if index!=len(grammar.standard_terminals)-1 else ';'}}
   {% endfor %}
 
     private final int id;
@@ -276,14 +276,14 @@ public class {{prefix}}Parser implements Parser {
 
     {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
       {% py xTerminals = set(grammar.first[nonterminal]) %}
-      {% py xTerminals = xTerminals.intersection(nonAbstractTerminals) %}
+      {% py xTerminals = xTerminals.intersection(grammar.standard_terminals) %}
       {% py xTerminals = set("TerminalId.TERMINAL_" + t.string.upper() for t in xTerminals) %}
     this.first.put("{{nonterminal.string.lower()}}", new TerminalId[] { {{', '.join([t for t in xTerminals])}} });
     {% endfor %}
 
     {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
       {% py xTerminals = set(grammar.follow[nonterminal]) %}
-      {% py xTerminals = xTerminals.intersection(nonAbstractTerminals) %}
+      {% py xTerminals = xTerminals.intersection(grammar.standard_terminals) %}
       {% py xTerminals = set("TerminalId.TERMINAL_" + t.string.upper() for t in xTerminals) %}
     this.follow.put("{{nonterminal.string.lower()}}", new TerminalId[] { {{', '.join([t for t in xTerminals])}} });
     {% endfor %}
@@ -307,28 +307,28 @@ public class {{prefix}}Parser implements Parser {
   }
 
   private boolean isTerminal(TerminalId terminal) {
-    return (0 <= terminal.id() && terminal.id() <= {{len(nonAbstractTerminals) - 1}});
+    return (0 <= terminal.id() && terminal.id() <= {{len(grammar.standard_terminals) - 1}});
   }
 
   private boolean isNonTerminal(TerminalId terminal) {
-    return ({{len(nonAbstractTerminals)}} <= terminal.id() && terminal.id() <= {{len(nonAbstractTerminals) + len(grammar.nonterminals) - 1}});
+    return ({{len(grammar.standard_terminals)}} <= terminal.id() && terminal.id() <= {{len(grammar.standard_terminals) + len(grammar.nonterminals) - 1}});
   }
 
   private boolean isTerminal(int terminal) {
-    return (0 <= terminal && terminal <= {{len(nonAbstractTerminals) - 1}});
+    return (0 <= terminal && terminal <= {{len(grammar.standard_terminals) - 1}});
   }
 
   private boolean isNonTerminal(int terminal) {
-    return ({{len(nonAbstractTerminals)}} <= terminal && terminal <= {{len(nonAbstractTerminals) + len(grammar.nonterminals) - 1}});
+    return ({{len(grammar.standard_terminals)}} <= terminal && terminal <= {{len(grammar.standard_terminals) + len(grammar.nonterminals) - 1}});
   }
  
-  {% for nonterminal in LL1Nonterminals %}
+  {% for nonterminal in grammar.ll1_nonterminals %}
 
   private ParseTree parse_{{nonterminal.string.lower()}}() throws SyntaxError {
     Terminal current = this.tokens.current();
     Terminal next;
     ParseTree subtree;
-    int rule = current != null ? this.table[{{nonterminal.id - len(nonAbstractTerminals)}}][current.getId()] : -1;
+    int rule = current != null ? this.table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.getId()] : -1;
     ParseTree tree = new ParseTree( new NonTerminal({{nonterminal.id}}, "{{nonterminal.string}}"));
 
       {% if isinstance(nonterminal.macro, SeparatedListMacro) %}

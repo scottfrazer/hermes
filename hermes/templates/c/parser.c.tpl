@@ -8,7 +8,7 @@
 #include "parser_common.h"
 #include "{{prefix}}parser.h"
 
-{% for nonterminal in LL1Nonterminals %}
+{% for nonterminal in grammar.ll1_nonterminals %}
 static PARSE_TREE_T * parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T *);
 {% endfor %}
 
@@ -21,7 +21,7 @@ void syntax_error( PARSER_CONTEXT_T * ctx, char * message );
 
 /* index with {{prefix.upper()}}TERMINAL_E or {{prefix.upper()}}NONTERMINAL_E */
 static char * {{prefix}}morphemes[] = {
-{% for terminal in sorted(nonAbstractTerminals, key=lambda x: x.id) %}
+{% for terminal in sorted(grammar.standard_terminals, key=lambda x: x.id) %}
   "{{terminal.string}}", /* {{terminal.id}} */
 {% endfor %}
 
@@ -30,19 +30,19 @@ static char * {{prefix}}morphemes[] = {
 {% endfor %}
 };
 
-static int {{prefix}}first[{{len(grammar.nonterminals)}}][{{len(nonAbstractTerminals)+2}}] = {
+static int {{prefix}}first[{{len(grammar.nonterminals)}}][{{len(grammar.standard_terminals)+2}}] = {
 {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
   { {{', '.join([str(x.id) for x in grammar.first[nonterminal]])}}{{', ' if len(grammar.first[nonterminal]) else ''}}-2 },
 {% endfor %}
 };
 
-static int {{prefix}}follow[{{len(grammar.nonterminals)}}][{{len(nonAbstractTerminals)+2}}] = {
+static int {{prefix}}follow[{{len(grammar.nonterminals)}}][{{len(grammar.standard_terminals)+2}}] = {
 {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
   { {{', '.join([str(x.id) for x in grammar.follow[nonterminal]])}}{{', ' if len(grammar.follow[nonterminal]) else ''}}-2 },
 {% endfor %}
 };
 
-static int {{prefix}}table[{{len(grammar.nonterminals)}}][{{len(nonAbstractTerminals)}}] = {
+static int {{prefix}}table[{{len(grammar.nonterminals)}}][{{len(grammar.standard_terminals)}}] = {
   {% py parseTable = grammar.getParseTable() %}
   {% for i in range(len(grammar.nonterminals)) %}
   { {{', '.join([str(rule.id) if rule else str(-1) for rule in parseTable[i]])}} },
@@ -412,7 +412,7 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
 }
 {% endfor %}
 
-{% for nonterminal in LL1Nonterminals %}
+{% for nonterminal in grammar.ll1_nonterminals %}
 
 static PARSE_TREE_T *
 parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
@@ -443,9 +443,9 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
   if ( tokens != NULL )
   {
     current = tokens->current;
-    rule = {{prefix}}table[{{nonterminal.id - len(nonAbstractTerminals)}}][current];
+    rule = {{prefix}}table[{{nonterminal.id - len(grammar.standard_terminals)}}][current];
     {% if nonterminal.empty %}
-    if ( in_array({{prefix}}follow[{{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}} - {{len(nonAbstractTerminals)}}], current))
+    if ( in_array({{prefix}}follow[{{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current))
     {
       return tree;
     }
@@ -494,7 +494,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
       {% if grammar.getExpressionTerminal(exprGrammar) in grammar.first[nonterminal] %}
         {% set grammar.getRuleFromFirstSet(nonterminal, {grammar.getExpressionTerminal(exprGrammar)}) as rule %}
 
-  else if ( in_array({{prefix}}first[{{prefix.upper()}}NONTERMINAL_{{exprGrammar.nonterminal.string.upper()}} - {{len(nonAbstractTerminals)}}], current) )
+  else if ( in_array({{prefix}}first[{{prefix.upper()}}NONTERMINAL_{{exprGrammar.nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current) )
   {
     tree->ast_converter = get_ast_converter({{rule.id}});
 
@@ -629,7 +629,7 @@ PARSE_TREE_T *
   if ( start == -1 )
     start = {{prefix.upper()}}NONTERMINAL_{{grammar.start.string.upper()}};
 
-  tree = functions[start - {{len(nonAbstractTerminals)}}](ctx);
+  tree = functions[start - {{len(grammar.standard_terminals)}}](ctx);
 
   if ( tokens->current != {{prefix.upper()}}TERMINAL_END_OF_STREAM )
   {
@@ -649,7 +649,7 @@ char *
 int
 {{prefix}}str_to_morpheme(const char * str)
 {
-  {% for terminal in nonAbstractTerminals %}
+  {% for terminal in grammar.standard_terminals %}
   if ( !strcmp(str, "{{terminal.string}}") )
     return {{terminal.id}};
   {% endfor %}

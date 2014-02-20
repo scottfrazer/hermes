@@ -3,12 +3,12 @@
 
 #include "parser_common.h"
 
-#define {{prefix.upper()}}TERMINAL_COUNT {{len(nonAbstractTerminals)}}
+#define {{prefix.upper()}}TERMINAL_COUNT {{len(grammar.standard_terminals)}}
 #define {{prefix.upper()}}NONTERMINAL_COUNT {{len(grammar.nonterminals)}}
 
 typedef enum {{prefix}}terminal_e {
 
-{% for terminal in nonAbstractTerminals %}
+{% for terminal in grammar.standard_terminals %}
   {{prefix.upper()}}TERMINAL_{{terminal.string.upper()}} = {{terminal.id}},
 {% endfor %}
   {{prefix.upper()}}TERMINAL_END_OF_STREAM = -1
@@ -24,8 +24,8 @@ typedef enum {{prefix}}nonterminal_e {
 
 } ENUM_{{prefix.upper()}}NONTERMINAL;
 
-#define {{prefix.upper()}}IS_TERMINAL(id) (0 <= id && id <= {{len(nonAbstractTerminals) - 1}})
-#define {{prefix.upper()}}IS_NONTERMINAL(id) ({{len(nonAbstractTerminals)}} <= id && id <= {{len(nonAbstractTerminals) + len(grammar.nonterminals) - 1}})
+#define {{prefix.upper()}}IS_TERMINAL(id) (0 <= id && id <= {{len(grammar.standard_terminals) - 1}})
+#define {{prefix.upper()}}IS_NONTERMINAL(id) ({{len(grammar.standard_terminals)}} <= id && id <= {{len(grammar.standard_terminals) + len(grammar.nonterminals) - 1}})
 
 PARSER_CONTEXT_T *
 {{prefix}}parser_init( TOKEN_LIST_T * tokens );

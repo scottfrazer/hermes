@@ -21,54 +21,45 @@ def underscore_to_camelcase(value):
   c = camelcase()
   return "".join(next(c)(x) if x else '_' for x in value.split("_"))
 
-class Template:
+#####
+# Everything a template needs:
+# 
+# 1) grammar: CompositeGrammar
+# 2) grammar modifications:
+#    a) grammar.[non]terminal.varname (TERMINAL_X) 
+#    b) egrammar.infix, egrammar.prefix, egrammar.precedence.- dictionaries of {operator ID -> associativity | bp}
+#    c) (non-expr NT only) nonterminal.rules - set to expanded rules that are not empty rules.  Set 'empty' attribute on nonterminal
+# 3) LL1NonTerminals - nonterminals that are not expression nonterminals
+# 4) nonAbstractTerminals - terminals that are not empty string or end of stream tokens
+# 5) prefix - Name used to prefix stuff in the generated code
+# 6) package - java_package
+# 7) lexer - lexer object (probably on grammar)
+#
+# Proposition:
+#
+# 1) grammar: CompositeGrammar
+# 2) egrammar.infix,prefix,precedence probably not needed
+# 3) Get rid of 2c?
+# 4) nonAbstractTerminals is used in a lot of places... maybe make accessor on grammar for concrete_terminals
+# 5) prefix stays... needs to be language dependent
+# 6) LL1Nonterminals should be made as accessor on grammar.ll1_nonterminals
+# 7) package -> java_package.  Defined on all Java templates, not defined elsewhere.
+# 8) lexer stays
+#
+# grammar
+#   .standard_terminals
+#   .ll1_nonterminals
+#   .lexer
+# prefix
+# java_package
+#####
+
+class GrammarTemplate:
   def __init__(self):
+    super().__init__()
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
-  def render(self):
-    kwargs = {k: v for k, v in self.__dict__.items() if k not in ['self']}
-    code = loader.render(
-      self.template,
-      **kwargs
-    )
-    return remove_blank_lines(code)
-  def write(self):
-    out_file_path = self.get_filename()
-    try:
-      os.makedirs(os.path.dirname(out_file_path))
-    except FileExistsError:
-      pass
-    with open(out_file_path, 'w') as fp:
-      fp.write(self.render())
-
-class MainTemplate(Template):
-  def __init__(self, grammar):
-    super().__init__()
-    self.__dict__.update(locals())
-
-class CommonTemplate(Template):
-    def __init__(self):
-        super().__init__()
-    def render(self):
-        try:
-            self.package = self.java_package
-        except AttributeError:
-            pass
-        return super().render() 
-
-class GrammarTemplate(Template):
-  def __init__(self, grammar):
-    super().__init__()
     self.__dict__.update(locals())
   def _prepare(self, grammar):
-
-    # Set the variable name for each terminal and nonterminal
-    terminals = grammar.getSimpleTerminals()
-
-    for terminal in terminals:
-      terminal.varname = 'TERMINAL_' + str(terminal).strip("'").upper()
-
-    for nonterminal in grammar.nonterminals:
-      nonterminal.varname = 'NONTERMINAL_' + str(nonterminal).upper()
 
     # Operator precedence
     for index, egrammar in enumerate(grammar.getExpressionGrammars()):
@@ -111,8 +102,7 @@ class GrammarTemplate(Template):
 
   def render(self):
     self._prepare(self.grammar)
-    self.LL1Nonterminals = [x for x in self.grammar.nonterminals if x not in map(lambda x: x.nonterminal, self.grammar.exprgrammars)]
-    self.nonAbstractTerminals = self.grammar.getSimpleTerminals()
+
     try:
       if not self.prefix: self.prefix = self.grammar.name + '_'
     except AttributeError:
@@ -123,39 +113,53 @@ class GrammarTemplate(Template):
     except AttributeError:
       pass
 
-    return super().render()
+    try:
+      self.lexer = self.grammar.lexer
+    except AttributeError:
+      pass
 
-class LexerTemplate(Template):
-  def __init__(self, grammar):
-    super().__init__()
-    self.__dict__.update(locals())
-  def render(self):
-    self.lexer = self.grammar.lexer
-    return super().render()
+    kwargs = {k: v for k, v in self.__dict__.items() if k not in ['self']}
+    code = loader.render(
+      self.template,
+      **kwargs
+    )
+    return remove_blank_lines(code)
+  def write(self):
+    out_file_path = self.get_filename()
+    try:
+      os.makedirs(os.path.dirname(out_file_path))
+    except FileExistsError:
+      pass
+    with open(out_file_path, 'w') as fp:
+      fp.write(self.render())
 
-class PythonInitTemplate(CommonTemplate):
+class PythonTemplate(GrammarTemplate):
+  def get_filename(self):
+    return os.path.join(self.directory, self.grammar.name, self.filename)
+
+class JavaTemplate(GrammarTemplate):
+  pass
+
+class CTemplate(GrammarTemplate):
+  pass
+
+class PythonInitTemplate(PythonTemplate):
+  filename = '__init__.py'
   template = 'python/Init.py.tpl'
-  def __init__(self, grammar):
-    self.__dict__.update(locals())
-  def get_filename(self):
-    return os.path.join(self.directory, self.grammar.name, '__init__.py')
-  def render(self, **kwargs):
-    return super().render()
 
-class PythonParserTemplate(GrammarTemplate):
+class PythonParserTemplate(PythonTemplate):
+  filename = 'Parser.py'
   template = 'python/Parser.py.tpl'
-  def get_filename(self):
-    return os.path.join(self.directory, self.grammar.name, 'Parser.py')
 
-class PythonLexerTemplate(LexerTemplate):
+class PythonLexerTemplate(PythonTemplate):
+  filename = 'Lexer.py'
   template = 'python/Lexer.py.tpl'
-  def get_filename(self):
-    return os.path.join(self.directory, self.grammar.name, 'Lexer.py')
 
-class PythonCommonTemplate(CommonTemplate):
+class PythonCommonTemplate(PythonTemplate):
+  filename = 'Common.py'
   template = 'python/Common.py.tpl'
   def get_filename(self):
-    return os.path.join(self.directory, 'Common.py')
+    return os.path.join(self.directory, self.filename)
 
 def java_package_to_path(package):
   return '/'.join(package.split('.')) if package else ''
@@ -173,102 +177,102 @@ class JavaTemplate(GrammarTemplate):
     self.prefix = underscore_to_camelcase(self.grammar.name)
     return super().render()
 
-class JavaUtilityTemplate(CommonTemplate):
+class JavaUtilityTemplate(GrammarTemplate):
   template = 'java/Utility.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'Utility.java')
 
-class JavaTerminalTemplate(CommonTemplate):
+class JavaTerminalTemplate(GrammarTemplate):
   template = 'java/Terminal.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'Terminal.java')
 
-class JavaNonTerminalTemplate(CommonTemplate):
+class JavaNonTerminalTemplate(GrammarTemplate):
   template = 'java/NonTerminal.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'NonTerminal.java')
 
-class JavaAstTransformTemplate(CommonTemplate):
+class JavaAstTransformTemplate(GrammarTemplate):
   template = 'java/AstTransform.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'AstTransform.java')
 
-class JavaAstTransformSubstitutionTemplate(CommonTemplate):
+class JavaAstTransformSubstitutionTemplate(GrammarTemplate):
   template = 'java/AstTransformSubstitution.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'AstTransformSubstitution.java')
 
-class JavaAstTransformNodeCreatorTemplate(CommonTemplate):
+class JavaAstTransformNodeCreatorTemplate(GrammarTemplate):
   template = 'java/AstTransformNodeCreator.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'AstTransformNodeCreator.java')
 
-class JavaAstNodeTemplate(CommonTemplate):
+class JavaAstNodeTemplate(GrammarTemplate):
   template = 'java/AstNode.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'AstNode.java')
 
-class JavaAstListTemplate(CommonTemplate):
+class JavaAstListTemplate(GrammarTemplate):
   template = 'java/AstList.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'AstList.java')
 
-class JavaAstTemplate(CommonTemplate):
+class JavaAstTemplate(GrammarTemplate):
   template = 'java/Ast.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'Ast.java')
 
-class JavaParseTreeNodeTemplate(CommonTemplate):
+class JavaParseTreeNodeTemplate(GrammarTemplate):
   template = 'java/ParseTreeNode.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'ParseTreeNode.java')
 
-class JavaParseTreeTemplate(CommonTemplate):
+class JavaParseTreeTemplate(GrammarTemplate):
   template = 'java/ParseTree.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'ParseTree.java')
 
-class JavaParserTemplate(CommonTemplate):
+class JavaParserTemplate(GrammarTemplate):
   template = 'java/Parser.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'Parser.java')
 
-class JavaExpressionParserTemplate(CommonTemplate):
+class JavaExpressionParserTemplate(GrammarTemplate):
   template = 'java/ExpressionParser.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'ExpressionParser.java')
 
-class JavaTerminalIdentifierTemplate(CommonTemplate):
+class JavaTerminalIdentifierTemplate(GrammarTemplate):
   template = 'java/TerminalIdentifier.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'TerminalIdentifier.java')
 
-class JavaTerminalMapTemplate(CommonTemplate):
+class JavaTerminalMapTemplate(GrammarTemplate):
   template = 'java/TerminalMap.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'TerminalMap.java')
 
-class JavaSyntaxErrorTemplate(CommonTemplate):
+class JavaSyntaxErrorTemplate(GrammarTemplate):
   template = 'java/SyntaxError.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'SyntaxError.java')
 
-class JavaTokenStreamTemplate(CommonTemplate):
+class JavaTokenStreamTemplate(GrammarTemplate):
   template = 'java/TokenStream.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'TokenStream.java')
 
-class JavaSourceCodeTemplate(CommonTemplate):
+class JavaSourceCodeTemplate(GrammarTemplate):
   template = 'java/SourceCode.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'SourceCode.java')
 
-class JavaSyntaxErrorFormatterTemplate(CommonTemplate):
+class JavaSyntaxErrorFormatterTemplate(GrammarTemplate):
   template = 'java/SyntaxErrorFormatter.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'SyntaxErrorFormatter.java')
 
-class JavaMainTemplate(MainTemplate):
+class JavaMainTemplate(GrammarTemplate):
   template = 'java/ParserMain.java.tpl'
   def get_filename(self):
     return os.path.join(self.directory, java_package_to_path(self.java_package), 'ParserMain.java')
@@ -286,37 +290,34 @@ class CSourceTemplate(GrammarTemplate):
   def get_filename(self):
     return os.path.join(self.directory, self.grammar.name.lower() + '_parser.c')
 
-class CCommonHeaderTemplate(CommonTemplate):
+class CCommonHeaderTemplate(GrammarTemplate):
   template = 'c/parser_common.h.tpl'
   def get_filename(self):
     return os.path.join(self.directory, 'parser_common.h')
 
-class CCommonSourceTemplate(CommonTemplate):
+class CCommonSourceTemplate(GrammarTemplate):
   template = 'c/parser_common.c.tpl'
   def get_filename(self):
     return os.path.join(self.directory, 'parser_common.c')
 
-class CMainSourceTemplate(MainTemplate):
+class CMainSourceTemplate(GrammarTemplate):
   template = 'c/parser_main.c.tpl'
   def get_filename(self):
     return os.path.join(self.directory, 'parser_main.c')
 
 class PythonTemplateFactory:
-  def create(self, grammar, directory='.', **kwargs):
+  def create(self, **kwargs):
     templates = [
         PythonCommonTemplate(),
-        PythonParserTemplate(grammar),
-        PythonInitTemplate(grammar)
+        PythonParserTemplate(),
+        PythonInitTemplate()
     ]
-    if grammar.lexer:
-      templates.extend([PythonLexerTemplate(grammar)])
-    for template in templates:
-      template.directory = directory
-      template.grammar = grammar
+    if kwargs['grammar'].lexer:
+      templates.extend([PythonLexerTemplate()])
     return templates
 
 class JavaTemplateFactory:
-  def create(self, grammar, directory='.', add_main=False, java_package=None, **kwargs):
+  def create(self, **kwargs):
     templates = [
       JavaTerminalTemplate(),
       JavaUtilityTemplate(),
@@ -338,23 +339,17 @@ class JavaTemplateFactory:
       JavaTerminalIdentifierTemplate(),
       JavaSyntaxErrorFormatterTemplate(),
     ]
-    templates.extend([JavaTemplate(grammar)])
-    if add_main:
-      templates.append(JavaMainTemplate(grammar))
-    for template in templates:
-      template.grammar = grammar
-      template.java_package = java_package
-      template.directory = directory
+    templates.extend([JavaTemplate()])
+    if kwargs['add_main']:
+      templates.append(JavaMainTemplate())
     return templates
 
 class CTemplateFactory:
-  def create(self, grammar, directory='.', add_main=False, **kwargs):
+  def create(self, **kwargs):
     templates = [CCommonHeaderTemplate(), CCommonSourceTemplate()]
-    templates.extend([CSourceTemplate(grammar), CHeaderTemplate(grammar)])
-    if add_main:
-      templates.append(CMainSourceTemplate(grammar))
-    for template in templates:
-      template.directory = directory
+    templates.extend([CSourceTemplate(), CHeaderTemplate()])
+    if kwargs['add_main']:
+      templates.append(CMainSourceTemplate())
     return templates
 
 class CodeGenerator:
@@ -372,7 +367,11 @@ class CodeGenerator:
   def generate(self, grammar, language, directory='.', add_main=False, java_package=None):
       template_factory = self.get_template_factory(language)
       templates = template_factory.create(
-          grammar, add_main=add_main, directory=directory, java_package=java_package
+          grammar=grammar, directory=directory, add_main=add_main, java_package=java_package 
       )
       for template in templates:
+          template.grammar = grammar
+          template.directory = directory
+          template.add_main = add_main
+          template.java_package = java_package
           code = template.write() 
