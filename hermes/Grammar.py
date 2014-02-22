@@ -540,28 +540,6 @@ class ExpressionGrammar(Grammar):
     (self.first, self.follow) = firstFollowCalc.compute(self)
     self._computeConflicts()
 
-  def extend(self, exprGrammar):
-    self.rules = self.rules.union({copy(rule) for rule in exprGrammar.rules})
-    self.expandedRules = self.expandedRules.union({copy(rule) for rule in exprGrammar.expandedRules})
-    for ruleSet in [self.rules, self.expandedRules]:
-      for rule in ruleSet:
-        rule.nonterminal = self.nonterminal
-        if not isinstance(rule, ExprRule):
-          continue
-        for index, atom in enumerate(rule.nudProduction.morphemes):
-          if atom == exprGrammar.nonterminal:
-            rule.nudProduction.morphemes[index] = self.nonterminal
-        for index, atom in enumerate(rule.ledProduction.morphemes):
-          if atom == exprGrammar.nonterminal:
-            rule.ledProduction.morphemes[index] = self.nonterminal
-    self.nonterminals = self.nonterminals.union(exprGrammar.nonterminals)
-    self.terminals = self.terminals.union(exprGrammar.terminals)
-    self.macros = self.macros.union(exprGrammar.macros)
-    self.precedence = exprGrammar.precedence + self.precedence
-    self._computePrecedence()
-    (self.first, self.follow) = self.firstFollowCalc.compute(self)
-    self._computeConflicts()
-
   def getExpandedExpressionRules(self, nonterminal = None):
     allRules = [rule for rule in self.expandedRules if isinstance(rule, ExprRule)]
     if nonterminal:
