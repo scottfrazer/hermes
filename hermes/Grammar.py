@@ -519,7 +519,7 @@ class Grammar:
     return self.rules
   
 class NudLedContainer:
-  def __init__(self, morphemes, rule, bindingPower = None):
+  def __init__(self, morphemes, rule):
     self.__dict__.update(locals())
   def __len__(self):
     return len(self.morphemes)
@@ -533,10 +533,7 @@ class ExpressionGrammar(Grammar):
     super().__init__('expr', rules) # TODO: fix this first parameter
     self.__dict__.update(locals())
     self._assignIds()
-    if isinstance(precedence, dict):
-      self.computedPrecedence = precedence
-    else:
-      self._computePrecedence()
+    self.computedPrecedence = precedence # Must be dictionary
     (self.first, self.follow) = firstFollowCalc.compute(self)
     self._computeConflicts()
 
@@ -545,17 +542,6 @@ class ExpressionGrammar(Grammar):
     if nonterminal:
       return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
     return allRules 
-
-  # TODO: Get rid of this
-  def _computePrecedence(self):
-    counter = 1000
-    self.computedPrecedence = {}
-    for precedence in self.precedence:
-      for terminal in precedence['terminals']:
-        if terminal not in self.computedPrecedence:
-          self.computedPrecedence[terminal] = list()
-        self.computedPrecedence[terminal].append( OperatorPrecedence(terminal, counter, precedence['associativity']) )
-      counter += 1000
   
   def getPrecedence(self):
     return self.computedPrecedence
