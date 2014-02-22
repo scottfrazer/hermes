@@ -22,15 +22,20 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
   def __init__(self, parent):
     self.__dict__.update(locals())
 
+
     self.infixBp = {
-      {% for terminal_id, binding_power in exprGrammar.infix.items() %}
-      {{terminal_id}}: {{binding_power}},
+      {% for rule in exprGrammar.rules %}
+        {% if rule.operator and rule.operator.associativity in ['left', 'right'] %}
+      {{rule.operator.operator.id}}: {{rule.operator.binding_power}},
+        {% endif %}
       {% endfor %}
     }
 
     self.prefixBp = {
-      {% for terminal_id, binding_power in exprGrammar.prefix.items() %}
-      {{terminal_id}}: {{binding_power}},
+      {% for rule in exprGrammar.rules %}
+        {% if rule.operator and rule.operator.associativity in ['unary'] %}
+      {{rule.operator.operator.id}}: {{rule.operator.binding_power}},
+        {% endif %}
       {% endfor %}
     }
 
@@ -143,11 +148,12 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
 
       tree.add(left)
 
+        {% py associativity = {rule.operator.operator.id: rule.operator.associativity for rule in exprGrammar.rules if rule.operator} %}
         {% for morpheme in led %}
           {% if isinstance(morpheme, Terminal) %}
       tree.add( self.expect({{morpheme.id}}) )
           {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
-      modifier = {{1 if rule.operator.operator.id in exprGrammar.precedence and exprGrammar.precedence[rule.operator.operator.id] == 'right' else 0}}
+      modifier = {{1 if rule.operator.operator.id in associativity and associativity[rule.operator.operator.id] == 'right' else 0}}
             {% if isinstance(rule.operator, InfixOperator) %}
       tree.isInfix = True
             {% endif %}
@@ -250,19 +256,19 @@ class Parser:
     tree.list = False
       {% endif %}
 
-      {% if nonterminal.empty %}
+      {% if grammar.is_empty(nonterminal) %}
     if current != None and (current.getId() in [{{', '.join([str(a.id) for a in grammar.follow[nonterminal]])}}]):
       return tree
       {% endif %}
 
     if current == None:
-      {% if nonterminal.empty or grammar._empty in grammar.first[nonterminal] %}
+      {% if grammar.is_empty(nonterminal) or grammar._empty in grammar.first[nonterminal] %}
       return tree
       {% else %}
       raise SyntaxError('Error: unexpected end of file')
       {% endif %}
     
-      {% for index, rule in enumerate(nonterminal.rules) %}
+      {% for index, rule in enumerate(grammar.getExpandedLL1Rules(nonterminal)) %}
 
         {% if index == 0 %}
     if rule == {{rule.id}}:
@@ -336,7 +342,7 @@ class Parser:
         {% endif %}
       {% endfor %}
 
-      {% if not nonterminal.empty %}
+      {% if not grammar.is_empty(nonterminal) %}
     raise SyntaxError('Error: Unexpected symbol (%s) on line %d, column %d when parsing %s' % (current, current.line, current.col, whoami()))
       {% else %}
     return tree

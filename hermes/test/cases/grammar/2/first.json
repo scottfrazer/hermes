@@ -1,90 +1,90 @@
 {
-    "$_gen1": [
-        ":_empty", 
-        ":comma"
-    ], 
-    "$_gen0": [
+    "$start": [
         ":sub", 
-        ":identifier", 
-        ":for", 
-        ":_empty", 
         ":n", 
+        ":for", 
+        ":identifier", 
+        ":_empty", 
         ":e", 
         ":s"
     ], 
     "$assignstatementsub": [
-        ":n", 
-        ":e", 
-        ":s", 
-        ":identifier", 
-        ":sub"
-    ], 
-    "$statement": [
         ":sub", 
         ":e", 
-        ":for", 
         ":n", 
-        ":identifier", 
-        ":s"
-    ], 
-    "$assignstatement": [
-        ":identifier"
-    ], 
-    "$forbody": [
-        ":sub", 
-        ":identifier", 
-        ":for", 
-        ":_empty", 
-        ":n", 
-        ":e", 
-        ":s"
-    ], 
-    "$fordeclstatement": [
-        ":sub", 
-        ":n", 
-        ":_empty", 
-        ":e", 
         ":identifier", 
         ":s"
     ], 
     "$forstatement": [
         ":for"
     ], 
-    "$complexexpression": [
-        ":n", 
-        ":e", 
-        ":s", 
-        ":identifier", 
-        ":sub"
-    ], 
-    "$start": [
-        ":_empty", 
-        ":for", 
-        ":n", 
-        ":e", 
+    "$e": [
         ":sub", 
+        ":e", 
+        ":n", 
+        ":s"
+    ], 
+    "$fordeclstatement": [
+        ":sub", 
+        ":n", 
+        ":identifier", 
+        ":_empty", 
+        ":e", 
+        ":s"
+    ], 
+    "$_gen1": [
+        ":comma", 
+        ":_empty"
+    ], 
+    "$_gen0": [
+        ":sub", 
+        ":n", 
+        ":e", 
+        ":for", 
+        ":identifier", 
+        ":_empty", 
+        ":s"
+    ], 
+    "$forbody": [
+        ":sub", 
+        ":n", 
+        ":e", 
+        ":for", 
+        ":identifier", 
+        ":_empty", 
+        ":s"
+    ], 
+    "$complexexpression": [
+        ":sub", 
+        ":e", 
+        ":n", 
         ":identifier", 
         ":s"
     ], 
     "$forcondstatement": [
-        ":n", 
-        ":_empty", 
-        ":s", 
         ":sub", 
-        ":e"
+        ":e", 
+        ":n", 
+        ":s", 
+        ":_empty"
+    ], 
+    "$statement": [
+        ":sub", 
+        ":n", 
+        ":for", 
+        ":identifier", 
+        ":e", 
+        ":s"
+    ], 
+    "$assignstatement": [
+        ":identifier"
     ], 
     "$foriterstatement": [
         ":sub", 
         ":n", 
+        ":identifier", 
         ":_empty", 
         ":e", 
-        ":identifier", 
         ":s"
-    ], 
-    "$e": [
-        ":e", 
-        ":n", 
-        ":s", 
-        ":sub"
     ]
 }

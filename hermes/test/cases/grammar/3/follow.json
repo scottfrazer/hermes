@@ -1,37 +1,37 @@
 {
+    "$forbody": [
+        ":rbrace"
+    ], 
+    "$for": [
+        ":_eos", 
+        ":semi"
+    ], 
+    "$start": [
+        ":_eos"
+    ], 
+    "$statement": [
+        ":_eos", 
+        ":semi"
+    ], 
     "$forsub": [
+        ":semi", 
+        ":rparen"
+    ], 
+    "$e": [
+        ":sub", 
+        ":power", 
         ":rparen", 
+        ":_eos", 
+        ":eq", 
+        ":div", 
+        ":add", 
+        ":mul", 
         ":semi"
     ], 
     "$_gen1": [
-        "\u03c3"
+        ":_eos"
     ], 
     "$_gen0": [
-        "\u03c3"
-    ], 
-    "$start": [
-        "\u03c3"
-    ], 
-    "$statement": [
-        ":semi", 
-        "\u03c3"
-    ], 
-    "$e": [
-        "\u03c3", 
-        ":mul", 
-        ":power", 
-        ":div", 
-        ":eq", 
-        ":semi", 
-        ":rparen", 
-        ":add", 
-        ":sub"
-    ], 
-    "$for": [
-        ":semi", 
-        "\u03c3"
-    ], 
-    "$forbody": [
-        ":rbrace"
+        ":_eos"
     ]
 }

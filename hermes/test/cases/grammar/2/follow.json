@@ -1,59 +1,59 @@
 {
-    "$_gen1": [
-        "\u03c3"
-    ], 
-    "$_gen0": [
-        "\u03c3"
+    "$start": [
+        ":_eos"
     ], 
     "$assignstatementsub": [
         ":comma", 
+        ":_eos", 
         ":rparen", 
-        ":semi", 
-        "\u03c3"
+        ":semi"
     ], 
-    "$statement": [
-        ":semi", 
-        ":comma", 
-        "\u03c3"
-    ], 
-    "$assignstatement": [
-        ":comma", 
+    "$e": [
+        ":sub", 
         ":rparen", 
-        ":semi", 
-        "\u03c3"
-    ], 
-    "$foriterstatement": [
-        ":rparen"
-    ], 
-    "$forstatement": [
-        ":semi", 
         ":comma", 
-        "\u03c3"
+        ":_eos", 
+        ":div", 
+        ":add", 
+        ":mul", 
+        ":semi"
+    ], 
+    "$fordeclstatement": [
+        ":semi"
+    ], 
+    "$_gen1": [
+        ":_eos"
+    ], 
+    "$_gen0": [
+        ":_eos"
+    ], 
+    "$forbody": [
+        ":rbrace"
     ], 
     "$complexexpression": [
         ":semi", 
         ":rparen"
     ], 
-    "$start": [
-        "\u03c3"
-    ], 
-    "$e": [
-        "\u03c3", 
-        ":rparen", 
-        ":sub", 
-        ":mul", 
-        ":comma", 
-        ":semi", 
-        ":add", 
-        ":div"
-    ], 
     "$forcondstatement": [
         ":semi"
     ], 
-    "$forbody": [
-        ":rbrace"
+    "$statement": [
+        ":comma", 
+        ":semi", 
+        ":_eos"
     ], 
-    "$fordeclstatement": [
+    "$assignstatement": [
+        ":comma", 
+        ":_eos", 
+        ":rparen", 
         ":semi"
+    ], 
+    "$foriterstatement": [
+        ":rparen"
+    ], 
+    "$forstatement": [
+        ":comma", 
+        ":semi", 
+        ":_eos"
     ]
 }

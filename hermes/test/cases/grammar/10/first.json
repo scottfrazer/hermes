@@ -1,55 +1,55 @@
 {
-    "$class_statement": [
-        ":public", 
-        ":private"
-    ], 
-    "$class_atom": [
-        ":y", 
-        ":x", 
-        ":function"
-    ], 
-    "$_gen2": [
-        ":_empty", 
-        ":comma"
+    "$classdef": [
+        ":class"
     ], 
     "$funcdef": [
         ":function"
     ], 
-    "$start": [
-        ":class", 
-        ":b", 
-        ":a", 
-        ":function", 
-        ":_empty"
+    "$class_statement": [
+        ":public", 
+        ":private"
     ], 
-    "$_gen1": [
-        ":param1", 
+    "$start": [
         ":_empty", 
+        ":class", 
+        ":a", 
+        ":b", 
+        ":function"
+    ], 
+    "$statement": [
+        ":class", 
+        ":a", 
+        ":b", 
+        ":function"
+    ], 
+    "$param": [
+        ":param1", 
         ":param2"
     ], 
     "$_gen0": [
-        ":b", 
-        ":a", 
-        ":_empty", 
+        ":function", 
         ":class", 
-        ":function"
+        ":a", 
+        ":b", 
+        ":_empty"
     ], 
     "$_gen3": [
         ":public", 
         ":_empty", 
         ":private"
     ], 
-    "$statement": [
-        ":function", 
-        ":class", 
-        ":b", 
-        ":a"
+    "$_gen2": [
+        ":comma", 
+        ":_empty"
     ], 
-    "$classdef": [
-        ":class"
-    ], 
-    "$param": [
+    "$_gen1": [
         ":param1", 
-        ":param2"
+        ":param2", 
+        ":_empty"
+    ], 
+    "$class_atom": [
+        ":x", 
+        ":y", 
+        ":function"
     ]
 }

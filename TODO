@@ -1,18 +1,34 @@
-1) Test Expression Grammar generation from new format
-2) Generate and test a lexer
-3) Restructure the python code output:
+TODO
+====
 
-    hermes
-      - __init__.py
-      - Common.py
-      - grammar1
-        - __init__.py
-        - Lexer.py
-        - Parser.py
-      - grammar2
-        - __init__.py
-        - Lexer.py
-        - Parser.py
+1) Have error message if expression rule needs a binding power but is missing one.
+
+Internal package structure
+--------------------------
+
+import hermes.GrammarParser
+GrammarParser().parse()
+
+import hermes.CodeGenerator
+CodeGenerator().generate()
+
+import hermes.GrammarAnalyzer
+GrammarAnalyzer().analyze()
+
+Document Python parser output format
+------------------------------------
+
+hermes
+  - __init__.py
+  - Common.py
+  - grammar1
+    - __init__.py
+    - Lexer.py
+    - Parser.py
+  - grammar2
+    - __init__.py
+    - Lexer.py
+    - Parser.py
 
 grammar/grammar[x]/__init__.py should define:
 
@@ -27,10 +43,8 @@ public API for tree and ast:
     - tree.children(), tree.child(3)
     - ast.keys(), ast[name], name in ast, (dict?)
 
-4) Have error message if expression rule needs a binding power but is missing one.
-
 HPath syntax
-============
+------------
 
     A :: All 'A' nodes
     A/B :: All 'B' nodes that are children of 'A' nodes

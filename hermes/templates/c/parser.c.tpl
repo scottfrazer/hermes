@@ -261,11 +261,19 @@ get_ast_converter(int rule_id)
 {% py name = exprGrammar.nonterminal.string.lower() %}
 
 static int infixBp_{{name}}[{{len(grammar.terminals)}}] = {
-  {% for i in range(len(grammar.terminals)) %}{{0 if i not in exprGrammar.infix else exprGrammar.infix[i]}}, {% endfor %}
+  {% py operators = {rule.operator.operator.id: rule.operator.binding_power for rule in exprGrammar.rules if rule.operator and rule.operator.associativity in ['left', 'right']} %}
+
+  {% for i in range(len(grammar.terminals)) %}
+  {{0 if i not in operators else operators[i]}},
+  {% endfor %}
 };
 
 static int prefixBp_{{name}}[{{len(grammar.terminals)}}] = {
-  {% for i in range(len(grammar.terminals)) %}{{0 if i not in exprGrammar.prefix else exprGrammar.prefix[i]}}, {% endfor %}
+  {% py operators = {rule.operator.operator.id: rule.operator.binding_power for rule in exprGrammar.rules if rule.operator and rule.operator.associativity in ['unary']} %}
+
+  {% for i in range(len(grammar.terminals)) %}
+  {{0 if i not in operators else operators[i]}},
+  {% endfor %}
 };
 
 static int
@@ -384,12 +392,13 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
     tree->children[0].type = PARSE_TREE_NODE_TYPE_PARSETREE;
     tree->children[0].object = (PARSE_TREE_NODE_U *) left;
 
+      {% py associativity = {rule.operator.operator.id: rule.operator.associativity for rule in exprGrammar.rules if rule.operator} %}
       {% for index, morpheme in enumerate(led) %}
         {% if isinstance(morpheme, Terminal) %}
     tree->children[{{index + 1}}].type = PARSE_TREE_NODE_TYPE_TERMINAL;
     tree->children[{{index + 1}}].object = (PARSE_TREE_NODE_U *) expect( {{prefix.upper()}}TERMINAL_{{morpheme.string.upper()}}, ctx );
         {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
-    modifier = {{1 if rule.operator.operator.id in exprGrammar.precedence and exprGrammar.precedence[rule.operator.operator.id] == 'right' else 0}};
+    modifier = {{1 if rule.operator.operator.id in associativity and associativity[rule.operator.operator.id] == 'right' else 0}};
           {% if isinstance(rule.operator, InfixOperator) %}
     tree->isInfix = 1;
           {% endif %}
@@ -444,7 +453,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
   {
     current = tokens->current;
     rule = {{prefix}}table[{{nonterminal.id - len(grammar.standard_terminals)}}][current];
-    {% if nonterminal.empty %}
+    {% if grammar.is_empty(nonterminal) %}
     if ( in_array({{prefix}}follow[{{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current))
     {
       return tree;
@@ -454,14 +463,14 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 
   if ( tokens == NULL || current == {{prefix.upper()}}TERMINAL_END_OF_STREAM )
   {
-    {% if nonterminal.empty or grammar._empty in grammar.first[nonterminal] %}
+    {% if grammar.is_empty(nonterminal) or grammar._empty in grammar.first[nonterminal] %}
     return tree;
     {% else %}
     syntax_error(ctx, strdup("Error: unexpected end of file"));
     {% endif %}
   }
 
-    {% for index0, rule in enumerate(nonterminal.rules) %}
+    {% for index0, rule in enumerate(filter(lambda r: not r.is_empty, grammar.getExpandedLL1Rules(nonterminal))) %}
       {% if index0 == 0 %}
   if ( rule == {{rule.id}} )
       {% else %}
@@ -514,7 +523,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
       {% endif %}
     {% endfor %}
 
-    {% if not nonterminal.empty %}
+    {% if not grammar.is_empty(nonterminal) %}
   fmt = "Error: Unexpected symbol (%s) when parsing %s";
   message = calloc( strlen(fmt) + strlen({{prefix}}morpheme_to_str(tokens->tokens[tokens->current_index].terminal->id)) + strlen("parse_{{nonterminal.string.lower()}}") + 1, sizeof(char) );
   sprintf(message, fmt, {{prefix}}morpheme_to_str(tokens->tokens[tokens->current_index].terminal->id), "parse_{{nonterminal.string.lower()}}");

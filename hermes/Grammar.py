@@ -46,6 +46,12 @@ class Rule:
     rules.append(Rule(self.nonterminal, Production(morphemes), self.id, self.root, self.ast))
     self.logger.debug('[rule expansion] %s becomes %s' % (self, ', '.join([str(x) for x in rules])))
     return rules
+  def __getattr__(self, name):
+    if name == 'is_empty':
+      v = len(self.production.morphemes) == 1 and self.production.morphemes[0] == EmptyString(-1)
+      print(v, self)
+      return v
+    return self.__dict__[name]
 
   def str( self, theme = None ):
     return self.__str__( theme )
@@ -61,9 +67,7 @@ class Rule:
     return theme.rule(rule) if theme else rule
 
   def __eq__(self, other):
-    if str(other) == str(self):
-      return True
-    return False
+    return str(other) == str(self)
 
   def __hash__(self):
     return hash(str(self))
@@ -452,6 +456,12 @@ class Grammar:
       for i, rule in enumerate(ruleSet):
         rule.id = i
 
+  def is_empty(self, nonterminal):
+    for rule in self.getExpandedLL1Rules(nonterminal):
+      if rule.is_empty:
+        return True
+    return False
+
   def isSimpleTerminal( self, t ):
     return isinstance(t, Terminal) and not isinstance(t, AbstractTerminal)
   
@@ -508,7 +518,6 @@ class Grammar:
       return [rule for rule in self.rules if str(rule.nonterminal) == str(nonterminal)]
     return self.rules
   
-
 class NudLedContainer:
   def __init__(self, morphemes, rule, bindingPower = None):
     self.__dict__.update(locals())

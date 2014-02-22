@@ -1,59 +1,59 @@
 {
-    "$forsub": [
-        ":_empty", 
+    "$forbody": [
         ":sub", 
         ":n", 
         ":e", 
-        ":identifier", 
-        ":s"
-    ], 
-    "$_gen1": [
-        ":_empty", 
-        ":semi"
-    ], 
-    "$_gen0": [
-        ":_empty", 
-        ":s", 
         ":for", 
         ":identifier", 
-        ":n", 
-        ":e", 
-        ":sub"
+        ":_empty", 
+        ":s"
     ], 
     "$for": [
         ":for"
     ], 
     "$start": [
-        ":_empty", 
         ":sub", 
-        ":for", 
         ":n", 
+        ":for", 
         ":identifier", 
-        ":s", 
-        ":e"
+        ":_empty", 
+        ":e", 
+        ":s"
     ], 
     "$statement": [
-        ":for", 
         ":sub", 
         ":n", 
+        ":for", 
+        ":identifier", 
         ":e", 
+        ":s"
+    ], 
+    "$forsub": [
+        ":sub", 
+        ":n", 
+        ":identifier", 
+        ":_empty", 
+        ":e", 
+        ":s"
+    ], 
+    "$e": [
+        ":sub", 
+        ":e", 
+        ":n", 
         ":identifier", 
         ":s"
     ], 
-    "$forbody": [
-        ":_empty", 
-        ":s", 
+    "$_gen1": [
+        ":semi", 
+        ":_empty"
+    ], 
+    "$_gen0": [
+        ":sub", 
+        ":n", 
+        ":e", 
         ":for", 
         ":identifier", 
-        ":n", 
-        ":e", 
-        ":sub"
-    ], 
-    "$e": [
-        ":n", 
-        ":s", 
-        ":e", 
-        ":identifier", 
-        ":sub"
+        ":_empty", 
+        ":s"
     ]
 }

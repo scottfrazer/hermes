@@ -1,5 +1,5 @@
-{% if package %}
-package {{package}};
+{% if java_package %}
+package {{java_package}};
 {% endif %}
 
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
@@ -88,12 +88,16 @@ public class {{prefix}}Parser implements Parser {
       this.infixBp = new HashMap<Integer, Integer>();
       this.prefixBp = new HashMap<Integer, Integer>();
 
-      {% for terminal_id, binding_power in exprGrammar.infix.items() %}
-      this.infixBp.put({{terminal_id}}, {{binding_power}});
+      {% for rule in exprGrammar.rules %}
+        {% if rule.operator and rule.operator.associativity in ['left', 'right'] %}
+      this.infixBp.put({{rule.operator.operator.id}}, {{rule.operator.binding_power}});
+        {% endif %}
       {% endfor %}
 
-      {% for terminal_id, binding_power in exprGrammar.prefix.items() %}
-      this.prefixBp.put({{terminal_id}}, {{binding_power}});
+      {% for rule in exprGrammar.rules %}
+        {% if rule.operator and rule.operator.associativity in ['left', 'right'] %}
+      this.prefixBp.put({{rule.operator.operator.id}}, {{rule.operator.binding_power}});
+        {% endif %}
       {% endfor %}
     }
 
@@ -228,11 +232,12 @@ public class {{prefix}}Parser implements Parser {
 
         tree.add(left);
 
+          {% py associativity = {rule.operator.operator.id: rule.operator.associativity for rule in exprGrammar.rules if rule.operator} %}
           {% for morpheme in led %}
             {% if isinstance(morpheme, Terminal) %}
         tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}, "{{exprGrammar.nonterminal.string.lower()}}", this.rules.get({{rule.id}})) );
             {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
-        modifier = {{1 if rule.operator.operator.id in exprGrammar.precedence and exprGrammar.precedence[rule.operator.operator.id] == 'right' else 0}};
+        modifier = {{1 if rule.operator.operator.id in associativity and associativity[rule.operator.operator.id] == 'right' else 0}};
               {% if isinstance(rule.operator, InfixOperator) %}
         tree.setInfix(true);
               {% endif %}
@@ -343,7 +348,7 @@ public class {{prefix}}Parser implements Parser {
     tree.setList(null);
       {% endif %}
 
-      {% if nonterminal.empty %}
+      {% if grammar.is_empty(nonterminal) %}
     if ( current != null ) {
       {% if len(grammar.follow[nonterminal]) %}
       if ({{' || '.join(['current.getId() == ' + str(a.id) for a in grammar.follow[nonterminal]])}}) {
@@ -354,7 +359,7 @@ public class {{prefix}}Parser implements Parser {
       {% endif %}
 
     if (current == null) {
-      {% if nonterminal.empty or grammar._empty in grammar.first[nonterminal] %}
+      {% if grammar.is_empty(nonterminal) or grammar._empty in grammar.first[nonterminal] %}
       return tree;
       {% else %}
 
@@ -367,7 +372,7 @@ public class {{prefix}}Parser implements Parser {
       {% endif %}
     }
     
-      {% for index, rule in enumerate(nonterminal.rules) %}
+      {% for index, rule in enumerate(filter(lambda r: not r.is_empty, grammar.getExpandedLL1Rules(nonterminal))) %}
 
         {% if index == 0 %}
     if (rule == {{rule.id}}) {
@@ -439,7 +444,7 @@ public class {{prefix}}Parser implements Parser {
         {% endif %}
       {% endfor %}
 
-      {% if not nonterminal.empty %}
+      {% if not grammar.is_empty(nonterminal) %}
 
     List<TerminalIdentifier> terminals = Arrays.asList(this.first.get("{{nonterminal.string.lower()}}"));
     throw new SyntaxError(this.syntaxErrorFormatter.unexpected_symbol(

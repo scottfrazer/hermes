@@ -1,6 +1,10 @@
 class Morpheme:
   def __init__(self, string, id=0):
     self.__dict__.update(locals())
+  def __eq__(self, other):
+    return str(other) == str(self)
+  def __hash__(self):
+    return hash(str(self))
 
 class NonTerminal(Morpheme):
   def __init__(self, string, id=0, generated=False, macro=None):
@@ -37,7 +41,7 @@ class AbstractTerminal(Terminal):
 
 class EmptyString(AbstractTerminal):
   def __init__(self, id):
-    super().__init__('ε', id)
+    super().__init__('_empty', id)
   def str(self, theme=None):
     return self.__str__(theme)
   def __str__(self, theme=None):
@@ -45,8 +49,8 @@ class EmptyString(AbstractTerminal):
 
 class EndOfStream(AbstractTerminal):
   def __init__(self, id):
-    super().__init__('σ', id)
+    super().__init__('_eos', id)
   def str(self, theme=None):
     return self.__str__(theme)
   def __str__(self, theme=None):
-    return theme.endOfStream('σ') if theme else 'σ'
+    return theme.endOfStream(':_eos') if theme else ':_eos'

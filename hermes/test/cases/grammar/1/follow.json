@@ -1,27 +1,27 @@
 {
-    "$_gen1": [
-        "\u03c3"
-    ], 
-    "$_gen0": [
-        "\u03c3"
+    "$statements": [
+        ":comma", 
+        ":_eos"
     ], 
     "$start": [
-        "\u03c3"
+        ":_eos"
     ], 
     "$assignstatement": [
         ":comma", 
-        "\u03c3"
-    ], 
-    "$statements": [
-        ":comma", 
-        "\u03c3"
+        ":_eos"
     ], 
     "$e": [
-        ":mul", 
         ":sub", 
-        ":div", 
-        ":add", 
         ":comma", 
-        "\u03c3"
+        ":div", 
+        ":_eos", 
+        ":add", 
+        ":mul"
+    ], 
+    "$_gen1": [
+        ":_eos"
+    ], 
+    "$_gen0": [
+        ":_eos"
     ]
 }

@@ -6,7 +6,7 @@ from ..Common import Terminal, SyntaxError, TokenStream
 from .Parser import Parser
 
 # START USER CODE
-{{lexer.code}}
+{{grammar.lexer.code}}
 # END USER CODE
 
 def default_action(context, mode, match, terminal, line, col):
@@ -15,7 +15,7 @@ def default_action(context, mode, match, terminal, line, col):
 
 class HermesLexer:
     regex = {
-      {% for mode, regex_list in lexer.items() %}
+      {% for mode, regex_list in grammar.lexer.items() %}
         '{{mode}}': [
           {% for regex in regex_list %}
           (re.compile({{regex.regex}}{{", "+' | '.join(['re.'+x for x in regex.options]) if regex.options else ''}}), {{"'" + regex.terminal.string.lower() + "'" if regex.terminal else 'None'}}, {{regex.function}}),
