@@ -535,23 +535,20 @@ class ExpressionGrammar(Grammar):
     self._assignIds()
     self.computedPrecedence = precedence # Must be dictionary
     (self.first, self.follow) = firstFollowCalc.compute(self)
-    self._computeConflicts()
+    self._compute_conflicts()
 
   def getExpandedExpressionRules(self, nonterminal = None):
     allRules = [rule for rule in self.expandedRules if isinstance(rule, ExprRule)]
     if nonterminal:
       return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
     return allRules 
-  
-  def getPrecedence(self):
-    return self.computedPrecedence
  
   def ruleFirst(self, rule):
     if len(rule.nudProduction) and rule.nudProduction.morphemes[0] != rule.nonterminal:
       return self._pfirst(rule.nudProduction)
     return set()
   
-  def _computeConflicts( self ):
+  def _compute_conflicts( self ):
     nud = {}
     led = {}
     self.conflicts = []
@@ -643,16 +640,12 @@ class LL1Grammar(Grammar):
 
     self._assignIds()
     (self.first, self.follow) = firstFollowCalc.compute(self)
-    self._computeConflicts()
- 
-  # TODO: remove
-  def getNormalizedRules(self, nonterminal = None):
-    return self.getExpandedRules(self, nonterminal)
+    self._compute_conflicts()
   
   def getStart(self):
     return self.start
   
-  def _computeConflicts( self ):
+  def _compute_conflicts( self ):
     self.conflicts = []
     self.warnings = []
     nonterminalUsageMap = {N: list() for N in self.nonterminals} # maps nonterminal to rules that use this nonterminal in its production
@@ -738,7 +731,7 @@ class CompositeGrammar(Grammar):
         progress |= grammar.updateFirstFollow(exprgrammar.first, exprgrammar.follow)
     self.first = grammar.first
     self.follow = grammar.follow
-    self.grammar._computeConflicts()
+    self.grammar._compute_conflicts()
 
     self.conflicts = grammar.conflicts
     self.warnings = grammar.warnings
@@ -822,9 +815,6 @@ class CompositeGrammar(Grammar):
     if nonterminal:
       return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
     return allRules 
-
-  def getNormalizedRules(self, nonterminal = None):
-    return self.getExpandedLL1Rules(nonterminal)
 
   def str(self, theme=None):
     return self.__str__(theme)
