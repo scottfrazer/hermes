@@ -54,7 +54,7 @@ class ExprConflict(Conflict):
     string = " -- %s conflict -- \n" % (self.type)
     string += "Terminal %s requires two different %s() functions.  Cannot choose between these rules:\n\n"%(self.terminal, self.type)
     for rule in self.rules:
-      string += "(Rule-%d) %s\n" % (rule.id, rule)
+      string += "%s\n" % (rule)
     return string
 
 class NudConflict(ExprConflict):
