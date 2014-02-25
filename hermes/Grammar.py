@@ -427,7 +427,6 @@ class Lexer(dict):
 class Grammar:
   _empty = EmptyString(-1)
   _end = EndOfStream(-1)
-  rules = []
   start = None
   tLookup = None
   ntLookup = None
@@ -698,7 +697,27 @@ class LL1Grammar(Grammar):
 
 class CompositeGrammar(Grammar):
   def __init__( self, name, grammar, exprgrammars, lexer=Lexer() ):
+    self.__dict__.update(locals())
     self.start = grammar.start
+    rules = OrderedDict()
+    for rule in grammar.rules: rules[str(rule)] = rule
+    for expression_grammar in exprgrammars:
+      for rule in expression_grammar.rules: rules[str(rule)] = rule
+
+    super().__init__(name, list(rules.values()))
+    """
+    rules = []
+    expandedRules = []
+    for rule in grammar.rules:
+      add_rule(rule)
+    for rule in grammar.expandedRules:
+      add_expanded_rule(rule)
+    for expr_grammar in exprgrammars:
+      for rule in expr_grammar.rules:
+        add_rule(rule)
+      for rule in expr_grammar.expandedRules:
+        add_expanded_rule(rule)
+    """
 
     def add_terminal(terminal):
       if terminal not in self.terminals:
@@ -706,24 +725,12 @@ class CompositeGrammar(Grammar):
     def add_nonterminal(nonterminal):
       if nonterminal not in self.nonterminals:
         self.nonterminals.append(nonterminal)
-    def add_rule(rule, rules):
-      if rule not in rules:
-        rules.append(rule)
-
-    rules = []
-    expandedRules = []
-    for rule in grammar.rules:
-      add_rule(rule, rules)
-    for rule in grammar.expandedRules:
-      add_rule(rule, expandedRules)
-    for expr_grammar in exprgrammars:
-      for rule in expr_grammar.rules:
-        add_rule(rule, rules)
-      for rule in expr_grammar.expandedRules:
-        add_rule(rule, expandedRules)
-
-    super().__init__(name, rules)
-    self.__dict__.update(locals())
+    def add_rule(rule):
+      if rule not in self.rules:
+        self.rules.append(rule)
+    def add_expanded_rule(rule):
+      if rule not in self.expandedRules:
+        self.expandedRules.append(rule)
     
     self.terminals = list(grammar.terminals)
     self.nonterminals = list(grammar.nonterminals)
@@ -744,8 +751,9 @@ class CompositeGrammar(Grammar):
     for exprgrammar in self.exprgrammars:
       for macros in exprgrammar.macros:
         for rule in macros.rules:
-          add_rule(rule, self.rules)
-          add_rule(rule, self.expandedRules)
+          pass
+          #add_rule(rule)
+          #add_expanded_rule(rule)
       tokens = exprgrammar.first[exprgrammar.nonterminal]
       grammar.first[exprgrammar.nonterminal] = grammar.first[exprgrammar.nonterminal].union(tokens)
       tokens = exprgrammar.follow[exprgrammar.nonterminal]
@@ -785,7 +793,6 @@ class CompositeGrammar(Grammar):
       nRules = self.getExpandedRules( nonterminal )
       if len(nRules) == 0 and nonterminal is not grammar.start and nonterminal not in [x.nonterminal for x in exprgrammars]:
         self.conflicts.append( UndefinedNonterminalConflict(nonterminal) )
-
     self._assignIds()
 
   def __getattr__(self, name):

@@ -1,19 +1,44 @@
 TODO
 ====
 
-1) Have error message if expression rule needs a binding power but is missing one.
+1) Have error message if expression rule needs a binding power but is missing one. (Add test!)
+2) Have error message if lexer produces token that is not consumed by the grammar.
+3) Error if the 
 
-Internal package structure
---------------------------
+Document the interface for the public classes in Grammar.py:
 
-import hermes.GrammarParser
-GrammarParser().parse()
-
-import hermes.CodeGenerator
-CodeGenerator().generate()
-
-import hermes.GrammarAnalyzer
-GrammarAnalyzer().analyze()
+  Grammar
+    - rules (Rule)
+    - terminals
+    - nonterminals
+    - macros
+    - start
+    - must_consume_tokens(nonterminal) [is_empty]
+    - is_standard_terminal(terminal)
+    - is_abstract_terminal(terminal)
+    - conflicts
+  LL1Grammar(Grammar)
+    - first (dict)
+    - follow (dict)
+  ExpressionGrammar(Grammar)
+    - nud
+    - led
+    - precedence
+  CompositeGrammar
+    - ll1_grammar
+    - expression_grammars
+  LL1Rule
+    - id, morphemes
+    - nonterminal
+    - production
+  ExpressionRule
+    - id, morphemes
+    - nud
+    - led
+  NonTerminal
+    - id, name
+  Terminal
+    - id, name
 
 Document Python parser output format
 ------------------------------------
