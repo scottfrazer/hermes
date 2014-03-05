@@ -206,7 +206,7 @@ public class {{prefix}}Parser implements Parser {
       int modifier;
 
       {% py seen = list() %}
-      {% for rule in exprGrammar.getExpandedExpressionRules() %}
+      {% for rule in grammar.grammar_expanded_expr_rules[exprGrammar] %}
         {% py led = rule.ledProduction.morphemes %}
         {% if len(led) and led[0] not in seen %}
 
@@ -351,7 +351,8 @@ public class {{prefix}}Parser implements Parser {
       {% if grammar.is_empty(nonterminal) %}
     if ( current != null ) {
       {% if len(grammar.follow[nonterminal]) %}
-      if ({{' || '.join(['current.getId() == ' + str(a.id) for a in grammar.follow[nonterminal]])}}) {
+      if ( ({{' || '.join(['current.getId() == ' + str(a.id) for a in grammar.follow[nonterminal]])}}) && 
+           ({{' && '.join(['current.getId() != ' + str(a.id) for a in grammar.first[nonterminal]])}}) ) {
         return tree;
       }
       {% endif %}

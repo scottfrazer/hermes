@@ -1,4 +1,4 @@
-from copy import copy
+from copy import copy, deepcopy
 from collections import OrderedDict
 from hermes.Morpheme import Terminal
 from hermes.Morpheme import EmptyString
@@ -120,6 +120,7 @@ class AstTranslation:
 class ExprRule:
   def __init__(self, nonterminal, nudProduction, ledProduction, nudAst, ast, operator):
     self.__dict__.update(locals())
+    self.production = Production(nudProduction.morphemes + ledProduction.morphemes)
     if (not nudProduction or not len(nudProduction)) and \
        (not ledProduction or not len(ledProduction)):
       raise Exception('Rule must contain a NUD or a LED portion.')
@@ -228,17 +229,18 @@ class FirstFollowCalculator:
   # This is duplicated
   def _pfirst( self, grammar, P ):
     r = set()
-    addEpsilon = True
+    add_empty_token = True
     for m in P.morphemes:
+      m_first_set = set([m]) if isinstance(m, Terminal) else self.first[m]
       if isinstance(m, MorphemeListMacro) or isinstance(m, SeparatedListMacro):
         m = m.start_nt
-      toks = self.first[m].difference({grammar._empty})
+      toks = m_first_set.difference({grammar._empty})
       if len(toks) > 0:
         r = r.union(toks)
-      if grammar._empty not in self.first[m]:
-        addEpsilon = False
+      if grammar._empty not in m_first_set:
+        add_empty_token = False
         break
-    if addEpsilon:
+    if add_empty_token:
       r = r.union({grammar._empty})
     return r
 
@@ -303,11 +305,12 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
         if (isinstance(morpheme, Terminal) or isinstance(morpheme, EmptyString)) and \
            morpheme not in self.first[rule.nonterminal]:
           progress = changed = True
-          self.logger.debug('first(%s) = {%s} ∪ {%s}' % (rule.nonterminal, ', '.join([str(x) for x in self.first[rule.nonterminal]]), morpheme))
+          self.logger.debug('RULE ' + str(rule))
+          self.logger.debug('(1) first(%s) = {%s} ∪ {%s}' % (rule.nonterminal, ', '.join([str(x) for x in self.first[rule.nonterminal]]), morpheme))
           self.first[rule.nonterminal] = self.first[rule.nonterminal].union({morpheme})
 
         elif isinstance(morpheme, NonTerminal) or isinstance(morpheme, LL1ListMacro):
-          addEpsilon = True
+          add_empty_token = True
           for morpheme in rule.production.morphemes:
             if isinstance(morpheme, LL1ListMacro):
               sub = self.first[morpheme.start_nt]
@@ -315,16 +318,17 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
               sub = self.first[morpheme]
             if not self.first[rule.nonterminal].issuperset(sub.difference({grammar._empty})):
               progress = changed = True
-              self.logger.debug('first(%s) = {%s} ∪ {%s}' % ( \
+              self.logger.debug('RULE ' + str(rule))
+              self.logger.debug('(2) first(%s) = {%s} ∪ {%s}' % ( \
                         rule.nonterminal, \
                         ', '.join([str(x) for x in self.first[rule.nonterminal]]), \
                         ', '.join([str(x) for x in sub.difference({grammar._empty})]) \
                       ))
               self.first[rule.nonterminal] = self.first[rule.nonterminal].union(sub.difference({grammar._empty}))
             if grammar._empty not in sub:
-              addEpsilon = False
+              add_empty_token = False
               break
-          if addEpsilon:
+          if add_empty_token:
             self.first[rule.nonterminal] = self.first[rule.nonterminal].union({grammar._empty})
     return changed
   
@@ -347,15 +351,15 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
             nextToken = None
 
           if nextToken:
-            newTokens = self.first[nextToken].difference({grammar._empty})
-            if not self.follow[morpheme].issuperset(newTokens):
+            next_first_set = set([nextToken]) if isinstance(nextToken, Terminal) else self.first[nextToken].difference({grammar._empty})
+            if not self.follow[morpheme].issuperset(next_first_set):
               progress = changed = True
               self.logger.debug('follow(%s) = {%s} ∪ {%s}' % ( \
                 morpheme, \
                 ', '.join([str(x) for x in self.follow[morpheme]]), \
-                ', '.join([str(x) for x in newTokens]) \
+                ', '.join([str(x) for x in next_first_set]) \
               ))
-              self.follow[morpheme] = self.follow[morpheme].union(newTokens)
+              self.follow[morpheme] = self.follow[morpheme].union(next_first_set)
 
           if not nextToken or grammar._empty in self._pfirst(grammar, Production(rule.production.morphemes[index+1:])):
             z = self.follow[rule.nonterminal]
@@ -381,9 +385,9 @@ class ExpressionFirstFollowCalculator(FirstFollowCalculator):
     return ( self.first, self.follow )
 
   def _init(self, grammar):
-    self.first = {x: set() for x in grammar.nonterminals}
-    self.follow = {x: set() for x in grammar.nonterminals}
-    self.first.update({x: {x} for x in grammar.terminals})
+    nonterminals = grammar.nonterminals + [grammar.nonterminal]
+    self.first = {x: set() for x in nonterminals}
+    self.follow = {x: set() for x in nonterminals}
     self.follow.update({x: set() for x in grammar.macros})
     self.first.update({x: set() for x in grammar.macros if isinstance(x, LL1ListMacro)})
 
@@ -526,17 +530,18 @@ class Grammar:
   # These should be pre-calculated.  also this is duplicated
   def _pfirst( self, P ):
     r = set()
-    addEpsilon = True
+    add_empty_token = True
     for m in P.morphemes:
       if isinstance(m, MorphemeListMacro) or isinstance(m, SeparatedListMacro):
         m = m.start_nt
-      toks = self.first[m].difference({self._empty})
+      m_first_set = set([m]) if isinstance(m, Terminal) else self.first[m]
+      toks = m_first_set.difference({self._empty})
       if len(toks) > 0:
         r = r.union(toks)
-      if self._empty not in self.first[m]:
-        addEpsilon = False
+      if self._empty not in m_first_set:
+        add_empty_token = False
         break
-    if addEpsilon:
+    if add_empty_token:
       r = r.union({self._empty})
     return r
   
@@ -673,7 +678,7 @@ class LL1Grammar(Grammar):
       if self._empty in self.first[N] and len(self.first[N].intersection(self.follow[N])):
         self.conflicts.append( FirstFollowConflict( N, self.first[N], self.follow[N] ) )
 
-      if not len(nonterminal_rules[str(N)]) and not N.generated:
+      if not len(nonterminal_rules[str(N)]) and not N.generated and N != self.start:
         self.warnings.append(UnusedNonterminalWarning(N))
 
       NR = self.getExpandedRules( N )
@@ -696,28 +701,16 @@ class LL1Grammar(Grammar):
     return self.conflicts
 
 class CompositeGrammar(Grammar):
-  def __init__( self, name, grammar, exprgrammars, lexer=Lexer() ):
+  def __init__( self, name, grammar, exprgrammars, lexer=Lexer(), firstFollowCalc=LL1FirstFollowCalculator() ):
     self.__dict__.update(locals())
     self.start = grammar.start
+
     rules = OrderedDict()
     for rule in grammar.rules: rules[str(rule)] = rule
     for expression_grammar in exprgrammars:
       for rule in expression_grammar.rules: rules[str(rule)] = rule
 
     super().__init__(name, list(rules.values()))
-    """
-    rules = []
-    expandedRules = []
-    for rule in grammar.rules:
-      add_rule(rule)
-    for rule in grammar.expandedRules:
-      add_expanded_rule(rule)
-    for expr_grammar in exprgrammars:
-      for rule in expr_grammar.rules:
-        add_rule(rule)
-      for rule in expr_grammar.expandedRules:
-        add_expanded_rule(rule)
-    """
 
     def add_terminal(terminal):
       if terminal not in self.terminals:
@@ -725,52 +718,59 @@ class CompositeGrammar(Grammar):
     def add_nonterminal(nonterminal):
       if nonterminal not in self.nonterminals:
         self.nonterminals.append(nonterminal)
-    def add_rule(rule):
-      if rule not in self.rules:
-        self.rules.append(rule)
-    def add_expanded_rule(rule):
-      if rule not in self.expandedRules:
-        self.expandedRules.append(rule)
     
     self.terminals = list(grammar.terminals)
     self.nonterminals = list(grammar.nonterminals)
 
-    terminalIdMax = max(map(lambda x: x.id, self.terminals))
+    rule_str = OrderedDict([(str(r), r) for r in self.rules])
+    expanded_rule_str = OrderedDict([(str(r), r) for r in self.expandedRules])
+    self.grammar_rules = OrderedDict()
+    self.grammar_expanded_rules = OrderedDict()
+    self.grammar_rules[grammar] = list()
+    self.grammar_expanded_rules[grammar] = list()
+    for rule in self.grammar.rules:
+      self.grammar_rules[grammar].append(rule_str[str(rule)])
+    for rule in self.grammar.expandedRules:
+      self.grammar_expanded_rules[grammar].append(expanded_rule_str[str(rule)])
+    for grammar in self.exprgrammars:
+      self.grammar_rules[grammar] = list()
+      self.grammar_expanded_rules[grammar] = list()
+      for rule in grammar.rules:
+        self.grammar_rules[grammar].append(rule_str[str(rule)])
+      for rule in grammar.expandedRules:
+        self.grammar_expanded_rules[grammar].append(expanded_rule_str[str(rule)])
+
+    max_terminal_id = max(map(lambda x: x.id, self.terminals))
     self.expressionTerminals = dict()
-    for i, exprGrammar in enumerate(self.exprgrammars):
+    for index, expr_grammar in enumerate(self.exprgrammars):
       # TODO: make this terminal an abstract terminal.  Prefix with underscore.  Lots of tests fail if either of these changes are made
-      terminal = Terminal(exprGrammar.nonterminal.string.lower(), terminalIdMax + i)
-      self.expressionTerminals[exprGrammar] = terminal
-      grammar.first[exprGrammar.nonterminal] = {terminal}
+      terminal = Terminal(expr_grammar.nonterminal.string.lower(), max_terminal_id + index)
+      self.expressionTerminals[expr_grammar] = terminal
+      expr_grammar.first[expr_grammar.nonterminal] = expr_grammar.first[expr_grammar.nonterminal].union({terminal})
       add_terminal(terminal)
-      for terminal in exprGrammar.terminals:
+      for terminal in expr_grammar.terminals:
         add_terminal(terminal)
-      for nonterminal in exprGrammar.nonterminals:
+      for nonterminal in expr_grammar.nonterminals:
         add_nonterminal(nonterminal)
 
-    for exprgrammar in self.exprgrammars:
-      for macros in exprgrammar.macros:
-        for rule in macros.rules:
-          pass
-          #add_rule(rule)
-          #add_expanded_rule(rule)
-      tokens = exprgrammar.first[exprgrammar.nonterminal]
-      grammar.first[exprgrammar.nonterminal] = grammar.first[exprgrammar.nonterminal].union(tokens)
-      tokens = exprgrammar.follow[exprgrammar.nonterminal]
-      grammar.follow[exprgrammar.nonterminal] = grammar.follow[exprgrammar.nonterminal].union(tokens)
+    self.first = copy(self.grammar.first)
+    self.follow = copy(self.grammar.follow)
+    for expr_grammar in self.exprgrammars:
+      expr_nt = expr_grammar.nonterminal
+      self.first[expr_nt] = self.first[expr_nt].union(expr_grammar.first[expr_nt])
+      self.follow[expr_nt] = self.follow[expr_nt].union(expr_grammar.follow[expr_nt])
 
+    self.firstFollowCalc.first = self.first
+    self.firstFollowCalc.follow = self.follow
     progress = True
     while progress:
       progress = False
-      for exprgrammar in self.exprgrammars:
-        progress |= exprgrammar.updateFirstFollow(grammar.first, grammar.follow)
-        progress |= grammar.updateFirstFollow(exprgrammar.first, exprgrammar.follow)
-    self.first = grammar.first
-    self.follow = grammar.follow
+      for expr_grammar in self.exprgrammars:
+        progress |= self.updateFirstFollow(expr_grammar.first, expr_grammar.follow)
     self.grammar._compute_conflicts()
 
-    self.conflicts = grammar.conflicts
-    self.warnings = grammar.warnings
+    self.conflicts = self.grammar.conflicts
+    self.warnings = self.grammar.warnings
     for exprGrammar in self.exprgrammars:
       self.conflicts.extend(exprGrammar.conflicts)
     self.conflicts = list(filter(lambda x: type(x) not in [UndefinedNonterminalConflict], self.conflicts ))
@@ -787,7 +787,8 @@ class CompositeGrammar(Grammar):
           nonterminal_rules[str(morpheme)].append(rule)
 
     for nonterminal in self.nonterminals:
-      if not len(nonterminal_rules[str(nonterminal)]) and not nonterminal.generated and nonterminal is not grammar.start:
+      if not len(nonterminal_rules[str(nonterminal)]) and not nonterminal.generated and nonterminal is not self.start:
+        print('qwerqwerqwer')
         self.warnings.append(UnusedNonterminalWarning(nonterminal))
 
       nRules = self.getExpandedRules( nonterminal )
@@ -800,6 +801,13 @@ class CompositeGrammar(Grammar):
       return [x for x in self.nonterminals if x not in [x.nonterminal for x in self.exprgrammars]]
     if name == 'standard_terminals':
       return self.getSimpleTerminals() 
+    if name == 'grammar_expanded_rules':
+      return self.__dict__['grammar_expanded_rules']
+    if name == 'grammar_expanded_expr_rules':
+      grammar_rules = {}
+      for grammar, rules in self.grammar_expanded_rules.items():
+        grammar_rules[grammar] = list(filter(lambda x: isinstance(x, ExprRule), rules))
+      return grammar_rules
     return self.__dict__[name]
 
   def getExpressionTerminal(self, exprGrammar):

@@ -60,7 +60,7 @@ typedef struct parse_tree_t {
 
 typedef union parse_tree_node_u {
 
-  struct terminal_t terminal;
+  struct token_t terminal;
   struct parse_tree_t parse_tree;
 
 } PARSE_TREE_NODE_U;

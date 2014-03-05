@@ -122,7 +122,7 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
     current = self.getCurrentToken()
 
     {% py seen = list() %}
-    {% for rule in exprGrammar.getExpandedExpressionRules() %}
+    {% for rule in grammar.grammar_expanded_expr_rules[exprGrammar] %}
       {% py led = rule.ledProduction.morphemes %}
       {% if len(led) and led[0] not in seen %}
 
@@ -257,7 +257,9 @@ class Parser:
       {% endif %}
 
       {% if grammar.is_empty(nonterminal) %}
-    if current != None and (current.getId() in [{{', '.join([str(a.id) for a in grammar.follow[nonterminal]])}}]):
+    if current != None and \
+       (current.getId() in [{{', '.join([str(a.id) for a in grammar.follow[nonterminal]])}}]) and \
+       (current.getId() not in [{{', '.join([str(a.id) for a in grammar.first[nonterminal]])}}]):
       return tree
       {% endif %}
 

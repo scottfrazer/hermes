@@ -373,7 +373,8 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
   current = list->current;
 
   {% py seen = list() %}
-  {% for rule in exprGrammar.getExpandedExpressionRules() %}
+
+  {% for rule in grammar.grammar_expanded_expr_rules[exprGrammar] %}
     {% py led = rule.ledProduction.morphemes %}
     {% if len(led) and led[0] not in seen %}
   {{'if' if len(seen)==0 else 'else if'}} ( current == {{led[0].id}} ) /* {{led[0]}} */
@@ -454,7 +455,8 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
     current = tokens->current;
     rule = {{prefix}}table[{{nonterminal.id - len(grammar.standard_terminals)}}][current];
     {% if grammar.is_empty(nonterminal) %}
-    if ( in_array({{prefix}}follow[{{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current))
+    if ( in_array({{prefix}}follow[{{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current) &&
+         !in_array({{prefix}}first[{{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current))
     {
       return tree;
     }

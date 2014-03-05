@@ -1,73 +1,92 @@
 {
-    "$e": [
-        ":lparen_cast", 
+    "$_gen4": [
         ":e", 
-        ":identifier", 
-        ":lparen", 
-        ":subtract", 
-        ":lbrace", 
-        ":number", 
-        ":lsquare"
-    ], 
-    "$type_name": [
-        ":int", 
-        ":char"
-    ], 
-    "$start": [
         ":lparen_cast", 
-        ":e", 
-        ":subtract", 
-        ":a", 
-        ":b", 
         ":identifier", 
-        ":lparen", 
         ":_empty", 
-        ":lbrace", 
+        ":lsquare", 
         ":number", 
-        ":lsquare"
+        ":lparen", 
+        ":lbrace", 
+        ":subtract"
     ], 
-    "$_gen5": [], 
-    "$_gen4": [], 
-    "$_gen3": [], 
-    "$_gen2": [], 
-    "$_gen1": [
+    "$_gen5": [
+        ":comma", 
+        ":_empty"
+    ], 
+    "$_gen2": [
+        ":item", 
+        ":_empty"
+    ], 
+    "$_gen3": [
         ":comma", 
         ":_empty"
     ], 
     "$_gen0": [
-        ":lparen_cast", 
         ":e", 
-        ":subtract", 
         ":a", 
         ":b", 
-        ":identifier", 
-        ":lparen", 
-        ":_empty", 
+        ":lparen_cast", 
         ":lbrace", 
+        ":subtract", 
+        ":lsquare", 
         ":number", 
-        ":lsquare"
+        ":lparen", 
+        ":identifier", 
+        ":_empty"
     ], 
-    "$item": [
-        ":a", 
-        ":b"
+    "$_gen1": [
+        ":comma", 
+        ":_empty"
     ], 
-    "$initializer_list_item": [
-        ":item"
+    "$e": [
+        ":e", 
+        ":lparen_cast", 
+        ":lbrace", 
+        ":lsquare", 
+        ":number", 
+        ":lparen", 
+        ":identifier", 
+        ":subtract"
+    ], 
+    "$type_name": [
+        ":int", 
+        ":char"
     ], 
     "$comma_opt": [
         ":comma", 
         ":_empty"
     ], 
     "$sub": [
-        ":lparen_cast", 
         ":e", 
         ":a", 
         ":b", 
-        ":identifier", 
-        ":lparen", 
-        ":subtract", 
+        ":lparen_cast", 
         ":lbrace", 
+        ":lsquare", 
         ":number", 
-        ":lsquare"
+        ":lparen", 
+        ":identifier", 
+        ":subtract"
+    ], 
+    "$start": [
+        ":e", 
+        ":a", 
+        ":b", 
+        ":lparen_cast", 
+        ":lbrace", 
+        ":subtract", 
+        ":lsquare", 
+        ":number", 
+        ":lparen", 
+        ":identifier", 
+        ":_empty"
+    ], 
+    "$initializer_list_item": [
+        ":item"
+    ], 
+    "$item": [
+        ":a", 
+        ":b"
     ]
 }
