@@ -438,66 +438,41 @@
                                                             )
                                                           )
                                                         ),
-                                                        (_gen20:
-                                                          (ast_transform:
-                                                            <arrow (line 18 col 53) `->`>,
-                                                            (ast_transform_sub:
-                                                              <identifier (line 18 col 56) `TypeInitializion`>,
-                                                              <lparen (line 18 col 72) `(`>,
-                                                              (_gen23:
-                                                                (ast_parameter:
-                                                                  <identifier (line 18 col 74) `type`>,
-                                                                  <equals (line 18 col 78) `=`>,
-                                                                  <nonterminal_reference (line 18 col 79) `1`>
-                                                                ),
-                                                                (_gen24:
-                                                                  <comma (line 18 col 81) `,`>,
-                                                                  (ast_parameter:
-                                                                    <identifier (line 18 col 83) `initializer`>,
-                                                                    <equals (line 18 col 94) `=`>,
-                                                                    <nonterminal_reference (line 18 col 95) `4`>
-                                                                  ),
-                                                                  (_gen24: )
-                                                                )
-                                                              ),
-                                                              <rparen (line 18 col 98) `)`>
-                                                            )
-                                                          )
-                                                        ),
+                                                        (_gen20: ),
                                                         (_gen15:
                                                           (led:
-                                                            <expression_divider (line 18 col 100) `<=>`>,
+                                                            <expression_divider (line 18 col 53) `<=>`>,
                                                             (_gen22:
                                                               (morpheme:
-                                                                <terminal (line 18 col 104) `lbrace`>
+                                                                <terminal (line 18 col 57) `lbrace`>
                                                               ),
                                                               (_gen22:
                                                                 (morpheme:
                                                                   (macro:
-                                                                    <identifier (line 18 col 112) `list`>,
-                                                                    <lparen (line 18 col 116) `(`>,
+                                                                    <identifier (line 18 col 65) `list`>,
+                                                                    <lparen (line 18 col 69) `(`>,
                                                                     (_gen25:
                                                                       (macro_parameter:
-                                                                        <nonterminal (line 18 col 117) `initializer_list_item`>
+                                                                        <nonterminal (line 18 col 70) `initializer_list_item`>
                                                                       ),
                                                                       (_gen26:
-                                                                        <comma (line 18 col 139) `,`>,
+                                                                        <comma (line 18 col 92) `,`>,
                                                                         (macro_parameter:
-                                                                          <terminal (line 18 col 141) `comma`>
+                                                                          <terminal (line 18 col 94) `comma`>
                                                                         ),
                                                                         (_gen26: )
                                                                       )
                                                                     ),
-                                                                    <rparen (line 18 col 147) `)`>
+                                                                    <rparen (line 18 col 100) `)`>
                                                                   )
                                                                 ),
                                                                 (_gen22:
                                                                   (morpheme:
-                                                                    <nonterminal (line 18 col 149) `comma_opt`>
+                                                                    <nonterminal (line 18 col 102) `comma_opt`>
                                                                   ),
                                                                   (_gen22:
                                                                     (morpheme:
-                                                                      <terminal (line 18 col 160) `rbrace`>
+                                                                      <terminal (line 18 col 113) `rbrace`>
                                                                     ),
                                                                     (_gen22: )
                                                                   )
@@ -508,27 +483,27 @@
                                                         ),
                                                         (_gen20:
                                                           (ast_transform:
-                                                            <arrow (line 18 col 168) `->`>,
+                                                            <arrow (line 18 col 121) `->`>,
                                                             (ast_transform_sub:
-                                                              <identifier (line 18 col 171) `TypeInitializion`>,
-                                                              <lparen (line 18 col 187) `(`>,
+                                                              <identifier (line 18 col 124) `TypeInitializion`>,
+                                                              <lparen (line 18 col 140) `(`>,
                                                               (_gen23:
                                                                 (ast_parameter:
-                                                                  <identifier (line 18 col 189) `type`>,
-                                                                  <equals (line 18 col 193) `=`>,
-                                                                  <nonterminal_reference (line 18 col 194) `1`>
+                                                                  <identifier (line 18 col 142) `type`>,
+                                                                  <equals (line 18 col 146) `=`>,
+                                                                  <nonterminal_reference (line 18 col 147) `1`>
                                                                 ),
                                                                 (_gen24:
-                                                                  <comma (line 18 col 196) `,`>,
+                                                                  <comma (line 18 col 149) `,`>,
                                                                   (ast_parameter:
-                                                                    <identifier (line 18 col 198) `initializer`>,
-                                                                    <equals (line 18 col 209) `=`>,
-                                                                    <nonterminal_reference (line 18 col 210) `4`>
+                                                                    <identifier (line 18 col 151) `initializer`>,
+                                                                    <equals (line 18 col 162) `=`>,
+                                                                    <nonterminal_reference (line 18 col 163) `4`>
                                                                   ),
                                                                   (_gen24: )
                                                                 )
                                                               ),
-                                                              <rparen (line 18 col 213) `)`>
+                                                              <rparen (line 18 col 166) `)`>
                                                             )
                                                           )
                                                         )

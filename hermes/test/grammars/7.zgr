@@ -15,7 +15,7 @@ grammar {
       (-:left) $e = $e :subtract $e
       (*:left) $e = $e :multiply $e
       (-:left) $e = $e :divide $e
-      (*:left) $e = :lparen_cast $type_name :rparen -> TypeInitializion( type=$1, initializer=$4 ) <=> :lbrace list($initializer_list_item, :comma) $comma_opt :rbrace -> TypeInitializion( type=$1, initializer=$4 )
+      (*:left) $e = :lparen_cast $type_name :rparen <=> :lbrace list($initializer_list_item, :comma) $comma_opt :rbrace -> TypeInitializion( type=$1, initializer=$4 )
       (-:left) $e = :identifier <=> :lparen list($e, :comma) :rparen -> FunctionCall( name=$$, params=$2 )
       (*:unary) $e = :subtract $e
       $e = :lsquare list($e, :comma) :rsquare
