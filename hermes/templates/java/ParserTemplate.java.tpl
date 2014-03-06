@@ -155,12 +155,10 @@ public class {{prefix}}Parser implements Parser {
         return tree;
       }
 
-      {% for i, rule in enumerate(exprGrammar.getExpandedRules()) %}
+      {% for i, rule in enumerate(grammar.grammar_expanded_rules[exprGrammar]) %}
         {% py ruleFirstSet = exprGrammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
 
-        {% py isOptional = isinstance(rule, ExprRule) and len(rule.nudProduction.morphemes) and isinstance(rule.nudProduction.morphemes[0], NonTerminal) and rule.nudProduction.morphemes[0].macro and isinstance(rule.nudProduction.morphemes[0].macro, OptionalMacro) and rule.nudProduction.morphemes[0].macro.nonterminal == exprGrammar.nonterminal %}
-
-        {% if len(ruleFirstSet) and not isOptional %}
+        {% if len(ruleFirstSet) %}
       {{'if' if i == 0 else 'else if'}} ( {{' || '.join(['current.getId() == ' + str(x.id) for x in exprGrammar.ruleFirst(rule)])}} ) {
 
           {% py ast = rule.nudAst if rule.nudAst else rule.ast %}

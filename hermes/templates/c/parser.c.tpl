@@ -103,13 +103,13 @@ static AST_CREATE_OBJECT_INIT {{prefix}}ast_objects[] = {
 
 static int {{prefix}}ast_index[{{len(grammar.expandedRules)}}] = {
   {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
-  {{rule.ast.idx if isinstance(rule.ast, AstTranslation) else 0}},
+  {{rule.ast.idx if isinstance(rule.ast, AstTranslation) else 0}}, /* ({{rule.id}}) {{rule}} */
   {% endfor %}
 };
 
 static int {{prefix}}nud_ast_index[{{len(grammar.expandedRules)}}] = {
   {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
-  {{rule.nudAst.idx if isinstance(rule, ExprRule) and isinstance(rule.nudAst, AstTranslation) else 0}},
+  {{rule.nudAst.idx if isinstance(rule, ExprRule) and isinstance(rule.nudAst, AstTranslation) else 0}}, /* ({{rule.id}}) {{rule}} */
   {% endfor %}
 };
 
@@ -309,12 +309,10 @@ nud_{{name}}(PARSER_CONTEXT_T * ctx)
     return tree;
   }
 
-  {% for i, rule in enumerate(exprGrammar.getExpandedRules()) %}
+  {% for i, rule in enumerate(grammar.grammar_expanded_rules[exprGrammar]) %}
     {% py ruleFirstSet = exprGrammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
 
-    {% py isOptional = isinstance(rule, ExprRule) and len(rule.nudProduction.morphemes) and isinstance(rule.nudProduction.morphemes[0], NonTerminal) and rule.nudProduction.morphemes[0].macro and isinstance(rule.nudProduction.morphemes[0].macro, OptionalMacro) and rule.nudProduction.morphemes[0].macro.nonterminal == exprGrammar.nonterminal %}
-
-    {% if len(ruleFirstSet) and not isOptional %}
+    {% if len(ruleFirstSet) %}
   if ( {{' || '.join(['current == %d' % (x.id) for x in ruleFirstSet])}} )
   {
     // {{rule}}

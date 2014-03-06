@@ -190,7 +190,7 @@ class ExprRule:
           nt=self.nonterminal, nud=self.nudProduction.str(theme), nud_ast=ast_to_str(self.nudAst), led=led, ast=ast_to_str(self.ast)
       )
     else:
-      string = '{nt} = {nud}{ast}'.format(nt=self.nonterminal, nud=self.nudProduction.str(theme), ast=ast_to_str(self.ast))
+      string = '{nt} = {nud}{nud_ast}'.format(nt=self.nonterminal, nud=self.nudProduction.str(theme), nud_ast=ast_to_str(self.nudAst))
 
     return theme.expressionRule(string) if theme else string
 

@@ -444,7 +444,7 @@ _ast_to_string_bytes( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_
 
     if ( ast_list == NULL || ast_list->tree == NULL )
     {
-      return 2; /* "[]" */
+      return indent + 2; /* "[]" */
     }
 
     /* <initial_indent, '[', '\n', indent> */
@@ -529,7 +529,9 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_T * ct
 
     if ( ast_list == NULL )
     {
-      strcpy(str, "[]");
+      indent_str = _get_indent_str(indent);
+      sprintf(str, "%s[]", indent_str);
+      free(indent_str);
       return str;
     }
     
@@ -600,7 +602,7 @@ parsetree_node_to_ast( PARSE_TREE_NODE_T * node )
   if ( node->type == PARSE_TREE_NODE_TYPE_PARSETREE )
   {
     tree = (PARSE_TREE_T *) node->object;
-	if ( tree == NULL ) return NULL;
+    if ( tree == NULL ) return NULL;
     if ( tree->list && strlen(tree->list) )
     {
       ast = __parsetree_node_to_ast_list(node);
