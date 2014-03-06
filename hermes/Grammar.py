@@ -314,6 +314,8 @@ class LL1FirstFollowCalculator(FirstFollowCalculator):
           for morpheme in rule.production.morphemes:
             if isinstance(morpheme, LL1ListMacro):
               sub = self.first[morpheme.start_nt]
+            elif isinstance(morpheme, Terminal):
+              sub = set([morpheme])
             else:
               sub = self.first[morpheme]
             if not self.first[rule.nonterminal].issuperset(sub.difference({grammar._empty})):

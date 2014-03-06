@@ -22,11 +22,10 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
   def __init__(self, parent):
     self.__dict__.update(locals())
 
-
     self.infixBp = {
       {% for rule in exprGrammar.rules %}
         {% if rule.operator and rule.operator.associativity in ['left', 'right'] %}
-      {{rule.operator.operator.id}}: {{rule.operator.binding_power}},
+      {{rule.operator.operator.id}}: {{rule.operator.binding_power}}, # {{rule}}
         {% endif %}
       {% endfor %}
     }
@@ -296,7 +295,7 @@ class Parser:
           {% if isinstance(morpheme, Terminal) %}
       t = self.expect({{morpheme.id}}) # {{morpheme.string}}
       tree.add(t)
-            {% if isinstance(nonterminal.macro, SeparatedListMacro) and index == 0 %}
+            {% if isinstance(nonterminal.macro, SeparatedListMacro) and nonterminal.macro.separator == morpheme %}
       tree.listSeparator = t
             {% endif %}
           {% endif %}

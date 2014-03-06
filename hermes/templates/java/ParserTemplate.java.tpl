@@ -398,7 +398,7 @@ public class {{prefix}}Parser implements Parser {
           {% if isinstance(morpheme, Terminal) %}
       next = this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}, "{{nonterminal.string.lower()}}", this.rules.get({{rule.id}}));
       tree.add(next);
-            {% if isinstance(nonterminal.macro, SeparatedListMacro) and index == 0 %}
+            {% if isinstance(nonterminal.macro, SeparatedListMacro) and nonterminal.macro.separator == morpheme %}
       tree.setListSeparator(next);
             {% endif %}
           {% endif %}
