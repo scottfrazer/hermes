@@ -1,0 +1,23 @@
+grammar {
+  parser<ll1> {
+    $start = list($sub, :comma)
+    $sub = $item | $e
+    $item = :a | :b
+    $type_name = :int | :char
+    $e = parser<expression> {
+      (*:left) $e = $e :add $e -> Add(lhs=$0, rhs=$2)
+      (-:left) $e = $e :subtract $e -> Subtract(lhs=$0, rhs=$2)
+      (*:left) $e = $e :multiply $e -> Multiply(lhs=$0, rhs=$2)
+      (-:left) $e = $e :divide $e -> Divide(lhs=$0, rhs=$2)
+      (*:left) $e = :lparen_cast $type_name :rparen <=> :lbrace list(:item, :comma) optional(:comma) :rbrace -> TypeInitializion( type=$1, initializer=$4 )
+      (-:left) $e = :identifier <=> :lparen list($e, :comma) :rparen -> FunctionCall( name=$$, params=$2 )
+      (*:left) $e = optional($e) <=> :lsquare list(:item, :comma) :rsquare -> ExprPlusList( expr=$$, params=$2 )
+      (*:unary) $e = :subtract $e -> UMinus(arg=$1)
+      $e = :lsquare list($e, :comma) :rsquare -> $1
+      $e = :lbrace list($e, :comma) :rbrace -> $1
+      $e = :lparen $e :rparen -> $1
+      $e = :identifier
+      $e = :number
+    }
+  }
+}
