@@ -19,13 +19,19 @@
                       (_gen22:
                         (morpheme:
                           (macro:
-                            <identifier (line 3 col 14) `optional`>,
-                            <lparen (line 3 col 22) `(`>,
+                            <identifier (line 3 col 14) `mlist`>,
+                            <lparen (line 3 col 19) `(`>,
                             (_gen25:
                               (macro_parameter:
-                                <terminal (line 3 col 23) `a`>
+                                <terminal (line 3 col 20) `a`>
                               ),
-                              (_gen26: )
+                              (_gen26:
+                                <comma (line 3 col 22) `,`>,
+                                (macro_parameter:
+                                  <integer (line 3 col 24) `4`>
+                                ),
+                                (_gen26: )
+                              )
                             ),
                             <rparen (line 3 col 25) `)`>
                           )

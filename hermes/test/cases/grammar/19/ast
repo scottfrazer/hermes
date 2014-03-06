@@ -8,9 +8,10 @@
             (Production:
               morphemes=[
                 (Macro:
-                  name=<identifier (line 3 col 14) `optional`>,
+                  name=<identifier (line 3 col 14) `mlist`>,
                   parameters=[
-                    <terminal (line 3 col 23) `a`>
+                    <terminal (line 3 col 20) `a`>,
+                    <integer (line 3 col 24) `4`>
                   ]
                 )
               ],
