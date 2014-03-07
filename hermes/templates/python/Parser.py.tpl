@@ -75,10 +75,9 @@ class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
       return tree
 
     {% for i, rule in enumerate(grammar.grammar_expanded_rules[exprGrammar]) %}
-      {% py ruleFirstSet = exprGrammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
-
-      {% if len(ruleFirstSet) %}
-    {{'if' if i == 0 else 'elif'}} current.getId() in [{{', '.join([str(x.id) for x in exprGrammar.ruleFirst(rule)])}}]:
+      {% py ruleFirstSet = grammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
+      {% if len(ruleFirstSet) and not ruleFirstSet.issuperset(grammar.first[exprGrammar.nonterminal])%}
+    {{'if' if i == 0 else 'elif'}} current.getId() in [{{', '.join(map(str, sorted([x.id for x in ruleFirstSet])))}}]:
       # {{rule}}
         {% if isinstance(rule.nudAst, AstSpecification) %}
       astParameters = OrderedDict([

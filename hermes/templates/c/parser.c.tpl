@@ -310,9 +310,9 @@ nud_{{name}}(PARSER_CONTEXT_T * ctx)
   }
 
   {% for i, rule in enumerate(grammar.grammar_expanded_rules[exprGrammar]) %}
-    {% py ruleFirstSet = exprGrammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
+    {% py ruleFirstSet = grammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
 
-    {% if len(ruleFirstSet) %}
+    {% if len(ruleFirstSet) and not ruleFirstSet.issuperset(grammar.first[exprGrammar.nonterminal])%}
   if ( {{' || '.join(['current == %d' % (x.id) for x in ruleFirstSet])}} )
   {
     // {{rule}}

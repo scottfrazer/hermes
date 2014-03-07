@@ -790,7 +790,6 @@ class CompositeGrammar(Grammar):
 
     for nonterminal in self.nonterminals:
       if not len(nonterminal_rules[str(nonterminal)]) and not nonterminal.generated and nonterminal is not self.start:
-        print('qwerqwerqwer')
         self.warnings.append(UnusedNonterminalWarning(nonterminal))
 
       nRules = self.getExpandedRules( nonterminal )
@@ -811,6 +810,12 @@ class CompositeGrammar(Grammar):
         grammar_rules[grammar] = list(filter(lambda x: isinstance(x, ExprRule), rules))
       return grammar_rules
     return self.__dict__[name]
+
+  def ruleFirst(self, rule):
+    if isinstance(rule, ExprRule):
+      if len(rule.nudProduction) and rule.nudProduction.morphemes[0] != rule.nonterminal:
+        return self._pfirst(rule.nudProduction)
+    return self._pfirst(rule.production)
 
   def getExpressionTerminal(self, exprGrammar):
     return self.expressionTerminals[exprGrammar]

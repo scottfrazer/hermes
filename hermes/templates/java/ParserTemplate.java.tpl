@@ -156,13 +156,13 @@ public class {{prefix}}Parser implements Parser {
       }
 
       {% for i, rule in enumerate(grammar.grammar_expanded_rules[exprGrammar]) %}
-        {% py ruleFirstSet = exprGrammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
+        {% py ruleFirstSet = grammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
 
-        {% if len(ruleFirstSet) %}
-      {{'if' if i == 0 else 'else if'}} ( {{' || '.join(['current.getId() == ' + str(x.id) for x in exprGrammar.ruleFirst(rule)])}} ) {
+        {% if len(ruleFirstSet) and not ruleFirstSet.issuperset(grammar.first[exprGrammar.nonterminal])%}
+      {{'if' if i == 0 else 'else if'}} ( {{' || '.join(['current.getId() == ' + str(x.id) for x in ruleFirstSet])}} ) {
 
           {% py ast = rule.nudAst if rule.nudAst else rule.ast %}
-        // ({{rule.id}}) {{'nud' if rule.nudAst else 'normal'}} {{rule}}
+        /* ({{rule.id}}) {{rule}} */
           {% if isinstance(ast, AstSpecification) %}
         LinkedHashMap<String, Integer> parameters = new LinkedHashMap<String, Integer>();
             {% for key, value in ast.parameters.items() %}
