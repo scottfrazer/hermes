@@ -452,7 +452,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
   {
     current = tokens->current;
     rule = {{prefix}}table[{{nonterminal.id - len(grammar.standard_terminals)}}][current];
-    {% if grammar.is_empty(nonterminal) %}
+    {% if grammar.must_consume_tokens(nonterminal) %}
     if ( in_array({{prefix}}follow[{{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current) &&
          !in_array({{prefix}}first[{{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current))
     {
@@ -463,14 +463,14 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 
   if ( tokens == NULL || current == {{prefix.upper()}}TERMINAL_END_OF_STREAM )
   {
-    {% if grammar.is_empty(nonterminal) or grammar._empty in grammar.first[nonterminal] %}
+    {% if grammar.must_consume_tokens(nonterminal) or grammar._empty in grammar.first[nonterminal] %}
     return tree;
     {% else %}
     syntax_error(ctx, strdup("Error: unexpected end of file"));
     {% endif %}
   }
 
-    {% for index0, rule in enumerate(filter(lambda r: not r.is_empty, grammar.getExpandedLL1Rules(nonterminal))) %}
+    {% for index0, rule in enumerate(filter(lambda r: not r.must_consume_tokens, grammar.getExpandedLL1Rules(nonterminal))) %}
       {% if index0 == 0 %}
   if ( rule == {{rule.id}} )
       {% else %}
@@ -523,7 +523,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
       {% endif %}
     {% endfor %}
 
-    {% if not grammar.is_empty(nonterminal) %}
+    {% if not grammar.must_consume_tokens(nonterminal) %}
   fmt = "Error: Unexpected symbol (%s) when parsing %s";
   message = calloc( strlen(fmt) + strlen({{prefix}}morpheme_to_str(tokens->tokens[tokens->current_index].terminal->id)) + strlen("parse_{{nonterminal.string.lower()}}") + 1, sizeof(char) );
   sprintf(message, fmt, {{prefix}}morpheme_to_str(tokens->tokens[tokens->current_index].terminal->id), "parse_{{nonterminal.string.lower()}}");

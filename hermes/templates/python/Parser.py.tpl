@@ -252,7 +252,7 @@ class Parser:
     tree.list = False
       {% endif %}
 
-      {% if grammar.is_empty(nonterminal) %}
+      {% if grammar.must_consume_tokens(nonterminal) %}
     if current != None and \
        (current.getId() in [{{', '.join([str(a.id) for a in grammar.follow[nonterminal]])}}]) and \
        (current.getId() not in [{{', '.join([str(a.id) for a in grammar.first[nonterminal]])}}]):
@@ -260,7 +260,7 @@ class Parser:
       {% endif %}
 
     if current == None:
-      {% if grammar.is_empty(nonterminal) or grammar._empty in grammar.first[nonterminal] %}
+      {% if grammar.must_consume_tokens(nonterminal) or grammar._empty in grammar.first[nonterminal] %}
       return tree
       {% else %}
       raise SyntaxError('Error: unexpected end of file')
@@ -340,7 +340,7 @@ class Parser:
         {% endif %}
       {% endfor %}
 
-      {% if not grammar.is_empty(nonterminal) %}
+      {% if not grammar.must_consume_tokens(nonterminal) %}
     raise SyntaxError('Error: Unexpected symbol (%s) on line %d, column %d when parsing %s' % (current, current.line, current.col, whoami()))
       {% else %}
     return tree

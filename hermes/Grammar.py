@@ -47,7 +47,7 @@ class Rule:
     self.logger.debug('[rule expansion] %s becomes %s' % (self, ', '.join([str(x) for x in rules])))
     return rules
   def __getattr__(self, name):
-    if name == 'is_empty':
+    if name == 'must_consume_tokens':
       return len(self.production.morphemes) == 1 and self.production.morphemes[0] == EmptyString(-1)
     if name == 'morphemes':
       return self.production.morphemes
@@ -79,23 +79,6 @@ class Rule:
     return self.nonterminal
 
 class MacroGeneratedRule(Rule):
-  pass
-
-class RuleExpander():
-  def __init__( self, rules ):
-    self.rules = rules
-  def expand( self ):
-    return self._flatten([e.expand() for e in self.rules])
-  def _flatten( self, l ):
-    f = []
-    for i in l:
-      if isinstance(i, list):
-        f.extend(i)
-      else:
-        f.append(i)
-    return f
-
-class Ast:
   pass
 
 class AstSpecification:
@@ -494,9 +477,9 @@ class Grammar:
             if str(morpheme) in morphemes:
               morpheme.id = morphemes[str(morpheme)]
 
-  def is_empty(self, nonterminal):
+  def must_consume_tokens(self, nonterminal):
     for rule in self.getExpandedLL1Rules(nonterminal):
-      if rule.is_empty:
+      if rule.must_consume_tokens:
         return True
     return False
 
@@ -592,6 +575,12 @@ class ExpressionGrammar(Grammar):
     led = {}
     self.conflicts = []
 
+    # 1) Generate maps such that:
+    #    nud = {
+    #      morpheme: list(morphemes, rule)
+    #    }
+    #    Such that morpheme is nud_production[0], morphemes=nud_production
+
     morphemes = set(self.terminals).union(set(self.nonterminals))
     for m in morphemes:
       nud[m] = []
@@ -615,6 +604,17 @@ class ExpressionGrammar(Grammar):
         except IndexError:
           return False
       return True
+    
+    def _unique(l, f):
+      r = []
+      for x in l:
+        d = False
+        for y in r:
+          if f(x, y):
+            d = True
+        if not d:
+          r.append(x)
+      return r
 
     # Filter out unused items
     nud = {k: v for k, v in nud.items() if len(v)}
@@ -625,30 +625,18 @@ class ExpressionGrammar(Grammar):
 
     # dedupe the list of rules for each terminal, should only be 1 rule per terminal or else it's a conflict
     for terminal, morphemes in nud.items():
-      dedupedProductions = self._unique(morphemes, dedupe_func)
+      dedupedProductions = _unique(morphemes, dedupe_func)
       if len(dedupedProductions) == 1:
         self.nud[terminal] = dedupedProductions[0].morphemes
-        self.logger.debug('nud(%s) = %s' % (terminal, ', '.join([str(x) for x in self.nud[terminal]])))
       elif len(dedupedProductions) > 1:
         self.conflicts.append(NudConflict(terminal, [r.rule for r in dedupedProductions]))
+
     for terminal, morphemes in led.items():
-      dedupedProductions = self._unique(morphemes, dedupe_func)
+      dedupedProductions = _unique(morphemes, dedupe_func)
       if len(dedupedProductions) == 1:
         self.led[terminal] = dedupedProductions[0].morphemes
-        self.logger.debug('led(%s) = %s' % (terminal, ', '.join([str(x) for x in self.led[terminal]])))
       elif len(dedupedProductions) > 1:
         self.conflicts.append(LedConflict(terminal, [r.rule for r in dedupedProductions]))
-  
-  def _unique(self, l, f):
-    r = []
-    for x in l:
-      d = False
-      for y in r:
-        if f(x, y):
-          d = True
-      if not d:
-        r.append(x)
-    return r
 
 class LL1Grammar(Grammar):
   def __init__(self, name, macros, rules, start, firstFollowCalc=LL1FirstFollowCalculator()):
@@ -827,12 +815,6 @@ class CompositeGrammar(Grammar):
         return rule
     return None
 
-  def getLL1Grammar(self):
-    return self.grammar
-  
-  def getExpressionGrammars(self):
-    return self.exprgrammars
-
   def getSimpleTerminals(self):
     return [terminal for terminal in self.terminals if terminal not in [self._empty, self._end]]
 
@@ -842,20 +824,8 @@ class CompositeGrammar(Grammar):
       return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
     return allRules 
 
-  def getLL1Rules(self, nonterminal = None):
-    allRules = [rule for rule in self.rules if isinstance(rule, Rule)]
-    if nonterminal:
-      return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
-    return allRules 
-
   def getExpandedExpressionRules(self, nonterminal = None):
     allRules = [rule for rule in self.expandedRules if isinstance(rule, ExprRule)]
-    if nonterminal:
-      return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
-    return allRules 
-
-  def getExpressionRules(self, nonterminal = None):
-    allRules = [rule for rule in self.rules if isinstance(rule, ExprRule)]
     if nonterminal:
       return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
     return allRules 

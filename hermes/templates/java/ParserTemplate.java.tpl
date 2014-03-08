@@ -346,7 +346,7 @@ public class {{prefix}}Parser implements Parser {
     tree.setList(null);
       {% endif %}
 
-      {% if grammar.is_empty(nonterminal) %}
+      {% if grammar.must_consume_tokens(nonterminal) %}
     if ( current != null ) {
       {% if len(grammar.follow[nonterminal]) %}
       if ( ({{' || '.join(['current.getId() == ' + str(a.id) for a in grammar.follow[nonterminal]])}}) && 
@@ -358,7 +358,7 @@ public class {{prefix}}Parser implements Parser {
       {% endif %}
 
     if (current == null) {
-      {% if grammar.is_empty(nonterminal) or grammar._empty in grammar.first[nonterminal] %}
+      {% if grammar.must_consume_tokens(nonterminal) or grammar._empty in grammar.first[nonterminal] %}
       return tree;
       {% else %}
 
@@ -371,7 +371,7 @@ public class {{prefix}}Parser implements Parser {
       {% endif %}
     }
     
-      {% for index, rule in enumerate(filter(lambda r: not r.is_empty, grammar.getExpandedLL1Rules(nonterminal))) %}
+      {% for index, rule in enumerate(filter(lambda r: not r.must_consume_tokens, grammar.getExpandedLL1Rules(nonterminal))) %}
 
         {% if index == 0 %}
     if (rule == {{rule.id}}) {
@@ -443,7 +443,7 @@ public class {{prefix}}Parser implements Parser {
         {% endif %}
       {% endfor %}
 
-      {% if not grammar.is_empty(nonterminal) %}
+      {% if not grammar.must_consume_tokens(nonterminal) %}
 
     List<TerminalIdentifier> terminals = Arrays.asList(this.first.get("{{nonterminal.string.lower()}}"));
     throw new SyntaxError(this.syntaxErrorFormatter.unexpected_symbol(
