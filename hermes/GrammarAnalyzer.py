@@ -19,7 +19,7 @@ class GrammarAnalyzer:
     file.write("\n".join([ rule.str(theme) for rule in sorted(self.grammar.getExpandedLL1Rules(), key=lambda x: x.str())]) + "\n\n")
     
     for exprGrammar in self.grammar.exprgrammars:
-      rules = self.grammar.getExpandedExpressionRules(exprGrammar.nonterminal)
+      rules = self.grammar.grammar_expanded_expr_rules[exprGrammar]
       file.write(theme.title('Expanded Expression Grammar (%s)' % (exprGrammar.nonterminal)))
       file.write("\n".join([ rule.str(theme) for rule in sorted(rules, key=lambda x: x.str())]) + "\n\n")
 

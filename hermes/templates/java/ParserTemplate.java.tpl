@@ -3,7 +3,7 @@ package {{java_package}};
 {% endif %}
 
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
-{% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
+{% from hermes.Grammar import PrefixOperator, InfixOperator %}
 {% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 
@@ -24,9 +24,9 @@ public class {{prefix}}Parser implements Parser {
 
   /* table[nonterminal][terminal] = rule */
   private static final int[][] table = {
-    {% py parseTable = grammar.getParseTable() %}
+    {% py parse_table = grammar.parse_table %}
     {% for i in range(len(grammar.nonterminals)) %}
-    { {{', '.join([str(rule.id) if rule else str(-1) for rule in parseTable[i]])}} },
+    { {{', '.join([str(rule.id) if rule else str(-1) for rule in parse_table[i]])}} },
     {% endfor %}
   };
 

@@ -35,7 +35,7 @@ class Rule:
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
   def __copy__( self ):
     return Rule(self.nonterminal, Production(copy(self.production.morphemes)), self.id, self.root, self.ast)
-  def expand( self ):
+  def expand(self):
     morphemes = []
     rules = []
     for m in self.production.morphemes:
@@ -51,6 +51,7 @@ class Rule:
     if name == 'must_consume_tokens':
       return len(self.production.morphemes) == 1 and self.production.morphemes[0] == EmptyString(-1)
     if name == 'morphemes':
+      # TODO: This is only around because Grammar.__init__() needs it for making ExprRule and Rule both able to do this
       return self.production.morphemes
     return self.__dict__[name]
 
@@ -72,12 +73,6 @@ class Rule:
 
   def __hash__(self):
     return hash(str(self))
-
-  def getProduction(self):
-    return self.production
-
-  def getNonTerminal(self):
-    return self.nonterminal
 
 class MacroGeneratedRule(Rule):
   pass
@@ -108,16 +103,14 @@ class ExprRule:
     if (not nudProduction or not len(nudProduction)) and \
        (not ledProduction or not len(ledProduction)):
       raise Exception('Rule must contain a NUD or a LED portion.')
-    if self.getRoot() and not isinstance(self.getRoot(), Terminal):
+    # TODO: this should be a conflict
+    root = self.ledProduction.morphemes[0] if self.ledProduction and len(self.ledProduction) else None
+    if root and not isinstance(root, Terminal):
       raise Exception('Root of expression rule must be a terminal.')
   def __copy__( self ):
     np = Production(copy(self.nudProduction.morphemes))
     lp = Production(copy(self.ledProduction.morphemes))
     return ExprRule(self.nonterminal, np, lp, self.nudAst, self.ast, self.operator)
-  def getRoot(self):
-    if self.ledProduction and len(self.ledProduction):
-      return self.ledProduction.morphemes[0]
-    return None
   def __getattr__(self, name):
     if name == 'morphemes':
       all = []
@@ -145,10 +138,6 @@ class ExprRule:
         ledMorphemes.append(morpheme)
     rules.append(ExprRule(self.nonterminal, Production(nudMorphemes), Production(ledMorphemes), self.nudAst, self.ast, self.operator))
     return rules
-  def getProduction(self):
-    return self.nudProduction
-  def getNonTerminal(self):
-    return self.nonterminal
   def str(self, theme = None):
     return self.__str__(theme)
   def __str__(self, theme = None):
@@ -190,14 +179,6 @@ class PrefixOperator(Operator):
 class MixfixOperator(Operator):
   def str(self, theme=None):
     return "<Mixfix {}>".format(super(MixfixOperator, self).str(theme))
-
-class OperatorPrecedence:
-  def __init__(self, terminal, precedence, associativity):
-    self.__dict__.update(locals())
-  def str(self, theme = None):
-    return self.__str__(theme)
-  def __str__(self, theme = None):
-    return 'OperatorPrecedence(%s, %s, %s)' % (str(self.terminal), self.precedence, self.associativity)
 
 class FirstFollowCalculator:
   def __init__(self):
@@ -495,13 +476,6 @@ class Grammar:
       for terminal in self.terminals:
         self.tLookup[terminal.string.lower()] = terminal
     return self.tLookup[string]
-  
-  def getNonTerminal( self, string ):
-    if not self.ntLookup:
-      self.ntLookup = dict()
-      for nonterminal in self.nonterminals:
-        self.ntLookup[nonterminal.string.lower()] = nonterminal
-    return self.ntLookup[string]
  
   def ruleFirst(self, rule):
     return self._pfirst(rule.production)
@@ -544,12 +518,6 @@ class ExpressionGrammar(Grammar):
     self.computedPrecedence = precedence # Must be dictionary
     (self.first, self.follow) = firstFollowCalc.compute(self)
     self._compute_conflicts()
-
-  def getExpandedExpressionRules(self, nonterminal = None):
-    allRules = [rule for rule in self.expandedRules if isinstance(rule, ExprRule)]
-    if nonterminal:
-      return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
-    return allRules 
  
   def ruleFirst(self, rule):
     if len(rule.nudProduction) and rule.nudProduction.morphemes[0] != rule.nonterminal:
@@ -730,16 +698,37 @@ class CompositeGrammar(Grammar):
   def __getattr__(self, name):
     if name == 'll1_nonterminals':
       return [x for x in self.nonterminals if x not in [x.nonterminal for x in self.exprgrammars]]
-    if name == 'standard_terminals':
-      return self.getSimpleTerminals() 
-    if name == 'grammar_expanded_rules':
+    elif name == 'standard_terminals':
+      return [terminal for terminal in self.terminals if terminal not in [self._empty, self._end]]
+    elif name == 'grammar_expanded_rules':
       return self.__dict__['grammar_expanded_rules']
-    if name == 'grammar_expanded_expr_rules':
+    elif name == 'grammar_expanded_expr_rules':
       grammar_rules = {}
       for grammar, rules in self.grammar_expanded_rules.items():
         grammar_rules[grammar] = list(filter(lambda x: isinstance(x, ExprRule), rules))
       return grammar_rules
-    return self.__dict__[name]
+    elif name == 'parse_table':
+      if 'parse_table' in self.__dict__:
+        return self.__dict__['parse_table']
+      nonterminals  = {n.id: n for n in self.nonterminals}
+      terminals   = {t.id: t for t in self.standard_terminals}
+      sort = lambda x: [x[key] for key in sorted(x.keys())]
+      table = []
+      for nonterminal in sort(nonterminals):
+        rules = []
+        for terminal in sort(terminals):
+          next = None
+          for rule in self.getExpandedLL1Rules(nonterminal):
+            Fip = self._pfirst(rule.production)
+            if terminal in Fip or (self._empty in Fip and terminal in self.follow[nonterminal]):
+              next = rule
+              break
+          rules.append(next)
+        table.append(rules)
+      self.__dict__['parse_table'] = table
+      return table
+    else:
+      return self.__dict__[name]
 
   def ruleFirst(self, rule):
     if isinstance(rule, ExprRule):
@@ -757,23 +746,8 @@ class CompositeGrammar(Grammar):
         return rule
     return None
 
-  def getSimpleTerminals(self):
-    return [terminal for terminal in self.terminals if terminal not in [self._empty, self._end]]
-
   def getExpandedLL1Rules(self, nonterminal = None):
     allRules = [rule for rule in self.expandedRules if isinstance(rule, Rule)]
-    if nonterminal:
-      return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
-    return allRules 
-
-  def getExpandedExpressionRules(self, nonterminal = None):
-    allRules = [rule for rule in self.expandedRules if isinstance(rule, ExprRule)]
-    if nonterminal:
-      return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
-    return allRules 
-
-  def getExpressionRules(self, nonterminal = None):
-    allRules = [rule for rule in self.rules if isinstance(rule, ExprRule)]
     if nonterminal:
       return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
     return allRules 
@@ -825,21 +799,3 @@ class CompositeGrammar(Grammar):
         rules.append(str(rule))
       string += '\n    '.join(rules)
     return string
-  
-  def getParseTable( self ):
-    nonterminals  = {n.id: n for n in self.nonterminals}
-    terminals   = {t.id: t for t in self.getSimpleTerminals()}
-    sort = lambda x: [x[key] for key in sorted(x.keys())]
-    table = []
-    for nonterminal in sort(nonterminals):
-      rules = []
-      for terminal in sort(terminals):
-        next = None
-        for rule in self.getExpandedLL1Rules(nonterminal):
-          Fip = self._pfirst(rule.getProduction())
-          if terminal in Fip or (self._empty in Fip and terminal in self.follow[nonterminal]):
-            next = rule
-            break
-        rules.append(next)
-      table.append(rules)
-    return table

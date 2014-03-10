@@ -3,7 +3,7 @@ from collections import OrderedDict
 from hermes.Morpheme import NonTerminal, Terminal, EmptyString
 from hermes.Grammar import CompositeGrammar, LL1Grammar, ExpressionGrammar, Lexer, Regex
 from hermes.Grammar import Rule, ExprRule, MacroGeneratedRule, Production, AstSpecification, AstTranslation
-from hermes.Grammar import InfixOperator, PrefixOperator, MixfixOperator, OperatorPrecedence
+from hermes.Grammar import InfixOperator, PrefixOperator, MixfixOperator
 from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro
 from hermes.Logger import Factory as LoggerFactory
 
