@@ -16,6 +16,14 @@ class Production:
     self.__dict__.update(locals())
   def __len__( self ):
     return len(self.morphemes)
+  def __eq__(self, other):
+    for index, morpheme in enumerate(self.morphemes):
+      try:
+        if other.morhemes[index] != morpheme:
+          return False
+      except:
+        return False
+    return True
   def str( self, theme=None ):
     return self.__str__(theme)
   def __str__( self, theme=None ):
@@ -27,13 +35,6 @@ class Rule:
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
   def __copy__( self ):
     return Rule(self.nonterminal, Production(copy(self.production.morphemes)), self.id, self.root, self.ast)
-  def isTokenAlias(self):
-    if len(self.production.morphemes) == 1 and isinstance(self.production.morphemes[0], Terminal):
-      return self.production.morphemes[0]
-    return False
-  def isAliasFor(self, terminal_str):
-    # terminal alias rule is a rule in the form nt := 'terminal'
-    return len(self.production.morphemes) == 1 and isinstance(self.production.morphemes[0], Terminal) and self.production.morphemes[0].string == terminal_str
   def expand( self ):
     morphemes = []
     rules = []
@@ -113,13 +114,6 @@ class ExprRule:
     np = Production(copy(self.nudProduction.morphemes))
     lp = Production(copy(self.ledProduction.morphemes))
     return ExprRule(self.nonterminal, np, lp, self.nudAst, self.ast, self.operator)
-  def isTokenAlias(self):
-    if len(self.nudProduction) == 1 and isinstance(self.nudProduction.morphemes[0], Terminal):
-      return self.nudProduction.morphemes[0]
-    return False
-  def isAliasFor(self, terminal_str):
-    # terminal alias rule is a rule in the form nt := 'terminal'
-    return len(self.nudProduction) == 1 and isinstance(self.nudProduction.morphemes[0], Terminal) and self.nudProduction.morphemes[0].string == terminal_str
   def getRoot(self):
     if self.ledProduction and len(self.ledProduction):
       return self.ledProduction.morphemes[0]
@@ -540,14 +534,6 @@ class Grammar:
       return [rule for rule in self.rules if str(rule.nonterminal) == str(nonterminal)]
     return self.rules
   
-class NudLedContainer:
-  def __init__(self, morphemes, rule):
-    self.__dict__.update(locals())
-  def __len__(self):
-    return len(self.morphemes)
-  def __str__(self):
-    pass
-
 class ExpressionGrammar(Grammar):
   def __init__(self, macros, rules, precedence, nonterminal, firstFollowCalc=ExpressionFirstFollowCalculator()):
     if not isinstance(rules, list):
@@ -575,68 +561,24 @@ class ExpressionGrammar(Grammar):
     led = {}
     self.conflicts = []
 
-    # 1) Generate maps such that:
-    #    nud = {
-    #      morpheme: list(morphemes, rule)
-    #    }
-    #    Such that morpheme is nud_production[0], morphemes=nud_production
-
-    morphemes = set(self.terminals).union(set(self.nonterminals))
-    for m in morphemes:
-      nud[m] = []
-      led[m] = []
-
     for rule in self.expandedRules:
       if isinstance(rule, ExprRule):
-        if len(rule.nudProduction):
-          morphemes = rule.nudProduction.morphemes
-          nud[morphemes[0]].append( NudLedContainer(morphemes, rule) )
-        if isinstance(rule, ExprRule) and len(rule.ledProduction):
-          morphemes = rule.ledProduction.morphemes
-          led[morphemes[0]].append( NudLedContainer(morphemes, rule) )
-
-    # if two rules parse the exact same atoms, they're the same rule
-    def dedupe_func(x, y):
-      for index in range(max(len(y), len(x))):
-        try:
-          if x.morphemes[index] != y.morphemes[index]:
-            return False
-        except IndexError:
-          return False
-      return True
-    
-    def _unique(l, f):
-      r = []
-      for x in l:
-        d = False
-        for y in r:
-          if f(x, y):
-            d = True
-        if not d:
-          r.append(x)
-      return r
-
-    # Filter out unused items
-    nud = {k: v for k, v in nud.items() if len(v)}
-    led = {k: v for k, v in led.items() if len(v)}
-
-    self.nud = {}
-    self.led = {}
-
-    # dedupe the list of rules for each terminal, should only be 1 rule per terminal or else it's a conflict
-    for terminal, morphemes in nud.items():
-      dedupedProductions = _unique(morphemes, dedupe_func)
-      if len(dedupedProductions) == 1:
-        self.nud[terminal] = dedupedProductions[0].morphemes
-      elif len(dedupedProductions) > 1:
-        self.conflicts.append(NudConflict(terminal, [r.rule for r in dedupedProductions]))
-
-    for terminal, morphemes in led.items():
-      dedupedProductions = _unique(morphemes, dedupe_func)
-      if len(dedupedProductions) == 1:
-        self.led[terminal] = dedupedProductions[0].morphemes
-      elif len(dedupedProductions) > 1:
-        self.conflicts.append(LedConflict(terminal, [r.rule for r in dedupedProductions]))
+        # For 'mixfix' rules... make sure no two nud/led functions start with the same thing.
+        if rule.operator is None and len(rule.nudProduction):
+          morpheme = rule.nudProduction.morphemes[0]
+          if morpheme not in nud:
+            nud[morpheme] = list()
+          if len(nud[morpheme]):
+            self.conflicts.append(NudConflict(morpheme, [rule] + nud[morpheme]))
+          nud[morpheme].append(rule)
+        if len(rule.ledProduction):
+          # TODO: no test for this code path
+          morpheme = rule.nudProduction.morphemes[0]
+          if morpheme not in led:
+            led[morpheme] = list()
+          if rule in led[morpheme]:
+            self.conflicts.append(NudConflict(morpheme, [rule] + led[morpheme]))
+          led[morpheme].append(rule)
 
 class LL1Grammar(Grammar):
   def __init__(self, name, macros, rules, start, firstFollowCalc=LL1FirstFollowCalculator()):
@@ -826,6 +768,12 @@ class CompositeGrammar(Grammar):
 
   def getExpandedExpressionRules(self, nonterminal = None):
     allRules = [rule for rule in self.expandedRules if isinstance(rule, ExprRule)]
+    if nonterminal:
+      return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
+    return allRules 
+
+  def getExpressionRules(self, nonterminal = None):
+    allRules = [rule for rule in self.rules if isinstance(rule, ExprRule)]
     if nonterminal:
       return [rule for rule in allRules if str(rule.nonterminal) == str(nonterminal)]
     return allRules 
