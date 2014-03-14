@@ -1,0 +1,56 @@
+(start:
+  (_gen0:
+    (sub:
+      (item:
+        <a (line 0 col 0) ``>
+      )
+    ),
+    (_gen1:
+      <comma (line 0 col 0) ``>,
+      (sub:
+        (item:
+          <b (line 0 col 0) ``>
+        )
+      ),
+      (_gen1:
+        <comma (line 0 col 0) ``>,
+        (sub:
+          (e:
+            <lparen (line 0 col 0) ``>,
+            (e:
+              <lparen (line 0 col 0) ``>,
+              (e:
+                (e:
+                  <number (line 0 col 0) ``>
+                ),
+                <multiply (line 0 col 0) ``>,
+                (e:
+                  (e:
+                    <identifier (line 0 col 0) ``>
+                  ),
+                  <lparen (line 0 col 0) ``>,
+                  (_gen2:
+                    (e:
+                      (e:
+                        <number (line 0 col 0) ``>
+                      ),
+                      <add (line 0 col 0) ``>,
+                      (e:
+                        <number (line 0 col 0) ``>
+                      )
+                    ),
+                    (_gen3: )
+                  ),
+                  <rparen (line 0 col 0) ``>
+                )
+              ),
+              <rparen (line 0 col 0) ``>
+            ),
+            <rparen (line 0 col 0) ``>
+          )
+        ),
+        (_gen1: )
+      )
+    )
+  )
+)

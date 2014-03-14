@@ -1,0 +1,7 @@
+grammar {
+  parser<ll1> {
+    $start = $sub :semi
+    $sub = :a $sub :b
+    $sub = :_empty
+  }
+}

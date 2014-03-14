@@ -1,8 +1,0 @@
-{
-  "statements": ["a", "identifier", "b", "sub", "_expr"],
-  "_expr": ["a", "b", "sub", "_expr"],
-  "start": ["a", "b", "sub", "ε", "_expr", "identifier"],
-  "_gen1": ["comma", "ε"],
-  "_gen0": ["a", "b", "sub", "ε", "_expr", "identifier"],
-  "assignstatement": ["identifier"]
-}

@@ -1,0 +1,102 @@
+(start:
+  (_gen0:
+    (statement:
+      (assignstatement:
+        <identifier (line 0 col 0) ``>,
+        <eq (line 0 col 0) ``>,
+        (assignstatementsub:
+          (assignstatement:
+            <identifier (line 0 col 0) ``>,
+            <eq (line 0 col 0) ``>,
+            (assignstatementsub:
+              (e:
+                <n (line 0 col 0) ``>
+              )
+            )
+          )
+        )
+      )
+    ),
+    (_gen1:
+      <comma (line 0 col 0) ``>,
+      (statement:
+        (forstatement:
+          <for (line 0 col 0) ``>,
+          <lparen (line 0 col 0) ``>,
+          (fordeclstatement:
+            (complexexpression:
+              (assignstatement:
+                <identifier (line 0 col 0) ``>,
+                <eq (line 0 col 0) ``>,
+                (assignstatementsub:
+                  (e:
+                    <n (line 0 col 0) ``>
+                  )
+                )
+              )
+            )
+          ),
+          <semi (line 0 col 0) ``>,
+          (forcondstatement: ),
+          <semi (line 0 col 0) ``>,
+          (foriterstatement:
+            (complexexpression:
+              (assignstatement:
+                <identifier (line 0 col 0) ``>,
+                <eq (line 0 col 0) ``>,
+                (assignstatementsub:
+                  (e:
+                    (e:
+                      <s (line 0 col 0) ``>
+                    ),
+                    <add (line 0 col 0) ``>,
+                    (e:
+                      <n (line 0 col 0) ``>
+                    )
+                  )
+                )
+              )
+            )
+          ),
+          <rparen (line 0 col 0) ``>,
+          <lbrace (line 0 col 0) ``>,
+          (forbody:
+            (statement:
+              (assignstatement:
+                <identifier (line 0 col 0) ``>,
+                <eq (line 0 col 0) ``>,
+                (assignstatementsub:
+                  (e:
+                    (e:
+                      <n (line 0 col 0) ``>
+                    ),
+                    <add (line 0 col 0) ``>,
+                    (e:
+                      (e:
+                        (e:
+                          <s (line 0 col 0) ``>
+                        ),
+                        <mul (line 0 col 0) ``>,
+                        (e:
+                          <n (line 0 col 0) ``>
+                        )
+                      ),
+                      <div (line 0 col 0) ``>,
+                      (e:
+                        <s (line 0 col 0) ``>
+                      )
+                    )
+                  )
+                )
+              )
+            ),
+            <semi (line 0 col 0) ``>,
+            (forbody: )
+          ),
+          <rbrace (line 0 col 0) ``>
+        )
+      ),
+      (_gen1: )
+    )
+  )
+)

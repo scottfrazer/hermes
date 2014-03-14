@@ -1,0 +1,135 @@
+TODO
+====
+
+1) Have error message if expression rule needs a binding power but is missing one. (Add test!)
+2) Have error message if lexer produces token that is not consumed by the grammar.
+3) Error if the 
+
+Document the interface for the public classes in Grammar.py:
+
+  Grammar
+    - rules (Rule)
+    - terminals
+    - nonterminals
+    - macros
+    - start
+    - must_consume_tokens(nonterminal) [is_empty]
+    - is_standard_terminal(terminal)
+    - is_abstract_terminal(terminal)
+    - conflicts
+  LL1Grammar(Grammar)
+    - first (dict)
+    - follow (dict)
+  ExpressionGrammar(Grammar)
+    - nud
+    - led
+    - precedence
+  CompositeGrammar
+    - ll1_grammar
+    - expression_grammars
+  LL1Rule
+    - id, morphemes
+    - nonterminal
+    - production
+  ExpressionRule
+    - id, morphemes
+    - nud
+    - led
+  NonTerminal
+    - id, name
+  Terminal
+    - id, name
+
+Document Python parser output format
+------------------------------------
+
+hermes
+  - __init__.py
+  - Common.py
+  - grammar1
+    - __init__.py
+    - Lexer.py
+    - Parser.py
+  - grammar2
+    - __init__.py
+    - Lexer.py
+    - Parser.py
+
+grammar/grammar[x]/__init__.py should define:
+
+    - def parse(string|list)
+    - def lex(string)
+
+public API for tree and ast:
+
+    - [tree|ast].walk('hpath query')
+    - [tree|ast].string()
+    - [tree|ast].name()
+    - tree.children(), tree.child(3)
+    - ast.keys(), ast[name], name in ast, (dict?)
+
+HPath syntax
+------------
+
+    A :: All 'A' nodes
+    A/B :: All 'B' nodes that are children of 'A' nodes
+    A//B :: All 'B' nodes that are descendents of 'A' nodes
+    A/B/C :: All 'C' nodes that are children of 'B' nodes that are children of 'A' nodes
+    A//B/C :: All 'C' nodes that are children of 'B' nodes that are descendents of 'A' nodes
+    /A :: All top-level 'A' nodes
+    /A[@attr] :: All 'attr' attributes of top level 'A' nodes
+    A[@attr]/B :: All 'B' nodes that are children of 'attr' attributes on 'A' nodes
+    A/*/C :: All 'C' nodes that are that are grandchildren of 'A' nodes
+    A[0] :: First 'A' element
+    /A[-1] :: Last root 'A' element
+    A|B :: Select all 'A' or 'B' elements
+    A//:T :: 'T' terminals that are descendents of 'A' nodes
+    A[@attr]/:T :: 'T' terminals that are in the 'attr' attribute of 'A' nodes
+    :T :: 'T' terminals
+    :S|:T :: 'T' or 'S' terminals
+    :* :: all terminals
+    :T[value='val'] :: 'T' terminals with a value of 'val'
+    :S[value>100] :: 'T' terminals with integer value greater than 100
+    :T[0] :: First 'T' element
+
+HPath examples
+==============
+
+(Grammar:
+  body=[
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<nonterminal (line 1 col 21) `a`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 1 col 24) `b`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 2 col 1) `c`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 2 col 4) `d`>
+              ],
+              ast=None
+            )
+          ]
+        )
+      ]
+    )
+  ],
+  code=None
+)
+
+Grammar :: Top level 'Grammar' AST
+Rule :: both 'Rule' ASTs
+Rule[@nonterminal] :: terminal elements for nonterminals 'a' and 'c'
+Parser[@rules] :: both 'Rule' ASTs
+:nonterminal :: 'a' and 'c' terminals
+:* :: 'a', 'b', 'c', and 'd' terminals

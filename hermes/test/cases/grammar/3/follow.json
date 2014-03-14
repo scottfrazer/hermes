@@ -1,0 +1,37 @@
+{
+    "$forbody": [
+        ":rbrace"
+    ], 
+    "$for": [
+        ":_eos", 
+        ":semi"
+    ], 
+    "$start": [
+        ":_eos"
+    ], 
+    "$statement": [
+        ":_eos", 
+        ":semi"
+    ], 
+    "$forsub": [
+        ":semi", 
+        ":rparen"
+    ], 
+    "$e": [
+        ":sub", 
+        ":power", 
+        ":rparen", 
+        ":_eos", 
+        ":eq", 
+        ":div", 
+        ":add", 
+        ":mul", 
+        ":semi"
+    ], 
+    "$_gen1": [
+        ":_eos"
+    ], 
+    "$_gen0": [
+        ":_eos"
+    ]
+}

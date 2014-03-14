@@ -1,0 +1,90 @@
+{
+    "$start": [
+        ":sub", 
+        ":n", 
+        ":for", 
+        ":identifier", 
+        ":_empty", 
+        ":e", 
+        ":s"
+    ], 
+    "$assignstatementsub": [
+        ":sub", 
+        ":e", 
+        ":n", 
+        ":identifier", 
+        ":s"
+    ], 
+    "$forstatement": [
+        ":for"
+    ], 
+    "$e": [
+        ":sub", 
+        ":e", 
+        ":n", 
+        ":s"
+    ], 
+    "$fordeclstatement": [
+        ":sub", 
+        ":n", 
+        ":identifier", 
+        ":_empty", 
+        ":e", 
+        ":s"
+    ], 
+    "$_gen1": [
+        ":comma", 
+        ":_empty"
+    ], 
+    "$_gen0": [
+        ":sub", 
+        ":n", 
+        ":e", 
+        ":for", 
+        ":identifier", 
+        ":_empty", 
+        ":s"
+    ], 
+    "$forbody": [
+        ":sub", 
+        ":n", 
+        ":e", 
+        ":for", 
+        ":identifier", 
+        ":_empty", 
+        ":s"
+    ], 
+    "$complexexpression": [
+        ":sub", 
+        ":e", 
+        ":n", 
+        ":identifier", 
+        ":s"
+    ], 
+    "$forcondstatement": [
+        ":sub", 
+        ":e", 
+        ":n", 
+        ":s", 
+        ":_empty"
+    ], 
+    "$statement": [
+        ":sub", 
+        ":n", 
+        ":for", 
+        ":identifier", 
+        ":e", 
+        ":s"
+    ], 
+    "$assignstatement": [
+        ":identifier"
+    ], 
+    "$foriterstatement": [
+        ":sub", 
+        ":n", 
+        ":identifier", 
+        ":_empty", 
+        ":e", 
+        ":s"
+    ]
+}

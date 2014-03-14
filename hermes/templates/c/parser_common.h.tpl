@@ -60,7 +60,7 @@ typedef struct parse_tree_t {
 
 typedef union parse_tree_node_u {
 
-  struct terminal_t terminal;
+  struct token_t terminal;
   struct parse_tree_t parse_tree;
 
 } PARSE_TREE_NODE_U;
@@ -193,6 +193,7 @@ typedef struct ast_object_specification_init {
 
 char * ast_to_string( ABSTRACT_SYNTAX_TREE_T * tree, PARSER_CONTEXT_T * ctx );
 char * parsetree_to_string( PARSE_TREE_T * tree, PARSER_CONTEXT_T * ctx );
+char * token_to_string(TOKEN_T * token, int indent, PARSER_CONTEXT_T * ctx);
 ABSTRACT_SYNTAX_TREE_T * parsetree_node_to_ast( PARSE_TREE_NODE_T * node );
 void free_parse_tree( PARSE_TREE_T * tree );
 void free_ast( ABSTRACT_SYNTAX_TREE_T * ast );

@@ -1,0 +1,850 @@
+(grammar:
+  <grammar (line 1 col 1) `grammar`>,
+  <lbrace (line 1 col 9) `{`>,
+  (_gen0:
+    (body_element:
+      (body_element_sub:
+        (parser:
+          (parser_ll1:
+            <parser_ll1 (line 2 col 3) `parser<ll1>`>,
+            <lbrace (line 2 col 15) `{`>,
+            (_gen7:
+              (ll1_rule:
+                <ll1_rule_hint (line 3 col 5) ``>,
+                <nonterminal (line 3 col 5) `start`>,
+                <equals (line 3 col 12) `=`>,
+                (ll1_rule_rhs:
+                  (_gen8:
+                    (rule:
+                      (_gen22:
+                        (morpheme:
+                          (macro:
+                            <identifier (line 3 col 14) `list`>,
+                            <lparen (line 3 col 18) `(`>,
+                            (_gen25:
+                              (macro_parameter:
+                                <nonterminal (line 3 col 19) `sub`>
+                              ),
+                              (_gen26:
+                                <comma (line 3 col 23) `,`>,
+                                (macro_parameter:
+                                  <terminal (line 3 col 25) `comma`>
+                                ),
+                                (_gen26: )
+                              )
+                            ),
+                            <rparen (line 3 col 31) `)`>
+                          )
+                        ),
+                        (_gen22: )
+                      ),
+                      (_gen20: )
+                    ),
+                    (_gen9: )
+                  )
+                )
+              ),
+              (_gen7:
+                (ll1_rule:
+                  <ll1_rule_hint (line 4 col 5) ``>,
+                  <nonterminal (line 4 col 5) `sub`>,
+                  <equals (line 4 col 10) `=`>,
+                  (ll1_rule_rhs:
+                    (_gen8:
+                      (rule:
+                        (_gen22:
+                          (morpheme:
+                            <nonterminal (line 4 col 12) `item`>
+                          ),
+                          (_gen22: )
+                        ),
+                        (_gen20: )
+                      ),
+                      (_gen9: )
+                    )
+                  )
+                ),
+                (_gen7:
+                  (ll1_rule:
+                    <ll1_rule_hint (line 5 col 5) ``>,
+                    <nonterminal (line 5 col 5) `sub`>,
+                    <equals (line 5 col 10) `=`>,
+                    (ll1_rule_rhs:
+                      (_gen8:
+                        (rule:
+                          (_gen22:
+                            (morpheme:
+                              <nonterminal (line 5 col 12) `e`>
+                            ),
+                            (_gen22: )
+                          ),
+                          (_gen20: )
+                        ),
+                        (_gen9: )
+                      )
+                    )
+                  ),
+                  (_gen7:
+                    (ll1_rule:
+                      <ll1_rule_hint (line 6 col 5) ``>,
+                      <nonterminal (line 6 col 5) `item`>,
+                      <equals (line 6 col 11) `=`>,
+                      (ll1_rule_rhs:
+                        (_gen8:
+                          (rule:
+                            (_gen22:
+                              (morpheme:
+                                <terminal (line 6 col 13) `b`>
+                              ),
+                              (_gen22: )
+                            ),
+                            (_gen20: )
+                          ),
+                          (_gen9: )
+                        )
+                      )
+                    ),
+                    (_gen7:
+                      (ll1_rule:
+                        <ll1_rule_hint (line 7 col 5) ``>,
+                        <nonterminal (line 7 col 5) `item`>,
+                        <equals (line 7 col 11) `=`>,
+                        (ll1_rule_rhs:
+                          (_gen8:
+                            (rule:
+                              (_gen22:
+                                (morpheme:
+                                  <terminal (line 7 col 13) `a`>
+                                ),
+                                (_gen22: )
+                              ),
+                              (_gen20: )
+                            ),
+                            (_gen9: )
+                          )
+                        )
+                      ),
+                      (_gen7:
+                        (ll1_rule:
+                          <ll1_rule_hint (line 8 col 5) ``>,
+                          <nonterminal (line 8 col 5) `type_name`>,
+                          <equals (line 8 col 16) `=`>,
+                          (ll1_rule_rhs:
+                            (_gen8:
+                              (rule:
+                                (_gen22:
+                                  (morpheme:
+                                    <terminal (line 8 col 18) `int`>
+                                  ),
+                                  (_gen22: )
+                                ),
+                                (_gen20: )
+                              ),
+                              (_gen9: )
+                            )
+                          )
+                        ),
+                        (_gen7:
+                          (ll1_rule:
+                            <ll1_rule_hint (line 9 col 5) ``>,
+                            <nonterminal (line 9 col 5) `type_name`>,
+                            <equals (line 9 col 16) `=`>,
+                            (ll1_rule_rhs:
+                              (_gen8:
+                                (rule:
+                                  (_gen22:
+                                    (morpheme:
+                                      <terminal (line 9 col 18) `char`>
+                                    ),
+                                    (_gen22: )
+                                  ),
+                                  (_gen20: )
+                                ),
+                                (_gen9: )
+                              )
+                            )
+                          ),
+                          (_gen7:
+                            (ll1_rule:
+                              <ll1_rule_hint (line 10 col 5) ``>,
+                              <nonterminal (line 10 col 5) `comma_opt`>,
+                              <equals (line 10 col 16) `=`>,
+                              (ll1_rule_rhs:
+                                (_gen8:
+                                  (rule:
+                                    (_gen22:
+                                      (morpheme:
+                                        <terminal (line 10 col 18) `comma`>
+                                      ),
+                                      (_gen22: )
+                                    ),
+                                    (_gen20: )
+                                  ),
+                                  (_gen9: )
+                                )
+                              )
+                            ),
+                            (_gen7:
+                              (ll1_rule:
+                                <ll1_rule_hint (line 11 col 5) ``>,
+                                <nonterminal (line 11 col 5) `comma_opt`>,
+                                <equals (line 11 col 16) `=`>,
+                                (ll1_rule_rhs:
+                                  (_gen8:
+                                    (rule:
+                                      (_gen22:
+                                        (morpheme:
+                                          <terminal (line 11 col 18) `_empty`>
+                                        ),
+                                        (_gen22: )
+                                      ),
+                                      (_gen20: )
+                                    ),
+                                    (_gen9: )
+                                  )
+                                )
+                              ),
+                              (_gen7:
+                                (ll1_rule:
+                                  <ll1_rule_hint (line 12 col 5) ``>,
+                                  <nonterminal (line 12 col 5) `initializer_list_item`>,
+                                  <equals (line 12 col 28) `=`>,
+                                  (ll1_rule_rhs:
+                                    (_gen8:
+                                      (rule:
+                                        (_gen22:
+                                          (morpheme:
+                                            <terminal (line 12 col 30) `item`>
+                                          ),
+                                          (_gen22: )
+                                        ),
+                                        (_gen20: )
+                                      ),
+                                      (_gen9: )
+                                    )
+                                  )
+                                ),
+                                (_gen7:
+                                  (ll1_rule:
+                                    <ll1_rule_hint (line 13 col 5) ``>,
+                                    <nonterminal (line 13 col 5) `e`>,
+                                    <equals (line 13 col 8) `=`>,
+                                    (ll1_rule_rhs:
+                                      (parser:
+                                        (parser_expression:
+                                          <parser_expression (line 13 col 10) `parser<expression>`>,
+                                          <lbrace (line 13 col 29) `{`>,
+                                          (_gen12:
+                                            (expression_rule:
+                                              (_gen13:
+                                                (binding_power:
+                                                  <lparen (line 14 col 7) `(`>,
+                                                  (precedence:
+                                                    (binding_power_marker:
+                                                      <asterisk (line 14 col 7) `*`>
+                                                    ),
+                                                    <colon (line 14 col 7) `:`>,
+                                                    (associativity:
+                                                      <left (line 14 col 7) `left`>
+                                                    )
+                                                  ),
+                                                  <rparen (line 14 col 7) `)`>
+                                                )
+                                              ),
+                                              <expr_rule_hint (line 14 col 16) ``>,
+                                              <nonterminal (line 14 col 16) `e`>,
+                                              <equals (line 14 col 16) `=`>,
+                                              (expression_rule_production:
+                                                <infix_rule_hint (line 14 col 16) ``>,
+                                                (_gen22:
+                                                  (morpheme:
+                                                    <nonterminal (line 14 col 16) `e`>
+                                                  ),
+                                                  (_gen22:
+                                                    (morpheme:
+                                                      <terminal (line 14 col 16) `add`>
+                                                    ),
+                                                    (_gen22:
+                                                      (morpheme:
+                                                        <nonterminal (line 14 col 16) `e`>
+                                                      ),
+                                                      (_gen22: )
+                                                    )
+                                                  )
+                                                ),
+                                                (_gen20: )
+                                              )
+                                            ),
+                                            (_gen12:
+                                              (expression_rule:
+                                                (_gen13:
+                                                  (binding_power:
+                                                    <lparen (line 15 col 7) `(`>,
+                                                    (precedence:
+                                                      (binding_power_marker:
+                                                        <dash (line 15 col 7) `-`>
+                                                      ),
+                                                      <colon (line 15 col 7) `:`>,
+                                                      (associativity:
+                                                        <left (line 15 col 7) `left`>
+                                                      )
+                                                    ),
+                                                    <rparen (line 15 col 7) `)`>
+                                                  )
+                                                ),
+                                                <expr_rule_hint (line 15 col 16) ``>,
+                                                <nonterminal (line 15 col 16) `e`>,
+                                                <equals (line 15 col 16) `=`>,
+                                                (expression_rule_production:
+                                                  <infix_rule_hint (line 15 col 16) ``>,
+                                                  (_gen22:
+                                                    (morpheme:
+                                                      <nonterminal (line 15 col 16) `e`>
+                                                    ),
+                                                    (_gen22:
+                                                      (morpheme:
+                                                        <terminal (line 15 col 16) `subtract`>
+                                                      ),
+                                                      (_gen22:
+                                                        (morpheme:
+                                                          <nonterminal (line 15 col 16) `e`>
+                                                        ),
+                                                        (_gen22: )
+                                                      )
+                                                    )
+                                                  ),
+                                                  (_gen20: )
+                                                )
+                                              ),
+                                              (_gen12:
+                                                (expression_rule:
+                                                  (_gen13:
+                                                    (binding_power:
+                                                      <lparen (line 16 col 7) `(`>,
+                                                      (precedence:
+                                                        (binding_power_marker:
+                                                          <asterisk (line 16 col 7) `*`>
+                                                        ),
+                                                        <colon (line 16 col 7) `:`>,
+                                                        (associativity:
+                                                          <left (line 16 col 7) `left`>
+                                                        )
+                                                      ),
+                                                      <rparen (line 16 col 7) `)`>
+                                                    )
+                                                  ),
+                                                  <expr_rule_hint (line 16 col 16) ``>,
+                                                  <nonterminal (line 16 col 16) `e`>,
+                                                  <equals (line 16 col 16) `=`>,
+                                                  (expression_rule_production:
+                                                    <infix_rule_hint (line 16 col 16) ``>,
+                                                    (_gen22:
+                                                      (morpheme:
+                                                        <nonterminal (line 16 col 16) `e`>
+                                                      ),
+                                                      (_gen22:
+                                                        (morpheme:
+                                                          <terminal (line 16 col 16) `multiply`>
+                                                        ),
+                                                        (_gen22:
+                                                          (morpheme:
+                                                            <nonterminal (line 16 col 16) `e`>
+                                                          ),
+                                                          (_gen22: )
+                                                        )
+                                                      )
+                                                    ),
+                                                    (_gen20: )
+                                                  )
+                                                ),
+                                                (_gen12:
+                                                  (expression_rule:
+                                                    (_gen13:
+                                                      (binding_power:
+                                                        <lparen (line 17 col 7) `(`>,
+                                                        (precedence:
+                                                          (binding_power_marker:
+                                                            <dash (line 17 col 7) `-`>
+                                                          ),
+                                                          <colon (line 17 col 7) `:`>,
+                                                          (associativity:
+                                                            <left (line 17 col 7) `left`>
+                                                          )
+                                                        ),
+                                                        <rparen (line 17 col 7) `)`>
+                                                      )
+                                                    ),
+                                                    <expr_rule_hint (line 17 col 16) ``>,
+                                                    <nonterminal (line 17 col 16) `e`>,
+                                                    <equals (line 17 col 16) `=`>,
+                                                    (expression_rule_production:
+                                                      <infix_rule_hint (line 17 col 16) ``>,
+                                                      (_gen22:
+                                                        (morpheme:
+                                                          <nonterminal (line 17 col 16) `e`>
+                                                        ),
+                                                        (_gen22:
+                                                          (morpheme:
+                                                            <terminal (line 17 col 16) `divide`>
+                                                          ),
+                                                          (_gen22:
+                                                            (morpheme:
+                                                              <nonterminal (line 17 col 16) `e`>
+                                                            ),
+                                                            (_gen22: )
+                                                          )
+                                                        )
+                                                      ),
+                                                      (_gen20: )
+                                                    )
+                                                  ),
+                                                  (_gen12:
+                                                    (expression_rule:
+                                                      (_gen13:
+                                                        (binding_power:
+                                                          <lparen (line 18 col 7) `(`>,
+                                                          (precedence:
+                                                            (binding_power_marker:
+                                                              <asterisk (line 18 col 7) `*`>
+                                                            ),
+                                                            <colon (line 18 col 7) `:`>,
+                                                            (associativity:
+                                                              <left (line 18 col 7) `left`>
+                                                            )
+                                                          ),
+                                                          <rparen (line 18 col 7) `)`>
+                                                        )
+                                                      ),
+                                                      <expr_rule_hint (line 18 col 16) ``>,
+                                                      <nonterminal (line 18 col 16) `e`>,
+                                                      <equals (line 18 col 16) `=`>,
+                                                      (expression_rule_production:
+                                                        <mixfix_rule_hint (line 18 col 16) ``>,
+                                                        (nud:
+                                                          (_gen22:
+                                                            (morpheme:
+                                                              <terminal (line 18 col 21) `lparen_cast`>
+                                                            ),
+                                                            (_gen22:
+                                                              (morpheme:
+                                                                <nonterminal (line 18 col 34) `type_name`>
+                                                              ),
+                                                              (_gen22:
+                                                                (morpheme:
+                                                                  <terminal (line 18 col 45) `rparen`>
+                                                                ),
+                                                                (_gen22: )
+                                                              )
+                                                            )
+                                                          )
+                                                        ),
+                                                        (_gen20: ),
+                                                        (_gen15:
+                                                          (led:
+                                                            <expression_divider (line 18 col 53) `<=>`>,
+                                                            (_gen22:
+                                                              (morpheme:
+                                                                <terminal (line 18 col 57) `lbrace`>
+                                                              ),
+                                                              (_gen22:
+                                                                (morpheme:
+                                                                  (macro:
+                                                                    <identifier (line 18 col 65) `list`>,
+                                                                    <lparen (line 18 col 69) `(`>,
+                                                                    (_gen25:
+                                                                      (macro_parameter:
+                                                                        <nonterminal (line 18 col 70) `initializer_list_item`>
+                                                                      ),
+                                                                      (_gen26:
+                                                                        <comma (line 18 col 92) `,`>,
+                                                                        (macro_parameter:
+                                                                          <terminal (line 18 col 94) `comma`>
+                                                                        ),
+                                                                        (_gen26: )
+                                                                      )
+                                                                    ),
+                                                                    <rparen (line 18 col 100) `)`>
+                                                                  )
+                                                                ),
+                                                                (_gen22:
+                                                                  (morpheme:
+                                                                    <nonterminal (line 18 col 102) `comma_opt`>
+                                                                  ),
+                                                                  (_gen22:
+                                                                    (morpheme:
+                                                                      <terminal (line 18 col 113) `rbrace`>
+                                                                    ),
+                                                                    (_gen22: )
+                                                                  )
+                                                                )
+                                                              )
+                                                            )
+                                                          )
+                                                        ),
+                                                        (_gen20:
+                                                          (ast_transform:
+                                                            <arrow (line 18 col 121) `->`>,
+                                                            (ast_transform_sub:
+                                                              <identifier (line 18 col 124) `TypeInitializion`>,
+                                                              <lparen (line 18 col 140) `(`>,
+                                                              (_gen23:
+                                                                (ast_parameter:
+                                                                  <identifier (line 18 col 142) `type`>,
+                                                                  <equals (line 18 col 146) `=`>,
+                                                                  <nonterminal_reference (line 18 col 147) `1`>
+                                                                ),
+                                                                (_gen24:
+                                                                  <comma (line 18 col 149) `,`>,
+                                                                  (ast_parameter:
+                                                                    <identifier (line 18 col 151) `initializer`>,
+                                                                    <equals (line 18 col 162) `=`>,
+                                                                    <nonterminal_reference (line 18 col 163) `4`>
+                                                                  ),
+                                                                  (_gen24: )
+                                                                )
+                                                              ),
+                                                              <rparen (line 18 col 166) `)`>
+                                                            )
+                                                          )
+                                                        )
+                                                      )
+                                                    ),
+                                                    (_gen12:
+                                                      (expression_rule:
+                                                        (_gen13:
+                                                          (binding_power:
+                                                            <lparen (line 19 col 7) `(`>,
+                                                            (precedence:
+                                                              (binding_power_marker:
+                                                                <dash (line 19 col 7) `-`>
+                                                              ),
+                                                              <colon (line 19 col 7) `:`>,
+                                                              (associativity:
+                                                                <left (line 19 col 7) `left`>
+                                                              )
+                                                            ),
+                                                            <rparen (line 19 col 7) `)`>
+                                                          )
+                                                        ),
+                                                        <expr_rule_hint (line 19 col 16) ``>,
+                                                        <nonterminal (line 19 col 16) `e`>,
+                                                        <equals (line 19 col 16) `=`>,
+                                                        (expression_rule_production:
+                                                          <mixfix_rule_hint (line 19 col 16) ``>,
+                                                          (nud:
+                                                            (_gen22:
+                                                              (morpheme:
+                                                                <terminal (line 19 col 21) `identifier`>
+                                                              ),
+                                                              (_gen22: )
+                                                            )
+                                                          ),
+                                                          (_gen20: ),
+                                                          (_gen15:
+                                                            (led:
+                                                              <expression_divider (line 19 col 33) `<=>`>,
+                                                              (_gen22:
+                                                                (morpheme:
+                                                                  <terminal (line 19 col 37) `lparen`>
+                                                                ),
+                                                                (_gen22:
+                                                                  (morpheme:
+                                                                    (macro:
+                                                                      <identifier (line 19 col 45) `list`>,
+                                                                      <lparen (line 19 col 49) `(`>,
+                                                                      (_gen25:
+                                                                        (macro_parameter:
+                                                                          <nonterminal (line 19 col 50) `e`>
+                                                                        ),
+                                                                        (_gen26:
+                                                                          <comma (line 19 col 52) `,`>,
+                                                                          (macro_parameter:
+                                                                            <terminal (line 19 col 54) `comma`>
+                                                                          ),
+                                                                          (_gen26: )
+                                                                        )
+                                                                      ),
+                                                                      <rparen (line 19 col 60) `)`>
+                                                                    )
+                                                                  ),
+                                                                  (_gen22:
+                                                                    (morpheme:
+                                                                      <terminal (line 19 col 62) `rparen`>
+                                                                    ),
+                                                                    (_gen22: )
+                                                                  )
+                                                                )
+                                                              )
+                                                            )
+                                                          ),
+                                                          (_gen20:
+                                                            (ast_transform:
+                                                              <arrow (line 19 col 70) `->`>,
+                                                              (ast_transform_sub:
+                                                                <identifier (line 19 col 73) `FunctionCall`>,
+                                                                <lparen (line 19 col 85) `(`>,
+                                                                (_gen23:
+                                                                  (ast_parameter:
+                                                                    <identifier (line 19 col 87) `name`>,
+                                                                    <equals (line 19 col 91) `=`>,
+                                                                    <nonterminal_reference (line 19 col 92) `$`>
+                                                                  ),
+                                                                  (_gen24:
+                                                                    <comma (line 19 col 94) `,`>,
+                                                                    (ast_parameter:
+                                                                      <identifier (line 19 col 96) `params`>,
+                                                                      <equals (line 19 col 102) `=`>,
+                                                                      <nonterminal_reference (line 19 col 103) `2`>
+                                                                    ),
+                                                                    (_gen24: )
+                                                                  )
+                                                                ),
+                                                                <rparen (line 19 col 106) `)`>
+                                                              )
+                                                            )
+                                                          )
+                                                        )
+                                                      ),
+                                                      (_gen12:
+                                                        (expression_rule:
+                                                          (_gen13:
+                                                            (binding_power:
+                                                              <lparen (line 20 col 7) `(`>,
+                                                              (precedence:
+                                                                (binding_power_marker:
+                                                                  <asterisk (line 20 col 7) `*`>
+                                                                ),
+                                                                <colon (line 20 col 7) `:`>,
+                                                                (associativity:
+                                                                  <unary (line 20 col 7) `unary`>
+                                                                )
+                                                              ),
+                                                              <rparen (line 20 col 7) `)`>
+                                                            )
+                                                          ),
+                                                          <expr_rule_hint (line 20 col 17) ``>,
+                                                          <nonterminal (line 20 col 17) `e`>,
+                                                          <equals (line 20 col 17) `=`>,
+                                                          (expression_rule_production:
+                                                            <prefix_rule_hint (line 20 col 17) ``>,
+                                                            (_gen22:
+                                                              (morpheme:
+                                                                <terminal (line 20 col 17) `subtract`>
+                                                              ),
+                                                              (_gen22:
+                                                                (morpheme:
+                                                                  <nonterminal (line 20 col 17) `e`>
+                                                                ),
+                                                                (_gen22: )
+                                                              )
+                                                            ),
+                                                            (_gen20: )
+                                                          )
+                                                        ),
+                                                        (_gen12:
+                                                          (expression_rule:
+                                                            (_gen13: ),
+                                                            <expr_rule_hint (line 21 col 7) ``>,
+                                                            <nonterminal (line 21 col 7) `e`>,
+                                                            <equals (line 21 col 7) `=`>,
+                                                            (expression_rule_production:
+                                                              <mixfix_rule_hint (line 21 col 7) ``>,
+                                                              (nud:
+                                                                (_gen22:
+                                                                  (morpheme:
+                                                                    <terminal (line 21 col 12) `lsquare`>
+                                                                  ),
+                                                                  (_gen22:
+                                                                    (morpheme:
+                                                                      (macro:
+                                                                        <identifier (line 21 col 21) `list`>,
+                                                                        <lparen (line 21 col 25) `(`>,
+                                                                        (_gen25:
+                                                                          (macro_parameter:
+                                                                            <nonterminal (line 21 col 26) `e`>
+                                                                          ),
+                                                                          (_gen26:
+                                                                            <comma (line 21 col 28) `,`>,
+                                                                            (macro_parameter:
+                                                                              <terminal (line 21 col 30) `comma`>
+                                                                            ),
+                                                                            (_gen26: )
+                                                                          )
+                                                                        ),
+                                                                        <rparen (line 21 col 36) `)`>
+                                                                      )
+                                                                    ),
+                                                                    (_gen22:
+                                                                      (morpheme:
+                                                                        <terminal (line 21 col 38) `rsquare`>
+                                                                      ),
+                                                                      (_gen22: )
+                                                                    )
+                                                                  )
+                                                                )
+                                                              ),
+                                                              (_gen20: ),
+                                                              (_gen15: ),
+                                                              (_gen20: )
+                                                            )
+                                                          ),
+                                                          (_gen12:
+                                                            (expression_rule:
+                                                              (_gen13: ),
+                                                              <expr_rule_hint (line 22 col 7) ``>,
+                                                              <nonterminal (line 22 col 7) `e`>,
+                                                              <equals (line 22 col 7) `=`>,
+                                                              (expression_rule_production:
+                                                                <mixfix_rule_hint (line 22 col 7) ``>,
+                                                                (nud:
+                                                                  (_gen22:
+                                                                    (morpheme:
+                                                                      <terminal (line 22 col 12) `lbrace`>
+                                                                    ),
+                                                                    (_gen22:
+                                                                      (morpheme:
+                                                                        (macro:
+                                                                          <identifier (line 22 col 20) `list`>,
+                                                                          <lparen (line 22 col 24) `(`>,
+                                                                          (_gen25:
+                                                                            (macro_parameter:
+                                                                              <nonterminal (line 22 col 25) `e`>
+                                                                            ),
+                                                                            (_gen26:
+                                                                              <comma (line 22 col 27) `,`>,
+                                                                              (macro_parameter:
+                                                                                <terminal (line 22 col 29) `comma`>
+                                                                              ),
+                                                                              (_gen26: )
+                                                                            )
+                                                                          ),
+                                                                          <rparen (line 22 col 35) `)`>
+                                                                        )
+                                                                      ),
+                                                                      (_gen22:
+                                                                        (morpheme:
+                                                                          <terminal (line 22 col 37) `rbrace`>
+                                                                        ),
+                                                                        (_gen22: )
+                                                                      )
+                                                                    )
+                                                                  )
+                                                                ),
+                                                                (_gen20: ),
+                                                                (_gen15: ),
+                                                                (_gen20: )
+                                                              )
+                                                            ),
+                                                            (_gen12:
+                                                              (expression_rule:
+                                                                (_gen13: ),
+                                                                <expr_rule_hint (line 23 col 7) ``>,
+                                                                <nonterminal (line 23 col 7) `e`>,
+                                                                <equals (line 23 col 7) `=`>,
+                                                                (expression_rule_production:
+                                                                  <mixfix_rule_hint (line 23 col 7) ``>,
+                                                                  (nud:
+                                                                    (_gen22:
+                                                                      (morpheme:
+                                                                        <terminal (line 23 col 12) `lparen`>
+                                                                      ),
+                                                                      (_gen22:
+                                                                        (morpheme:
+                                                                          <nonterminal (line 23 col 20) `e`>
+                                                                        ),
+                                                                        (_gen22:
+                                                                          (morpheme:
+                                                                            <terminal (line 23 col 23) `rparen`>
+                                                                          ),
+                                                                          (_gen22: )
+                                                                        )
+                                                                      )
+                                                                    )
+                                                                  ),
+                                                                  (_gen20: ),
+                                                                  (_gen15: ),
+                                                                  (_gen20: )
+                                                                )
+                                                              ),
+                                                              (_gen12:
+                                                                (expression_rule:
+                                                                  (_gen13: ),
+                                                                  <expr_rule_hint (line 24 col 7) ``>,
+                                                                  <nonterminal (line 24 col 7) `e`>,
+                                                                  <equals (line 24 col 7) `=`>,
+                                                                  (expression_rule_production:
+                                                                    <mixfix_rule_hint (line 24 col 7) ``>,
+                                                                    (nud:
+                                                                      (_gen22:
+                                                                        (morpheme:
+                                                                          <terminal (line 24 col 12) `identifier`>
+                                                                        ),
+                                                                        (_gen22: )
+                                                                      )
+                                                                    ),
+                                                                    (_gen20: ),
+                                                                    (_gen15: ),
+                                                                    (_gen20: )
+                                                                  )
+                                                                ),
+                                                                (_gen12:
+                                                                  (expression_rule:
+                                                                    (_gen13: ),
+                                                                    <expr_rule_hint (line 25 col 7) ``>,
+                                                                    <nonterminal (line 25 col 7) `e`>,
+                                                                    <equals (line 25 col 7) `=`>,
+                                                                    (expression_rule_production:
+                                                                      <mixfix_rule_hint (line 25 col 7) ``>,
+                                                                      (nud:
+                                                                        (_gen22:
+                                                                          (morpheme:
+                                                                            <terminal (line 25 col 12) `number`>
+                                                                          ),
+                                                                          (_gen22: )
+                                                                        )
+                                                                      ),
+                                                                      (_gen20: ),
+                                                                      (_gen15: ),
+                                                                      (_gen20: )
+                                                                    )
+                                                                  ),
+                                                                  (_gen12: )
+                                                                )
+                                                              )
+                                                            )
+                                                          )
+                                                        )
+                                                      )
+                                                    )
+                                                  )
+                                                )
+                                              )
+                                            )
+                                          ),
+                                          <rbrace (line 26 col 5) `}`>
+                                        )
+                                      )
+                                    )
+                                  ),
+                                  (_gen7: )
+                                )
+                              )
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            ),
+            <rbrace (line 27 col 3) `}`>
+          )
+        )
+      )
+    ),
+    (_gen0: )
+  ),
+  <rbrace (line 28 col 1) `}`>,
+  (_gen1: )
+)

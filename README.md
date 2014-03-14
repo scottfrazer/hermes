@@ -7,22 +7,20 @@ Hermes is a parser generator for LL(1) grammars with extensions to parse express
 
 # Dependencies
 
-* Python 3.2+
+* Python 3.3+
 * moody-templates 0.9
 * xtermcolor 1.2
 
 # Installation
 
-If you don't have Distribute:
-
-```bash
-$ python distribute_setup.py
-```
-
-Then, use the standard Python module installation mechanic:
-
 ```bash
 $ python setup.py install
+```
+
+Or, through pip:
+
+```bash
+$ pip install hermes-parser
 ```
 
 # Documentation
@@ -35,37 +33,27 @@ Hermes is a parser generator that takes as input a grammar file and generates a 
 
 The following grammar will accept input, and return a parse tree, if the input tokens contains any number of `a` tokens followed by the same number of `b` tokens:
 
-```json
-{
-  "ll1": {
-    "start": "Start",
-    "rules": [
-      "Start := Sub + 'semi'",
-      "Sub := 'a' + Sub + 'b' | _empty"
-    ]
+```
+grammar {
+  parser<ll1> {
+    $start = $sub + :semi
+    $sub := :a + $sub + :b | :_empty
   }
 }
 ```
 
 ## Grammar File Specification
 
-Grammar files are specified as a JSON object that typically has the `.zgr` extension.  A skeleton grammar file looks like this:
+Grammar files are specified as a JSON object that typically has the `.gr` extension.  A skeleton grammar file looks like this:
 
-```json
-{
-  "ll1": {
-    "start": "",
-    "rules": []
-  },
-  "expr": [
-    {
-      "nonterminal": "",
-      "binding_power": [
-        {"associativity": "", "terminals": []}
-      ],
-      "rules": []
+```
+grammar {
+  parser<ll1> {
+    ... rules ...
+    $e = parser<expressoin> {
+      ... expression rules ...
     }
-  ]
+  }
 }
 ```
 
@@ -74,30 +62,32 @@ There are two main sections here: LL(1) and Expression grammars.  LL(1) grammars
 The syntax for expressing grammar rules is:
 
 ```
-Nonterminal := [Nonterminal | 'Terminal']+
+$Nonterminal := [$Nonterminal | :Terminal]+
 ```
 
-Nonterminals are expressed as identifiers that conform to `[a-zA-Z0-9_]+`.  Terminals are specified in a similar format, except they are surrounded by single quotes.
+Nonterminals must conform to the regular expression: `\$[a-zA-Z0-9_]+` (i.e. variable names preceded by a $)
+Terminals must conform to the regular expression: `:[a-zA-Z0-9_]+` (i.e. variable names preceded by a :)
 
 Some examples of grammar rules:
 
 ```
-SimpleSentenceAboutFood := Subject + Verb + 'food'
-Verb := 'ate' | 'like' | 'want'
-Subject := 'I' | 'we' | 'you'
+$properties = :lbrace $items :rbrace
+$items = :item $items_sub
+$items_sub = :comma :item $items_sub
+$items_sub = :_empty
 ```
 
 Grammar rules can be combined for brevity:
 
 ```
-N := 'a'
-N := 'b'
+$N := :a
+$N := :b
 ```
 
 Is the same as:
 
 ```
-N := 'a' | 'b'
+$N := :a | :b
 ```
 
 ## Generating a Parser
@@ -111,7 +101,7 @@ $ hermes generate --language=c --add-main grammar.zgr
 The output of this command will be a bunch of .c and .h files in the current directory.  Compile the code as follows:
 
 ```bash
-$ cc -o parser grammar_parser.c parser_common.c parser_main.c -g -Wall -pedantic -ansi -std=c99
+$ cc -o parser *.c -std=c99
 ```
 
 ## Running the Parser

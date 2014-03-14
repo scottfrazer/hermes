@@ -56,7 +56,7 @@ class TerminalColorTheme(Theme):
   def nonterminal(self, string):
     return colorize(string, ansi=2)
   def terminal(self, string):
-    return "'" + colorize(string.strip("'"), ansi=14) + "'"
+    return colorize(string.strip("'"), ansi=14)
   def endOfStream(self, string):
     return string
   def emptyString(self, string):

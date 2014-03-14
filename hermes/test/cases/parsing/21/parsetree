@@ -1,0 +1,33 @@
+(program:
+  (block:
+    (block_const: ),
+    (block_var:
+      <var (line 0 col 0) ``>,
+      (ident:
+        <ident (line 0 col 0) ``>
+      ),
+      (block_var1: ),
+      <semi (line 0 col 0) ``>
+    ),
+    (block_proc: ),
+    (statement:
+      (ident:
+        <ident (line 0 col 0) ``>
+      ),
+      <assign (line 0 col 0) ``>,
+      (expression:
+        (unary_add_op: ),
+        (term:
+          (factor:
+            (number:
+              <number (line 0 col 0) ``>
+            )
+          ),
+          (term_sub1: )
+        ),
+        (expression_sub1: )
+      )
+    )
+  ),
+  <dot (line 0 col 0) ``>
+)

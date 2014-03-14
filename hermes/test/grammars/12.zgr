@@ -1,0 +1,6 @@
+grammar {
+  parser<ll1> {
+    $s = mlist($t, 2)
+    $t = :nt
+  }
+}

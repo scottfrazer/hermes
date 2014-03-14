@@ -1,0 +1,5 @@
+grammar {
+  parser<ll1> {
+    $start = optional(:a)
+  }
+}

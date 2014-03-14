@@ -1,0 +1,16 @@
+grammar {
+  lexer {
+    r'[a-zA-Z][a-zA-Z0-9_]*' -> :node_name
+    r'@[a-zA-Z][a-zA-Z0-9_]*' -> :attr_name
+    r':[a-zA-Z][a-zA-Z0-9_]*' -> :terminal_name
+    r'//' -> :ancestor
+    r'/' -> :child
+    r'\[' -> :lsquare
+    r'\]' -> :rsquare
+  }
+  
+  parser<ll1> {
+    $query = list($generation) -> Query(generations=$0)
+    $generation = :
+  }
+}

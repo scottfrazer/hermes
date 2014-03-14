@@ -1,0 +1,38 @@
+{
+    "$statements": [
+        ":sub", 
+        ":e", 
+        ":identifier", 
+        ":a", 
+        ":b"
+    ], 
+    "$start": [
+        ":sub", 
+        ":identifier", 
+        ":_empty", 
+        ":e", 
+        ":a", 
+        ":b"
+    ], 
+    "$assignstatement": [
+        ":identifier"
+    ], 
+    "$e": [
+        ":sub", 
+        ":e", 
+        ":a", 
+        ":b"
+    ], 
+    "$_gen1": [
+        ":comma", 
+        ":_empty"
+    ], 
+    "$_gen0": [
+        ":sub", 
+        ":identifier", 
+        ":_empty", 
+        ":e", 
+        ":a", 
+        ":b"
+    ]
+}

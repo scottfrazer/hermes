@@ -1,6 +1,0 @@
-{
-  "type": "ExprConflict", 
-  "message": "Terminal 'identifier' requires two different NUD() functions.", 
-  "rule-0": "_expr := {'identifier' 'lparen' _gen2 'rparen'} + {_empty} -> $0 ", 
-  "rule-1": "_expr := {'identifier'} + {_empty} -> $0 "
-}

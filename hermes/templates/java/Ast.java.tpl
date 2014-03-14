@@ -1,5 +1,5 @@
-{% if package %}
-package {{package}};
+{% if java_package %}
+package {{java_package}};
 {% endif %}
 
 import java.util.Map;

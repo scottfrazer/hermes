@@ -1,0 +1,59 @@
+{
+    "$start": [
+        ":_eos"
+    ], 
+    "$assignstatementsub": [
+        ":comma", 
+        ":_eos", 
+        ":rparen", 
+        ":semi"
+    ], 
+    "$e": [
+        ":sub", 
+        ":rparen", 
+        ":comma", 
+        ":_eos", 
+        ":div", 
+        ":add", 
+        ":mul", 
+        ":semi"
+    ], 
+    "$fordeclstatement": [
+        ":semi"
+    ], 
+    "$_gen1": [
+        ":_eos"
+    ], 
+    "$_gen0": [
+        ":_eos"
+    ], 
+    "$forbody": [
+        ":rbrace"
+    ], 
+    "$complexexpression": [
+        ":semi", 
+        ":rparen"
+    ], 
+    "$forcondstatement": [
+        ":semi"
+    ], 
+    "$statement": [
+        ":comma", 
+        ":semi", 
+        ":_eos"
+    ], 
+    "$assignstatement": [
+        ":comma", 
+        ":_eos", 
+        ":rparen", 
+        ":semi"
+    ], 
+    "$foriterstatement": [
+        ":rparen"
+    ], 
+    "$forstatement": [
+        ":comma", 
+        ":semi", 
+        ":_eos"
+    ]
+}

@@ -1,0 +1,197 @@
+(Grammar:
+  body=[
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<nonterminal (line 3 col 5) `start`>,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<identifier (line 3 col 14) `list`>,
+                  parameters=[
+                    <nonterminal (line 3 col 19) `statement`>
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 4 col 5) `statement`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 4 col 18) `funcdef`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 5 col 5) `statement`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 5 col 18) `classdef`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 6 col 5) `statement`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 6 col 18) `a`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 7 col 5) `statement`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 7 col 18) `b`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 8 col 5) `funcdef`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 8 col 16) `function`>,
+                <terminal (line 8 col 26) `identifier`>,
+                <terminal (line 8 col 38) `lparen`>,
+                (Macro:
+                  name=<identifier (line 8 col 46) `list`>,
+                  parameters=[
+                    <nonterminal (line 8 col 51) `param`>,
+                    <terminal (line 8 col 59) `comma`>
+                  ]
+                ),
+                <terminal (line 8 col 67) `rparen`>,
+                <terminal (line 8 col 75) `lbrace`>,
+                (Macro:
+                  name=<identifier (line 8 col 83) `list`>,
+                  parameters=[
+                    <nonterminal (line 8 col 88) `statement`>
+                  ]
+                ),
+                <terminal (line 8 col 100) `rbrace`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 9 col 5) `param`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 9 col 14) `param1`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 10 col 5) `param`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 10 col 14) `param2`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 11 col 5) `classdef`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 11 col 17) `class`>,
+                <terminal (line 11 col 24) `identifier`>,
+                <terminal (line 11 col 36) `lbrace`>,
+                (Macro:
+                  name=<identifier (line 11 col 44) `list`>,
+                  parameters=[
+                    <nonterminal (line 11 col 49) `class_statement`>
+                  ]
+                ),
+                <terminal (line 11 col 67) `rbrace`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 12 col 5) `class_statement`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 12 col 24) `private`>,
+                <nonterminal (line 12 col 33) `class_atom`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 13 col 5) `class_statement`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 13 col 24) `public`>,
+                <nonterminal (line 13 col 32) `class_atom`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 14 col 5) `class_atom`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 14 col 19) `funcdef`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 15 col 5) `class_atom`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 15 col 19) `x`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 16 col 5) `class_atom`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 16 col 19) `y`>
+              ],
+              ast=None
+            )
+          ]
+        )
+      ]
+    )
+  ],
+  code=None
+)

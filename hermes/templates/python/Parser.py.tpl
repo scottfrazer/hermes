@@ -1,34 +1,40 @@
-import sys, inspect
+import sys
+import inspect
 from collections import OrderedDict
-from ParserCommon import *
+from ..Common import *
 
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
-{% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
+{% from hermes.Grammar import PrefixOperator, InfixOperator %}
 {% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 
 def whoami():
   return inspect.stack()[1][3]
+
 def whosdaddy():
   return inspect.stack()[2][3]
-def parse( iterator, entry ):
-  p = {{prefix}}Parser()
-  return p.parse(iterator, entry)
+
+def parse(tokens):
+  return Parser().parse(tokens)
 
 {% for exprGrammar in grammar.exprgrammars %}
-class {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
+class ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
   def __init__(self, parent):
     self.__dict__.update(locals())
 
     self.infixBp = {
-      {% for terminal_id, binding_power in exprGrammar.infix.items() %}
-      {{terminal_id}}: {{binding_power}},
+      {% for rule in exprGrammar.rules %}
+        {% if rule.operator and rule.operator.associativity in ['left', 'right'] %}
+      {{rule.operator.operator.id}}: {{rule.operator.binding_power}}, # {{rule}}
+        {% endif %}
       {% endfor %}
     }
 
     self.prefixBp = {
-      {% for terminal_id, binding_power in exprGrammar.prefix.items() %}
-      {{terminal_id}}: {{binding_power}},
+      {% for rule in exprGrammar.rules %}
+        {% if rule.operator and rule.operator.associativity in ['unary'] %}
+      {{rule.operator.operator.id}}: {{rule.operator.binding_power}},
+        {% endif %}
       {% endfor %}
     }
 
@@ -68,13 +74,10 @@ class {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
     if not current:
       return tree
 
-    {% for i, rule in enumerate(exprGrammar.getExpandedRules()) %}
-      {% py ruleFirstSet = exprGrammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
-
-      {% py isOptional = isinstance(rule, ExprRule) and len(rule.nudProduction.morphemes) and isinstance(rule.nudProduction.morphemes[0], NonTerminal) and rule.nudProduction.morphemes[0].macro and isinstance(rule.nudProduction.morphemes[0].macro, OptionalMacro) and rule.nudProduction.morphemes[0].macro.nonterminal == exprGrammar.nonterminal %}
-
-      {% if len(ruleFirstSet) and not isOptional %}
-    {{'if' if i == 0 else 'elif'}} current.getId() in [{{', '.join([str(x.id) for x in exprGrammar.ruleFirst(rule)])}}]:
+    {% for i, rule in enumerate(grammar.grammar_expanded_rules[exprGrammar]) %}
+      {% py ruleFirstSet = grammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
+      {% if len(ruleFirstSet) and not ruleFirstSet.issuperset(grammar.first[exprGrammar.nonterminal])%}
+    {{'if' if i == 0 else 'elif'}} current.getId() in [{{', '.join(map(str, sorted([x.id for x in ruleFirstSet])))}}]:
       # {{rule}}
         {% if isinstance(rule.nudAst, AstSpecification) %}
       astParameters = OrderedDict([
@@ -115,7 +118,7 @@ class {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
     current = self.getCurrentToken()
 
     {% py seen = list() %}
-    {% for rule in exprGrammar.getExpandedExpressionRules() %}
+    {% for rule in grammar.grammar_expanded_expr_rules[exprGrammar] %}
       {% py led = rule.ledProduction.morphemes %}
       {% if len(led) and led[0] not in seen %}
 
@@ -141,11 +144,12 @@ class {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
 
       tree.add(left)
 
+        {% py associativity = {rule.operator.operator.id: rule.operator.associativity for rule in exprGrammar.rules if rule.operator} %}
         {% for morpheme in led %}
           {% if isinstance(morpheme, Terminal) %}
       tree.add( self.expect({{morpheme.id}}) )
           {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
-      modifier = {{1 if rule.operator.operator.id in exprGrammar.precedence and exprGrammar.precedence[rule.operator.operator.id] == 'right' else 0}}
+      modifier = {{1 if rule.operator.operator.id in associativity and associativity[rule.operator.operator.id] == 'right' else 0}}
             {% if isinstance(rule.operator, InfixOperator) %}
       tree.isInfix = True
             {% endif %}
@@ -163,14 +167,14 @@ class {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}:
     return tree
 {% endfor %}
 
-class {{prefix}}Parser:
+class Parser:
   # Quark - finite string set maps one string to exactly one int, and vice versa
   terminals = {
-  {% for terminal in nonAbstractTerminals %}
+  {% for terminal in grammar.standard_terminals %}
     {{terminal.id}}: '{{terminal.string}}',
   {% endfor %}
 
-  {% for terminal in nonAbstractTerminals %}
+  {% for terminal in grammar.standard_terminals %}
     '{{terminal.string.lower()}}': {{terminal.id}},
   {% endfor %}
   }
@@ -188,13 +192,13 @@ class {{prefix}}Parser:
 
   # table[nonterminal][terminal] = rule
   table = [
-    {% py parseTable = grammar.getParseTable() %}
+    {% py parse_table = grammar.parse_table %}
     {% for i in range(len(grammar.nonterminals)) %}
-    [{{', '.join([str(rule.id) if rule else str(-1) for rule in parseTable[i]])}}],
+    [{{', '.join([str(rule.id) if rule else str(-1) for rule in parse_table[i]])}}],
     {% endfor %}
   ]
 
-  {% for terminal in nonAbstractTerminals %}
+  {% for terminal in grammar.standard_terminals %}
   TERMINAL_{{terminal.string.upper()}} = {{terminal.id}}
   {% endfor %}
 
@@ -203,15 +207,15 @@ class {{prefix}}Parser:
     self.expressionParsers = dict()
 
   def isTerminal(self, id):
-    return 0 <= id <= {{len(nonAbstractTerminals) - 1}}
+    return 0 <= id <= {{len(grammar.standard_terminals) - 1}}
 
   def isNonTerminal(self, id):
-    return {{len(nonAbstractTerminals)}} <= id <= {{len(nonAbstractTerminals) + len(grammar.nonterminals) - 1}}
+    return {{len(grammar.standard_terminals)}} <= id <= {{len(grammar.standard_terminals) + len(grammar.nonterminals) - 1}}
 
   def parse(self, tokens):
     self.tokens = tokens
     self.start = '{{str(grammar.start).upper()}}'
-    tree = self.parse_{{str(grammar.start).lower()}}()
+    tree = self.parse_{{grammar.start.string.lower()}}()
     if self.tokens.current() != None:
       raise SyntaxError( 'Finished parsing without consuming all tokens.' )
     return tree
@@ -221,7 +225,7 @@ class {{prefix}}Parser:
     if not currentToken:
       raise SyntaxError( 'No more tokens.  Expecting %s' % (self.terminals[terminalId]) )
     if currentToken.getId() != terminalId:
-      raise SyntaxError( 'Unexpected symbol when parsing %s.  Expected %s, got %s.' %(whosdaddy(), self.terminals[terminalId], currentToken if currentToken else 'None') )
+      raise SyntaxError( 'Unexpected symbol (line %d, col %d) when parsing %s.  Expected %s, got %s.' %(currentToken.line, currentToken.col, whosdaddy(), self.terminals[terminalId], currentToken) )
 
     nextToken = self.tokens.advance()
     if nextToken and not self.isTerminal(nextToken.getId()):
@@ -229,11 +233,11 @@ class {{prefix}}Parser:
 
     return currentToken
  
-  {% for nonterminal in LL1Nonterminals %}
+  {% for nonterminal in grammar.ll1_nonterminals %}
 
   def parse_{{nonterminal.string.lower()}}(self):
     current = self.tokens.current()
-    rule = self.table[{{nonterminal.id - len(nonAbstractTerminals)}}][current.getId()] if current else -1
+    rule = self.table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.getId()] if current else -1
     tree = ParseTree( NonTerminal({{nonterminal.id}}, self.nonterminals[{{nonterminal.id}}]))
 
       {% if isinstance(nonterminal.macro, SeparatedListMacro) %}
@@ -248,19 +252,21 @@ class {{prefix}}Parser:
     tree.list = False
       {% endif %}
 
-      {% if nonterminal.empty %}
-    if current != None and (current.getId() in [{{', '.join([str(a.id) for a in grammar.follow[nonterminal]])}}]):
+      {% if grammar.must_consume_tokens(nonterminal) %}
+    if current != None and \
+       (current.getId() in [{{', '.join([str(a.id) for a in grammar.follow[nonterminal]])}}]) and \
+       (current.getId() not in [{{', '.join([str(a.id) for a in grammar.first[nonterminal]])}}]):
       return tree
       {% endif %}
 
     if current == None:
-      {% if nonterminal.empty or grammar._empty in grammar.first[nonterminal] %}
+      {% if grammar.must_consume_tokens(nonterminal) or grammar._empty in grammar.first[nonterminal] %}
       return tree
       {% else %}
       raise SyntaxError('Error: unexpected end of file')
       {% endif %}
     
-      {% for index, rule in enumerate(nonterminal.rules) %}
+      {% for index, rule in enumerate(grammar.getExpandedLL1Rules(nonterminal)) %}
 
         {% if index == 0 %}
     if rule == {{rule.id}}:
@@ -286,7 +292,7 @@ class {{prefix}}Parser:
           {% if isinstance(morpheme, Terminal) %}
       t = self.expect({{morpheme.id}}) # {{morpheme.string}}
       tree.add(t)
-            {% if isinstance(nonterminal.macro, SeparatedListMacro) and index == 0 %}
+            {% if isinstance(nonterminal.macro, SeparatedListMacro) and nonterminal.macro.separator == morpheme %}
       tree.listSeparator = t
             {% endif %}
           {% endif %}
@@ -334,8 +340,8 @@ class {{prefix}}Parser:
         {% endif %}
       {% endfor %}
 
-      {% if not nonterminal.empty %}
-    raise SyntaxError('Error: Unexpected symbol (%s) when parsing %s' % (current, whoami()))
+      {% if not grammar.must_consume_tokens(nonterminal) %}
+    raise SyntaxError('Error: Unexpected symbol (%s) on line %d, column %d when parsing %s' % (current, current.line, current.col, whoami()))
       {% else %}
     return tree
       {% endif %}
@@ -346,6 +352,44 @@ class {{prefix}}Parser:
   def parse_{{exprGrammar.nonterminal.string.lower()}}( self, rbp = 0):
     name = '{{exprGrammar.nonterminal.string.lower()}}'
     if name not in self.expressionParsers:
-      self.expressionParsers[name] = {{prefix}}ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}(self)
+      self.expressionParsers[name] = ExpressionParser_{{exprGrammar.nonterminal.string.lower()}}(self)
     return self.expressionParsers[name].parse(rbp)
   {% endfor %}
+
+if __name__ == '__main__':
+    import argparse
+    import json
+
+    cli_parser = argparse.ArgumentParser(description='Grammar Parser')
+    cli_parser.add_argument('--color', action='store_true', help="Print output in terminal colors")
+    cli_parser.add_argument('--file')
+    cli_parser.add_argument('--out', default='ast', choices=['ast', 'parsetree'])
+    cli_parser.add_argument('--stdin', action='store_true')
+    cli = cli_parser.parse_args()
+
+    if (not cli.file and not cli.stdin) or (cli.file and cli.stdin):
+      sys.exit('Either --file=<path> or --stdin required, but not both')
+
+    cli.file = open(cli.file) if cli.file else sys.stdin
+    json_tokens = json.loads(cli.file.read())
+    cli.file.close()
+
+    tokens = TokenStream() 
+    for json_token in json_tokens:
+        tokens.append(Terminal(
+            Parser.terminals[json_token['terminal']],
+            json_token['terminal'],
+            json_token['source_string'],
+            json_token['resource'],
+            json_token['line'],
+            json_token['col']
+        ))
+
+    try:
+        tree = parse(tokens)
+        if cli.out == 'parsetree':
+          print(ParseTreePrettyPrintable(tree, color=cli.color))
+        else:
+          print(AstPrettyPrintable(tree.toAst(), color=cli.color))
+    except SyntaxError as error:
+        print(error)

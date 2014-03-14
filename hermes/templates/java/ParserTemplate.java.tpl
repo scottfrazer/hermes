@@ -1,9 +1,9 @@
-{% if package %}
-package {{package}};
+{% if java_package %}
+package {{java_package}};
 {% endif %}
 
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
-{% from hermes.Grammar import PrefixOperator, InfixOperator, MixfixOperator %}
+{% from hermes.Grammar import PrefixOperator, InfixOperator %}
 {% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 
@@ -24,15 +24,15 @@ public class {{prefix}}Parser implements Parser {
 
   /* table[nonterminal][terminal] = rule */
   private static final int[][] table = {
-    {% py parseTable = grammar.getParseTable() %}
+    {% py parse_table = grammar.parse_table %}
     {% for i in range(len(grammar.nonterminals)) %}
-    { {{', '.join([str(rule.id) if rule else str(-1) for rule in parseTable[i]])}} },
+    { {{', '.join([str(rule.id) if rule else str(-1) for rule in parse_table[i]])}} },
     {% endfor %}
   };
 
   public enum TerminalId implements TerminalIdentifier {
-  {% for index, terminal in enumerate(nonAbstractTerminals) %}
-    TERMINAL_{{terminal.string.upper()}}({{terminal.id}}, "{{terminal.string}}"){{',' if index!=len(nonAbstractTerminals)-1 else ';'}}
+  {% for index, terminal in enumerate(grammar.standard_terminals) %}
+    TERMINAL_{{terminal.string.upper()}}({{terminal.id}}, "{{terminal.string}}"){{',' if index!=len(grammar.standard_terminals)-1 else ';'}}
   {% endfor %}
 
     private final int id;
@@ -88,12 +88,16 @@ public class {{prefix}}Parser implements Parser {
       this.infixBp = new HashMap<Integer, Integer>();
       this.prefixBp = new HashMap<Integer, Integer>();
 
-      {% for terminal_id, binding_power in exprGrammar.infix.items() %}
-      this.infixBp.put({{terminal_id}}, {{binding_power}});
+      {% for rule in exprGrammar.rules %}
+        {% if rule.operator and rule.operator.associativity in ['left', 'right'] %}
+      this.infixBp.put({{rule.operator.operator.id}}, {{rule.operator.binding_power}});
+        {% endif %}
       {% endfor %}
 
-      {% for terminal_id, binding_power in exprGrammar.prefix.items() %}
-      this.prefixBp.put({{terminal_id}}, {{binding_power}});
+      {% for rule in exprGrammar.rules %}
+        {% if rule.operator and rule.operator.associativity in ['left', 'right'] %}
+      this.prefixBp.put({{rule.operator.operator.id}}, {{rule.operator.binding_power}});
+        {% endif %}
       {% endfor %}
     }
 
@@ -151,16 +155,14 @@ public class {{prefix}}Parser implements Parser {
         return tree;
       }
 
-      {% for i, rule in enumerate(exprGrammar.getExpandedRules()) %}
-        {% py ruleFirstSet = exprGrammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
+      {% for i, rule in enumerate(grammar.grammar_expanded_rules[exprGrammar]) %}
+        {% py ruleFirstSet = grammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
 
-        {% py isOptional = isinstance(rule, ExprRule) and len(rule.nudProduction.morphemes) and isinstance(rule.nudProduction.morphemes[0], NonTerminal) and rule.nudProduction.morphemes[0].macro and isinstance(rule.nudProduction.morphemes[0].macro, OptionalMacro) and rule.nudProduction.morphemes[0].macro.nonterminal == exprGrammar.nonterminal %}
-
-        {% if len(ruleFirstSet) and not isOptional %}
-      {{'if' if i == 0 else 'else if'}} ( {{' || '.join(['current.getId() == ' + str(x.id) for x in exprGrammar.ruleFirst(rule)])}} ) {
+        {% if len(ruleFirstSet) and not ruleFirstSet.issuperset(grammar.first[exprGrammar.nonterminal])%}
+      {{'if' if i == 0 else 'else if'}} ( {{' || '.join(['current.getId() == ' + str(x.id) for x in ruleFirstSet])}} ) {
 
           {% py ast = rule.nudAst if rule.nudAst else rule.ast %}
-        // ({{rule.id}}) {{'nud' if rule.nudAst else 'normal'}} {{rule}}
+        /* ({{rule.id}}) {{rule}} */
           {% if isinstance(ast, AstSpecification) %}
         LinkedHashMap<String, Integer> parameters = new LinkedHashMap<String, Integer>();
             {% for key, value in ast.parameters.items() %}
@@ -202,7 +204,7 @@ public class {{prefix}}Parser implements Parser {
       int modifier;
 
       {% py seen = list() %}
-      {% for rule in exprGrammar.getExpandedExpressionRules() %}
+      {% for rule in grammar.grammar_expanded_expr_rules[exprGrammar] %}
         {% py led = rule.ledProduction.morphemes %}
         {% if len(led) and led[0] not in seen %}
 
@@ -228,11 +230,12 @@ public class {{prefix}}Parser implements Parser {
 
         tree.add(left);
 
+          {% py associativity = {rule.operator.operator.id: rule.operator.associativity for rule in exprGrammar.rules if rule.operator} %}
           {% for morpheme in led %}
             {% if isinstance(morpheme, Terminal) %}
         tree.add( this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}, "{{exprGrammar.nonterminal.string.lower()}}", this.rules.get({{rule.id}})) );
             {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
-        modifier = {{1 if rule.operator.operator.id in exprGrammar.precedence and exprGrammar.precedence[rule.operator.operator.id] == 'right' else 0}};
+        modifier = {{1 if rule.operator.operator.id in associativity and associativity[rule.operator.operator.id] == 'right' else 0}};
               {% if isinstance(rule.operator, InfixOperator) %}
         tree.setInfix(true);
               {% endif %}
@@ -276,14 +279,14 @@ public class {{prefix}}Parser implements Parser {
 
     {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
       {% py xTerminals = set(grammar.first[nonterminal]) %}
-      {% py xTerminals = xTerminals.intersection(nonAbstractTerminals) %}
+      {% py xTerminals = xTerminals.intersection(grammar.standard_terminals) %}
       {% py xTerminals = set("TerminalId.TERMINAL_" + t.string.upper() for t in xTerminals) %}
     this.first.put("{{nonterminal.string.lower()}}", new TerminalId[] { {{', '.join([t for t in xTerminals])}} });
     {% endfor %}
 
     {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
       {% py xTerminals = set(grammar.follow[nonterminal]) %}
-      {% py xTerminals = xTerminals.intersection(nonAbstractTerminals) %}
+      {% py xTerminals = xTerminals.intersection(grammar.standard_terminals) %}
       {% py xTerminals = set("TerminalId.TERMINAL_" + t.string.upper() for t in xTerminals) %}
     this.follow.put("{{nonterminal.string.lower()}}", new TerminalId[] { {{', '.join([t for t in xTerminals])}} });
     {% endfor %}
@@ -298,7 +301,7 @@ public class {{prefix}}Parser implements Parser {
     this.tokens.setSyntaxErrorFormatter(this.syntaxErrorFormatter);
     this.tokens.setTerminalMap(this.getTerminalMap());
 
-    ParseTree tree = this.parse_{{str(grammar.start).lower()}}();
+    ParseTree tree = this.parse_{{grammar.start.string.lower()}}();
     if (this.tokens.current() != null) {
       StackTraceElement[] stack = Thread.currentThread().getStackTrace();
       throw new SyntaxError(this.syntaxErrorFormatter.excess_tokens(stack[1].getMethodName(), this.tokens.current()));
@@ -307,28 +310,28 @@ public class {{prefix}}Parser implements Parser {
   }
 
   private boolean isTerminal(TerminalId terminal) {
-    return (0 <= terminal.id() && terminal.id() <= {{len(nonAbstractTerminals) - 1}});
+    return (0 <= terminal.id() && terminal.id() <= {{len(grammar.standard_terminals) - 1}});
   }
 
   private boolean isNonTerminal(TerminalId terminal) {
-    return ({{len(nonAbstractTerminals)}} <= terminal.id() && terminal.id() <= {{len(nonAbstractTerminals) + len(grammar.nonterminals) - 1}});
+    return ({{len(grammar.standard_terminals)}} <= terminal.id() && terminal.id() <= {{len(grammar.standard_terminals) + len(grammar.nonterminals) - 1}});
   }
 
   private boolean isTerminal(int terminal) {
-    return (0 <= terminal && terminal <= {{len(nonAbstractTerminals) - 1}});
+    return (0 <= terminal && terminal <= {{len(grammar.standard_terminals) - 1}});
   }
 
   private boolean isNonTerminal(int terminal) {
-    return ({{len(nonAbstractTerminals)}} <= terminal && terminal <= {{len(nonAbstractTerminals) + len(grammar.nonterminals) - 1}});
+    return ({{len(grammar.standard_terminals)}} <= terminal && terminal <= {{len(grammar.standard_terminals) + len(grammar.nonterminals) - 1}});
   }
  
-  {% for nonterminal in LL1Nonterminals %}
+  {% for nonterminal in grammar.ll1_nonterminals %}
 
   private ParseTree parse_{{nonterminal.string.lower()}}() throws SyntaxError {
     Terminal current = this.tokens.current();
     Terminal next;
     ParseTree subtree;
-    int rule = current != null ? this.table[{{nonterminal.id - len(nonAbstractTerminals)}}][current.getId()] : -1;
+    int rule = current != null ? this.table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.getId()] : -1;
     ParseTree tree = new ParseTree( new NonTerminal({{nonterminal.id}}, "{{nonterminal.string}}"));
 
       {% if isinstance(nonterminal.macro, SeparatedListMacro) %}
@@ -343,10 +346,11 @@ public class {{prefix}}Parser implements Parser {
     tree.setList(null);
       {% endif %}
 
-      {% if nonterminal.empty %}
+      {% if grammar.must_consume_tokens(nonterminal) %}
     if ( current != null ) {
       {% if len(grammar.follow[nonterminal]) %}
-      if ({{' || '.join(['current.getId() == ' + str(a.id) for a in grammar.follow[nonterminal]])}}) {
+      if ( ({{' || '.join(['current.getId() == ' + str(a.id) for a in grammar.follow[nonterminal]])}}) && 
+           ({{' && '.join(['current.getId() != ' + str(a.id) for a in grammar.first[nonterminal]])}}) ) {
         return tree;
       }
       {% endif %}
@@ -354,7 +358,7 @@ public class {{prefix}}Parser implements Parser {
       {% endif %}
 
     if (current == null) {
-      {% if nonterminal.empty or grammar._empty in grammar.first[nonterminal] %}
+      {% if grammar.must_consume_tokens(nonterminal) or grammar._empty in grammar.first[nonterminal] %}
       return tree;
       {% else %}
 
@@ -367,7 +371,7 @@ public class {{prefix}}Parser implements Parser {
       {% endif %}
     }
     
-      {% for index, rule in enumerate(nonterminal.rules) %}
+      {% for index, rule in enumerate(filter(lambda r: not r.must_consume_tokens, grammar.getExpandedLL1Rules(nonterminal))) %}
 
         {% if index == 0 %}
     if (rule == {{rule.id}}) {
@@ -392,7 +396,7 @@ public class {{prefix}}Parser implements Parser {
           {% if isinstance(morpheme, Terminal) %}
       next = this.tokens.expect(TerminalId.TERMINAL_{{morpheme.string.upper()}}, "{{nonterminal.string.lower()}}", this.rules.get({{rule.id}}));
       tree.add(next);
-            {% if isinstance(nonterminal.macro, SeparatedListMacro) and index == 0 %}
+            {% if isinstance(nonterminal.macro, SeparatedListMacro) and nonterminal.macro.separator == morpheme %}
       tree.setListSeparator(next);
             {% endif %}
           {% endif %}
@@ -439,7 +443,7 @@ public class {{prefix}}Parser implements Parser {
         {% endif %}
       {% endfor %}
 
-      {% if not nonterminal.empty %}
+      {% if not grammar.must_consume_tokens(nonterminal) %}
 
     List<TerminalIdentifier> terminals = Arrays.asList(this.first.get("{{nonterminal.string.lower()}}"));
     throw new SyntaxError(this.syntaxErrorFormatter.unexpected_symbol(

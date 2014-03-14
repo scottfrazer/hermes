@@ -1,0 +1,42 @@
+(Program:
+  statements=[
+    (Assign:
+      lhs=<identifier (line 0 col 0) ``>,
+      rhs=(Assign:
+        lhs=<identifier (line 0 col 0) ``>,
+        rhs=<n (line 0 col 0) ``>
+      )
+    ),
+    (For:
+      decl=(Assign:
+        lhs=<identifier (line 0 col 0) ``>,
+        rhs=<n (line 0 col 0) ``>
+      ),
+      cond=None,
+      iter=(Assign:
+        lhs=<identifier (line 0 col 0) ``>,
+        rhs=(Add:
+          lhs=<s (line 0 col 0) ``>,
+          rhs=<n (line 0 col 0) ``>
+        )
+      ),
+      body=(Assign:
+        lhs=<identifier (line 0 col 0) ``>,
+        rhs=(Add:
+          lhs=<n (line 0 col 0) ``>,
+          rhs=(Multiply:
+            lhs=<identifier (line 0 col 0) ``>,
+            rhs=(Power:
+              lhs=<n (line 0 col 0) ``>,
+              rhs=<s (line 0 col 0) ``>
+            )
+          )
+        )
+      )
+    ),
+    (Add:
+      lhs=<identifier (line 0 col 0) ``>,
+      rhs=<identifier (line 0 col 0) ``>
+    )
+  ]
+)

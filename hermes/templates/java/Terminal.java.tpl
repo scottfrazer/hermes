@@ -1,5 +1,5 @@
-{% if package %}
-package {{package}};
+{% if java_package %}
+package {{java_package}};
 {% endif %}
 
 import java.util.Formatter;
@@ -60,7 +60,8 @@ public class Terminal implements AstNode, ParseTreeNode
 
   public String toPrettyString(int indent) {
     String spaces = Utility.getIndentString(indent);
-    return spaces + this.getTerminalStr();
+    // <b (line 0 col 0) ``>
+    return String.format("%s<%s (line %d col %d) `%s`>", spaces, this.getTerminalStr(), this.getLine(), this.getColumn(), this.getSourceString());
   }
 
   public AstNode toAst() { return this; }
