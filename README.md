@@ -5,6 +5,7 @@ Hermes is a parser generator for LL(1) grammars with extensions to parse express
 [![Build Status](https://secure.travis-ci.org/scottfrazer/hermes.png)](http://travis-ci.org/scottfrazer/hermes)
 [![Coverage Status](https://coveralls.io/repos/scottfrazer/hermes/badge.png)](https://coveralls.io/r/scottfrazer/hermes)
 [![Latest Version](https://pypip.in/v/hermes-parser/badge.png)](https://pypi.python.org/pypi/hermes-parser/)
+[![License](https://pypip.in/license/hermes-parser/badge.png)](https://pypi.python.org/pypi/hermes-parser/)
 
 # Dependencies
 
