@@ -3,6 +3,7 @@
 Hermes is a parser generator for LL(1) grammars with extensions to parse expressions. 
 
 [![Build Status](https://secure.travis-ci.org/scottfrazer/hermes.png)](http://travis-ci.org/scottfrazer/hermes)
+[![Coverage Status](https://coveralls.io/repos/scottfrazer/hermes/badge.png)](https://coveralls.io/r/scottfrazer/hermes)
 
 # Dependencies
 
