@@ -52,7 +52,7 @@ Grammar files are specified as a JSON object that typically has the `.gr` extens
 grammar {
   parser<ll1> {
     ... rules ...
-    $e = parser<expressoin> {
+    $e = parser<expression> {
       ... expression rules ...
     }
   }
