@@ -1,11 +1,67 @@
 TODO
 ====
 
+- Make test with macro for first part of expression rule
+
+What does a generated grammar need?
+-----------------------------------
+
+1) One expression parser definition:
+
+{% for exprGrammar in grammar.exprgrammars %}
+
+2) expression parser contains:
+  1) 1 Map of int (terminal id) -> int (binding power) for infix terminals only
+  2) another map of int->int for prefix terminals only
+  3) int get_infix_binding_power(int terminal_id) [returns the binding power or else 0]
+  4) int get_prefix_binding_power(int terminal_id) [returns the binding power or else 0]
+  5) NOTE: (1) and (2) are not strictly needed, only (3) and (4)
+  6) get_current_token(), expect(), parse(rbp=0)
+  7) nud(): production first set, nonterminal first set,
+
+Errors to be added:
+
 1) Have error message if expression rule needs a binding power but is missing one. (Add test!)
 2) Have error message if lexer produces token that is not consumed by the grammar.
-3) Error if the 
+3) Get rid of MacroGeneratedRule
 
 Document the interface for the public classes in Grammar.py:
+
+  HermesGrammar:
+    __init__(name, rules) - self.start=rules[0].nonterminal
+    rules - self.rules
+    terminals
+    nonterminals
+    macros
+    ll1_nonterminals
+    standard_terminals
+    expression_nonterminals
+    parse_table
+    nonterminal_rules (old:grammar_expanded_rules) - {grammar: list(Rule)}
+    (old:grammar_expanded_expr_rules) - {grammar: list(ExprRule)}
+    must_consume_token(nonterminal)
+    is_abstract_terminal(terminal)
+    first(production|terminal|nonterminal)
+    follow(production|terminal|nonterminal)
+    conflicts
+    ? nud ?
+    ? led ?
+    ? precedence ?
+    __str__()
+
+  Rule
+    - id, morphemes?, nonterminal, production
+    - must_consume_token
+    - __eq__(), __str__()
+
+  ExprRule(Rule)
+    - nud_production, led_production
+    - __str__()
+
+  NonTerminal, Terminal
+    - id, name
+
+  ------------------------
 
   Grammar
     - rules (Rule)
