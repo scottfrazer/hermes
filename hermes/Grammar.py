@@ -211,9 +211,10 @@ class CompositeGrammar:
         self.start = rule.nonterminal
       if isinstance(rule, ExprRule):
         expression_terminal = Terminal(rule.nonterminal.string.lower())
-        self.expression_nonterminals.add(rule.nonterminal)
-        self.expression_terminals[rule.nonterminal] = expression_terminal
-        self.terminals.add(expression_terminal)
+        if expression_terminal not in self.terminals:
+          self.expression_nonterminals.add(rule.nonterminal)
+          self.expression_terminals[rule.nonterminal] = expression_terminal
+          self.terminals.add(expression_terminal)
       for expanded_rule in rule.expand():
         if expanded_rule not in self.expanded_rules:
           self.expanded_rules.append(expanded_rule)
