@@ -63,8 +63,19 @@ class ParseTree():
       if len(self.children) == 0:
         return AstList()
       offset = 1 if self.children[0] == self.listSeparator else 0
-      r = AstList([self.children[offset].toAst()])
+      first = self.children[offset].toAst()
+      r = AstList()
+      if first is not None:
+        r.append(first)
       r.extend(self.children[offset+1].toAst())
+      return r
+    elif self.list == 'otlist':
+      if len(self.children) == 0:
+        return AstList()
+      r = AstList()
+      if self.children[0] != self.listSeparator:
+        r.append(self.children[0].toAst())
+      r.extend(self.children[1].toAst())
       return r
     elif self.list == 'tlist':
       if len(self.children) == 0:
@@ -152,7 +163,7 @@ class AstPrettyPrintable:
     indentStr = ''.join([' ' for x in range(indent)])
     colored = noColor
     if self.color:
-      colored = termColor 
+      colored = termColor
     if isinstance(ast, Ast):
       string = '%s(%s:\n' % (indentStr, colored(ast.name, 12))
       string += ',\n'.join([ \
@@ -180,7 +191,7 @@ class ParseTreePrettyPrintable:
   def _prettyPrint(self, parsetree, indent = 0):
     colored = noColor
     if self.color:
-      colored = termColor 
+      colored = termColor
     indentStr = ''.join([' ' for x in range(indent)])
     if isinstance(parsetree, ParseTree):
       if len(parsetree.children) == 0:

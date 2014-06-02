@@ -1,10 +1,10 @@
 import re, json
 from collections import OrderedDict
 from hermes.Morpheme import NonTerminal, Terminal, EmptyString
-from hermes.Grammar import CompositeGrammar, LL1Grammar, ExpressionGrammar, Lexer, Regex
+from hermes.Grammar import CompositeGrammar, Lexer, Regex
 from hermes.Grammar import Rule, ExprRule, MacroGeneratedRule, Production, AstSpecification, AstTranslation
 from hermes.Grammar import InfixOperator, PrefixOperator, MixfixOperator
-from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro
+from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro
 from hermes.Logger import Factory as LoggerFactory
 
 from hermes.parser.hermes.Lexer import Terminal as HermesTerminal
@@ -44,6 +44,11 @@ class GrammarFactory:
       lexer = self.parse_lexer(lexer_ast, lexer_terminals, lexer_nonterminals)
       lexer.code = ast.getAttr('code').source_string
 
+    all_rules = []
+    all_nonterminals = {}
+    all_terminals = {'_empty': EmptyString(-1)}
+    all_macros = {}
+
     expression_parser_asts = []
     ll1_rules = []
     ll1_nonterminals = {}
@@ -55,46 +60,29 @@ class GrammarFactory:
 
     for rule_ast in self.walk_ast(parser_ast, 'Rule'):
       if start is None:
-        start = self.get_morpheme_from_lexer_token(rule_ast.getAttr('nonterminal'), ll1_terminals, ll1_nonterminals)
+        start = self.get_morpheme_from_lexer_token(rule_ast.getAttr('nonterminal'), all_terminals, all_nonterminals)
       production_ast = rule_ast.getAttr('production')
       if isinstance(production_ast, Ast) and production_ast.name == 'ExpressionParser':
         expression_parser_asts.append(rule_ast)
       else:
-        new_rules = self.parse_ll1_rule(rule_ast, ll1_terminals, ll1_nonterminals, ll1_macros)
-        ll1_rules.extend(new_rules) # Bill Maher!
-
-    ll1_grammar = LL1Grammar(
-      name,
-      ll1_macros.values(),
-      set(ll1_rules),
-      start 
-    )
+        new_rules = self.parse_ll1_rule(rule_ast, all_terminals, all_nonterminals, all_macros)
+        all_rules.extend(new_rules) # Bill Maher!
 
     expression_grammars = []
     for expression_parser_ast in expression_parser_asts:
-      expression_terminals = {'_empty': EmptyString(-1)}
-      expression_nonterminals = {}
-      expression_macros = {}
-      expression_rules = []
-      precedence = {}
-      nonterminal = self.get_morpheme_from_lexer_token(expression_parser_ast.getAttr('nonterminal'), expression_terminals, expression_nonterminals)
+      nonterminal = self.get_morpheme_from_lexer_token(expression_parser_ast.getAttr('nonterminal'), all_terminals, all_nonterminals)
       for expression_rule_ast in expression_parser_ast.getAttr('production').getAttr('rules'):
-        rules = self.parse_expr_rule(expression_rule_ast, nonterminal, expression_terminals, expression_nonterminals, expression_macros)
-        expression_rules.extend(rules)
-      grammar = ExpressionGrammar(
-        expression_macros.values(),
-        expression_rules,
-        precedence,
-        nonterminal
-      )
-      expression_grammars.append(grammar)
+        rules = self.parse_expr_rule(expression_rule_ast, nonterminal, all_terminals, all_nonterminals, all_macros)
+        all_rules.extend(rules)
 
-    return CompositeGrammar(name, ll1_grammar, expression_grammars, lexer)
+    return CompositeGrammar(name, all_rules, lexer)
 
   def get_macro_from_ast(self, ast, terminals, nonterminals):
     macro_string = self.macro_ast_to_string(ast)
     if macro_string not in self.macros:
-      if ast.getAttr('name').source_string == 'list' and len(ast.getAttr('parameters')) == 2:
+      if ast.getAttr('name').source_string == 'otlist':
+        macro = self.otlist(ast, terminals, nonterminals)
+      elif ast.getAttr('name').source_string == 'list' and len(ast.getAttr('parameters')) == 2:
         macro = self.slist(ast, terminals, nonterminals)
       elif ast.getAttr('name').source_string == 'list' and len(ast.getAttr('parameters')) == 1:
         macro = self.nlist(ast, terminals, nonterminals)
@@ -104,6 +92,8 @@ class GrammarFactory:
         macro = self.mlist(ast, terminals, nonterminals)
       elif ast.getAttr('name').source_string == 'optional':
         macro = self.optional(ast, terminals, nonterminals)
+      else:
+        raise Exception("Invalid macro: " + str(macro_string))
       self.macros[macro_string] = macro
     return self.macros[macro_string]
 
@@ -118,7 +108,7 @@ class GrammarFactory:
         mode_name = lexer_atom.getAttr('name').source_string
         lexer[mode_name] = self.parse_lexer_mode(lexer_atom, terminals, nonterminals)
     return lexer
-        
+
   def parse_regex(self, regex_ast, terminals, nonterminals):
     (terminal, options, function) = (None, [], None)
     onmatch = regex_ast.getAttr('onmatch')
@@ -130,7 +120,7 @@ class GrammarFactory:
       function = onmatch.getAttr('name').source_string
     elif onmatch.name == 'Null':
       terminal = None
-   
+
     if regex_ast.getAttr('options') is not None:
       for option in regex_ast.getAttr('options'):
         options.append(option.source_string)
@@ -162,7 +152,7 @@ class GrammarFactory:
       if precedence.getAttr('marker').str == 'asterisk':
         self.binding_power += 1000
       associativity = precedence.getAttr('associativity').source_string
-   
+
     if nonterminal != expr_nonterminal:
       raise Exception('parse_expr_rule(): Expecting rule nonterminal to match parser nonterminal')
 
@@ -286,7 +276,7 @@ class GrammarFactory:
       ast = self.parse_ast(ast_ast)
       rules.append( Rule(nonterminal, Production(morphemes), id=0, root=0, ast=ast) )
     return rules
-  
+
   def parse_ast(self, ast_ast):
     if ast_ast is None:
       return AstTranslation(0)
@@ -344,6 +334,46 @@ class GrammarFactory:
       rules.append( MacroGeneratedRule(nt0, Production( [empty] )) )
 
     macro = MinimumListMacro(morpheme, minimum, nt0, rules)
+
+    for rule in rules:
+      rule.nonterminal.macro = macro
+
+    return macro
+
+  def otlist( self, ast, terminals, nonterminals ):
+    morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
+    separator = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[1], terminals, nonterminals)
+    minimum = int(ast.getAttr('parameters')[2].source_string) if len(ast.getAttr('parameters')) > 2 else 0
+    nt0 = self.generate_nonterminal(nonterminals)
+    nt1 = self.generate_nonterminal(nonterminals)
+    nt2 = self.generate_nonterminal(nonterminals)
+    empty = terminals['_empty']
+
+    # otlist(:item, :comma, 3) =
+    # $_gen0 = :item :comma :item :comma :item $_gen1
+    # $_gen0 = :_empty
+    # $_gen1 = :comma _gen2
+    # $_gen1 = :_empty
+    # $_gen2 = :item $_gen1
+    # $_gen2 = :_empty
+    start_production = []
+    if minimum > 0:
+      for x in range(minimum):
+        start_production.extend([morpheme, separator])
+      start_production = start_production[:-1]
+    else:
+      start_production.append(morpheme)
+    start_production.append(nt1)
+    rules = [
+      MacroGeneratedRule(nt0, Production( start_production )),
+      MacroGeneratedRule(nt1, Production( [separator, nt2] )),
+      MacroGeneratedRule(nt1, Production( [empty] )),
+      MacroGeneratedRule(nt2, Production( [morpheme, nt1] )),
+      MacroGeneratedRule(nt2, Production( [empty] ))
+    ]
+    if minimum == 0:
+      rules.append(MacroGeneratedRule(nt0, Production( [empty] )))
+    macro = OptionallyTerminatedListMacro(morpheme, separator, minimum, nt0, rules)
 
     for rule in rules:
       rule.nonterminal.macro = macro
@@ -435,7 +465,7 @@ class GrammarFactory:
     for rule in rules:
       rule.nonterminal.macro = macro
 
-    return macro 
+    return macro
 
   def walk_ast_terminal(self, ast, terminal, stop=False):
     nodes = []

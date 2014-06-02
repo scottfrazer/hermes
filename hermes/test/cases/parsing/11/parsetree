@@ -13,7 +13,7 @@
             <identifier (line 0 col 0) ``>
           ),
           <lparen (line 0 col 0) ``>,
-          (_gen4: ),
+          (_gen5: ),
           <rparen (line 0 col 0) ``>
         )
       ),
@@ -35,19 +35,22 @@
               ),
               (_gen3:
                 <comma (line 0 col 0) ``>,
-                (initializer_list_item:
-                  <item (line 0 col 0) ``>
-                ),
-                (_gen3:
-                  <comma (line 0 col 0) ``>,
+                (_gen4:
                   (initializer_list_item:
                     <item (line 0 col 0) ``>
                   ),
-                  (_gen3: )
+                  (_gen3:
+                    <comma (line 0 col 0) ``>,
+                    (_gen4:
+                      (initializer_list_item:
+                        <item (line 0 col 0) ``>
+                      ),
+                      (_gen3: )
+                    )
+                  )
                 )
               )
             ),
-            (comma_opt: ),
             <rbrace (line 0 col 0) ``>
           )
         ),

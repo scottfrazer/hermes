@@ -1,55 +1,56 @@
 {
-    "$comma_opt": [
-        ":rbrace"
-    ], 
-    "$_gen5": [
-        ":rbrace", 
-        ":rparen", 
-        ":rsquare"
-    ], 
-    "$_gen4": [
-        ":rbrace", 
-        ":rparen", 
-        ":rsquare"
-    ], 
-    "$_gen1": [
-        ":_eos"
-    ], 
-    "$_gen0": [
-        ":_eos"
-    ], 
-    "$_gen3": [
-        ":comma"
-    ], 
     "$initializer_list_item": [
-        ":comma"
-    ], 
-    "$start": [
-        ":_eos"
-    ], 
-    "$type_name": [
-        ":rparen"
+        ":comma", 
+        ":rbrace"
     ], 
     "$sub": [
         ":_eos", 
         ":comma"
     ], 
+    "$_gen5": [
+        ":rparen", 
+        ":rsquare", 
+        ":rbrace"
+    ], 
     "$e": [
         ":_eos", 
-        ":divide", 
         ":rparen", 
+        ":divide", 
+        ":subtract", 
         ":rbrace", 
-        ":rsquare", 
         ":comma", 
-        ":multiply", 
         ":add", 
-        ":subtract"
+        ":multiply", 
+        ":rsquare"
+    ], 
+    "$start": [
+        ":_eos"
+    ], 
+    "$_gen0": [
+        ":_eos"
+    ], 
+    "$_gen1": [
+        ":_eos"
     ], 
     "$_gen2": [
-        ":comma"
+        ":rbrace"
+    ], 
+    "$_gen3": [
+        ":rbrace"
+    ], 
+    "$_gen4": [
+        ":rbrace"
     ], 
     "$item": [
         ":_eos", 
         ":comma"
+    ], 
+    "$_gen6": [
+        ":rparen", 
+        ":rsquare", 
+        ":rbrace"
+    ], 
+    "$type_name": [
+        ":rparen"
     ]
 }

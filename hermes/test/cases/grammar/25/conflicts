@@ -1,0 +1,7 @@
+ -- FIRST/FOLLOW conflict --
+Nonterminal $_gen7 has a first and follow set that overlap.
+
+first($_gen7) = {:_empty, :char, :e, :identifier, :int, :lbrace, :lparen, :lparen_cast, :lsquare, :number, :subtract}
+follow($_gen7) = {:lsquare}
+
+first($_gen7) ∩ follow($_gen7) = {:lsquare}

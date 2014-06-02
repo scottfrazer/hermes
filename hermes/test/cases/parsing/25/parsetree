@@ -33,15 +33,18 @@
               <item (line 10 col 0) ``>,
               (_gen3:
                 <comma (line 11 col 0) ``>,
-                <item (line 12 col 0) ``>,
-                (_gen3:
-                  <comma (line 13 col 0) ``>,
-                  <item (line 14 col 0) ``>,
-                  (_gen3: )
+                (_gen4:
+                  <item (line 12 col 0) ``>,
+                  (_gen3:
+                    <comma (line 13 col 0) ``>,
+                    (_gen4:
+                      <item (line 14 col 0) ``>,
+                      (_gen3: )
+                    )
+                  )
                 )
               )
             ),
-            (_gen4: ),
             <rbrace (line 15 col 0) ``>
           )
         ),
@@ -53,7 +56,7 @@
                 <number (line 17 col 0) ``>
               ),
               <lsquare (line 18 col 0) ``>,
-              (_gen2: ),
+              (_gen8: ),
               <rsquare (line 19 col 0) ``>
             )
           ),
@@ -81,12 +84,12 @@
                   <rparen (line 21 col 0) ``>
                 ),
                 <lsquare (line 22 col 0) ``>,
-                (_gen2:
+                (_gen8:
                   <item (line 23 col 0) ``>,
-                  (_gen3:
+                  (_gen9:
                     <comma (line 24 col 0) ``>,
                     <item (line 25 col 0) ``>,
-                    (_gen3: )
+                    (_gen9: )
                   )
                 ),
                 <rsquare (line 26 col 0) ``>

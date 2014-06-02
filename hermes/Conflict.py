@@ -101,8 +101,8 @@ class FirstFirstConflict(Conflict):
     ]), indent=2)
 
   def __str__( self ):
-    rule1_first = self.grammar.ruleFirst(self.rule1)
-    rule2_first = self.grammar.ruleFirst(self.rule2)
+    rule1_first = self.grammar.first(self.rule1.production)
+    rule2_first = self.grammar.first(self.rule2.production)
     string = " -- FIRST/FIRST conflict --\n"
     string += "Two rules for nonterminal %s have intersecting first sets.  Can't decide which rule to choose based on terminal.\n\n" %(self.rule1.nonterminal)
     string += "(Rule-%d)  %s\n" %(self.rule1.id, self.rule1)

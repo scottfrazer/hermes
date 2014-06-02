@@ -59,6 +59,21 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
 
     if ( next ) free(next);
   }
+  else if ( !strcmp(tree->list, "otlist") )
+  {
+    this = parsetree_node_to_ast(&tree->children[0]);
+    next = parsetree_node_to_ast(&tree->children[1]);
+    if ( tree->children[0].object == tree->listSeparator )
+    {
+      ast_list = (AST_LIST_T *) next->object;
+    }
+    else
+    {
+      ast_list = calloc(1, sizeof(AST_LIST_T));
+      ast_list->tree = this;
+      ast_list->next = (AST_LIST_T *) next->object;
+    }
+  }
   else if ( !strcmp(tree->list, "tlist") )
   {
     this = parsetree_node_to_ast(&tree->children[0]);
@@ -98,7 +113,7 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
     }
 
     next = parsetree_node_to_ast(&tree->children[tree->nchildren - 1]);
-    
+
     if ( next == NULL ) tail->next = NULL;
     else tail->next = (AST_LIST_T *) next->object;
   }
@@ -292,7 +307,7 @@ _parsetree_to_string_bytes( PARSE_TREE_NODE_T * node, int indent, PARSER_CONTEXT
       return bytes;
     }
   }
-  
+
   if ( node->type == PARSE_TREE_NODE_TYPE_TERMINAL )
   {
     return 2 + token_to_string_bytes( (TOKEN_T *) node->object, indent, ctx );
@@ -534,7 +549,7 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_T * ct
       free(indent_str);
       return str;
     }
-    
+
     snprintf(str, bytes, "[\n");
     for ( i = 0, lnode = ast_list; lnode && lnode->tree; i++, lnode = lnode->next )
     {
@@ -639,7 +654,7 @@ free_ast( ABSTRACT_SYNTAX_TREE_T * ast )
   AST_OBJECT_T * ast_object;
   AST_LIST_T * ast_list, * current, * tmp;
   int i;
-  
+
   if ( ast )
   {
     if ( ast->type == AST_NODE_TYPE_OBJECT )
@@ -655,7 +670,7 @@ free_ast( ABSTRACT_SYNTAX_TREE_T * ast )
       free(ast_object->children);
       free(ast_object);
     }
-    
+
     if ( ast->type == AST_NODE_TYPE_LIST )
     {
       ast_list = (AST_LIST_T *) ast->object;
@@ -684,4 +699,3 @@ free_ast( ABSTRACT_SYNTAX_TREE_T * ast )
     free(ast);
   }
 }
-

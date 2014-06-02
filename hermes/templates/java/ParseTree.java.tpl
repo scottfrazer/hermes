@@ -77,8 +77,21 @@ public class ParseTree implements ParseTreeNode {
         return astList;
       }
 
-      astList.add(this.children.get(offset).toAst());
+      AstNode first = this.children.get(offset).toAst();
+      if ( first != null ) {
+        astList.add(this.children.get(offset).toAst());
+      }
       astList.addAll((AstList) this.children.get(offset + 1).toAst());
+      return astList;
+    } else if ( this.list == "otlist" ) {
+      AstList astList = new AstList();
+      if ( this.children.size() == 0 ) {
+        return astList;
+      }
+      if (this.children.get(0) != this.listSeparator) {
+        astList.add(this.children.get(0).toAst());
+      }
+      astList.addAll((AstList) this.children.get(1).toAst());
       return astList;
     } else if ( this.list == "tlist" ) {
       AstList astList = new AstList();
@@ -86,7 +99,7 @@ public class ParseTree implements ParseTreeNode {
       if ( this.children.size() == 0 ) {
         return astList;
       }
-  
+
       astList.add(this.children.get(0).toAst());
       astList.addAll((AstList) this.children.get(2).toAst());
       return astList;
@@ -191,7 +204,7 @@ public class ParseTree implements ParseTreeNode {
       String sub = node.toPrettyString(indent + 2).trim();
       children.add(spaces + "  " +  sub);
     }
-    
+
     return spaces + "(" + this.nonterminal.toString() + ":\n" + Utility.join(children, ",\n") + "\n" + spaces + ")";
   }
 

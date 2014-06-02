@@ -1,92 +1,92 @@
 {
-    "$_gen4": [
-        ":e", 
-        ":lparen_cast", 
+    "$initializer_list_item": [
+        ":item"
+    ], 
+    "$sub": [
         ":identifier", 
-        ":_empty", 
+        ":subtract", 
+        ":b", 
+        ":a", 
+        ":e", 
         ":lsquare", 
-        ":number", 
-        ":lparen", 
         ":lbrace", 
-        ":subtract"
+        ":lparen_cast", 
+        ":number", 
+        ":lparen"
     ], 
     "$_gen5": [
-        ":comma", 
-        ":_empty"
-    ], 
-    "$_gen2": [
-        ":item", 
-        ":_empty"
-    ], 
-    "$_gen3": [
-        ":comma", 
-        ":_empty"
-    ], 
-    "$_gen0": [
+        ":identifier", 
+        ":subtract", 
+        ":_empty", 
         ":e", 
-        ":a", 
-        ":b", 
+        ":lsquare", 
+        ":lbrace", 
         ":lparen_cast", 
+        ":number", 
+        ":lparen"
+    ], 
+    "$e": [
+        ":lsquare", 
+        ":identifier", 
         ":lbrace", 
         ":subtract", 
-        ":lsquare", 
+        ":lparen_cast", 
         ":number", 
         ":lparen", 
+        ":e"
+    ], 
+    "$start": [
         ":identifier", 
-        ":_empty"
+        ":subtract", 
+        ":b", 
+        ":_empty", 
+        ":e", 
+        ":lsquare", 
+        ":lbrace", 
+        ":lparen_cast", 
+        ":number", 
+        ":lparen", 
+        ":a"
+    ], 
+    "$_gen0": [
+        ":identifier", 
+        ":subtract", 
+        ":b", 
+        ":_empty", 
+        ":e", 
+        ":lsquare", 
+        ":lbrace", 
+        ":lparen_cast", 
+        ":number", 
+        ":lparen", 
+        ":a"
     ], 
     "$_gen1": [
         ":comma", 
         ":_empty"
     ], 
-    "$e": [
-        ":e", 
-        ":lparen_cast", 
-        ":lbrace", 
-        ":lsquare", 
-        ":number", 
-        ":lparen", 
-        ":identifier", 
-        ":subtract"
+    "$_gen2": [
+        ":_empty", 
+        ":item"
+    ], 
+    "$_gen3": [
+        ":comma", 
+        ":_empty"
+    ], 
+    "$_gen4": [
+        ":_empty", 
+        ":item"
+    ], 
+    "$item": [
+        ":b", 
+        ":a"
+    ], 
+    "$_gen6": [
+        ":comma", 
+        ":_empty"
     ], 
     "$type_name": [
         ":int", 
         ":char"
-    ], 
-    "$comma_opt": [
-        ":comma", 
-        ":_empty"
-    ], 
-    "$sub": [
-        ":e", 
-        ":a", 
-        ":b", 
-        ":lparen_cast", 
-        ":lbrace", 
-        ":lsquare", 
-        ":number", 
-        ":lparen", 
-        ":identifier", 
-        ":subtract"
-    ], 
-    "$start": [
-        ":e", 
-        ":a", 
-        ":b", 
-        ":lparen_cast", 
-        ":lbrace", 
-        ":subtract", 
-        ":lsquare", 
-        ":number", 
-        ":lparen", 
-        ":identifier", 
-        ":_empty"
-    ], 
-    "$initializer_list_item": [
-        ":item"
-    ], 
-    "$item": [
-        ":a", 
-        ":b"
     ]
 }

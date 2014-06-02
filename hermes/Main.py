@@ -16,6 +16,7 @@ def Cli():
     command_help = {
         "analyze": "Analyze a grammer, find conflicts, and print out first/follow sets",
         "generate": "Generate the code for a parser",
+        "parse": "Parse a Hermes grammar file",
         "bootstrap": "Generate the parser for Hermes to parse its own grammar file format"
     }
 
@@ -62,6 +63,12 @@ def Cli():
     commands['generate'].add_argument(
         '-m', '--add-main', required=False, action='store_true', help='If this is specified, a main() function will be generated in the source code.'
     )
+    commands['parse'] = subparsers.add_parser(
+        'parse', description=command_help['parse'], help=command_help['parse']
+    )
+    commands['parse'].add_argument(
+        'grammar', metavar='GRAMMAR', help='Grammar file'
+    )
 
     cli = parser.parse_args()
     logger = LoggerFactory().initialize(cli.debug)
@@ -105,6 +112,11 @@ def Cli():
             cli.language.lower(),
             directory=cli.directory, add_main=cli.add_main, java_package=cli.java_package
         )
+
+    elif cli.action == 'parse':
+        from hermes.parser.Common import AstPrettyPrintable
+        ast = GrammarParser().get_ast('test', open(cli.grammar))
+        print(AstPrettyPrintable(ast))
 
 if __name__ == '__main__':
     Cli()

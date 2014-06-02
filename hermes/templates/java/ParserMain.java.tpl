@@ -63,7 +63,7 @@ public class ParserMain {
         JSONObject token = arr.getJSONObject(i);
 
         tokens.add(new Terminal(
-          terminals.get(token.getString("terminal")),
+          terminals.get(token.getString("terminal")).id(),
           token.getString("terminal"),
           token.getString("source_string"),
           token.getString("resource"),

@@ -198,30 +198,24 @@
                   led=[
                     <terminal (line 12 col 57) `lbrace`>,
                     (Macro:
-                      name=<identifier (line 12 col 65) `list`>,
+                      name=<identifier (line 12 col 65) `otlist`>,
                       parameters=[
-                        <terminal (line 12 col 70) `item`>,
-                        <terminal (line 12 col 77) `comma`>
+                        <terminal (line 12 col 72) `item`>,
+                        <terminal (line 12 col 79) `comma`>
                       ]
                     ),
-                    (Macro:
-                      name=<identifier (line 12 col 85) `optional`>,
-                      parameters=[
-                        <terminal (line 12 col 94) `comma`>
-                      ]
-                    ),
-                    <terminal (line 12 col 102) `rbrace`>
+                    <terminal (line 12 col 87) `rbrace`>
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 12 col 113) `TypeInitializion`>,
+                    name=<identifier (line 12 col 98) `TypeInitializion`>,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 12 col 131) `type`>,
-                        index=<nonterminal_reference (line 12 col 136) `1`>
+                        name=<identifier (line 12 col 116) `type`>,
+                        index=<nonterminal_reference (line 12 col 121) `1`>
                       ),
                       (AstParameter:
-                        name=<identifier (line 12 col 140) `initializer`>,
-                        index=<nonterminal_reference (line 12 col 152) `4`>
+                        name=<identifier (line 12 col 125) `initializer`>,
+                        index=<nonterminal_reference (line 12 col 137) `4`>
                       )
                     ]
                   )
@@ -272,35 +266,30 @@
                 nonterminal=<nonterminal (line 14 col 16) `e`>,
                 production=(MixfixProduction:
                   nud=[
-                    (Macro:
-                      name=<identifier (line 14 col 21) `optional`>,
-                      parameters=[
-                        <nonterminal (line 14 col 30) `e`>
-                      ]
-                    )
+                    <nonterminal (line 14 col 21) `e`>
                   ],
                   nud_ast=None,
                   led=[
-                    <terminal (line 14 col 38) `lsquare`>,
+                    <terminal (line 14 col 28) `lsquare`>,
                     (Macro:
-                      name=<identifier (line 14 col 47) `list`>,
+                      name=<identifier (line 14 col 37) `list`>,
                       parameters=[
-                        <terminal (line 14 col 52) `item`>,
-                        <terminal (line 14 col 59) `comma`>
+                        <terminal (line 14 col 42) `item`>,
+                        <terminal (line 14 col 49) `comma`>
                       ]
                     ),
-                    <terminal (line 14 col 67) `rsquare`>
+                    <terminal (line 14 col 57) `rsquare`>
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 14 col 79) `ExprPlusList`>,
+                    name=<identifier (line 14 col 69) `ExprPlusList`>,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 14 col 93) `expr`>,
-                        index=<nonterminal_reference (line 14 col 98) `$`>
+                        name=<identifier (line 14 col 83) `expr`>,
+                        index=<nonterminal_reference (line 14 col 88) `$`>
                       ),
                       (AstParameter:
-                        name=<identifier (line 14 col 102) `params`>,
-                        index=<nonterminal_reference (line 14 col 109) `2`>
+                        name=<identifier (line 14 col 92) `params`>,
+                        index=<nonterminal_reference (line 14 col 99) `2`>
                       )
                     ]
                   )

@@ -465,43 +465,28 @@
                                                   (_gen22:
                                                     (morpheme:
                                                       (macro:
-                                                        <identifier (line 12 col 65) `list`>,
-                                                        <lparen (line 12 col 69) `(`>,
+                                                        <identifier (line 12 col 65) `otlist`>,
+                                                        <lparen (line 12 col 71) `(`>,
                                                         (_gen25:
                                                           (macro_parameter:
-                                                            <terminal (line 12 col 70) `item`>
+                                                            <terminal (line 12 col 72) `item`>
                                                           ),
                                                           (_gen26:
-                                                            <comma (line 12 col 75) `,`>,
+                                                            <comma (line 12 col 77) `,`>,
                                                             (macro_parameter:
-                                                              <terminal (line 12 col 77) `comma`>
+                                                              <terminal (line 12 col 79) `comma`>
                                                             ),
                                                             (_gen26: )
                                                           )
                                                         ),
-                                                        <rparen (line 12 col 83) `)`>
+                                                        <rparen (line 12 col 85) `)`>
                                                       )
                                                     ),
                                                     (_gen22:
                                                       (morpheme:
-                                                        (macro:
-                                                          <identifier (line 12 col 85) `optional`>,
-                                                          <lparen (line 12 col 93) `(`>,
-                                                          (_gen25:
-                                                            (macro_parameter:
-                                                              <terminal (line 12 col 94) `comma`>
-                                                            ),
-                                                            (_gen26: )
-                                                          ),
-                                                          <rparen (line 12 col 100) `)`>
-                                                        )
+                                                        <terminal (line 12 col 87) `rbrace`>
                                                       ),
-                                                      (_gen22:
-                                                        (morpheme:
-                                                          <terminal (line 12 col 102) `rbrace`>
-                                                        ),
-                                                        (_gen22: )
-                                                      )
+                                                      (_gen22: )
                                                     )
                                                   )
                                                 )
@@ -509,27 +494,27 @@
                                             ),
                                             (_gen20:
                                               (ast_transform:
-                                                <arrow (line 12 col 110) `->`>,
+                                                <arrow (line 12 col 95) `->`>,
                                                 (ast_transform_sub:
-                                                  <identifier (line 12 col 113) `TypeInitializion`>,
-                                                  <lparen (line 12 col 129) `(`>,
+                                                  <identifier (line 12 col 98) `TypeInitializion`>,
+                                                  <lparen (line 12 col 114) `(`>,
                                                   (_gen23:
                                                     (ast_parameter:
-                                                      <identifier (line 12 col 131) `type`>,
-                                                      <equals (line 12 col 135) `=`>,
-                                                      <nonterminal_reference (line 12 col 136) `1`>
+                                                      <identifier (line 12 col 116) `type`>,
+                                                      <equals (line 12 col 120) `=`>,
+                                                      <nonterminal_reference (line 12 col 121) `1`>
                                                     ),
                                                     (_gen24:
-                                                      <comma (line 12 col 138) `,`>,
+                                                      <comma (line 12 col 123) `,`>,
                                                       (ast_parameter:
-                                                        <identifier (line 12 col 140) `initializer`>,
-                                                        <equals (line 12 col 151) `=`>,
-                                                        <nonterminal_reference (line 12 col 152) `4`>
+                                                        <identifier (line 12 col 125) `initializer`>,
+                                                        <equals (line 12 col 136) `=`>,
+                                                        <nonterminal_reference (line 12 col 137) `4`>
                                                       ),
                                                       (_gen24: )
                                                     )
                                                   ),
-                                                  <rparen (line 12 col 155) `)`>
+                                                  <rparen (line 12 col 140) `)`>
                                                 )
                                               )
                                             )
@@ -656,17 +641,7 @@
                                                 (nud:
                                                   (_gen22:
                                                     (morpheme:
-                                                      (macro:
-                                                        <identifier (line 14 col 21) `optional`>,
-                                                        <lparen (line 14 col 29) `(`>,
-                                                        (_gen25:
-                                                          (macro_parameter:
-                                                            <nonterminal (line 14 col 30) `e`>
-                                                          ),
-                                                          (_gen26: )
-                                                        ),
-                                                        <rparen (line 14 col 32) `)`>
-                                                      )
+                                                      <nonterminal (line 14 col 21) `e`>
                                                     ),
                                                     (_gen22: )
                                                   )
@@ -674,34 +649,34 @@
                                                 (_gen20: ),
                                                 (_gen15:
                                                   (led:
-                                                    <expression_divider (line 14 col 34) `<=>`>,
+                                                    <expression_divider (line 14 col 24) `<=>`>,
                                                     (_gen22:
                                                       (morpheme:
-                                                        <terminal (line 14 col 38) `lsquare`>
+                                                        <terminal (line 14 col 28) `lsquare`>
                                                       ),
                                                       (_gen22:
                                                         (morpheme:
                                                           (macro:
-                                                            <identifier (line 14 col 47) `list`>,
-                                                            <lparen (line 14 col 51) `(`>,
+                                                            <identifier (line 14 col 37) `list`>,
+                                                            <lparen (line 14 col 41) `(`>,
                                                             (_gen25:
                                                               (macro_parameter:
-                                                                <terminal (line 14 col 52) `item`>
+                                                                <terminal (line 14 col 42) `item`>
                                                               ),
                                                               (_gen26:
-                                                                <comma (line 14 col 57) `,`>,
+                                                                <comma (line 14 col 47) `,`>,
                                                                 (macro_parameter:
-                                                                  <terminal (line 14 col 59) `comma`>
+                                                                  <terminal (line 14 col 49) `comma`>
                                                                 ),
                                                                 (_gen26: )
                                                               )
                                                             ),
-                                                            <rparen (line 14 col 65) `)`>
+                                                            <rparen (line 14 col 55) `)`>
                                                           )
                                                         ),
                                                         (_gen22:
                                                           (morpheme:
-                                                            <terminal (line 14 col 67) `rsquare`>
+                                                            <terminal (line 14 col 57) `rsquare`>
                                                           ),
                                                           (_gen22: )
                                                         )
@@ -711,27 +686,27 @@
                                                 ),
                                                 (_gen20:
                                                   (ast_transform:
-                                                    <arrow (line 14 col 76) `->`>,
+                                                    <arrow (line 14 col 66) `->`>,
                                                     (ast_transform_sub:
-                                                      <identifier (line 14 col 79) `ExprPlusList`>,
-                                                      <lparen (line 14 col 91) `(`>,
+                                                      <identifier (line 14 col 69) `ExprPlusList`>,
+                                                      <lparen (line 14 col 81) `(`>,
                                                       (_gen23:
                                                         (ast_parameter:
-                                                          <identifier (line 14 col 93) `expr`>,
-                                                          <equals (line 14 col 97) `=`>,
-                                                          <nonterminal_reference (line 14 col 98) `$`>
+                                                          <identifier (line 14 col 83) `expr`>,
+                                                          <equals (line 14 col 87) `=`>,
+                                                          <nonterminal_reference (line 14 col 88) `$`>
                                                         ),
                                                         (_gen24:
-                                                          <comma (line 14 col 100) `,`>,
+                                                          <comma (line 14 col 90) `,`>,
                                                           (ast_parameter:
-                                                            <identifier (line 14 col 102) `params`>,
-                                                            <equals (line 14 col 108) `=`>,
-                                                            <nonterminal_reference (line 14 col 109) `2`>
+                                                            <identifier (line 14 col 92) `params`>,
+                                                            <equals (line 14 col 98) `=`>,
+                                                            <nonterminal_reference (line 14 col 99) `2`>
                                                           ),
                                                           (_gen24: )
                                                         )
                                                       ),
-                                                      <rparen (line 14 col 112) `)`>
+                                                      <rparen (line 14 col 102) `)`>
                                                     )
                                                   )
                                                 )

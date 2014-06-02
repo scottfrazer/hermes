@@ -1,6 +1,6 @@
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator %}
-{% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro %}
+{% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,9 +12,9 @@
 static PARSE_TREE_T * parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T *);
 {% endfor %}
 
-{% for exprGrammar in grammar.exprgrammars %}
-static PARSE_TREE_T * parse_{{exprGrammar.nonterminal.string.lower()}}(PARSER_CONTEXT_T *);
-static PARSE_TREE_T * _parse_{{exprGrammar.nonterminal.string.lower()}}(int, PARSER_CONTEXT_T *);
+{% for expression_nonterminal in grammar.expression_nonterminals %}
+static PARSE_TREE_T * parse_{{expression_nonterminal.string.lower()}}(PARSER_CONTEXT_T *);
+static PARSE_TREE_T * _parse_{{expression_nonterminal.string.lower()}}(int, PARSER_CONTEXT_T *);
 {% endfor %}
 
 void syntax_error( PARSER_CONTEXT_T * ctx, char * message );
@@ -32,13 +32,13 @@ static char * {{prefix}}morphemes[] = {
 
 static int {{prefix}}first[{{len(grammar.nonterminals)}}][{{len(grammar.standard_terminals)+2}}] = {
 {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
-  { {{', '.join([str(x.id) for x in grammar.first[nonterminal]])}}{{', ' if len(grammar.first[nonterminal]) else ''}}-2 },
+  { {{', '.join([str(x.id) for x in grammar.first(nonterminal)])}}{{', ' if len(grammar.first(nonterminal)) else ''}}-2 },
 {% endfor %}
 };
 
 static int {{prefix}}follow[{{len(grammar.nonterminals)}}][{{len(grammar.standard_terminals)+2}}] = {
 {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
-  { {{', '.join([str(x.id) for x in grammar.follow[nonterminal]])}}{{', ' if len(grammar.follow[nonterminal]) else ''}}-2 },
+  { {{', '.join([str(x.id) for x in grammar.follow(nonterminal)])}}{{', ' if len(grammar.follow(nonterminal)) else ''}}-2 },
 {% endfor %}
 };
 
@@ -50,8 +50,8 @@ static int {{prefix}}table[{{len(grammar.nonterminals)}}][{{len(grammar.standard
 };
 
 /* Index with rule ID */
-static PARSETREE_TO_AST_CONVERSION_TYPE_E {{prefix}}nud_ast_types[{{len(grammar.expandedRules)}}] = {
-  {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
+static PARSETREE_TO_AST_CONVERSION_TYPE_E {{prefix}}nud_ast_types[{{len(grammar.get_expanded_rules())}}] = {
+  {% for rule in sorted(grammar.get_expanded_rules(), key=lambda x: x.id) %}
     {% if isinstance(rule, ExprRule) and isinstance(rule.nudAst, AstSpecification) %}
   AST_CREATE_OBJECT, /* ({{rule.id}}) {{rule}} */
     {% else %}
@@ -61,8 +61,8 @@ static PARSETREE_TO_AST_CONVERSION_TYPE_E {{prefix}}nud_ast_types[{{len(grammar.
 };
 
 /* Index with rule ID */
-static PARSETREE_TO_AST_CONVERSION_TYPE_E {{prefix}}ast_types[{{len(grammar.expandedRules)}}] = {
-  {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
+static PARSETREE_TO_AST_CONVERSION_TYPE_E {{prefix}}ast_types[{{len(grammar.get_expanded_rules())}}] = {
+  {% for rule in sorted(grammar.get_expanded_rules(), key=lambda x: x.id) %}
     {% if isinstance(rule.ast, AstSpecification) %}
   AST_CREATE_OBJECT, /* ({{rule.id}}) {{rule}} */
     {% else %}
@@ -72,7 +72,7 @@ static PARSETREE_TO_AST_CONVERSION_TYPE_E {{prefix}}ast_types[{{len(grammar.expa
 };
 
 static AST_CREATE_OBJECT_INIT {{prefix}}nud_ast_objects[] = {
-  {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
+  {% for rule in sorted(grammar.get_expanded_rules(), key=lambda x: x.id) %}
     {% if isinstance(rule, ExprRule) and rule.nudAst and isinstance(rule.nudAst, AstSpecification) %}
       {% for i, key in enumerate(rule.nudAst.parameters.keys()) %}
   { {{rule.id}}, "{{rule.nudAst.name}}", "{{key}}", {{rule.nudAst.parameters[key] if rule.nudAst.parameters[key] != '$' else "'$'"}} },
@@ -87,7 +87,7 @@ static AST_CREATE_OBJECT_INIT {{prefix}}nud_ast_objects[] = {
 };
 
 static AST_CREATE_OBJECT_INIT {{prefix}}ast_objects[] = {
-  {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
+  {% for rule in sorted(grammar.get_expanded_rules(), key=lambda x: x.id) %}
     {% if isinstance(rule.ast, AstSpecification) %}
       {% for i, key in enumerate(rule.ast.parameters.keys()) %}
   { {{rule.id}}, "{{rule.ast.name}}", "{{key}}", {{rule.ast.parameters[key] if rule.ast.parameters[key] != '$' else "'$'"}} },
@@ -101,14 +101,14 @@ static AST_CREATE_OBJECT_INIT {{prefix}}ast_objects[] = {
   {0}
 };
 
-static int {{prefix}}ast_index[{{len(grammar.expandedRules)}}] = {
-  {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
+static int {{prefix}}ast_index[{{len(grammar.get_expanded_rules())}}] = {
+  {% for rule in sorted(grammar.get_expanded_rules(), key=lambda x: x.id) %}
   {{rule.ast.idx if isinstance(rule.ast, AstTranslation) else 0}}, /* ({{rule.id}}) {{rule}} */
   {% endfor %}
 };
 
-static int {{prefix}}nud_ast_index[{{len(grammar.expandedRules)}}] = {
-  {% for rule in sorted(grammar.expandedRules, key=lambda x: x.id) %}
+static int {{prefix}}nud_ast_index[{{len(grammar.get_expanded_rules())}}] = {
+  {% for rule in sorted(grammar.get_expanded_rules(), key=lambda x: x.id) %}
   {{rule.nudAst.idx if isinstance(rule, ExprRule) and isinstance(rule.nudAst, AstTranslation) else 0}}, /* ({{rule.id}}) {{rule}} */
   {% endfor %}
 };
@@ -215,7 +215,7 @@ _get_ast_converter(int rule_id, PARSETREE_TO_AST_CONVERSION_TYPE_E * ast_types, 
     converter->type = AST_RETURN_INDEX;
     converter->object = (PARSE_TREE_TO_AST_CONVERSION_U *) ast_return_index;
   }
-  
+
   if (conversion_type == AST_CREATE_OBJECT)
   {
     ast_object_spec = calloc(1, sizeof(AST_OBJECT_SPECIFICATION_T));
@@ -257,11 +257,11 @@ get_ast_converter(int rule_id)
   return _get_ast_converter(rule_id, &{{prefix}}ast_types[0], &{{prefix}}ast_objects[0], &{{prefix}}nud_ast_index[0]);
 }
 
-{% for exprGrammar in grammar.exprgrammars %}
-{% py name = exprGrammar.nonterminal.string.lower() %}
+{% for expression_nonterminal in grammar.expression_nonterminals %}
+{% py name = expression_nonterminal.string.lower() %}
 
 static int infixBp_{{name}}[{{len(grammar.terminals)}}] = {
-  {% py operators = {rule.operator.operator.id: rule.operator.binding_power for rule in exprGrammar.rules if rule.operator and rule.operator.associativity in ['left', 'right']} %}
+  {% py operators = {rule.operator.operator.id: rule.operator.binding_power for rule in grammar.get_rules(expression_nonterminal) if rule.operator and rule.operator.associativity in ['left', 'right']} %}
 
   {% for i in range(len(grammar.terminals)) %}
   {{0 if i not in operators else operators[i]}},
@@ -269,7 +269,7 @@ static int infixBp_{{name}}[{{len(grammar.terminals)}}] = {
 };
 
 static int prefixBp_{{name}}[{{len(grammar.terminals)}}] = {
-  {% py operators = {rule.operator.operator.id: rule.operator.binding_power for rule in exprGrammar.rules if rule.operator and rule.operator.associativity in ['unary']} %}
+  {% py operators = {rule.operator.operator.id: rule.operator.binding_power for rule in grammar.get_rules(expression_nonterminal) if rule.operator and rule.operator.associativity in ['unary']} %}
 
   {% for i in range(len(grammar.terminals)) %}
   {{0 if i not in operators else operators[i]}},
@@ -293,13 +293,13 @@ nud_{{name}}(PARSER_CONTEXT_T * ctx)
 {
   PARSE_TREE_T * tree;
   TOKEN_LIST_T * list;
-  int current = ctx->tokens->current; 
+  int current = ctx->tokens->current;
   int modifier = 0;
 
   list = ctx->tokens;
 
   tree = calloc(1, sizeof(PARSE_TREE_T));
-  tree->nonterminal = {{prefix.upper()}}NONTERMINAL_{{exprGrammar.nonterminal.string.upper()}};
+  tree->nonterminal = {{prefix.upper()}}NONTERMINAL_{{expression_nonterminal.string.upper()}};
 
   current = list->current;
 
@@ -309,10 +309,10 @@ nud_{{name}}(PARSER_CONTEXT_T * ctx)
     return tree;
   }
 
-  {% for i, rule in enumerate(grammar.grammar_expanded_rules[exprGrammar]) %}
-    {% py ruleFirstSet = grammar.ruleFirst(rule) if isinstance(rule, ExprRule) else set() %}
+  {% for i, rule in enumerate(grammar.get_expanded_rules(expression_nonterminal)) %}
+    {% py ruleFirstSet = grammar.first(rule.production) %}
 
-    {% if len(ruleFirstSet) and not ruleFirstSet.issuperset(grammar.first[exprGrammar.nonterminal])%}
+    {% if len(ruleFirstSet) and not ruleFirstSet.issuperset(grammar.first(expression_nonterminal))%}
   if ( {{' || '.join(['current == %d' % (x.id) for x in ruleFirstSet])}} )
   {
     // {{rule}}
@@ -357,13 +357,13 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
 {
   PARSE_TREE_T * tree;
   TOKEN_LIST_T * list;
-  int current = ctx->tokens->current; 
+  int current = ctx->tokens->current;
   int modifier = 0;
 
   list = ctx->tokens;
 
   tree = calloc(1, sizeof(PARSE_TREE_T));
-  tree->nonterminal = {{prefix.upper()}}NONTERMINAL_{{exprGrammar.nonterminal.string.upper()}};
+  tree->nonterminal = {{prefix.upper()}}NONTERMINAL_{{expression_nonterminal.string.upper()}};
 
   if ( list == NULL )
     return tree;
@@ -372,7 +372,7 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
 
   {% py seen = list() %}
 
-  {% for rule in grammar.grammar_expanded_expr_rules[exprGrammar] %}
+  {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
     {% py led = rule.ledProduction.morphemes %}
     {% if len(led) and led[0] not in seen %}
   {{'if' if len(seen)==0 else 'else if'}} ( current == {{led[0].id}} ) /* {{led[0]}} */
@@ -384,14 +384,14 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
     {% if len(rule.nudProduction) == 1 and isinstance(rule.nudProduction.morphemes[0], NonTerminal) %}
       {% py nt = rule.nudProduction.morphemes[0] %}
       {% if nt == rule.nonterminal or (isinstance(nt.macro, OptionalMacro) and nt.macro.nonterminal == rule.nonterminal) %}
-    tree->isExprNud = 1; 
+    tree->isExprNud = 1;
       {% endif %}
     {% endif %}
 
     tree->children[0].type = PARSE_TREE_NODE_TYPE_PARSETREE;
     tree->children[0].object = (PARSE_TREE_NODE_U *) left;
 
-      {% py associativity = {rule.operator.operator.id: rule.operator.associativity for rule in exprGrammar.rules if rule.operator} %}
+      {% py associativity = {rule.operator.operator.id: rule.operator.associativity for rule in grammar.get_rules(expression_nonterminal) if rule.operator} %}
       {% for index, morpheme in enumerate(led) %}
         {% if isinstance(morpheme, Terminal) %}
     tree->children[{{index + 1}}].type = PARSE_TREE_NODE_TYPE_TERMINAL;
@@ -444,33 +444,35 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
   tree->list = "tlist";
     {% elif isinstance(nonterminal.macro, MinimumListMacro) %}
   tree->list = "mlist";
+    {% elif isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
+  tree->list = "otlist";
     {% else %}
   tree->list = NULL;
     {% endif %}
 
-  if ( tokens != NULL )
-  {
-    current = tokens->current;
-    rule = {{prefix}}table[{{nonterminal.id - len(grammar.standard_terminals)}}][current];
-    {% if grammar.must_consume_tokens(nonterminal) %}
-    if ( in_array({{prefix}}follow[{{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current) &&
-         !in_array({{prefix}}first[{{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current))
-    {
-      return tree;
-    }
-    {% endif %}
-  }
+  current = tokens->current;
 
-  if ( tokens == NULL || current == {{prefix.upper()}}TERMINAL_END_OF_STREAM )
+  {% if not grammar.must_consume_tokens(nonterminal) %}
+  if ( current != {{prefix.upper()}}TERMINAL_END_OF_STREAM &&
+       in_array({{prefix}}follow[{{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current) &&
+       !in_array({{prefix}}first[{{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current) )
   {
-    {% if grammar.must_consume_tokens(nonterminal) or grammar._empty in grammar.first[nonterminal] %}
+    return tree;
+  }
+  {% endif %}
+
+  if ( current == {{prefix.upper()}}TERMINAL_END_OF_STREAM )
+  {
+    {% if not grammar.must_consume_tokens(nonterminal) %}
     return tree;
     {% else %}
     syntax_error(ctx, strdup("Error: unexpected end of file"));
     {% endif %}
   }
 
-    {% for index0, rule in enumerate(filter(lambda r: not r.must_consume_tokens, grammar.getExpandedLL1Rules(nonterminal))) %}
+  rule = {{prefix}}table[{{nonterminal.id - len(grammar.standard_terminals)}}][current];
+
+    {% for index0, rule in enumerate([rule for rule in grammar.get_expanded_rules(nonterminal) if not rule.is_empty]) %}
       {% if index0 == 0 %}
   if ( rule == {{rule.id}} )
       {% else %}
@@ -484,8 +486,10 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
         {% if isinstance(morpheme, Terminal) %}
     tree->children[{{index}}].type = PARSE_TREE_NODE_TYPE_TERMINAL;
     tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) expect( {{prefix.upper()}}TERMINAL_{{morpheme.string.upper()}}, ctx );
-          {% if isinstance(nonterminal.macro, SeparatedListMacro) and nonterminal.macro.separator == morpheme %}
+          {% if isinstance(nonterminal.macro, SeparatedListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
+            {% if nonterminal.macro.separator == morpheme %}
     tree->listSeparator = tree->children[{{index}}].object;
+            {% endif %}
           {% endif %}
         {% endif %}
 
@@ -499,11 +503,11 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
   }
     {% endfor %}
 
-    {% for exprGrammar in grammar.exprgrammars %}
-      {% if grammar.getExpressionTerminal(exprGrammar) in grammar.first[nonterminal] %}
-        {% set grammar.getRuleFromFirstSet(nonterminal, {grammar.getExpressionTerminal(exprGrammar)}) as rule %}
+    {% for expression_nonterminal in grammar.expression_nonterminals %}
+      {% if grammar.expression_terminals[expression_nonterminal] in grammar.first(nonterminal) %}
+        {% set grammar.getRuleFromFirstSet(nonterminal, {grammar.expression_terminals[expression_nonterminal]}) as rule %}
 
-  else if ( in_array({{prefix}}first[{{prefix.upper()}}NONTERMINAL_{{exprGrammar.nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current) )
+  else if ( in_array({{prefix}}first[{{prefix.upper()}}NONTERMINAL_{{expression_nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current) )
   {
     tree->ast_converter = get_ast_converter({{rule.id}});
 
@@ -537,15 +541,15 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 
 #define HAS_MORE_TOKENS(ctx) (ctx->tokens->current != {{prefix.upper()}}TERMINAL_END_OF_STREAM)
 
-{% for exprGrammar in grammar.exprgrammars %}
+{% for expression_nonterminals in grammar.expression_nonterminals %}
 
-#define {{exprGrammar.nonterminal.string.upper()}}_LEFT_BINDING_POWER_LARGER(ctx, rbp) (rbp < getInfixBp_{{exprGrammar.nonterminal.string.lower()}}(ctx->tokens->current))
+#define {{expression_nonterminal.string.upper()}}_LEFT_BINDING_POWER_LARGER(ctx, rbp) (rbp < getInfixBp_{{expression_nonterminal.string.lower()}}(ctx->tokens->current))
 
 static PARSE_TREE_T *
-_parse_{{exprGrammar.nonterminal.string.lower()}}(int rbp, PARSER_CONTEXT_T * ctx)
+_parse_{{expression_nonterminal.string.lower()}}(int rbp, PARSER_CONTEXT_T * ctx)
 {
   PARSE_TREE_T * left = NULL;
-  left = nud_{{exprGrammar.nonterminal.string.lower()}}(ctx);
+  left = nud_{{expression_nonterminal.string.lower()}}(ctx);
 
   if ( left != NULL )
   {
@@ -553,9 +557,9 @@ _parse_{{exprGrammar.nonterminal.string.lower()}}(int rbp, PARSER_CONTEXT_T * ct
     left->isNud = 1;
   }
 
-  while ( HAS_MORE_TOKENS(ctx) && {{exprGrammar.nonterminal.string.upper()}}_LEFT_BINDING_POWER_LARGER(ctx, rbp) )
+  while ( HAS_MORE_TOKENS(ctx) && {{expression_nonterminal.string.upper()}}_LEFT_BINDING_POWER_LARGER(ctx, rbp) )
   {
-    left = led_{{exprGrammar.nonterminal.string.lower()}}(left, ctx);
+    left = led_{{expression_nonterminal.string.lower()}}(left, ctx);
   }
 
   if ( left != NULL )
@@ -567,10 +571,10 @@ _parse_{{exprGrammar.nonterminal.string.lower()}}(int rbp, PARSER_CONTEXT_T * ct
 }
 
 static PARSE_TREE_T *
-parse_{{exprGrammar.nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
+parse_{{expression_nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 {
-  ctx->current_function = "parse_{{exprGrammar.nonterminal.string.lower()}}";
-  return _parse_{{exprGrammar.nonterminal.string.lower()}}(0, ctx);
+  ctx->current_function = "parse_{{expression_nonterminal.string.lower()}}";
+  return _parse_{{expression_nonterminal.string.lower()}}(0, ctx);
 }
 {% endfor %}
 
@@ -667,7 +671,7 @@ int
   if ( !strcmp(str, "{{nonterminal.string}}") )
     return {{nonterminal.id}};
   {% endfor %}
-  
+
   return -1;
 }
 

@@ -15,7 +15,6 @@ class LL1ListMacro(ListMacro):
 class MinimumListMacro(LL1ListMacro):
   def __init__( self, nonterminal, minimum, start_nt, rules ):
     self.__dict__.update(locals())
-    self.finishTerminals = {}
     if start_nt:
       self.start_nt.setMacro(self)
   def __repr__( self ):
@@ -24,7 +23,6 @@ class MinimumListMacro(LL1ListMacro):
 class OptionalMacro(LL1ListMacro):
   def __init__( self, nonterminal, start_nt, rules ):
     self.__dict__.update(locals())
-    self.finishTerminals = {}
     if start_nt:
       self.start_nt.setMacro(self)
   def __repr__( self ):
@@ -33,7 +31,6 @@ class OptionalMacro(LL1ListMacro):
 class TerminatedListMacro(LL1ListMacro):
   def __init__( self, nonterminal, terminator, start_nt, rules ):
     self.__dict__.update(locals())
-    self.finishTerminals = {}
     if start_nt:
       self.start_nt.setMacro(self)
   def __repr__( self ):
@@ -42,7 +39,6 @@ class TerminatedListMacro(LL1ListMacro):
 class MorphemeListMacro(LL1ListMacro):
   def __init__( self, morpheme, start_nt, rules ):
     self.__dict__.update(locals())
-    self.finishTerminals = {}
     if start_nt:
       self.start_nt.setMacro(self)
   def __repr__( self ):
@@ -51,8 +47,15 @@ class MorphemeListMacro(LL1ListMacro):
 class SeparatedListMacro(LL1ListMacro):
   def __init__( self, nonterminal, separator, start_nt, rules ):
     self.__dict__.update(locals())
-    self.finishTerminals = {}
     if start_nt:
       self.start_nt.setMacro(self)
   def __repr__( self ):
     return 'list({0}, {1})'.format(str(self.nonterminal), str(self.separator))
+
+class OptionallyTerminatedListMacro(LL1ListMacro):
+  def __init__( self, nonterminal, separator, minimum, start_nt, rules ):
+    self.__dict__.update(locals())
+    if start_nt:
+      self.start_nt.setMacro(self)
+  def __repr__( self ):
+    return 'otlist({0}, {1}, {2})'.format(str(self.nonterminal), str(self.separator), self.minimum)

@@ -198,30 +198,24 @@
                   led=[
                     <terminal (line 12 col 57) `lbrace`>,
                     (Macro:
-                      name=<identifier (line 12 col 65) `list`>,
+                      name=<identifier (line 12 col 65) `otlist`>,
                       parameters=[
-                        <terminal (line 12 col 70) `item`>,
-                        <terminal (line 12 col 77) `comma`>
+                        <terminal (line 12 col 72) `item`>,
+                        <terminal (line 12 col 79) `comma`>
                       ]
                     ),
-                    (Macro:
-                      name=<identifier (line 12 col 85) `optional`>,
-                      parameters=[
-                        <terminal (line 12 col 94) `comma`>
-                      ]
-                    ),
-                    <terminal (line 12 col 102) `rbrace`>
+                    <terminal (line 12 col 87) `rbrace`>
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 12 col 113) `TypeInitializion`>,
+                    name=<identifier (line 12 col 98) `TypeInitializion`>,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 12 col 131) `type`>,
-                        index=<nonterminal_reference (line 12 col 136) `1`>
+                        name=<identifier (line 12 col 116) `type`>,
+                        index=<nonterminal_reference (line 12 col 121) `1`>
                       ),
                       (AstParameter:
-                        name=<identifier (line 12 col 140) `initializer`>,
-                        index=<nonterminal_reference (line 12 col 152) `4`>
+                        name=<identifier (line 12 col 125) `initializer`>,
+                        index=<nonterminal_reference (line 12 col 137) `4`>
                       )
                     ]
                   )
