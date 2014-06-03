@@ -11,18 +11,21 @@ setup(
   author_email='scott.d.frazer@gmail.com',
   packages=['hermes', 'hermes.parser', 'hermes.parser.hermes'],
   package_dir={'hermes': 'hermes'},
-  package_data={'hermes': ['templates/python/*.tpl', 'templates/java/*.tpl', 'templates/c/*.tpl']},
+  package_data={
+      'hermes': [
+          'templates/python/*.tpl',
+          'templates/java/*.tpl',
+          'templates/c/*.tpl'
+      ]
+  },
   install_requires=[
       "moody-templates",
       "xtermcolor",
       "nose"
   ],
-  entry_points={
-    'console_scripts': [
-        'hermes = hermes.Main:Cli'
-    ]
+  scripts={
+      'scripts/hermes',
   },
-  test_suite='test.HermesTest',
   license = 'MIT',
   keywords = "Parser, Recursive Descent, LL(1), Pratt, Expression, Parser Generator",
   url = "http://github.com/scottfrazer/hermes",
