@@ -8,37 +8,37 @@
           (parser_ll1:
             <parser_ll1 (line 2 col 3) `parser<ll1>`>,
             <lbrace (line 2 col 15) `{`>,
-            (_gen7:
+            (_gen6:
               (ll1_rule:
                 <ll1_rule_hint (line 3 col 5) ``>,
                 <nonterminal (line 3 col 5) `start`>,
                 <equals (line 3 col 12) `=`>,
                 (ll1_rule_rhs:
-                  (_gen8:
+                  (_gen7:
                     (rule:
-                      (_gen22:
+                      (_gen9:
                         (morpheme:
                           (macro:
                             <identifier (line 3 col 14) `optional`>,
                             <lparen (line 3 col 22) `(`>,
-                            (_gen25:
+                            (_gen16:
                               (macro_parameter:
                                 <terminal (line 3 col 23) `a`>
                               ),
-                              (_gen26: )
+                              (_gen17: )
                             ),
                             <rparen (line 3 col 25) `)`>
                           )
                         ),
-                        (_gen22: )
+                        (_gen9: )
                       ),
-                      (_gen20: )
+                      (_gen10: )
                     ),
-                    (_gen9: )
+                    (_gen8: )
                   )
                 )
               ),
-              (_gen7: )
+              (_gen6: )
             ),
             <rbrace (line 4 col 3) `}`>
           )

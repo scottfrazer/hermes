@@ -105,19 +105,6 @@ def default_action(context, mode, match, terminal, line, col):
     return (tokens, mode, context)
 class HermesLexer:
     regex = {
-        'lexer': [
-          (re.compile(r'\s+'), None, None),
-          (re.compile(r'{'), 'lbrace', lexer_lbrace),
-          (re.compile(r'}'), 'rbrace', lexer_rbrace),
-          (re.compile(r'null'), 'null', None),
-          (re.compile(r'\('), 'lparen', None),
-          (re.compile(r'\)'), 'rparen', None),
-          (re.compile(r'r\'(\\\'|[^\'])*\''), 'regex', None),
-          (re.compile(r'->'), 'arrow', None),
-          (re.compile(r':([a-zA-Z][a-zA-Z0-9_]*|_empty)'), 'terminal', morpheme),
-          (re.compile(r'mode<[a-zA-Z0-9_]+>'), 'mode', parse_mode),
-          (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), 'identifier', None),
-        ],
         'parser_expr': [
           (re.compile(r'\s+'), None, None),
           (re.compile(r'\([\*-]:(left|right|unary)\)'), None, binding_power),
@@ -146,6 +133,19 @@ class HermesLexer:
           (re.compile(r'}'), 'rbrace', grammar_rbrace),
           (re.compile(r'lexer'), 'lexer', lexer_start),
           (re.compile(r'parser\s*<\s*ll1\s*>'), 'parser_ll1', parser_ll1_start),
+        ],
+        'lexer': [
+          (re.compile(r'\s+'), None, None),
+          (re.compile(r'{'), 'lbrace', lexer_lbrace),
+          (re.compile(r'}'), 'rbrace', lexer_rbrace),
+          (re.compile(r'null'), 'null', None),
+          (re.compile(r'\('), 'lparen', None),
+          (re.compile(r'\)'), 'rparen', None),
+          (re.compile(r'r\'(\\\'|[^\'])*\''), 'regex', None),
+          (re.compile(r'->'), 'arrow', None),
+          (re.compile(r':([a-zA-Z][a-zA-Z0-9_]*|_empty)'), 'terminal', morpheme),
+          (re.compile(r'mode<[a-zA-Z0-9_]+>'), 'mode', parse_mode),
+          (re.compile(r'[a-zA-Z][a-zA-Z0-9_]*'), 'identifier', None),
         ],
         'default': [
           (re.compile(r'\grammar'), 'grammar', grammar_start),
@@ -233,7 +233,7 @@ def lex(file_or_path, debug=False):
     lexer = HermesLexer()
     return TokenStream(lexer.lex(contents, debug))
 if __name__ == '__main__':
-    cli_parser = argparse.ArgumentParser(description='Hermes Grammar Lexer')
+    cli_parser = argparse.ArgumentParser(description='Grammar Lexer')
     cli_parser.add_argument('--debug', action='store_true', help="Print lexical analysis progress to stdout, for debugging.")
     cli_parser.add_argument('--color', action='store_true', help="With --debug, use colorized output.  Requires xtermcolor.")
     cli_parser.add_argument('file')
@@ -252,9 +252,9 @@ if __name__ == '__main__':
                 serialized_tokens = []
                 for token in tokens:
                   serialized_tokens.append(
-                      '\{\{"terminal": "{}", "resource": "{}", "line": {}, "col": {}, "source_string": "{}"\}\}'.format(
-                          token.str, token.resource, token.line, token.col, base64.b64encode(token.source_string.encode('utf-8')).decode('utf-8')
-                      )
+                      '{' + '"terminal": "{}", "resource": "{}", "line": {}, "col": {}, "source_string": "{}"'.format(
+                        token.str, token.resource, token.line, token.col, base64.b64encode(token.source_string.encode('utf-8')).decode('utf-8')
+                      ) + '}'
                   )
                 sys.stdout.write('[\n    ')
                 sys.stdout.write(',\n    '.join(serialized_tokens))
