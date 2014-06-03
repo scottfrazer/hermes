@@ -157,7 +157,7 @@ public class {{prefix}}Parser implements Parser {
       }
 
       {% for i, rule in enumerate(grammar.get_expanded_rules(expression_nonterminal)) %}
-        {% py ruleFirstSet = grammar.first(rule.production) if isinstance(rule, ExprRule) else set() %}
+        {% py ruleFirstSet = grammar.first(rule.production) %}
 
         {% if len(ruleFirstSet) and not ruleFirstSet.issuperset(grammar.first(expression_nonterminal))%}
       {{'if' if i == 0 else 'else if'}} ( {{' || '.join(['current.getId() == ' + str(x.id) for x in ruleFirstSet])}} ) {

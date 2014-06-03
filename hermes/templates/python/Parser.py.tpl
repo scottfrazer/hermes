@@ -8,12 +8,152 @@ from ..Common import *
 {% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 
-def whoami():
-  return inspect.stack()[1][3]
+{% for expression_nonterminal in grammar.expression_nonterminals %}
+    {% py name = expression_nonterminal.string %}
 
-def whosdaddy():
-  return inspect.stack()[2][3]
+# START definitions for expression parser `{{name}}`
+{{name}}_infix_binding_power = {
+    {% for rule in grammar.get_rules(expression_nonterminal) %}
+        {% if rule.operator and rule.operator.associativity in ['left', 'right'] %}
+    {{rule.operator.operator.id}}: {{rule.operator.binding_power}}, # {{rule}}
+        {% endif %}
+    {% endfor %}
+}
 
+{{name}}_prefix_binding_power = {
+    {% for rule in grammar.get_rules(expression_nonterminal) %}
+        {% if rule.operator and rule.operator.associativity in ['unary'] %}
+    {{rule.operator.operator.id}}: {{rule.operator.binding_power}}, # {{rule}}
+        {% endif %}
+    {% endfor %}
+}
+
+def {{name}}_get_infix_binding_power(terminal_id):
+    try:
+        return {{name}}_infix_binding_power[terminal_id]
+    except:
+        return 0
+
+def {{name}}_get_infix_binding_power(terminal_id):
+    try:
+        return {{name}}_prefix_binding_power[terminal_id]
+    except:
+        return 0
+
+def {{name}}_parse(tokens, rbp=0):
+    left = {{name}}_nud()
+    if isinstance(left, ParseTree):
+        left.isExpr = True
+        left.isNud = True
+    while tokens.current() and rbp < {{name}}_get_infix_binding_power(tokens.current().getId()):
+        left = {{name}}_led(left)
+    if left:
+        left.isExpr = True
+    return left
+
+def {{name}}_nud(tokens):
+    tree = ParseTree(NonTerminal({{expression_nonterminal.id}}, '{{name}}'))
+    current = tokens.current()
+
+    if not current:
+        return tree
+
+    {% for i, rule in enumerate(grammar.get_expanded_rules(expression_nonterminal)) %}
+      {% py first_set = grammar.first(rule.production) if isinstance(rule, ExprRule) else set() %}
+      {% if len(first_set) and not first_set.issuperset(grammar.first(expression_nonterminal))%}
+    {{'if' if i == 0 else 'elif'}} current.getId() in [{{', '.join(map(str, sorted([x.id for x in first_set])))}}]:
+      # {{rule}}
+        {% if isinstance(rule.nudAst, AstSpecification) %}
+      astParameters = OrderedDict([
+          {% for k,v in rule.nudAst.parameters.items() %}
+        ('{{k}}', {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %}),
+          {% endfor %}
+      ])
+      tree.astTransform = AstTransformNodeCreator('{{rule.nudAst.name}}', astParameters)
+        {% elif isinstance(rule.nudAst, AstTranslation) %}
+      tree.astTransform = AstTransformSubstitution({{rule.nudAst.idx}})
+        {% endif %}
+
+      tree.nudMorphemeCount = {{len(rule.nudProduction)}}
+
+        {% for morpheme in rule.nudProduction.morphemes %}
+          {% if isinstance(morpheme, Terminal) %}
+      tree.add( self.expect({{morpheme.id}}) )
+          {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
+            {% if isinstance(rule.operator, PrefixOperator) %}
+      tree.add( self.parent.parse_{{rule.nonterminal.string.lower()}}( self.getPrefixBp({{rule.operator.operator.id}}) ) )
+      tree.isPrefix = True
+            {% else %}
+      tree.add( self.parent.parse_{{rule.nonterminal.string.lower()}}() )
+            {% endif %}
+          {% elif isinstance(morpheme, NonTerminal) %}
+      tree.add( self.parent.parse_{{morpheme.string.lower()}}() )
+          {% elif isinstance(morpheme, LL1ListMacro) %}
+      tree.add( self.parent.parse_{{morpheme.start_nt.string.lower()}}() )
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+
+    return tree
+
+def led(self, left):
+    tree = ParseTree( NonTerminal({{expression_nonterminal.id}}, '{{expression_nonterminal.string.lower()}}') )
+    current = self.getCurrentToken()
+
+    {% py seen = list() %}
+    {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
+      {% py led = rule.ledProduction.morphemes %}
+      {% if len(led) and led[0] not in seen %}
+
+    {{'if' if len(seen)==0 else 'else if'}} current.getId() == {{led[0].id}}: # {{led[0]}}
+
+        {% if isinstance(rule.ast, AstSpecification) %}
+      astParameters = OrderedDict([
+          {% for k,v in rule.ast.parameters.items() %}
+        ('{{k}}', {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %}),
+          {% endfor %}
+      ])
+      tree.astTransform = AstTransformNodeCreator('{{rule.ast.name}}', astParameters)
+        {% elif isinstance(rule.ast, AstTranslation) %}
+      tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
+        {% endif %}
+
+        {% if len(rule.nudProduction) == 1 and isinstance(rule.nudProduction.morphemes[0], NonTerminal) %}
+          {% py nt = rule.nudProduction.morphemes[0] %}
+          {% if nt == rule.nonterminal or (isinstance(nt.macro, OptionalMacro) and nt.macro.nonterminal == rule.nonterminal) %}
+      tree.isExprNud = True
+          {% endif %}
+        {% endif %}
+
+      tree.add(left)
+
+        {% py associativity = {rule.operator.operator.id: rule.operator.associativity for rule in grammar.get_rules(expression_nonterminal) if rule.operator} %}
+        {% for morpheme in led %}
+          {% if isinstance(morpheme, Terminal) %}
+      tree.add( self.expect({{morpheme.id}}) )
+          {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
+      modifier = {{1 if rule.operator.operator.id in associativity and associativity[rule.operator.operator.id] == 'right' else 0}}
+            {% if isinstance(rule.operator, InfixOperator) %}
+      tree.isInfix = True
+            {% endif %}
+      tree.add( self.parent.parse_{{rule.nonterminal.string.lower()}}( self.getInfixBp({{rule.operator.operator.id}}) - modifier ) )
+          {% elif isinstance(morpheme, NonTerminal) %}
+      tree.add( self.parent.parse_{{morpheme.string.lower()}}() )
+          {% elif isinstance(morpheme, LL1ListMacro) %}
+      tree.add( self.parent.parse_{{morpheme.start_nt.string.lower()}}() )
+          {% endif %}
+        {% endfor %}
+      return tree
+      {% endif %}
+    {% endfor %}
+
+    return tree
+# END definitions for expression parser `{{name}}`
+{% endfor %}
+####
+# OLD
+####
 def parse(tokens):
   return Parser().parse(tokens)
 
@@ -75,9 +215,9 @@ class ExpressionParser_{{expression_nonterminal.string.lower()}}:
       return tree
 
     {% for i, rule in enumerate(grammar.get_expanded_rules(expression_nonterminal)) %}
-      {% py ruleFirstSet = grammar.first(rule.production) if isinstance(rule, ExprRule) else set() %}
-      {% if len(ruleFirstSet) and not ruleFirstSet.issuperset(grammar.first(expression_nonterminal))%}
-    {{'if' if i == 0 else 'elif'}} current.getId() in [{{', '.join(map(str, sorted([x.id for x in ruleFirstSet])))}}]:
+      {% py first_set = grammar.first(rule.production) %}
+      {% if len(first_set) and not first_set.issuperset(grammar.first(expression_nonterminal))%}
+    {{'if' if i == 0 else 'elif'}} current.getId() in [{{', '.join(map(str, sorted([x.id for x in first_set])))}}]:
       # {{rule}}
         {% if isinstance(rule.nudAst, AstSpecification) %}
       astParameters = OrderedDict([
@@ -198,10 +338,6 @@ class Parser:
     {% endfor %}
   ]
 
-  {% for terminal in grammar.standard_terminals %}
-  TERMINAL_{{terminal.string.upper()}} = {{terminal.id}}
-  {% endfor %}
-
   def __init__(self, tokens=None):
     self.__dict__.update(locals())
     self.expressionParsers = dict()
@@ -216,19 +352,25 @@ class Parser:
     self.tokens = tokens
     tree = self.parse_{{grammar.start.string.lower()}}()
     if self.tokens.current() != None:
-      raise SyntaxError( 'Finished parsing without consuming all tokens.' )
+      raise SyntaxError('Finished parsing without consuming all tokens.')
     return tree
 
   def expect(self, terminalId):
     currentToken = self.tokens.current()
     if not currentToken:
-      raise SyntaxError( 'No more tokens.  Expecting %s' % (self.terminals[terminalId]) )
+      raise SyntaxError('No more tokens.  Expecting {}'.format(self.terminals[terminalId]) )
     if currentToken.getId() != terminalId:
-      raise SyntaxError( 'Unexpected symbol (line %d, col %d) when parsing %s.  Expected %s, got %s.' %(currentToken.line, currentToken.col, whosdaddy(), self.terminals[terminalId], currentToken) )
+      raise SyntaxError('Unexpected symbol (line {}, col {}) when parsing {}.  Expected {}, got {}.'.format(
+        currentToken.line,
+        currentToken.col,
+        inspect.stack()[2][3],
+        self.terminals[terminalId],
+        currentToken
+      ))
 
     nextToken = self.tokens.advance()
     if nextToken and not self.isTerminal(nextToken.getId()):
-      raise SyntaxError( 'Invalid symbol ID: %d (%s)' % (nextToken.getId(), nextToken) )
+      raise SyntaxError('Invalid symbol ID: {} ({})'.format(nextToken.getId(), nextToken))
 
     return currentToken
 
@@ -344,7 +486,12 @@ class Parser:
       {% endfor %}
 
       {% if grammar.must_consume_tokens(nonterminal) %}
-    raise SyntaxError('Error: Unexpected symbol (%s) on line %d, column %d when parsing %s' % (current, current.line, current.col, whoami()))
+    raise SyntaxError('Error: Unexpected symbol ({}) on line {}, column {} when parsing {}'.format(
+      current,
+      current.line,
+      current.col,
+      inspect.stack()[1][3]
+    ))
       {% else %}
     return tree
       {% endif %}
@@ -352,7 +499,7 @@ class Parser:
   {% endfor %}
 
   {% for expression_nonterminal in grammar.expression_nonterminals %}
-  def parse_{{expression_nonterminal.string.lower()}}( self, rbp = 0):
+  def parse_{{expression_nonterminal.string.lower()}}(self, rbp = 0):
     name = '{{expression_nonterminal.string.lower()}}'
     if name not in self.expressionParsers:
       self.expressionParsers[name] = ExpressionParser_{{expression_nonterminal.string.lower()}}(self)
