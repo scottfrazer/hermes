@@ -27,10 +27,10 @@ def parse_python(test_dir, out):
     tokens_file = os.path.join(test_dir, 'tokens')
     grammar = GrammarParser().parse('grammar', open(grammar_file))
     tmp_dir = tempfile.mkdtemp()
-    
+
     try:
       CodeGenerator().generate(grammar, 'python', directory=tmp_dir)
-      command = 'python -m {0}.grammar.Parser --file={1} --out={2} 2>&1'.format(os.path.basename(tmp_dir), os.path.abspath(tokens_file), out)
+      command = 'python -m {0}.grammar.Parser {1} {2} 2>&1'.format(os.path.basename(tmp_dir), out, os.path.abspath(tokens_file))
       return subprocess.check_output(command, shell=True, stderr=None, cwd=os.path.dirname(tmp_dir)).decode('utf-8').strip()
     except subprocess.CalledProcessError as exception:
       return exception.output.decode('utf-8').strip()

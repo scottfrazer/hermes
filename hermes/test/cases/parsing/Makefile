@@ -13,8 +13,8 @@ java_files: java_dir
 	cp -r ../javacp/org java/
 python_files: python_dir
 	hermes generate --language=python --add-main --directory=python grammar.zgr
-	-python -m python.grammar.Parser --file=tokens --out=parsetree &> python/parsetree
-	-python -m python.grammar.Parser --file=tokens --out=ast &> python/ast
+	-python -m python.grammar.Parser parsetree tokens &> python/parsetree
+	-python -m python.grammar.Parser ast tokens &> python/ast
 c_files: c_dir
 	hermes generate --language=c --add-main --directory=c grammar.zgr
 c_dir:

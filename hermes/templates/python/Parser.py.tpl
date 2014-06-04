@@ -322,39 +322,30 @@ def parse_{{name}}(tokens):
 {% endfor %}
 
 if __name__ == '__main__':
-    import argparse
     import json
+    import os
 
-    cli_parser = argparse.ArgumentParser(description='Grammar Parser')
-    cli_parser.add_argument('--color', action='store_true', help="Print output in terminal colors")
-    cli_parser.add_argument('--file')
-    cli_parser.add_argument('--out', default='ast', choices=['ast', 'parsetree'])
-    cli_parser.add_argument('--stdin', action='store_true')
-    cli = cli_parser.parse_args()
-
-    if (not cli.file and not cli.stdin) or (cli.file and cli.stdin):
-      sys.exit('Either --file=<path> or --stdin required, but not both')
-
-    cli.file = open(cli.file) if cli.file else sys.stdin
-    json_tokens = json.loads(cli.file.read())
-    cli.file.close()
+    if len(sys.argv) != 3 or sys.argv[1] not in ['parsetree', 'ast']:
+        sys.exit("Usage: Parser.py <parsetree|ast> <tokens_file>")
 
     tokens = TokenStream()
-    for json_token in json_tokens:
-        tokens.append(Terminal(
-            terminals[json_token['terminal']],
-            json_token['terminal'],
-            json_token['source_string'],
-            json_token['resource'],
-            json_token['line'],
-            json_token['col']
-        ))
+    with open(os.path.expanduser(sys.argv[2])) as fp:
+        json_tokens = json.loads(fp.read())
+        for json_token in json_tokens:
+            tokens.append(Terminal(
+                terminals[json_token['terminal']],
+                json_token['terminal'],
+                json_token['source_string'],
+                json_token['resource'],
+                json_token['line'],
+                json_token['col']
+            ))
 
     try:
         tree = parse(tokens)
-        if cli.out == 'parsetree':
-          print(ParseTreePrettyPrintable(tree, color=cli.color))
+        if sys.argv[1] == 'parsetree':
+            print(ParseTreePrettyPrintable(tree))
         else:
-          print(AstPrettyPrintable(tree.toAst(), color=cli.color))
+            print(AstPrettyPrintable(tree.toAst()))
     except SyntaxError as error:
         print(error)
