@@ -97,10 +97,10 @@ class AstTranslation:
     return theme.astTranslation(string) if theme else string
 
 class ExprRule:
-  def __init__(self, nonterminal, nudProduction, ledProduction, nudAst, ast, operator, id=0):
+  def __init__(self, nonterminal, nud_production, ledProduction, nudAst, ast, operator, id=0):
     self.__dict__.update(locals())
-    self.production = Production(nudProduction.morphemes + ledProduction.morphemes)
-    if (not nudProduction or not len(nudProduction)) and \
+    self.production = Production(nud_production.morphemes + ledProduction.morphemes)
+    if (not nud_production or not len(nud_production)) and \
        (not ledProduction or not len(ledProduction)):
       raise Exception('Rule must contain a NUD or a LED portion.')
     # TODO: this should be a conflict
@@ -108,13 +108,13 @@ class ExprRule:
     if root and not isinstance(root, Terminal):
       raise Exception('Root of expression rule must be a terminal.')
   def __copy__( self ):
-    np = Production(copy(self.nudProduction.morphemes))
+    np = Production(copy(self.nud_production.morphemes))
     lp = Production(copy(self.ledProduction.morphemes))
     return ExprRule(self.nonterminal, np, lp, self.nudAst, self.ast, self.operator)
   def __getattr__(self, name):
     if name == 'morphemes':
       all = []
-      for morpheme in self.nudProduction.morphemes:
+      for morpheme in self.nud_production.morphemes:
         all.append(morpheme)
       for morpheme in self.ledProduction.morphemes:
         all.append(morpheme)
@@ -124,7 +124,7 @@ class ExprRule:
     nudMorphemes = []
     ledMorphemes = []
     rules = []
-    for morpheme in self.nudProduction.morphemes:
+    for morpheme in self.nud_production.morphemes:
       if isinstance(morpheme, LL1ListMacro):
         rules.extend(morpheme.rules)
         nudMorphemes.append(morpheme.start_nt)
@@ -153,10 +153,10 @@ class ExprRule:
     elif isinstance(self.operator, MixfixOperator):
       led = ' <=> {}'.format(self.ledProduction.str(theme)) if len(self.ledProduction.morphemes) else ''
       string = '{nt} = {nud}{nud_ast}{led}{ast}'.format(
-          nt=self.nonterminal, nud=self.nudProduction.str(theme), nud_ast=ast_to_str(self.nudAst), led=led, ast=ast_to_str(self.ast)
+          nt=self.nonterminal, nud=self.nud_production.str(theme), nud_ast=ast_to_str(self.nudAst), led=led, ast=ast_to_str(self.ast)
       )
     else:
-      string = '{nt} = {nud}{nud_ast}'.format(nt=self.nonterminal, nud=self.nudProduction.str(theme), nud_ast=ast_to_str(self.nudAst))
+      string = '{nt} = {nud}{nud_ast}'.format(nt=self.nonterminal, nud=self.nud_production.str(theme), nud_ast=ast_to_str(self.nudAst))
 
     return theme.expressionRule(string) if theme else string
 
@@ -420,8 +420,8 @@ class CompositeGrammar:
           nonterminal_rules[morpheme].append(rule)
       if isinstance(rule, ExprRule):
         # For 'mixfix' rules... make sure no two nud/led functions start with the same thing.
-        if rule.operator is None and len(rule.nudProduction):
-          morpheme = rule.nudProduction.morphemes[0]
+        if rule.operator is None and len(rule.nud_production):
+          morpheme = rule.nud_production.morphemes[0]
           if morpheme not in nud:
             nud[morpheme] = list()
           if len(nud[morpheme]):
@@ -429,7 +429,7 @@ class CompositeGrammar:
           nud[morpheme].append(rule)
         if len(rule.ledProduction):
           # TODO: no test for this code path
-          morpheme = rule.nudProduction.morphemes[0]
+          morpheme = rule.nud_production.morphemes[0]
           if morpheme not in led:
             led[morpheme] = list()
           if rule in led[morpheme]:
@@ -481,7 +481,7 @@ class CompositeGrammar:
             if str(morpheme) in morphemes:
               morpheme.id = morphemes[str(morpheme)]
         if isinstance(rule, ExprRule):
-          for morpheme in rule.nudProduction.morphemes:
+          for morpheme in rule.nud_production.morphemes:
             if str(morpheme) in morphemes:
               morpheme.id = morphemes[str(morpheme)]
           for morpheme in rule.ledProduction.morphemes:
@@ -500,8 +500,8 @@ class CompositeGrammar:
 
   def ruleFirst(self, rule):
     if isinstance(rule, ExprRule):
-      if len(rule.nudProduction) and rule.nudProduction.morphemes[0] != rule.nonterminal:
-        return self._pfirst(rule.nudProduction)
+      if len(rule.nud_production) and rule.nud_production.morphemes[0] != rule.nonterminal:
+        return self._pfirst(rule.nud_production)
     return self._pfirst(rule.production)
 
   def getExpressionTerminal(self):

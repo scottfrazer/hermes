@@ -317,10 +317,10 @@ nud_{{name}}(PARSER_CONTEXT_T * ctx)
   {
     // {{rule}}
     tree->ast_converter = get_nud_ast_converter({{rule.id}});
-    tree->nchildren = {{len(rule.nudProduction)}};
+    tree->nchildren = {{len(rule.nud_production)}};
     tree->children = calloc(tree->nchildren, sizeof(PARSE_TREE_NODE_T));
-    tree->nudMorphemeCount = {{len(rule.nudProduction)}};
-    {% for index, morpheme in enumerate(rule.nudProduction.morphemes) %}
+    tree->nudMorphemeCount = {{len(rule.nud_production)}};
+    {% for index, morpheme in enumerate(rule.nud_production.morphemes) %}
       {% if isinstance(morpheme, Terminal) %}
     tree->children[{{index}}].type = PARSE_TREE_NODE_TYPE_TERMINAL;
     tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) expect({{prefix.upper()}}TERMINAL_{{morpheme.string.upper()}}, ctx );
@@ -381,8 +381,8 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
     tree->nchildren = {{len(led) + 1}};
     tree->children = calloc(tree->nchildren, sizeof(PARSE_TREE_NODE_T));
 
-    {% if len(rule.nudProduction) == 1 and isinstance(rule.nudProduction.morphemes[0], NonTerminal) %}
-      {% py nt = rule.nudProduction.morphemes[0] %}
+    {% if len(rule.nud_production) == 1 and isinstance(rule.nud_production.morphemes[0], NonTerminal) %}
+      {% py nt = rule.nud_production.morphemes[0] %}
       {% if nt == rule.nonterminal or (isinstance(nt.macro, OptionalMacro) and nt.macro.nonterminal == rule.nonterminal) %}
     tree->isExprNud = 1;
       {% endif %}

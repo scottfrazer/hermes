@@ -174,9 +174,9 @@ public class {{prefix}}Parser implements Parser {
         tree.setAstTransformation(new AstTransformSubstitution({{ast.idx}}));
           {% endif %}
 
-        tree.setNudMorphemeCount({{len(rule.nudProduction)}});
+        tree.setNudMorphemeCount({{len(rule.nud_production)}});
 
-          {% for morpheme in rule.nudProduction.morphemes %}
+          {% for morpheme in rule.nud_production.morphemes %}
             {% if isinstance(morpheme, Terminal) %}
         tree.add( this.tokens.expect({{prefix}}TerminalIdentifier.TERMINAL_{{morpheme.string.upper()}}, "{{expression_nonterminal.string.lower()}}", this.rules.get({{rule.id}})));
             {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
@@ -222,8 +222,8 @@ public class {{prefix}}Parser implements Parser {
         tree.setAstTransformation(new AstTransformSubstitution({{rule.ast.idx}}));
           {% endif %}
 
-          {% if len(rule.nudProduction) == 1 and isinstance(rule.nudProduction.morphemes[0], NonTerminal) %}
-            {% py nt = rule.nudProduction.morphemes[0] %}
+          {% if len(rule.nud_production) == 1 and isinstance(rule.nud_production.morphemes[0], NonTerminal) %}
+            {% py nt = rule.nud_production.morphemes[0] %}
             {% if nt == rule.nonterminal or (isinstance(nt.macro, OptionalMacro) and nt.macro.nonterminal == rule.nonterminal) %}
         tree.setExprNud(true);
             {% endif %}

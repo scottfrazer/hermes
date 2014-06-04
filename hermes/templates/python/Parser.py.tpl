@@ -8,6 +8,51 @@ from ..Common import *
 {% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 
+terminals = {
+{% for terminal in grammar.standard_terminals %}
+    {{terminal.id}}: '{{terminal.string}}',
+{% endfor %}
+
+{% for terminal in grammar.standard_terminals %}
+    '{{terminal.string.lower()}}': {{terminal.id}},
+{% endfor %}
+}
+
+nonterminals = {
+{% for nonterminal in grammar.nonterminals %}
+    {{nonterminal.id}}: '{{nonterminal.string}}',
+{% endfor %}
+
+{% for nonterminal in grammar.nonterminals %}
+    '{{nonterminal.string.lower()}}': {{nonterminal.id}},
+{% endfor %}
+}
+
+nonterminal_first = {
+{% for nonterminal in grammar.nonterminals %}
+    {{nonterminal.id}}: [{{', '.join([str(t.id) for t in grammar.first(nonterminal)])}}],
+{% endfor %}
+}
+
+nonterminal_follow = {
+{% for nonterminal in grammar.nonterminals %}
+    {{nonterminal.id}}: [{{', '.join([str(t.id) for t in grammar.follow(nonterminal)])}}],
+{% endfor %}
+}
+
+rule_first = {
+{% for rule in grammar.get_expanded_rules() %}
+    {{rule.id}}: [{{', '.join([str(t.id) for t in grammar.first(rule.production)])}}],
+{% endfor %}
+}
+
+def get_nonterminal_str(id): return nonterminals[id]
+def get_terminal_str(id): return terminals[id]
+def get_nonterminal_id(str): return nonterminals[str]
+def get_terminal_str(str): return terminals[str]
+def is_terminal(id): return isinstance(id, int) and id in terminals
+def is_nonterminal(id): return isinstance(id, int) and id in nonterminals
+
 {% for expression_nonterminal in grammar.expression_nonterminals %}
     {% py name = expression_nonterminal.string %}
 
@@ -59,24 +104,24 @@ def {{name}}_nud(tokens):
         return tree
 
     {% for i, rule in enumerate(grammar.get_expanded_rules(expression_nonterminal)) %}
-      {% py first_set = grammar.first(rule.production) if isinstance(rule, ExprRule) else set() %}
-      {% if len(first_set) and not first_set.issuperset(grammar.first(expression_nonterminal))%}
-    {{'if' if i == 0 else 'elif'}} current.getId() in [{{', '.join(map(str, sorted([x.id for x in first_set])))}}]:
+      {% py first_set = grammar.first(rule.production) %}
+      {% if len(first_set) and not first_set.issuperset(grammar.first(expression_nonterminal)) %}
+    {{'if' if i == 0 else 'elif'}} current.id in rule_first[{{rule.id}}]:
       # {{rule}}
         {% if isinstance(rule.nudAst, AstSpecification) %}
-      astParameters = OrderedDict([
+      ast_parameters = OrderedDict([
           {% for k,v in rule.nudAst.parameters.items() %}
         ('{{k}}', {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %}),
           {% endfor %}
       ])
-      tree.astTransform = AstTransformNodeCreator('{{rule.nudAst.name}}', astParameters)
+      tree.astTransform = AstTransformNodeCreator('{{rule.nudAst.name}}', ast_parameters)
         {% elif isinstance(rule.nudAst, AstTranslation) %}
       tree.astTransform = AstTransformSubstitution({{rule.nudAst.idx}})
         {% endif %}
 
-      tree.nudMorphemeCount = {{len(rule.nudProduction)}}
+      tree.nudMorphemeCount = {{len(rule.nud_production)}}
 
-        {% for morpheme in rule.nudProduction.morphemes %}
+        {% for morpheme in rule.nud_production.morphemes %}
           {% if isinstance(morpheme, Terminal) %}
       tree.add( self.expect({{morpheme.id}}) )
           {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
@@ -106,7 +151,7 @@ def led(self, left):
       {% py led = rule.ledProduction.morphemes %}
       {% if len(led) and led[0] not in seen %}
 
-    {{'if' if len(seen)==0 else 'else if'}} current.getId() == {{led[0].id}}: # {{led[0]}}
+    {{'if' if len(seen)==0 else 'else if'}} current.id == {{led[0].id}}: # {{led[0]}}
 
         {% if isinstance(rule.ast, AstSpecification) %}
       astParameters = OrderedDict([
@@ -119,8 +164,8 @@ def led(self, left):
       tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
         {% endif %}
 
-        {% if len(rule.nudProduction) == 1 and isinstance(rule.nudProduction.morphemes[0], NonTerminal) %}
-          {% py nt = rule.nudProduction.morphemes[0] %}
+        {% if len(rule.nud_production) == 1 and isinstance(rule.nud_production.morphemes[0], NonTerminal) %}
+          {% py nt = rule.nud_production.morphemes[0] %}
           {% if nt == rule.nonterminal or (isinstance(nt.macro, OptionalMacro) and nt.macro.nonterminal == rule.nonterminal) %}
       tree.isExprNud = True
           {% endif %}
@@ -230,9 +275,9 @@ class ExpressionParser_{{expression_nonterminal.string.lower()}}:
       tree.astTransform = AstTransformSubstitution({{rule.nudAst.idx}})
         {% endif %}
 
-      tree.nudMorphemeCount = {{len(rule.nudProduction)}}
+      tree.nudMorphemeCount = {{len(rule.nud_production)}}
 
-        {% for morpheme in rule.nudProduction.morphemes %}
+        {% for morpheme in rule.nud_production.morphemes %}
           {% if isinstance(morpheme, Terminal) %}
       tree.add( self.expect({{morpheme.id}}) )
           {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
@@ -275,8 +320,8 @@ class ExpressionParser_{{expression_nonterminal.string.lower()}}:
       tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
         {% endif %}
 
-        {% if len(rule.nudProduction) == 1 and isinstance(rule.nudProduction.morphemes[0], NonTerminal) %}
-          {% py nt = rule.nudProduction.morphemes[0] %}
+        {% if len(rule.nud_production) == 1 and isinstance(rule.nud_production.morphemes[0], NonTerminal) %}
+          {% py nt = rule.nud_production.morphemes[0] %}
           {% if nt == rule.nonterminal or (isinstance(nt.macro, OptionalMacro) and nt.macro.nonterminal == rule.nonterminal) %}
       tree.isExprNud = True
           {% endif %}
