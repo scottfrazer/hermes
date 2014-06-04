@@ -1,6 +1,6 @@
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator %}
-{% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro %}
+{% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 #include <stdio.h>
 #include <stdlib.h>
@@ -338,9 +338,6 @@ nud_{{name}}(PARSER_CONTEXT_T * ctx)
     {% elif isinstance(morpheme, NonTerminal) %}
     tree->children[{{index}}].type = PARSE_TREE_NODE_TYPE_PARSETREE;
     tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) parse_{{morpheme.string.lower()}}(ctx);
-      {% elif isinstance(morpheme, LL1ListMacro) %}
-    tree->children[{{index}}].type = PARSE_TREE_NODE_TYPE_PARSETREE;
-    tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) parse_{{morpheme.start_nt.string.lower()}}(ctx);
       {% endif %}
     {% endfor %}
     return tree;
@@ -404,9 +401,6 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
         {% elif isinstance(morpheme, NonTerminal) %}
     tree->children[{{index + 1}}].type = PARSE_TREE_NODE_TYPE_PARSETREE;
     tree->children[{{index + 1}}].object = (PARSE_TREE_NODE_U *) parse_{{morpheme.string.lower()}}(ctx);
-        {% elif isinstance(morpheme, LL1ListMacro) %}
-    tree->children[{{index + 1}}].type = PARSE_TREE_NODE_TYPE_PARSETREE;
-    tree->children[{{index + 1}}].object = (PARSE_TREE_NODE_U *) parse_{{morpheme.start_nt.string.lower()}}(ctx);
         {% endif %}
       {% endfor %}
   }

@@ -4,7 +4,7 @@ package {{java_package}};
 
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator %}
-{% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro %}
+{% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 
 import java.util.*;
@@ -188,8 +188,6 @@ public class {{prefix}}Parser implements Parser {
               {% endif %}
             {% elif isinstance(morpheme, NonTerminal) %}
         tree.add( parse_{{morpheme.string.lower()}}() );
-            {% elif isinstance(morpheme, LL1ListMacro) %}
-        tree.add( parse_{{morpheme.start_nt.string.lower()}}() );
             {% endif %}
           {% endfor %}
       }
@@ -242,8 +240,6 @@ public class {{prefix}}Parser implements Parser {
         tree.add( parse_{{rule.nonterminal.string.lower()}}( this.getInfixBp({{rule.operator.operator.id}}) - modifier ) );
             {% elif isinstance(morpheme, NonTerminal) %}
         tree.add( parse_{{morpheme.string.lower()}}() );
-            {% elif isinstance(morpheme, LL1ListMacro) %}
-        tree.add( parse_{{morpheme.start_nt.string.lower()}}() );
             {% endif %}
           {% endfor %}
         return tree;

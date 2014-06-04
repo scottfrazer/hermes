@@ -5,7 +5,7 @@ from ..Common import *
 
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator %}
-{% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, LL1ListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro %}
+{% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 
 terminals = {
@@ -148,7 +148,7 @@ def nud_{{name}}(tokens):
         {% if isinstance(rule.nudAst, AstSpecification) %}
         ast_parameters = OrderedDict([
           {% for k,v in rule.nudAst.parameters.items() %}
-          ('{{k}}', {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %}),
+            ('{{k}}', {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %}),
           {% endfor %}
         ])
         tree.astTransform = AstTransformNodeCreator('{{rule.nudAst.name}}', ast_parameters)
@@ -170,8 +170,6 @@ def nud_{{name}}(tokens):
             {% endif %}
           {% elif isinstance(morpheme, NonTerminal) %}
         tree.add(parse_{{morpheme.string.lower()}}(tokens))
-          {% elif isinstance(morpheme, LL1ListMacro) %}
-        tree.add(parse_{{morpheme.start_nt.string.lower()}}(tokens))
           {% endif %}
         {% endfor %}
       {% endif %}
@@ -221,8 +219,6 @@ def led_{{name}}(left, tokens):
         tree.add(parse_{{name}}_internal(tokens, get_infix_binding_power_{{name}}({{rule.operator.operator.id}}) - modifier))
           {% elif isinstance(morpheme, NonTerminal) %}
         tree.add(parse_{{morpheme.string.lower()}}(tokens))
-          {% elif isinstance(morpheme, LL1ListMacro) %}
-        tree.add(parse_{{morpheme.start_nt.string.lower()}}(tokens))
           {% endif %}
         {% endfor %}
       {% endif %}
