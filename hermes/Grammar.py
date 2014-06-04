@@ -325,13 +325,6 @@ class CompositeGrammar:
         answer = False
     return answer
 
-  def getRuleFromFirstSet(self, nonterminal, first):
-    rules = self.get_expanded_rules(nonterminal)
-    for rule in rules:
-      if self.first(rule.production).issuperset(first):
-        return rule
-    return None
-
   def _compute_first(self, first=None):
     if first is None:
       first = {nt: set() for nt in self.nonterminals}
