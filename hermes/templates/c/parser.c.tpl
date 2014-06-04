@@ -370,12 +370,10 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
 
   current = list->current;
 
-  {% py seen = list() %}
-
   {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
     {% py led = rule.ledProduction.morphemes %}
-    {% if len(led) and led[0] not in seen %}
-  {{'if' if len(seen)==0 else 'else if'}} ( current == {{led[0].id}} ) /* {{led[0]}} */
+    {% if len(led) %}
+  if ( current == {{led[0].id}} ) /* {{led[0]}} */
   {
     tree->ast_converter = get_ast_converter({{rule.id}});
     tree->nchildren = {{len(led) + 1}};
@@ -411,7 +409,6 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
     tree->children[{{index + 1}}].object = (PARSE_TREE_NODE_U *) parse_{{morpheme.start_nt.string.lower()}}(ctx);
         {% endif %}
       {% endfor %}
-      {% py seen.append(led[0]) %}
   }
     {% endif %}
   {% endfor %}

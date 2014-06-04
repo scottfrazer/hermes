@@ -204,12 +204,11 @@ public class {{prefix}}Parser implements Parser {
       Terminal current = this.tokens.current();
       int modifier;
 
-      {% py seen = list() %}
       {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
         {% py led = rule.ledProduction.morphemes %}
-        {% if len(led) and led[0] not in seen %}
+        {% if len(led) %}
 
-      {{'if' if len(seen)==0 else 'else if'}} (current.getId() == {{led[0].id}}) {
+      if (current.getId() == {{led[0].id}}) {
         // {{led[0]}}
 
           {% if isinstance(rule.ast, AstSpecification) %}
