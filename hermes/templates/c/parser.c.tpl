@@ -503,30 +503,6 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
   }
     {% endfor %}
 
-    {% for expression_nonterminal in grammar.expression_nonterminals %}
-      {% if grammar.expression_terminals[expression_nonterminal] in grammar.first(nonterminal) %}
-        {% set grammar.getRuleFromFirstSet(nonterminal, {grammar.expression_terminals[expression_nonterminal]}) as rule %}
-
-  else if ( in_array({{prefix}}first[{{prefix.upper()}}NONTERMINAL_{{expression_nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], current) )
-  {
-    tree->ast_converter = get_ast_converter({{rule.id}});
-
-        {% for index, morpheme in enumerate(rule.production.morphemes) %}
-
-          {% if isinstance(morpheme, Terminal) %}
-    tree->children[{{index}}].type = PARSE_TREE_NODE_TYPE_TERMINAL;
-    tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) expect( {{prefix.upper()}}TERMINAL_{{morpheme.string.upper()}}, ctx );
-          {% endif %}
-
-          {% if isinstance(morpheme, NonTerminal) %}
-    tree->children[{{index}}].type = PARSE_TREE_NODE_TYPE_PARSETREE;
-    tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) parse_{{morpheme.string.lower()}}(ctx);
-          {% endif %}
-        {% endfor %}
-  }
-      {% endif %}
-    {% endfor %}
-
     {% if not grammar.must_consume_tokens(nonterminal) %}
   fmt = "Error: Unexpected symbol (%s) when parsing %s";
   message = calloc( strlen(fmt) + strlen({{prefix}}morpheme_to_str(tokens->tokens[tokens->current_index].terminal->id)) + strlen("parse_{{nonterminal.string.lower()}}") + 1, sizeof(char) );

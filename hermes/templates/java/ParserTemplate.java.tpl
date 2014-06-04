@@ -419,37 +419,6 @@ public class {{prefix}}Parser implements Parser {
     }
       {% endfor %}
 
-      {% for expression_nonterminal in grammar.expression_nonterminals %}
-        {% if grammar.expression_terminals[expression_nonterminal] in grammar.first(nonterminal) %}
-          {% set grammar.getRuleFromFirstSet(nonterminal, {grammar.expression_terminals[expression_nonterminal]}) as rule %}
-    else if ( {{' || '.join(['current.getId() == ' + str(a.id) for a in grammar.first(expression_nonterminal)])}} ) {
-          {% if isinstance(rule.ast, AstTranslation) %}
-      tree.setAstTransformation(new AstTransformSubstitution({{rule.ast.idx}}));
-          {% elif isinstance(rule.ast, AstSpecification) %}
-      LinkedHashMap<String, Integer> parameters = new LinkedHashMap<String, Integer>();
-            {% for key, value in rule.ast.parameters.items() %}
-      parameters.put("{{key}}", {{"(int) '$'" if value == '$' else value}});
-            {% endfor %}
-      tree.setAstTransformation(new AstTransformNodeCreator("{{rule.ast.name}}", parameters));
-          {% else %}
-      tree.setAstTransformation(new AstTransformSubstitution(0));
-          {% endif %}
-
-          {% for morpheme in rule.production.morphemes %}
-
-            {% if isinstance(morpheme, Terminal) %}
-      tree.add( this.tokens.expect({{prefix}}TerminalIdentifier.TERMINAL_{{morpheme.string.upper()}}, "{{nonterminal.string.lower()}}", this.rules.get({{rule.id}})) );
-            {% endif %}
-
-            {% if isinstance(morpheme, NonTerminal) %}
-      subtree = this.parse_{{morpheme.string.lower()}}();
-      tree.add(subtree);
-            {% endif %}
-          {% endfor %}
-    }
-        {% endif %}
-      {% endfor %}
-
       {% if grammar.must_consume_tokens(nonterminal) %}
     List<TerminalIdentifier> terminals = Arrays.asList(this.first.get("{{nonterminal.string.lower()}}"));
     throw new SyntaxError(this.syntaxErrorFormatter.unexpected_symbol(
