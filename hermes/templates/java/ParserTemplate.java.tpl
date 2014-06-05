@@ -8,28 +8,18 @@ package {{java_package}};
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 
 import java.util.*;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Arrays;
 
 public class {{prefix}}Parser implements Parser {
 
   private TokenStream tokens;
   private HashMap<String, ExpressionParser> expressionParsers;
   private SyntaxErrorFormatter syntaxErrorFormatter;
-  private Map<String, TerminalIdentifier[]> first;
-  private Map<String, TerminalIdentifier[]> follow;
+  private static Map<Integer, List<TerminalIdentifier>> nonterminal_first;
+  private static Map<Integer, List<TerminalIdentifier>> nonterminal_follow;
+  private static Map<Integer, List<TerminalIdentifier>> rule_first;
   private Map<String, List<String>> nonterminal_rules;
   private Map<Integer, String> rules;
   private {{prefix}}TerminalMap terminalMap;
-
-  /* table[nonterminal][terminal] = rule */
-  private static final int[][] table = {
-    {% py parse_table = grammar.parse_table %}
-    {% for i in range(len(grammar.nonterminals)) %}
-    { {{', '.join([str(rule.id) if rule else str(-1) for rule in parse_table[i]])}} },
-    {% endfor %}
-  };
 
   public enum {{prefix}}TerminalIdentifier implements TerminalIdentifier {
   {% for index, terminal in enumerate(grammar.standard_terminals) %}
@@ -46,6 +36,56 @@ public class {{prefix}}Parser implements Parser {
 
     public int id() {return id;}
     public String string() {return string;}
+  }
+
+  /* table[nonterminal][terminal] = rule */
+  private static final int[][] table = {
+    {% py parse_table = grammar.parse_table %}
+    {% for i in range(len(grammar.nonterminals)) %}
+    { {{', '.join([str(rule.id) if rule else str(-1) for rule in parse_table[i]])}} },
+    {% endfor %}
+  };
+
+  static {
+    Map<Integer, List<TerminalIdentifier>> map = new HashMap<Integer, List<TerminalIdentifier>>();
+  {% for nonterminal in grammar.nonterminals %}
+    map.put({{nonterminal.id}}, Arrays.asList(new TerminalIdentifier[] {
+      {% for terminal in grammar.first(nonterminal) %}
+        {% if terminal in grammar.standard_terminals %}
+        {{prefix}}TerminalIdentifier.TERMINAL_{{terminal.string.upper()}},
+        {% endif %}
+      {% endfor %}
+    }));
+  {% endfor %}
+    nonterminal_first = Collections.unmodifiableMap(map);
+  }
+
+  static {
+    Map<Integer, List<TerminalIdentifier>> map = new HashMap<Integer, List<TerminalIdentifier>>();
+  {% for nonterminal in grammar.nonterminals %}
+    map.put({{nonterminal.id}}, Arrays.asList(new TerminalIdentifier[] {
+      {% for terminal in grammar.follow(nonterminal) %}
+        {% if terminal in grammar.standard_terminals %}
+        {{prefix}}TerminalIdentifier.TERMINAL_{{terminal.string.upper()}},
+        {% endif %}
+      {% endfor %}
+    }));
+  {% endfor %}
+    nonterminal_follow = Collections.unmodifiableMap(map);
+  }
+
+  static {
+    Map<Integer, List<TerminalIdentifier>> map = new HashMap<Integer, List<TerminalIdentifier>>();
+  {% for rule in grammar.get_expanded_rules() %}
+    map.put({{rule.id}}, Arrays.asList(new TerminalIdentifier[] {
+      {% for terminal in grammar.first(rule.production) %}
+        {% if terminal in grammar.standard_terminals %}
+        {{prefix}}TerminalIdentifier.TERMINAL_{{terminal.string.upper()}},
+        {% endif %}
+      {% endfor %}
+    }));
+  {% endfor %}
+    rule_first = Collections.unmodifiableMap(map);
   }
 
   private class {{prefix}}TerminalMap implements TerminalMap {
@@ -255,8 +295,6 @@ public class {{prefix}}Parser implements Parser {
   public {{prefix}}Parser(SyntaxErrorFormatter syntaxErrorFormatter) {
     this.syntaxErrorFormatter = syntaxErrorFormatter;
     this.expressionParsers = new HashMap<String, ExpressionParser>();
-    this.first = new HashMap<String, TerminalIdentifier[]>();
-    this.follow = new HashMap<String, TerminalIdentifier[]>();
     this.nonterminal_rules = new HashMap<String, List<String>>();
     this.rules = new HashMap<Integer, String>();
     this.terminalMap = new {{prefix}}TerminalMap({{prefix}}TerminalIdentifier.values());
@@ -272,26 +310,6 @@ public class {{prefix}}Parser implements Parser {
     rule = "{{rule}}";
     this.nonterminal_rules.get("{{rule.nonterminal.string.lower()}}").add(rule);
     this.rules.put(new Integer({{rule.id}}), rule);
-    {% endfor %}
-
-    {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
-      {% py xTerminals = set(grammar.first(nonterminal)) %}
-      {% py xTerminals = xTerminals.intersection(grammar.standard_terminals) %}
-    this.first.put("{{nonterminal.string.lower()}}", new {{prefix}}TerminalIdentifier[] {
-      {% for terminal in xTerminals %}
-      {{prefix}}TerminalIdentifier.TERMINAL_{{terminal.string.upper()}},
-      {% endfor %}
-    });
-    {% endfor %}
-
-    {% for nonterminal in sorted(grammar.nonterminals, key=lambda n: n.id) %}
-      {% py xTerminals = set(grammar.follow(nonterminal)) %}
-      {% py xTerminals = xTerminals.intersection(grammar.standard_terminals) %}
-    this.follow.put("{{nonterminal.string.lower()}}", new {{prefix}}TerminalIdentifier[] {
-      {% for terminal in xTerminals %}
-      {{prefix}}TerminalIdentifier.TERMINAL_{{terminal.string.upper()}},
-      {% endfor %}
-    });
     {% endfor %}
   }
 
@@ -353,8 +371,8 @@ public class {{prefix}}Parser implements Parser {
 
       {% if not grammar.must_consume_tokens(nonterminal) %}
     if ( current != null &&
-         !Arrays.asList(this.first.get("{{nonterminal.string}}")).contains(this.terminalMap.get(current.getId())) &&
-         Arrays.asList(this.follow.get("{{nonterminal.string}}")).contains(this.terminalMap.get(current.getId())) ) {
+         !Arrays.asList(nonterminal_first.get({{nonterminal.id}})).contains(this.terminalMap.get(current.getId())) &&
+         Arrays.asList(nonterminal_follow.get({{nonterminal.id}})).contains(this.terminalMap.get(current.getId())) ) {
         return tree;
     }
       {% endif %}
@@ -363,7 +381,7 @@ public class {{prefix}}Parser implements Parser {
       {% if grammar.must_consume_tokens(nonterminal) %}
       throw new SyntaxError(this.syntaxErrorFormatter.unexpected_eof(
         "{{nonterminal.string.lower()}}",
-        Arrays.asList(this.first.get("{{nonterminal.string.lower()}}")),
+        nonterminal_first.get({{nonterminal.id}}),
         this.nonterminal_rules.get("{{nonterminal.string.lower()}}")
       ));
       {% else %}
@@ -415,11 +433,10 @@ public class {{prefix}}Parser implements Parser {
       {% endfor %}
 
       {% if grammar.must_consume_tokens(nonterminal) %}
-    List<TerminalIdentifier> terminals = Arrays.asList(this.first.get("{{nonterminal.string.lower()}}"));
     throw new SyntaxError(this.syntaxErrorFormatter.unexpected_symbol(
       "{{nonterminal.string.lower()}}",
       current,
-      Arrays.asList(this.first.get("{{nonterminal.string.lower()}}")),
+      nonterminal_first.get({{nonterminal.id}}),
       this.rules.get({{rule.id}})
     ));
       {% else %}

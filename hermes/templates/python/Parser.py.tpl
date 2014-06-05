@@ -18,16 +18,6 @@ terminals = {
 {% endfor %}
 }
 
-nonterminals = {
-{% for nonterminal in grammar.nonterminals %}
-    {{nonterminal.id}}: '{{nonterminal.string}}',
-{% endfor %}
-
-{% for nonterminal in grammar.nonterminals %}
-    '{{nonterminal.string.lower()}}': {{nonterminal.id}},
-{% endfor %}
-}
-
 # table[nonterminal][terminal] = rule
 table = [
 {% py parse_table = grammar.parse_table %}
@@ -54,10 +44,8 @@ rule_first = {
 {% endfor %}
 }
 
-def get_nonterminal_str(id): return nonterminals[id]
 def get_terminal_str(id): return terminals[id]
-def get_nonterminal_id(str): return nonterminals[str]
-def get_terminal_str(str): return terminals[str]
+def get_terminal_id(str): return terminals[str]
 def is_terminal(id): return isinstance(id, int) and id in terminals
 def is_nonterminal(id): return isinstance(id, int) and id in nonterminals
 
