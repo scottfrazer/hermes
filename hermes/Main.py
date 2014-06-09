@@ -55,7 +55,7 @@ def Cli():
         '-d', '--directory', required=False, default='.', help='Directory to write generated code to'
     )
     commands['generate'].add_argument(
-        '-l', '--language', required=False, default='python', choices=['c', 'java', 'python'], help = 'Language for generated parser'
+        '-l', '--language', required=False, default='python', choices=['c', 'java', 'python', 'javascript'], help = 'Language for generated parser'
     )
     commands['generate'].add_argument(
         '--java-package', required=False, help='If generating Java code, this is the package.'

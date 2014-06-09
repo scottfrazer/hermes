@@ -76,6 +76,13 @@ class CTemplate(GrammarTemplate):
     self.prefix = self.grammar.name + '_'
     return super().render()
 
+class JavascriptTemplate(GrammarTemplate):
+  def get_filename(self):
+    return os.path.join(self.directory, self.filename)
+  def render(self, **kwargs):
+    self.prefix = self.grammar.name + '_'
+    return super().render()
+
 class PythonInitTemplate(PythonTemplate):
   filename = '__init__.py'
   template = 'python/Init.py.tpl'
@@ -198,6 +205,16 @@ class CMainSourceTemplate(CTemplate):
   filename = 'parser_main.c'
   template = 'c/parser_main.c.tpl'
 
+class JavascriptParserTemplate(JavascriptTemplate):
+  template = 'javascript/parser.js.tpl'
+  def get_filename(self):
+    return os.path.join(self.directory, self.grammar.name.lower() + '_parser.js')
+
+class JavascriptCommonTemplate(JavascriptTemplate):
+  template = 'javascript/common.js.tpl'
+  def get_filename(self):
+    return os.path.join(self.directory, 'common.js')
+
 class PythonTemplateFactory:
   def create(self, **kwargs):
     templates = [
@@ -247,11 +264,20 @@ class CTemplateFactory:
       templates.append(CMainSourceTemplate())
     return templates
 
+class JavascriptTemplateFactory:
+  def create(self, **kwargs):
+    templates = [
+        JavascriptCommonTemplate(),
+        JavascriptParserTemplate()
+    ]
+    return templates
+
 class CodeGenerator:
   templates = {
     'python': PythonTemplateFactory,
     'c': CTemplateFactory,
-    'java': JavaTemplateFactory
+    'java': JavaTemplateFactory,
+    'javascript': JavascriptTemplateFactory
   }
   def get_template_factory(self, language):
     for (template_language, template_class) in self.templates.items():
