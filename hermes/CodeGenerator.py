@@ -14,7 +14,7 @@ def remove_blank_lines(string):
   return string
 
 def underscore_to_camelcase(value):
-  def camelcase(): 
+  def camelcase():
     while True:
       yield str.capitalize
 
@@ -148,14 +148,6 @@ class JavaParseTreeTemplate(JavaTemplate):
   filename = 'ParseTree.java'
   template = 'java/ParseTree.java.tpl'
 
-class JavaParserInterfaceTemplate(JavaTemplate):
-  filename = 'Parser.java'
-  template = 'java/Parser.java.tpl'
-
-class JavaExpressionParserTemplate(JavaTemplate):
-  filename = 'ExpressionParser.java'
-  template = 'java/ExpressionParser.java.tpl'
-
 class JavaTerminalIdentifierTemplate(JavaTemplate):
   filename = 'TerminalIdentifier.java'
   template = 'java/TerminalIdentifier.java.tpl'
@@ -188,7 +180,7 @@ class CHeaderTemplate(CTemplate):
   template = 'c/parser.h.tpl'
   def get_filename(self):
     return os.path.join(self.directory, self.grammar.name.lower() + '_parser.h')
-  
+
 class CSourceTemplate(CTemplate):
   template = 'c/parser.c.tpl'
   def get_filename(self):
@@ -230,8 +222,6 @@ class JavaTemplateFactory:
       JavaAstTemplate(),
       JavaAstNodeTemplate(),
       JavaParseTreeTemplate(),
-      JavaParserInterfaceTemplate(),
-      JavaExpressionParserTemplate(),
       JavaTerminalMapTemplate(),
       JavaParseTreeNodeTemplate(),
       JavaSyntaxErrorTemplate(),
@@ -272,11 +262,11 @@ class CodeGenerator:
   def generate(self, grammar, language, directory='.', add_main=False, java_package=None):
       template_factory = self.get_template_factory(language)
       templates = template_factory.create(
-          grammar=grammar, directory=directory, add_main=add_main, java_package=java_package 
+          grammar=grammar, directory=directory, add_main=add_main, java_package=java_package
       )
       for template in templates:
           template.grammar = grammar
           template.directory = directory
           template.add_main = add_main
           template.java_package = java_package
-          code = template.write() 
+          code = template.write()
