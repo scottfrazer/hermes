@@ -44,35 +44,44 @@ rule_first = {
 {% endfor %}
 }
 
-def get_terminal_str(id): return terminals[id]
-def get_terminal_id(str): return terminals[str]
-def is_terminal(id): return isinstance(id, int) and id in terminals
-def is_nonterminal(id): return isinstance(id, int) and id in nonterminals
+nonterminal_rules = {
+{% for nonterminal in grammar.nonterminals %}
+    {{nonterminal.id}}: [
+  {% for rule in grammar.get_expanded_rules() %}
+    {% if rule.nonterminal.id == nonterminal.id %}
+        "{{rule}}",
+    {% endif %}
+  {% endfor %}
+    ],
+{% endfor %}
+}
 
-def parse(tokens):
-    #return Parser().parse(tokens)
-    tree = parse_{{grammar.start.string.lower()}}(tokens)
+rules = {
+{% for rule in grammar.get_expanded_rules() %}
+    {{rule.id}}: "{{rule}}",
+{% endfor %}
+}
+
+def is_terminal(id): return isinstance(id, int) and 0 <= id <= {{len(grammar.standard_terminals) - 1}}
+
+def parse(tokens, error_formatter=None, start=None):
+    if error_formatter is None:
+        error_formatter = DefaultSyntaxErrorFormatter()
+    ctx = ParserContext(tokens, error_formatter)
+    tree = parse_{{grammar.start.string.lower()}}(ctx)
     if tokens.current() != None:
         raise SyntaxError('Finished parsing without consuming all tokens.')
     return tree
 
-def expect(tokens, terminal_id):
-    current = tokens.current()
+def expect(ctx, terminal_id):
+    current = ctx.tokens.current()
     if not current:
-        raise SyntaxError('No more tokens.  Expecting {}'.format(terminals[terminal_id]))
+        raise SyntaxError(ctx.error_formatter.no_more_tokens(ctx.nonterminal, terminals[terminal_id], ctx.tokens.last()))
     if current.id != terminal_id:
-        raise SyntaxError('Unexpected symbol (line {}, col {}) when parsing {}.  Expected {}, got {}.'.format(
-            current.line,
-            current.col,
-            inspect.stack()[2][3],
-            terminals[terminal_id],
-            current
-        ))
-
-    next = tokens.advance()
+        raise SyntaxError(ctx.error_formatter.unexpected_symbol(ctx.nonterminal, current, [terminals[terminal_id]], ctx.rule))
+    next = ctx.tokens.advance()
     if next and not is_terminal(next.id):
-        raise SyntaxError('Invalid symbol ID: {} ({})'.format(next.id, next))
-
+        raise SyntaxError(ctx.error_formatter.invalid_terminal(ctx.nonterminal, next))
     return current
 
 {% for expression_nonterminal in grammar.expression_nonterminals %}
@@ -107,23 +116,23 @@ def get_prefix_binding_power_{{name}}(terminal_id):
     except:
         return 0
 
-def parse_{{name}}(tokens):
-    return parse_{{name}}_internal(tokens, rbp=0)
+def parse_{{name}}(ctx):
+    return parse_{{name}}_internal(ctx, rbp=0)
 
-def parse_{{name}}_internal(tokens, rbp=0):
-    left = nud_{{name}}(tokens)
+def parse_{{name}}_internal(ctx, rbp=0):
+    left = nud_{{name}}(ctx)
     if isinstance(left, ParseTree):
         left.isExpr = True
         left.isNud = True
-    while tokens.current() and rbp < get_infix_binding_power_{{name}}(tokens.current().id):
-        left = led_{{name}}(left, tokens)
+    while ctx.tokens.current() and rbp < get_infix_binding_power_{{name}}(ctx.tokens.current().id):
+        left = led_{{name}}(left, ctx)
     if left:
         left.isExpr = True
     return left
 
-def nud_{{name}}(tokens):
+def nud_{{name}}(ctx):
     tree = ParseTree(NonTerminal({{expression_nonterminal.id}}, '{{name}}'))
-    current = tokens.current()
+    current = ctx.tokens.current()
 
     if not current:
         return tree
@@ -133,6 +142,8 @@ def nud_{{name}}(tokens):
       {% if len(first_set) and not first_set.issuperset(grammar.first(expression_nonterminal)) %}
     {{'if' if i == 0 else 'elif'}} current.id in rule_first[{{rule.id}}]:
         # {{rule}}
+        ctx.nonterminal = "{{name}}"
+        ctx.rule = rules[{{rule.id}}]
         {% if isinstance(rule.nudAst, AstSpecification) %}
         ast_parameters = OrderedDict([
           {% for k,v in rule.nudAst.parameters.items() %}
@@ -148,16 +159,16 @@ def nud_{{name}}(tokens):
 
         {% for morpheme in rule.nud_production.morphemes %}
           {% if isinstance(morpheme, Terminal) %}
-        tree.add(expect(tokens, {{morpheme.id}}))
+        tree.add(expect(ctx, {{morpheme.id}}))
           {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
             {% if isinstance(rule.operator, PrefixOperator) %}
-        tree.add(parse_{{name}}_internal(tokens, get_prefix_binding_power_{{name}}({{rule.operator.operator.id}})))
+        tree.add(parse_{{name}}_internal(ctx, get_prefix_binding_power_{{name}}({{rule.operator.operator.id}})))
         tree.isPrefix = True
             {% else %}
-        tree.add(parse_{{rule.nonterminal.string.lower()}}(tokens))
+        tree.add(parse_{{rule.nonterminal.string.lower()}}(ctx))
             {% endif %}
           {% elif isinstance(morpheme, NonTerminal) %}
-        tree.add(parse_{{morpheme.string.lower()}}(tokens))
+        tree.add(parse_{{morpheme.string.lower()}}(ctx))
           {% endif %}
         {% endfor %}
       {% endif %}
@@ -165,16 +176,18 @@ def nud_{{name}}(tokens):
 
     return tree
 
-def led_{{name}}(left, tokens):
+def led_{{name}}(left, ctx):
     tree = ParseTree(NonTerminal({{expression_nonterminal.id}}, '{{name}}'))
-    current = tokens.current()
+    current = ctx.tokens.current()
 
     {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
       {% py led = rule.ledProduction.morphemes %}
       {% if len(led) %}
 
     if current.id == {{led[0].id}}: # {{led[0]}}
-
+        # {{rule}}
+        ctx.nonterminal = "{{name}}"
+        ctx.rule = rules[{{rule.id}}]
         {% if isinstance(rule.ast, AstSpecification) %}
         ast_parameters = OrderedDict([
           {% for k,v in rule.ast.parameters.items() %}
@@ -198,15 +211,15 @@ def led_{{name}}(left, tokens):
         {% py associativity = {rule.operator.operator.id: rule.operator.associativity for rule in grammar.get_rules(expression_nonterminal) if rule.operator} %}
         {% for morpheme in led %}
           {% if isinstance(morpheme, Terminal) %}
-        tree.add(expect(tokens, {{morpheme.id}})) # {{morpheme}}
+        tree.add(expect(ctx, {{morpheme.id}})) # {{morpheme}}
           {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
         modifier = {{1 if rule.operator.operator.id in associativity and associativity[rule.operator.operator.id] == 'right' else 0}}
             {% if isinstance(rule.operator, InfixOperator) %}
         tree.isInfix = True
             {% endif %}
-        tree.add(parse_{{name}}_internal(tokens, get_infix_binding_power_{{name}}({{rule.operator.operator.id}}) - modifier))
+        tree.add(parse_{{name}}_internal(ctx, get_infix_binding_power_{{name}}({{rule.operator.operator.id}}) - modifier))
           {% elif isinstance(morpheme, NonTerminal) %}
-        tree.add(parse_{{morpheme.string.lower()}}(tokens))
+        tree.add(parse_{{morpheme.string.lower()}}(ctx))
           {% endif %}
         {% endfor %}
       {% endif %}
@@ -219,8 +232,8 @@ def led_{{name}}(left, tokens):
 
 {% for nonterminal in grammar.ll1_nonterminals %}
   {% py name = nonterminal.string %}
-def parse_{{name}}(tokens):
-    current = tokens.current()
+def parse_{{name}}(ctx):
+    current = ctx.tokens.current()
     rule = table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.id] if current else -1
     tree = ParseTree(NonTerminal({{nonterminal.id}}, '{{name}}'))
 
@@ -258,6 +271,9 @@ def parse_{{name}}(tokens):
     elif rule == {{rule.id}}: # {{rule}}
       {% endif %}
 
+        ctx.nonterminal = "{{name}}"
+        ctx.rule = rules[{{rule.id}}]
+
       {% if isinstance(rule.ast, AstTranslation) %}
         tree.astTransform = AstTransformSubstitution({{rule.ast.idx}})
       {% elif isinstance(rule.ast, AstSpecification) %}
@@ -274,7 +290,7 @@ def parse_{{name}}(tokens):
       {% for index, morpheme in enumerate(rule.production.morphemes) %}
 
         {% if isinstance(morpheme, Terminal) %}
-        t = expect(tokens, {{morpheme.id}}) # {{morpheme}}
+        t = expect(ctx, {{morpheme.id}}) # {{morpheme}}
         tree.add(t)
           {% if isinstance(nonterminal.macro, SeparatedListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
             {% if nonterminal.macro.separator == morpheme %}
@@ -284,7 +300,7 @@ def parse_{{name}}(tokens):
         {% endif %}
 
         {% if isinstance(morpheme, NonTerminal) %}
-        subtree = parse_{{morpheme.string.lower()}}(tokens)
+        subtree = parse_{{morpheme.string.lower()}}(ctx)
         tree.add(subtree)
         {% endif %}
 
@@ -293,11 +309,11 @@ def parse_{{name}}(tokens):
     {% endfor %}
 
     {% if grammar.must_consume_tokens(nonterminal) %}
-    raise SyntaxError('Error: Unexpected symbol ({}) on line {}, column {} when parsing {}'.format(
-      current,
-      current.line,
-      current.col,
-      inspect.stack()[1][3]
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      nonterminal_first({{nonterminal.id}}),
+      rule[{{rule.id}}]
     ))
     {% else %}
     return tree

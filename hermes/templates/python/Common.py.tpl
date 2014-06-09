@@ -220,8 +220,34 @@ class TokenStream(list):
   def advance(self):
     self.index += 1
     return self.current()
+  def last(self):
+    return self[-1]
   def current(self):
     try:
       return self[self.index]
     except IndexError:
       return None
+
+class DefaultSyntaxErrorFormatter:
+  def unexpected_eof(self, nonterminal, expected_terminals, nonterminal_rules):
+    return "Error: unexpected end of file"
+  def excess_tokens(self, nonterminal, terminal):
+    return "Finished parsing without consuming all tokens."
+  def unexpected_symbol(self, nonterminal, actual_terminal, expected_terminals, rule):
+    return "Unexpected symbol (line {line}, col {col}) when parsing parse_{nt}.  Expected {expected}, got {actual}.".format(
+      line=actual_terminal.line,
+      col=actual_terminal.col,
+      nt=nonterminal,
+      expected=', '.join(expected_terminals),
+      actual=actual_terminal
+    )
+  def no_more_tokens(self, nonterminal, expected_terminal, last_terminal):
+    return "No more tokens.  Expecting " + expected_terminal
+  def invalid_terminal(nonterminal, invalid_terminal):
+    return "Invalid symbol ID: {} ({})".format(invalid_terminal.id, invalid_terminal.string)
+
+class ParserContext:
+  def __init__(self, tokens, error_formatter):
+    self.__dict__.update(locals())
+    self.nonterminal_string = None
+    self.rule_string = None
