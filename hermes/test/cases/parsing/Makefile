@@ -1,5 +1,6 @@
 all: c_parser python_parser java_parser
-java_parser: java_files
+java_parser: java_files java_compile
+java_compile:
 	javac -cp java java/*.java
 	-java -cp java ParserMain parsetree tokens &>java/parsetree
 	-java -cp java ParserMain ast tokens &>java/ast
