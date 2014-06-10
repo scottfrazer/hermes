@@ -30,4 +30,4 @@ java_dir:
 js_dir:
 	-mkdir js
 clean:
-	-rm -rf java c python
+	-rm -rf java c python js
