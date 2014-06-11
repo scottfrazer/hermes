@@ -30,6 +30,7 @@ def underscore_to_camelcase(value):
 #   .lexer
 # prefix
 # java_package
+# nodejs
 # directory
 # add_main
 #####
@@ -285,14 +286,15 @@ class CodeGenerator:
         return template_class()
     raise Exception('Invalid language: ' + language)
 
-  def generate(self, grammar, language, directory='.', add_main=False, java_package=None):
+  def generate(self, grammar, language, directory='.', add_main=False, java_package=None, nodejs=False):
       template_factory = self.get_template_factory(language)
       templates = template_factory.create(
-          grammar=grammar, directory=directory, add_main=add_main, java_package=java_package
+          grammar=grammar, directory=directory, add_main=add_main, java_package=java_package, nodejs=nodejs
       )
       for template in templates:
           template.grammar = grammar
           template.directory = directory
           template.add_main = add_main
           template.java_package = java_package
+          template.nodejs = nodejs
           code = template.write()

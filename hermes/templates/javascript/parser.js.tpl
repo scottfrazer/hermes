@@ -340,3 +340,10 @@ function parse_{{name}}(ctx) {
     {% endif %}
 }
 {% endfor %}
+
+{% if nodejs %}
+module.exports = {
+  parse: parse,
+  nud_e: nud_e
+}
+{% endif %}

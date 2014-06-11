@@ -61,6 +61,9 @@ def Cli():
         '--java-package', required=False, help='If generating Java code, this is the package.'
     )
     commands['generate'].add_argument(
+        '--nodejs', action="store_true", required=False, help='If generating JavaScript, make it usable with Node.js'
+    )
+    commands['generate'].add_argument(
         '-m', '--add-main', required=False, action='store_true', help='If this is specified, a main() function will be generated in the source code.'
     )
     commands['parse'] = subparsers.add_parser(
@@ -110,7 +113,10 @@ def Cli():
         CodeGenerator().generate(
             grammar,
             cli.language.lower(),
-            directory=cli.directory, add_main=cli.add_main, java_package=cli.java_package
+            directory=cli.directory,
+            add_main=cli.add_main,
+            java_package=cli.java_package,
+            nodejs=cli.nodejs
         )
 
     elif cli.action == 'parse':

@@ -20,7 +20,7 @@ python_files: python_dir
 c_files: c_dir
 	hermes generate --language=c --add-main --directory=c grammar.zgr
 js_files: js_dir
-	hermes generate --language=javascript --add-main --directory=js grammar.zgr
+	hermes generate --language=javascript --add-main --nodejs --directory=js grammar.zgr
 c_dir:
 	-mkdir c
 python_dir:
