@@ -133,6 +133,7 @@ def parse_{{name}}_internal(ctx, rbp=0):
 def nud_{{name}}(ctx):
     tree = ParseTree(NonTerminal({{expression_nonterminal.id}}, '{{name}}'))
     current = ctx.tokens.current()
+    ctx.nonterminal = "{{name}}"
 
     if not current:
         return tree
@@ -142,7 +143,6 @@ def nud_{{name}}(ctx):
       {% if len(first_set) and not first_set.issuperset(grammar.first(expression_nonterminal)) %}
     {{'if' if i == 0 else 'elif'}} current.id in rule_first[{{rule.id}}]:
         # {{rule}}
-        ctx.nonterminal = "{{name}}"
         ctx.rule = rules[{{rule.id}}]
         {% if isinstance(rule.nudAst, AstSpecification) %}
         ast_parameters = OrderedDict([
@@ -179,6 +179,7 @@ def nud_{{name}}(ctx):
 def led_{{name}}(left, ctx):
     tree = ParseTree(NonTerminal({{expression_nonterminal.id}}, '{{name}}'))
     current = ctx.tokens.current()
+    ctx.nonterminal = "{{name}}"
 
     {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
       {% py led = rule.ledProduction.morphemes %}
@@ -186,7 +187,6 @@ def led_{{name}}(left, ctx):
 
     if current.id == {{led[0].id}}: # {{led[0]}}
         # {{rule}}
-        ctx.nonterminal = "{{name}}"
         ctx.rule = rules[{{rule.id}}]
         {% if isinstance(rule.ast, AstSpecification) %}
         ast_parameters = OrderedDict([
@@ -236,6 +236,7 @@ def parse_{{name}}(ctx):
     current = ctx.tokens.current()
     rule = table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.id] if current else -1
     tree = ParseTree(NonTerminal({{nonterminal.id}}, '{{name}}'))
+    ctx.nonterminal = "{{name}}"
 
     {% if isinstance(nonterminal.macro, SeparatedListMacro) %}
     tree.list = 'slist'
@@ -271,7 +272,6 @@ def parse_{{name}}(ctx):
     elif rule == {{rule.id}}: # {{rule}}
       {% endif %}
 
-        ctx.nonterminal = "{{name}}"
         ctx.rule = rules[{{rule.id}}]
 
       {% if isinstance(rule.ast, AstTranslation) %}

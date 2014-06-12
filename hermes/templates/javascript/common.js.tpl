@@ -55,17 +55,21 @@ function AstTransformNodeCreator(name, parameters) {
 
 function AstList(list) {
     this.list = list
+    this.push = function(element) {
+        this.list.push(element);
+    };
     this.to_ast = function() {
         var arr = [];
         for (item in this.list) {
             arr.push(item.to_ast());
         }
         return arr;
-    }
+    };
 }
 
 function ParseTree(nonterminal) {
     this.children = [];
+    this.nonterminal = nonterminal;
     this.astTransform = null;
     this.isExpr = false;
     this.isNud = false;
@@ -76,47 +80,47 @@ function ParseTree(nonterminal) {
     this.listSeparator = null;
     this.list = false;
     this.add = function(tree) {
-        this.children.append(tree);
+        this.children.push(tree);
     }
     this.to_ast = function() {
         if (this.list == 'slist' || this.list == 'nlist') {
             if (this.children.length == 0) {
               return new AstList([]);
             }
-            offset = this.children[0] == this.listSeparator ? 1 : 0;
-            first = this.children[offset].to_ast();
-            list = new AstList([]);
+            var offset = this.children[0] == this.listSeparator ? 1 : 0;
+            var first = this.children[offset].to_ast();
+            var list = [];
             if (first !== null) {
                 list.push(first);
             }
             list.push.apply(list, this.children[offset+1].to_ast());
-            return list;
+            return new AstList(list);
         }
         else if (this.list == 'otlist') {
-            if (len(this.children) == 0) {
+            if (this.children.length == 0) {
                 return new AstList([]);
             }
-            list = new AstList([]);
+            var list = [];
             if (this.children[0] != this.listSeparator ) {
                 list.push(this.children[0].to_ast());
             }
             list.push.apply(list, this.children[1].to_ast());
-            return list;
+            return new AstList(list);
         }
         else if (this.list == 'tlist') {
             if (this.children.length == 0) {
                 return new AstList([]);
             }
-            list = new AstList([this.children[0].to_ast()]);
+            var list = new AstList([this.children[0].to_ast()]);
             list.push.apply(this.children[2].to_ast());
             return list;
         }
         else if (this.list == 'mlist') {
-            list = AstList([]);
+            var list = AstList([]);
             if (this.children.length == 0) {
                 return list;
             }
-            lastElement = this.children.length - 1;
+            var lastElement = this.children.length - 1;
             for (var i = 0; i < lastElement; i++) {
                 list.push(this.children[i].to_ast());
             }
@@ -131,6 +135,7 @@ function ParseTree(nonterminal) {
                 var parameters = {}
                 for (name in this.astTransform.parameters) {
                     var idx = this.astTransform.parameters[name];
+                    var child = null;
                     if (idx == '$') {
                         child = this.children[0];
                     } else if (this.children[0] instanceof ParseTree && this.children[0].isNud && !this.children[0].isPrefix && !this.isExprNud && !this.isInfix) {
@@ -148,14 +153,14 @@ function ParseTree(nonterminal) {
 
                     parameters[name] = child.to_ast()
                 }
-                return Ast(this.astTransform.name, parameters);
+                return new Ast(this.astTransform.name, parameters);
             }
         }
         else {
             if (this.astTransform instanceof AstTransformSubstitution) {
                 return this.children[this.astTransform.idx].to_ast()
             } else if (this.astTransform instanceof AstTransformNodeCreator) {
-                parameters = {}
+                var parameters = {}
                 for (name, idx in this.astTransform.parameters.items()) {
                     parameters[name] = this.children[idx].to_ast()
                 }
@@ -168,9 +173,9 @@ function ParseTree(nonterminal) {
         }
     }
     this.to_string = function() {
-        children = []
+        var children = []
         for (i in this.children) {
-            child = this.children[i];
+            var child = this.children[i];
             if (child instanceof Array) {
                 var stringify = child.map(function(x) {return x.to_string()});
                 children.push('[' + stringify.join(', ') + ']');
@@ -220,14 +225,14 @@ function AstPrettyPrintable(ast) {
             string += arr.join(',\n');
             string += '\n{0})'.format(indent_str);
             return string;
-        } else if (ast instanceof Array) {
+        } else if (ast instanceof AstList) {
             if (ast.length == 0) {
                 return '{0}[]'.format(indent_str)
             }
             var string = '{0}[\n'.format(indent_str);
             var arr = [];
-            for (element in ast) {
-                arr.push(this._to_string(element, indent+2));
+            for (i in ast.list) {
+                arr.push(this._to_string(ast.list[i], indent+2));
             }
             string += arr.join(',\n');
             string += '\n{0}]'.format(indent_str);
@@ -235,6 +240,7 @@ function AstPrettyPrintable(ast) {
         } else if (ast instanceof Terminal) {
             return '{0}{1}'.format(indent_str, ast.to_string());
         } else {
+            console.log(ast);
             return '{0}{1}'.format(indent_str, ast.to_string());
         }
     }
@@ -272,7 +278,7 @@ function ParseTreePrettyPrintable(parsetree) {
 }
 
 function SyntaxError(message) {
-    this.message = messasge;
+    this.message = message;
     this.to_string = function() {
         return this.message;
     }
@@ -327,3 +333,21 @@ function ParserContext(tokens, error_formatter) {
     this.nonterminal_string = null;
     this.rule_string = null;
 }
+
+{% if nodejs %}
+module.exports = {
+    ParserContext: ParserContext,
+    DefaultSyntaxErrorFormatter: DefaultSyntaxErrorFormatter,
+    TokenStream: TokenStream,
+    SyntaxError: SyntaxError,
+    ParseTreePrettyPrintable: ParseTreePrettyPrintable,
+    AstPrettyPrintable: AstPrettyPrintable,
+    Ast: Ast,
+    ParseTree: ParseTree,
+    AstList: AstList,
+    AstTransformNodeCreator: AstTransformNodeCreator,
+    AstTransformSubstitution: AstTransformSubstitution,
+    NonTerminal: NonTerminal,
+    Terminal: Terminal
+}
+{% endif %}

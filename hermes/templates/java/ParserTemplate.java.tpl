@@ -262,6 +262,7 @@ public class {{prefix}}Parser {
     private static ParseTree nud_{{name}}(ParserContext ctx) throws SyntaxError {
         ParseTree tree = new ParseTree( new NonTerminal({{expression_nonterminal.id}}, "{{name}}") );
         Terminal current = ctx.tokens.current();
+        ctx.nonterminal = "{{name}}";
 
         if (current == null) {
             return tree;
@@ -275,7 +276,6 @@ public class {{prefix}}Parser {
 
       {% py ast = rule.nudAst if rule.nudAst else rule.ast %}
             /* ({{rule.id}}) {{rule}} */
-            ctx.nonterminal = "{{name}}";
             ctx.rule = rules.get({{rule.id}});
 
       {% if isinstance(ast, AstSpecification) %}
@@ -314,6 +314,7 @@ public class {{prefix}}Parser {
     private static ParseTree led_{{name}}(ParseTree left, ParserContext ctx) throws SyntaxError {
         ParseTree tree = new ParseTree( new NonTerminal({{expression_nonterminal.id}}, "{{name}}") );
         Terminal current = ctx.tokens.current();
+        ctx.nonterminal = "{{name}}";
         int modifier;
 
   {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
@@ -322,7 +323,6 @@ public class {{prefix}}Parser {
 
         if (current.getId() == {{led[0].id}}) {
             /* {{rule}} */
-            ctx.nonterminal = "{{name}}";
             ctx.rule = rules.get({{rule.id}});
 
       {% if isinstance(rule.ast, AstSpecification) %}
@@ -374,6 +374,7 @@ public class {{prefix}}Parser {
         ParseTree subtree;
         int rule = (current != null) ? table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.getId()] : -1;
         ParseTree tree = new ParseTree( new NonTerminal({{nonterminal.id}}, "{{nonterminal.string}}"));
+        ctx.nonterminal = "{{nonterminal.string.lower()}}";
 
   {% if isinstance(nonterminal.macro, SeparatedListMacro) %}
         tree.setList("slist");
@@ -416,7 +417,6 @@ public class {{prefix}}Parser {
         else if (rule == {{rule.id}}) {
     {% endif %}
             /* {{rule}} */
-            ctx.nonterminal = "{{nonterminal.string.lower()}}";
             ctx.rule = rules.get({{rule.id}});
 
     {% if isinstance(rule.ast, AstTranslation) %}

@@ -3,6 +3,8 @@
 {% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 
+var common = require('./common.js');
+
 var terminals = {
 {% for terminal in grammar.standard_terminals %}
     {{terminal.id}}: '{{terminal.string}}',
@@ -63,12 +65,12 @@ function is_terminal(id){
 
 function parse(tokens, error_formatter, start) {
     if (error_formatter === undefined) {
-        error_formatter = new DefaultSyntaxErrorFormatter();
+        error_formatter = new common.DefaultSyntaxErrorFormatter();
     }
-    var ctx = new ParserContext(tokens, error_formatter);
+    var ctx = new common.ParserContext(tokens, error_formatter);
     var tree = parse_{{grammar.start.string.lower()}}(ctx);
     if (tokens.current() != null) {
-        throw new SyntaxError('Finished parsing without consuming all tokens.');
+        throw new common.SyntaxError('Finished parsing without consuming all tokens.');
     }
     return tree;
 }
@@ -76,14 +78,14 @@ function parse(tokens, error_formatter, start) {
 function expect(ctx, terminal_id) {
     var current = ctx.tokens.current();
     if (current == null) {
-        throw new SyntaxError(ctx.error_formatter.no_more_tokens(ctx.nonterminal, terminals[terminal_id], ctx.tokens.last()));
+        throw new common.SyntaxError(ctx.error_formatter.no_more_tokens(ctx.nonterminal, terminals[terminal_id], ctx.tokens.last()));
     }
     if (current.id != terminal_id) {
-        throw new SyntaxError(ctx.error_formatter.unexpected_symbol(ctx.nonterminal, current, [terminals[terminal_id]], ctx.rule));
+        throw new common.SyntaxError(ctx.error_formatter.unexpected_symbol(ctx.nonterminal, current, [terminals[terminal_id]], ctx.rule));
     }
     var next = ctx.tokens.advance();
     if (next && !is_terminal(next.id)) {
-        throw new SyntaxError(ctx.error_formatter.invalid_terminal(ctx.nonterminal, next));
+        throw new common.SyntaxError(ctx.error_formatter.invalid_terminal(ctx.nonterminal, next));
     }
     return current;
 }
@@ -130,7 +132,7 @@ function parse_{{name}}(ctx) {
 
 function parse_{{name}}_internal(ctx, rbp) {
     left = nud_{{name}}(ctx);
-    if (left instanceof ParseTree) {
+    if (left instanceof common.ParseTree) {
         left.isExpr = true;
         left.isNud = true;
     }
@@ -144,8 +146,9 @@ function parse_{{name}}_internal(ctx, rbp) {
 }
 
 function nud_{{name}}(ctx) {
-    tree = new ParseTree(NonTerminal({{expression_nonterminal.id}}, '{{name}}'));
-    current = ctx.tokens.current();
+    var tree = new common.ParseTree(new common.NonTerminal({{expression_nonterminal.id}}, '{{name}}'));
+    var current = ctx.tokens.current();
+    ctx.nonterminal = "{{name}}";
 
     if (!current) {
         return tree;
@@ -156,17 +159,16 @@ function nud_{{name}}(ctx) {
       {% if len(first_set) and not first_set.issuperset(grammar.first(expression_nonterminal)) %}
     {{'if' if i == 0 else 'else if'}} (rule_first[{{rule.id}}].indexOf(current.id) != -1) {
         // {{rule}}
-        ctx.nonterminal = "{{name}}"
-        ctx.rule = rules[{{rule.id}}]
+        ctx.rule = rules[{{rule.id}}];
         {% if isinstance(rule.nudAst, AstSpecification) %}
         ast_parameters = {
           {% for k,v in rule.nudAst.parameters.items() %}
             '{{k}}': {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %},
           {% endfor %}
         }
-        tree.astTransform = new AstTransformNodeCreator('{{rule.nudAst.name}}', ast_parameters);
+        tree.astTransform = new common.AstTransformNodeCreator('{{rule.nudAst.name}}', ast_parameters);
         {% elif isinstance(rule.nudAst, AstTranslation) %}
-        tree.astTransform = new AstTransformSubstitution({{rule.nudAst.idx}});
+        tree.astTransform = new common.AstTransformSubstitution({{rule.nudAst.idx}});
         {% endif %}
 
         tree.nudMorphemeCount = {{len(rule.nud_production)}};
@@ -193,15 +195,15 @@ function nud_{{name}}(ctx) {
 }
 
 function led_{{name}}(left, ctx) {
-    tree = ParseTree(NonTerminal({{expression_nonterminal.id}}, '{{name}}'))
-    current = ctx.tokens.current()
+    var tree = new common.ParseTree(new common.NonTerminal({{expression_nonterminal.id}}, '{{name}}'))
+    var current = ctx.tokens.current()
+    ctx.nonterminal = "{{name}}";
 
     {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
       {% py led = rule.ledProduction.morphemes %}
       {% if len(led) %}
     if (current.id == {{led[0].id}}) { // {{led[0]}}
         // {{rule}}
-        ctx.nonterminal = "{{name}}";
         ctx.rule = rules[{{rule.id}}];
         {% if isinstance(rule.ast, AstSpecification) %}
         ast_parameters = {
@@ -209,9 +211,9 @@ function led_{{name}}(left, ctx) {
             '{{k}}': {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %},
           {% endfor %}
         }
-        tree.astTransform = new AstTransformNodeCreator('{{rule.ast.name}}', ast_parameters);
+        tree.astTransform = new common.AstTransformNodeCreator('{{rule.ast.name}}', ast_parameters);
         {% elif isinstance(rule.ast, AstTranslation) %}
-        tree.astTransform = new AstTransformSubstitution({{rule.ast.idx}});
+        tree.astTransform = new common.AstTransformSubstitution({{rule.ast.idx}});
         {% endif %}
 
         {% if len(rule.nud_production) == 1 and isinstance(rule.nud_production.morphemes[0], NonTerminal) %}
@@ -250,9 +252,10 @@ function led_{{name}}(left, ctx) {
 {% for nonterminal in grammar.ll1_nonterminals %}
   {% py name = nonterminal.string %}
 function parse_{{name}}(ctx) {
-    current = ctx.tokens.current();
-    rule = current != null ? table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.id] : -1;
-    tree = new ParseTree(NonTerminal({{nonterminal.id}}, '{{name}}'));
+    var current = ctx.tokens.current();
+    var rule = current != null ? table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.id] : -1;
+    var tree = new common.ParseTree(new common.NonTerminal({{nonterminal.id}}, '{{name}}'));
+    ctx.nonterminal = "{{name}}";
 
     {% if isinstance(nonterminal.macro, SeparatedListMacro) %}
     tree.list = 'slist';
@@ -276,7 +279,7 @@ function parse_{{name}}(ctx) {
 
     if (current == null) {
     {% if grammar.must_consume_tokens(nonterminal) %}
-        throw new SyntaxError('Error: unexpected end of file');
+        throw new common.SyntaxError('Error: unexpected end of file');
     {% else %}
         return tree
     {% endif %}
@@ -290,20 +293,19 @@ function parse_{{name}}(ctx) {
     else if (rule == {{rule.id}}) { // {{rule}}
       {% endif %}
 
-        ctx.nonterminal = "{{name}}";
         ctx.rule = rules[{{rule.id}}];
 
       {% if isinstance(rule.ast, AstTranslation) %}
-        tree.astTransform = AstTransformSubstitution({{rule.ast.idx}});
+        tree.astTransform = new common.AstTransformSubstitution({{rule.ast.idx}});
       {% elif isinstance(rule.ast, AstSpecification) %}
         ast_parameters = {
         {% for k,v in rule.ast.parameters.items() %}
             '{{k}}': {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %},
         {% endfor %}
         }
-        tree.astTransform = new AstTransformNodeCreator('{{rule.ast.name}}', ast_parameters);
+        tree.astTransform = new common.AstTransformNodeCreator('{{rule.ast.name}}', ast_parameters);
       {% else %}
-        tree.astTransform = new AstTransformSubstitution(0);
+        tree.astTransform = new common.AstTransformSubstitution(0);
       {% endif %}
 
       {% for index, morpheme in enumerate(rule.production.morphemes) %}
@@ -329,11 +331,11 @@ function parse_{{name}}(ctx) {
     {% endfor %}
 
     {% if grammar.must_consume_tokens(nonterminal) %}
-    throw new SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      nonterminal_first({{nonterminal.id}}),
-      rule[{{rule.id}}]
+    throw new common.SyntaxError(ctx.error_formatter.unexpected_symbol(
+        ctx.nonterminal,
+        ctx.tokens.current(),
+        nonterminal_first[{{nonterminal.id}}],
+        rules[{{rule.id}}]
     ));
     {% else %}
     return tree;
@@ -344,6 +346,6 @@ function parse_{{name}}(ctx) {
 {% if nodejs %}
 module.exports = {
   parse: parse,
-  nud_e: nud_e
+  terminals: terminals
 }
 {% endif %}

@@ -19,6 +19,8 @@ def test_all():
             yield c_ast, test_dir
             yield java_parse_tree, test_dir
             yield java_ast, test_dir
+            yield javascript_parse_tree, test_dir
+            yield javascript_ast, test_dir
 
 # Utility
 
@@ -80,8 +82,23 @@ def parser_java(test_dir, out):
     except subprocess.CalledProcessError as exception:
         return exception.output.decode('utf-8').strip()
     finally:
-        print(tmp_dir)
-        #shutil.rmtree(tmp_dir)
+        shutil.rmtree(tmp_dir)
+
+def parse_javascript(test_dir, out):
+    grammar_file = os.path.join(test_dir, 'grammar.zgr')
+    tokens_file = os.path.join(test_dir, 'tokens')
+    grammar = GrammarParser().parse('grammar', open(grammar_file))
+    tmp_dir = tempfile.mkdtemp()
+
+    try:
+      CodeGenerator().generate(grammar, 'javascript', directory=tmp_dir, nodejs=True, add_main=True)
+      command = 'node main.js {1} {2} 2>&1'.format(out, os.path.abspath(tokens_file))
+      return subprocess.check_output(command, shell=True, stderr=None, cwd=os.path.dirname(tmp_dir)).decode('utf-8').strip()
+    except subprocess.CalledProcessError as exception:
+      return exception.output.decode('utf-8').strip()
+    finally:
+      shutil.rmtree(tmp_dir)
+
 # Tests
 
 def python_parse_tree(test_dir):
@@ -130,4 +147,24 @@ def java_ast(test_dir):
     with open(ast_file) as fp:
         expected = fp.read()
     actual = parser_java(test_dir, 'ast')
+    assert expected == actual
+
+def javascript_parse_tree(test_dir):
+    parse_tree_file = os.path.join(test_dir, 'parsetree')
+    if not os.path.isfile(parse_tree_file):
+        with open(parse_tree_file, 'w') as fp:
+            fp.write(parse_javascript(test_dir, 'parsetree'))
+    with open(parse_tree_file) as fp:
+        expected = fp.read()
+    actual = parse_python(test_dir, 'parsetree')
+    assert expected == actual
+
+def javascript_ast(test_dir):
+    ast_file = os.path.join(test_dir, 'ast')
+    if not os.path.isfile(ast_file):
+        with open(ast_file, 'w') as fp:
+            fp.write(parse_javascript(test_dir, 'ast'))
+    with open(ast_file) as fp:
+        expected = fp.read()
+    actual = parse_python(test_dir, 'ast')
     assert expected == actual

@@ -216,6 +216,11 @@ class JavascriptCommonTemplate(JavascriptTemplate):
   def get_filename(self):
     return os.path.join(self.directory, 'common.js')
 
+class JavascriptMainTemplate(JavascriptTemplate):
+  template = 'javascript/main.js.tpl'
+  def get_filename(self):
+    return os.path.join(self.directory, 'main.js')
+
 class PythonTemplateFactory:
   def create(self, **kwargs):
     templates = [
@@ -271,6 +276,8 @@ class JavascriptTemplateFactory:
         JavascriptCommonTemplate(),
         JavascriptParserTemplate()
     ]
+    if kwargs['add_main'] and kwargs['nodejs']:
+      templates.append(JavascriptMainTemplate())
     return templates
 
 class CodeGenerator:
