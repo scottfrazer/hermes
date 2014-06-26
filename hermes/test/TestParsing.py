@@ -92,8 +92,8 @@ def parse_javascript(test_dir, out):
 
     try:
       CodeGenerator().generate(grammar, 'javascript', directory=tmp_dir, nodejs=True, add_main=True)
-      command = 'node main.js {1} {2} 2>&1'.format(out, os.path.abspath(tokens_file))
-      return subprocess.check_output(command, shell=True, stderr=None, cwd=os.path.dirname(tmp_dir)).decode('utf-8').strip()
+      command = 'node main.js {0} {1} 2>&1'.format(out, os.path.abspath(tokens_file))
+      return subprocess.check_output(command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as exception:
       return exception.output.decode('utf-8').strip()
     finally:
@@ -156,7 +156,7 @@ def javascript_parse_tree(test_dir):
             fp.write(parse_javascript(test_dir, 'parsetree'))
     with open(parse_tree_file) as fp:
         expected = fp.read()
-    actual = parse_python(test_dir, 'parsetree')
+    actual = parse_javascript(test_dir, 'parsetree')
     assert expected == actual
 
 def javascript_ast(test_dir):
@@ -166,5 +166,5 @@ def javascript_ast(test_dir):
             fp.write(parse_javascript(test_dir, 'ast'))
     with open(ast_file) as fp:
         expected = fp.read()
-    actual = parse_python(test_dir, 'ast')
+    actual = parse_javascript(test_dir, 'ast')
     assert expected == actual

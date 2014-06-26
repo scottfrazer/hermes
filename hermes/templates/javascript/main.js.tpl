@@ -32,17 +32,15 @@ fs.readFile(file, 'utf-8', function (err, data) {
             file_tokens[i].col
         );
         tokens.push(token);
-        //console.log(token);
-        //console.log(file_tokens[i]);
     }
-    //try {
+    try {
         tree = parser.parse(new common.TokenStream(tokens));
         if (output == 'parsetree') {
             console.log(new common.ParseTreePrettyPrintable(tree).to_string());
         } else if (output == 'ast') {
             console.log(new common.AstPrettyPrintable(tree.to_ast()).to_string());
         }
-    //} catch (err) {
-    //    console.log(err.message);
-    //}
+    } catch (err) {
+        console.log(err.message);
+    }
 });

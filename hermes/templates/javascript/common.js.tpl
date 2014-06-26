@@ -90,10 +90,10 @@ function ParseTree(nonterminal) {
             var offset = this.children[0] == this.listSeparator ? 1 : 0;
             var first = this.children[offset].to_ast();
             var list = [];
-            if (first !== null) {
+            if (first != null) {
                 list.push(first);
             }
-            list.push.apply(list, this.children[offset+1].to_ast());
+            list.push.apply(list, this.children[offset+1].to_ast().list);
             return new AstList(list);
         }
         else if (this.list == 'otlist') {
@@ -104,32 +104,32 @@ function ParseTree(nonterminal) {
             if (this.children[0] != this.listSeparator ) {
                 list.push(this.children[0].to_ast());
             }
-            list.push.apply(list, this.children[1].to_ast());
+            list.push.apply(list, this.children[1].to_ast().list);
             return new AstList(list);
         }
         else if (this.list == 'tlist') {
             if (this.children.length == 0) {
                 return new AstList([]);
             }
-            var list = new AstList([this.children[0].to_ast()]);
-            list.push.apply(this.children[2].to_ast());
-            return list;
+            var list = [this.children[0].to_ast()];
+            list.push.apply(this.children[2].to_ast().list);
+            return new AstList(list);
         }
         else if (this.list == 'mlist') {
-            var list = AstList([]);
             if (this.children.length == 0) {
-                return list;
+                return new AstList([]);
             }
             var lastElement = this.children.length - 1;
+            var list = [];
             for (var i = 0; i < lastElement; i++) {
                 list.push(this.children[i].to_ast());
             }
-            list.push.apply(this.children[lastElement].to_ast());
-            return list;
+            list.push.apply(this.children[lastElement].to_ast().list);
+            return new AstList(list);
         }
         else if (this.isExpr == true) {
             if (this.astTransform instanceof AstTransformSubstitution) {
-                return this.children[this.astTransform.idx].to_ast()
+                return this.children[this.astTransform.idx].to_ast();
             }
             else if (this.astTransform instanceof AstTransformNodeCreator) {
                 var parameters = {}
@@ -150,7 +150,6 @@ function ParseTree(nonterminal) {
                     } else {
                         child = this.children[idx];
                     }
-
                     parameters[name] = child.to_ast()
                 }
                 return new Ast(this.astTransform.name, parameters);
@@ -160,13 +159,14 @@ function ParseTree(nonterminal) {
             if (this.astTransform instanceof AstTransformSubstitution) {
                 return this.children[this.astTransform.idx].to_ast()
             } else if (this.astTransform instanceof AstTransformNodeCreator) {
-                var parameters = {}
-                for (name, idx in this.astTransform.parameters.items()) {
-                    parameters[name] = this.children[idx].to_ast()
+                var parameters = {};
+                for (name in this.astTransform.parameters) {
+                    parameters[name] = this.children[this.astTransform.parameters[name]].to_ast();
                 }
-                return Ast(this.astTransform.name, parameters)
+                return new Ast(this.astTransform.name, parameters);
+                return x;
             } else if (this.children.length) {
-                return this.children[0].to_ast()
+                return this.children[0].to_ast();
             } else {
                 return null;
             }
@@ -192,7 +192,7 @@ function Ast(name, attributes) {
     this.attributes = attributes;
     this.to_string = function() {
         var arr = [];
-        for (key in this.attributes) {
+        for (var key in this.attributes) {
             var value = this.attributes[key];
             if (value instanceof Array) {
                 var stringify = value.map(function(x) {return x.to_string()});
@@ -226,7 +226,7 @@ function AstPrettyPrintable(ast) {
             string += '\n{0})'.format(indent_str);
             return string;
         } else if (ast instanceof AstList) {
-            if (ast.length == 0) {
+            if (ast.list.length == 0) {
                 return '{0}[]'.format(indent_str)
             }
             var string = '{0}[\n'.format(indent_str);
@@ -240,7 +240,6 @@ function AstPrettyPrintable(ast) {
         } else if (ast instanceof Terminal) {
             return '{0}{1}'.format(indent_str, ast.to_string());
         } else {
-            console.log(ast);
             return '{0}{1}'.format(indent_str, ast.to_string());
         }
     }
