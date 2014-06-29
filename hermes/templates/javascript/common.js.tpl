@@ -124,7 +124,7 @@ function ParseTree(nonterminal) {
             for (var i = 0; i < lastElement; i++) {
                 list.push(this.children[i].to_ast());
             }
-            list.push.apply(this.children[lastElement].to_ast().list);
+            list.push.apply(list, this.children[lastElement].to_ast().list);
             return new AstList(list);
         }
         else if (this.isExpr == true) {
@@ -240,7 +240,7 @@ function AstPrettyPrintable(ast) {
         } else if (ast instanceof Terminal) {
             return '{0}{1}'.format(indent_str, ast.to_string());
         } else {
-            return '{0}{1}'.format(indent_str, ast.to_string());
+            return '{0}{1}'.format(indent_str, (ast == null) ? 'None' : ast.to_string());
         }
     }
 }
@@ -315,7 +315,7 @@ function DefaultSyntaxErrorFormatter() {
           actual_terminal.col,
           nonterminal,
           expected_terminals.join(', '),
-          actual_terminal
+          actual_terminal.to_string()
         );
     }
     this.no_more_tokens = function(nonterminal, expected_terminal, last_terminal) {

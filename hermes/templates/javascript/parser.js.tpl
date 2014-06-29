@@ -281,7 +281,7 @@ function parse_{{name}}(ctx) {
     {% if grammar.must_consume_tokens(nonterminal) %}
         throw new common.SyntaxError('Error: unexpected end of file');
     {% else %}
-        return tree
+        return tree;
     {% endif %}
     }
 
