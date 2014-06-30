@@ -9,8 +9,9 @@ from hermes.parser.Common import ParseTreePrettyPrintable, AstPrettyPrintable
 base_dir = os.path.join(os.path.dirname(__file__), 'cases/grammar')
 
 def test_all():
-    for directory in os.listdir(base_dir):
-        test_dir = os.path.join(base_dir, directory)
+    for test_dir, dirs, files in os.walk(base_dir):
+        if 'grammar.zgr' not in files:
+            continue
         grammar_path = os.path.join(test_dir, 'grammar.zgr')
         first_sets_path = os.path.join(test_dir, 'first.json')
         follow_sets_path = os.path.join(test_dir, 'follow.json')
@@ -21,7 +22,7 @@ def test_all():
                 yield tokens, test_dir
                 yield parse_tree, test_dir
                 yield ast, test_dir
-            
+
             grammar = GrammarParser().parse('grammar', open(grammar_path))
             if grammar.conflicts:
                 if not os.path.exists(conflicts_path) and (not os.path.exists(first_sets_path) or not os.path.exists(follow_sets_path)):
@@ -105,4 +106,3 @@ def conflicts(test_dir):
     with open(conflicts_file) as fp:
         expected = fp.read()
     assert expected == conflicts_to_string(grammar.conflicts)
-

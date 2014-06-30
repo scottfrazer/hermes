@@ -66,7 +66,7 @@ def parser_java(test_dir, out):
     tmp_dir = tempfile.mkdtemp()
     try:
         shutil.copy(tokens_file, tmp_dir)
-        shutil.copytree(os.path.join(test_dir, '..', 'javacp', 'org'), os.path.join(tmp_dir, 'org'))
+        shutil.copytree(os.path.join(test_dir, '..', '..', 'javacp', 'org'), os.path.join(tmp_dir, 'org'))
         java_sources = list(filter(lambda filename: filename.endswith('.java'), os.listdir(tmp_dir)))
         CodeGenerator().generate(grammar, 'java', directory=tmp_dir, add_main=True)
         compile_command = 'javac *.java 2>/dev/null'
