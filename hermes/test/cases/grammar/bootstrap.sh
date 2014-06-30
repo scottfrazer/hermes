@@ -1,5 +1,5 @@
-for file in *
+for file in parsing/*
 do
-  rm $file/grammar.zgr 2>/dev/null
-  ln -s ../../../grammars/$file.zgr $file/grammar.zgr 2>/dev/null
+  rm $file/grammar.zgr
+  ln -s ../../../../grammars/$file.zgr $file/grammar.zgr
 done
