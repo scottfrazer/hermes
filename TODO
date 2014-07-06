@@ -1,65 +1,89 @@
-TODO
-====
+2.0 TODO
+========
 
-- Make test with macro for first part of expression rule
-
-What does a generated grammar need?
------------------------------------
-
-1) One expression parser definition:
-
-{% for exprGrammar in grammar.exprgrammars %}
-
-2) expression parser contains:
-  1) 1 Map of int (terminal id) -> int (binding power) for infix terminals only
-  2) another map of int->int for prefix terminals only
-  3) int get_infix_binding_power(int terminal_id) [returns the binding power or else 0]
-  4) int get_prefix_binding_power(int terminal_id) [returns the binding power or else 0]
-  5) NOTE: (1) and (2) are not strictly needed, only (3) and (4)
-  6) get_current_token(), expect(), parse(rbp=0)
-  7) nud(): production first set, nonterminal first set,
-
-Errors to be added:
+Minor things
+------------
 
 1) Have error message if expression rule needs a binding power but is missing one. (Add test!)
 2) Have error message if lexer produces token that is not consumed by the grammar.
 3) Get rid of MacroGeneratedRule
+4) Make test with macro for first part of expression rule.  Should this be a syntax error?
+5) Test capital letters, numbers, underscores in terminal/nonterminal
+6) All syntax errors need a test
+
+Lexer for C, Java, Javascript
+-----------------------------
+
++ tests
+
+Syntax Error Formatting for C
+-----------------------------
+
+parse() method takes tokens and syntax error formatter.  Optionally, a nonterminal to parse.
+
+This creates a ParserContext which is passed around internally to the parser methods
+
+ParserContext
+  - tokens
+  - syntax error formatter
+  - rule
+  - nonterminal
+
+Document public interface for all targets
+-----------------------------------------
 
 Document the interface for the public classes in Grammar.py:
 
   HermesGrammar:
-    __init__(name, rules) - self.start=rules[0].nonterminal
+    __init__(name, rules)
+    start - self.rules[0].nonterminal
     rules - self.rules
-    terminals
-    nonterminals
-    macros
-    ll1_nonterminals
-    standard_terminals
-    expression_nonterminals
-    parse_table
-    nonterminal_rules (old:grammar_expanded_rules) - {grammar: list(Rule)}
-    (old:grammar_expanded_expr_rules) - {grammar: list(ExprRule)}
-    must_consume_token(nonterminal)
-    is_abstract_terminal(terminal)
-    first(production|terminal|nonterminal)
-    follow(production|terminal|nonterminal)
-    conflicts
-    ? nud ?
-    ? led ?
-    ? precedence ?
+    terminals - list of all terminals
+    nonterminals - list of all nonterminals
+    standard_terminals - list of terminals that are non-abstract (i.e. not :_empty and :_end)
+    ll1_nonterminals - list of nonterminals that aren't expression nonterminals
+    expression_nonterminals - list of expression nonterminals
+    parse_table - 2x2 matrix [nonterminal][terminal] = rule
+    must_consume_token(nonterminal) - returns true if there is no production such that $nonterminal = :_empty
+    first(production|nonterminal) - list of terminals in first set
+    follow(nonterminal) - list of terminals in follow set
+    get_rules(nonterminal) - list of rules for this nonterminal
+    get_expanded_rules(nonterminal) - list of expanded rules for this nonterminal
     __str__()
 
   Rule
-    - id, morphemes?, nonterminal, production
-    - must_consume_token
-    - __eq__(), __str__()
+    id - auto assigned integer identifier
+    nonterminal - LHS of this rule
+    is_empty - true if $nonterminal = :_empty
+    production - Production object
+    operator (optional) - Terminal
+    __eq__(), __str__()
+
+  Production:
+    morphemes - list of morphemes in this production
 
   ExprRule(Rule)
-    - nud_production, led_production
-    - __str__()
+    nud_production - Production
+    led_production - Production
+    nudAst - AstSpecification or AstTranslation
+    ledAst - AstSpecification or AstTranslation
+    __str__()
 
   NonTerminal, Terminal
-    - id, name
+    id - auto assigned integer identifier
+    string - string representation, without leading $ or :
+
+  Operator
+    operator - Terminal of this operator
+    associativity - ['left', 'right', 'unary']
+    binding_power - integer binding power.  How closely this binds relative to other operators
+
+  AstSpecification
+    name
+    parameters
+
+  AstTranslation
+    idx
 
   ------------------------
 
@@ -124,8 +148,8 @@ public API for tree and ast:
     - tree.children(), tree.child(3)
     - ast.keys(), ast[name], name in ast, (dict?)
 
-HPath syntax
-------------
+HPath (implement and document)
+------------------------------
 
     A :: All 'A' nodes
     A/B :: All 'B' nodes that are children of 'A' nodes
@@ -148,8 +172,7 @@ HPath syntax
     :S[value>100] :: 'T' terminals with integer value greater than 100
     :T[0] :: First 'T' element
 
-HPath examples
-==============
+h2. HPath examples
 
 (Grammar:
   body=[
@@ -189,3 +212,23 @@ Rule[@nonterminal] :: terminal elements for nonterminals 'a' and 'c'
 Parser[@rules] :: both 'Rule' ASTs
 :nonterminal :: 'a' and 'c' terminals
 :* :: 'a', 'b', 'c', and 'd' terminals
+
+h3. HPath algorithm
+
+/Grammar[@body]/Parser[@rules]/Rule[@production]/Production
+/Grammar/Parser/Rule/Production
+/Grammar/Parser = /Grammar[@*]/Parser
+
+(1) HPath is parsed as segments: `/Grammar[@body]`, `/Parser[@body]`, `/Rule[@production]`, `/Production`
+(2) HPath segment have three parts:
+  (2a) SCOPE: / or // (null=//)
+  (2b) NAME: name of the AST to match, may be * to match any AST
+  (2c) SPECIFIER: in square brackets... either an integer (index for lists), or a string "@attr" (attribute on an AST)
+(3) CTX is a list of contexts.  A context contains a list of elements.  current(CTX) is the current context.
+(3a) CTX = []
+(4) Loop through the segments:
+  (4a) current = new Context();
+  (4b) If the SCOPE is /, current.add(elements CTX[-1] that match NAME/SPECIFIER)
+  (4c) If the SCOPE is //, current.add(recursive elements of CTX[-1] that match NAME/SPECIFIER)
+  (4d) CTX.append(current)
+(5) Return CTX[-1]
