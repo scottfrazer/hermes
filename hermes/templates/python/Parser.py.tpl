@@ -311,8 +311,8 @@ def parse_{{name}}(ctx):
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      nonterminal_first({{nonterminal.id}}),
-      rule[{{rule.id}}]
+      [terminals[x] for x in nonterminal_first[{{nonterminal.id}}]],
+      rules[{{rule.id}}]
     ))
     {% else %}
     return tree

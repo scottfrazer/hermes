@@ -1,5 +1,3 @@
-try:
-  from .Lexer import lex
-except ImportError:
-  pass
+
+from .Lexer import lex
 from .Parser import parse

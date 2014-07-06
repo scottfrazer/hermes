@@ -10,8 +10,6 @@ from hermes.Logger import Factory as LoggerFactory
 from hermes.parser.hermes.Lexer import Terminal as HermesTerminal
 from hermes.parser.Common import Ast, AstList, AstPrettyPrintable
 
-logger = LoggerFactory().getModuleLogger(__name__)
-
 class GrammarFactory:
   # TODO: I want to get rid of name and start parameters
   def create(self, name, ast):
@@ -61,6 +59,8 @@ class GrammarFactory:
           rules = self.parse_expr_rule(expression_rule_ast, nonterminal, all_terminals, all_nonterminals, all_macros)
           all_rules.extend(rules)
 
+      if lexer:
+        lexer.terminals = all_terminals.values()
       return CompositeGrammar(name, all_rules, lexer)
 
   def get_macro_from_ast(self, ast, terminals, nonterminals):
@@ -93,7 +93,6 @@ class GrammarFactory:
       if lexer_atom.name == 'Mode':
         mode_name = lexer_atom.getAttr('name').source_string
         lexer[mode_name] = self.parse_lexer_mode(lexer_atom, terminals, nonterminals)
-    lexer.terminals = terminals.values()
     return lexer
 
   def parse_regex(self, regex_ast, terminals, nonterminals):

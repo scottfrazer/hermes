@@ -96,7 +96,7 @@ def Cli():
 
     if cli.action == 'bootstrap':
         grammar = GrammarParser().parse('hermes', open('hermes.zgr'))
-        CodeGenerator().generate(grammar, 'python', directory='hermes/parser')
+        CodeGenerator().generate(grammar, 'python', python_package="parser", directory='hermes')
 
     elif cli.action == 'analyze':
         grammar = get_grammars(cli)
