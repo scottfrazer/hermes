@@ -19,20 +19,6 @@ class GrammarFactory:
     self.binding_power = 0
     self.macros = {}
 
-    terminals = {
-      '_empty': EmptyString(-1)
-    }
-    for terminal in self.walk_ast_terminal(ast, 'terminal'):
-      t_name = terminal.source_string
-      if t_name not in terminals:
-        terminals[t_name] = Terminal(t_name, len(terminals))
-
-    nonterminals = {}
-    for nonterminal in self.walk_ast_terminal(ast, 'nonterminal', stop=True):
-      nt_name = nonterminal.source_string
-      if nt_name not in nonterminals:
-        nonterminals[nt_name] = NonTerminal(nt_name, len(nonterminals))
-
     lexer = None
     lexer_ast = self.walk_ast(ast, 'Lexer')
     lexer_terminals = {}
@@ -42,7 +28,7 @@ class GrammarFactory:
     elif len(lexer_ast) == 1:
       lexer_ast = lexer_ast[0]
       lexer = self.parse_lexer(lexer_ast, lexer_terminals, lexer_nonterminals)
-      lexer.code = ast.getAttr('code').source_string
+      lexer.code = ast.getAttr('code').source_string if ast.getAttr('code') else ''
 
     all_rules = []
     all_nonterminals = {}
@@ -50,32 +36,32 @@ class GrammarFactory:
     all_macros = {}
 
     expression_parser_asts = []
-    ll1_rules = []
-    ll1_nonterminals = {}
-    ll1_terminals = {'_empty': EmptyString(-1)}
-    ll1_macros = {}
     start = None
-    parser_ast = self.walk_ast(ast, 'Parser')[0]
-    # TODO: assert parser_ast has one entry
+    parser_ast = self.walk_ast(ast, 'Parser')
 
-    for rule_ast in self.walk_ast(parser_ast, 'Rule'):
-      if start is None:
-        start = self.get_morpheme_from_lexer_token(rule_ast.getAttr('nonterminal'), all_terminals, all_nonterminals)
-      production_ast = rule_ast.getAttr('production')
-      if isinstance(production_ast, Ast) and production_ast.name == 'ExpressionParser':
-        expression_parser_asts.append(rule_ast)
-      else:
-        new_rules = self.parse_ll1_rule(rule_ast, all_terminals, all_nonterminals, all_macros)
-        all_rules.extend(new_rules) # Bill Maher!
+    if len(parser_ast) == 0:
+      return CompositeGrammar(name, [Rule(NonTerminal('start', 0), Production([all_terminals['_empty']]))], lexer)
+    elif len(parser_ast) > 1:
+      raise Exception('Expecting only one parser')
+    else:
+      for rule_ast in self.walk_ast(parser_ast[0], 'Rule'):
+        if start is None:
+          start = self.get_morpheme_from_lexer_token(rule_ast.getAttr('nonterminal'), all_terminals, all_nonterminals)
+        production_ast = rule_ast.getAttr('production')
+        if isinstance(production_ast, Ast) and production_ast.name == 'ExpressionParser':
+          expression_parser_asts.append(rule_ast)
+        else:
+          new_rules = self.parse_ll1_rule(rule_ast, all_terminals, all_nonterminals, all_macros)
+          all_rules.extend(new_rules)
 
-    expression_grammars = []
-    for expression_parser_ast in expression_parser_asts:
-      nonterminal = self.get_morpheme_from_lexer_token(expression_parser_ast.getAttr('nonterminal'), all_terminals, all_nonterminals)
-      for expression_rule_ast in expression_parser_ast.getAttr('production').getAttr('rules'):
-        rules = self.parse_expr_rule(expression_rule_ast, nonterminal, all_terminals, all_nonterminals, all_macros)
-        all_rules.extend(rules)
+      expression_grammars = []
+      for expression_parser_ast in expression_parser_asts:
+        nonterminal = self.get_morpheme_from_lexer_token(expression_parser_ast.getAttr('nonterminal'), all_terminals, all_nonterminals)
+        for expression_rule_ast in expression_parser_ast.getAttr('production').getAttr('rules'):
+          rules = self.parse_expr_rule(expression_rule_ast, nonterminal, all_terminals, all_nonterminals, all_macros)
+          all_rules.extend(rules)
 
-    return CompositeGrammar(name, all_rules, lexer)
+      return CompositeGrammar(name, all_rules, lexer)
 
   def get_macro_from_ast(self, ast, terminals, nonterminals):
     macro_string = self.macro_ast_to_string(ast)
@@ -87,7 +73,7 @@ class GrammarFactory:
       elif ast.getAttr('name').source_string == 'list' and len(ast.getAttr('parameters')) == 1:
         macro = self.nlist(ast, terminals, nonterminals)
       elif ast.getAttr('name').source_string == 'tlist':
-        macro = self.slist(ast, terminals, nonterminals)
+        macro = self.tlist(ast, terminals, nonterminals)
       elif ast.getAttr('name').source_string == 'mlist':
         macro = self.mlist(ast, terminals, nonterminals)
       elif ast.getAttr('name').source_string == 'optional':
@@ -107,6 +93,7 @@ class GrammarFactory:
       if lexer_atom.name == 'Mode':
         mode_name = lexer_atom.getAttr('name').source_string
         lexer[mode_name] = self.parse_lexer_mode(lexer_atom, terminals, nonterminals)
+    lexer.terminals = terminals.values()
     return lexer
 
   def parse_regex(self, regex_ast, terminals, nonterminals):
@@ -349,13 +336,6 @@ class GrammarFactory:
     nt2 = self.generate_nonterminal(nonterminals)
     empty = terminals['_empty']
 
-    # otlist(:item, :comma, 3) =
-    # $_gen0 = :item :comma :item :comma :item $_gen1
-    # $_gen0 = :_empty
-    # $_gen1 = :comma _gen2
-    # $_gen1 = :_empty
-    # $_gen2 = :item $_gen1
-    # $_gen2 = :_empty
     start_production = []
     if minimum > 0:
       for x in range(minimum):
@@ -453,8 +433,8 @@ class GrammarFactory:
   def tlist( self, ast, terminals, nonterminals ):
     nt0 = self.generate_nonterminal(nonterminals)
     empty = terminals['_empty']
-    morpheme = terminals[ast.getAttr('parameters')[0].source_string]
-    terminator = terminals[ast.getAttr('parameters')[1].source_string]
+    morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
+    terminator = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[1], terminals, nonterminals)
     rules = [
         MacroGeneratedRule(nt0, Production( [morpheme, terminator, nt0] )),
         MacroGeneratedRule(nt0, Production( [empty] ))
@@ -467,7 +447,7 @@ class GrammarFactory:
 
     return macro
 
-  def walk_ast_terminal(self, ast, terminal, stop=False):
+  def walk_ast_terminal(self, ast, terminal):
     nodes = []
     if isinstance(ast, HermesTerminal) and ast.str == terminal:
       return [ast]

@@ -30,6 +30,7 @@ def underscore_to_camelcase(value):
 #   .lexer
 # prefix
 # java_package
+# python_package
 # nodejs
 # directory
 # add_main
@@ -58,7 +59,7 @@ class GrammarTemplate:
 
 class PythonTemplate(GrammarTemplate):
   def get_filename(self):
-    return os.path.join(self.directory, self.grammar.name, self.filename)
+    return os.path.join(self.directory, self.python_package, self.grammar.name, self.filename)
 
 class JavaTemplate(GrammarTemplate):
   def get_filename(self):
@@ -103,7 +104,13 @@ class PythonCommonTemplate(PythonTemplate):
   filename = 'Common.py'
   template = 'python/Common.py.tpl'
   def get_filename(self):
-    return os.path.join(self.directory, self.filename)
+    return os.path.join(self.directory, self.python_package, self.filename)
+
+class PythonMainTemplate(PythonTemplate):
+  filename = 'main.py'
+  template = 'python/Main.py.tpl'
+  def get_filename(self):
+    return os.path.join(self.directory, self.grammar.name + '_' + self.filename)
 
 class JavaParserTemplate(JavaTemplate):
   filename = 'Parser.java'
@@ -230,6 +237,8 @@ class PythonTemplateFactory:
     ]
     if kwargs['grammar'].lexer:
       templates.extend([PythonLexerTemplate()])
+    if kwargs['add_main']:
+      templates.append(PythonMainTemplate())
     return templates
 
 class JavaTemplateFactory:
@@ -293,15 +302,21 @@ class CodeGenerator:
         return template_class()
     raise Exception('Invalid language: ' + language)
 
-  def generate(self, grammar, language, directory='.', add_main=False, java_package=None, nodejs=False):
+  def generate(self, grammar, language, directory='.', add_main=False, java_package=None, python_package=None, nodejs=False):
       template_factory = self.get_template_factory(language)
       templates = template_factory.create(
-          grammar=grammar, directory=directory, add_main=add_main, java_package=java_package, nodejs=nodejs
+          grammar=grammar,
+          directory=directory,
+          add_main=add_main,
+          java_package=java_package,
+          python_package=python_package,
+          nodejs=nodejs
       )
       for template in templates:
           template.grammar = grammar
           template.directory = directory
           template.add_main = add_main
           template.java_package = java_package
+          template.python_package = python_package
           template.nodejs = nodejs
           code = template.write()

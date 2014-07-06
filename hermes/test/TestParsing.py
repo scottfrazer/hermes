@@ -22,8 +22,6 @@ def test_all():
             yield javascript_parse_tree, test_dir
             yield javascript_ast, test_dir
 
-# Utility
-
 def parse_python(test_dir, out):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
     tokens_file = os.path.join(test_dir, 'tokens')
@@ -31,9 +29,10 @@ def parse_python(test_dir, out):
     tmp_dir = tempfile.mkdtemp()
 
     try:
-      CodeGenerator().generate(grammar, 'python', directory=tmp_dir)
-      command = 'python -m {0}.grammar.Parser {1} {2} 2>&1'.format(os.path.basename(tmp_dir), out, os.path.abspath(tokens_file))
-      return subprocess.check_output(command, shell=True, stderr=None, cwd=os.path.dirname(tmp_dir)).decode('utf-8').strip()
+      CodeGenerator().generate(grammar, 'python', directory=tmp_dir, python_package='parsers', add_main=True)
+      command = 'python grammar_main.py {0} {1} 2>&1'.format(out, os.path.abspath(tokens_file))
+      print(command, tmp_dir)
+      return subprocess.check_output(command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as exception:
       return exception.output.decode('utf-8').strip()
     finally:
@@ -109,6 +108,7 @@ def python_parse_tree(test_dir):
     with open(parse_tree_file) as fp:
         expected = fp.read()
     actual = parse_python(test_dir, 'parsetree')
+    print(actual)
     assert expected == actual
 
 def python_ast(test_dir):

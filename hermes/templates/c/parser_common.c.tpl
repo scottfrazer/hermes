@@ -550,7 +550,8 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_T * ct
       return str;
     }
 
-    snprintf(str, bytes, "[\n");
+    indent_str = _get_indent_str(indent);
+    snprintf(str, bytes, "%s[\n", indent_str);
     for ( i = 0, lnode = ast_list; lnode && lnode->tree; i++, lnode = lnode->next )
     {
       value = _ast_to_string(lnode->tree, indent + 2, ctx);
@@ -559,7 +560,6 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_T * ct
         strcat(str, ",\n");
       free(value);
     }
-    indent_str = _get_indent_str(indent);
     snprintf(str + strlen(str), bytes - strlen(str), "\n%s]", indent_str);
     free(indent_str);
     return str;

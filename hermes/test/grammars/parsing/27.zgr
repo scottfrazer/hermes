@@ -1,0 +1,6 @@
+grammar {
+  parser<ll1> {
+    $start = tlist($item, :newline)
+    $item = list(:a) | list(:b)
+  }
+}

@@ -61,6 +61,9 @@ def Cli():
         '--java-package', required=False, help='If generating Java code, this is the package.'
     )
     commands['generate'].add_argument(
+        '--python-package', required=False, help='If generating Python code, this is the package.'
+    )
+    commands['generate'].add_argument(
         '--nodejs', action="store_true", required=False, help='If generating JavaScript, make it usable with Node.js'
     )
     commands['generate'].add_argument(
@@ -116,6 +119,7 @@ def Cli():
             directory=cli.directory,
             add_main=cli.add_main,
             java_package=cli.java_package,
+            python_package=cli.python_package,
             nodejs=cli.nodejs
         )
 

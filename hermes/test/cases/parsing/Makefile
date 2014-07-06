@@ -16,9 +16,9 @@ java_files: java_dir
 	hermes generate --language=java --add-main --directory=java grammar.zgr
 	cp -r ../../javacp/org java/
 python_files: python_dir
-	hermes generate --language=python --add-main --directory=python grammar.zgr
-	-python -m python.grammar.Parser parsetree tokens &> python/parsetree
-	-python -m python.grammar.Parser ast tokens &> python/ast
+	hermes generate --language=python --add-main --python-package=parsers --directory=python grammar.zgr
+	-python python/grammar_main.py parsetree tokens &> python/parsetree
+	-python python/grammar_main.py ast tokens &> python/ast
 c_files: c_dir
 	hermes generate --language=c --add-main --directory=c grammar.zgr
 js_files: js_dir

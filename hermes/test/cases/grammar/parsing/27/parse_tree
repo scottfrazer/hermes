@@ -1,0 +1,111 @@
+(grammar:
+  <grammar (line 1 col 1) `grammar`>,
+  <lbrace (line 1 col 9) `{`>,
+  (_gen0:
+    (body_element:
+      (body_element_sub:
+        (parser:
+          (parser_ll1:
+            <parser_ll1 (line 2 col 3) `parser<ll1>`>,
+            <lbrace (line 2 col 15) `{`>,
+            (_gen6:
+              (ll1_rule:
+                <ll1_rule_hint (line 3 col 5) ``>,
+                <nonterminal (line 3 col 5) `start`>,
+                <equals (line 3 col 12) `=`>,
+                (ll1_rule_rhs:
+                  (_gen7:
+                    (rule:
+                      (_gen9:
+                        (morpheme:
+                          (macro:
+                            <identifier (line 3 col 14) `tlist`>,
+                            <lparen (line 3 col 19) `(`>,
+                            (_gen16:
+                              (macro_parameter:
+                                <nonterminal (line 3 col 20) `item`>
+                              ),
+                              (_gen17:
+                                <comma (line 3 col 25) `,`>,
+                                (macro_parameter:
+                                  <terminal (line 3 col 27) `newline`>
+                                ),
+                                (_gen17: )
+                              )
+                            ),
+                            <rparen (line 3 col 35) `)`>
+                          )
+                        ),
+                        (_gen9: )
+                      ),
+                      (_gen10: )
+                    ),
+                    (_gen8: )
+                  )
+                )
+              ),
+              (_gen6:
+                (ll1_rule:
+                  <ll1_rule_hint (line 4 col 5) ``>,
+                  <nonterminal (line 4 col 5) `item`>,
+                  <equals (line 4 col 11) `=`>,
+                  (ll1_rule_rhs:
+                    (_gen7:
+                      (rule:
+                        (_gen9:
+                          (morpheme:
+                            (macro:
+                              <identifier (line 4 col 13) `list`>,
+                              <lparen (line 4 col 17) `(`>,
+                              (_gen16:
+                                (macro_parameter:
+                                  <terminal (line 4 col 18) `a`>
+                                ),
+                                (_gen17: )
+                              ),
+                              <rparen (line 4 col 20) `)`>
+                            )
+                          ),
+                          (_gen9: )
+                        ),
+                        (_gen10: )
+                      ),
+                      (_gen8:
+                        <pipe (line 4 col 22) `|`>,
+                        (rule:
+                          (_gen9:
+                            (morpheme:
+                              (macro:
+                                <identifier (line 4 col 24) `list`>,
+                                <lparen (line 4 col 28) `(`>,
+                                (_gen16:
+                                  (macro_parameter:
+                                    <terminal (line 4 col 29) `b`>
+                                  ),
+                                  (_gen17: )
+                                ),
+                                <rparen (line 4 col 31) `)`>
+                              )
+                            ),
+                            (_gen9: )
+                          ),
+                          (_gen10: )
+                        ),
+                        (_gen8: )
+                      )
+                    )
+                  )
+                ),
+                (_gen6: )
+              )
+            ),
+            <rbrace (line 5 col 3) `}`>
+          )
+        )
+      )
+    ),
+    (_gen0: )
+  ),
+  <rbrace (line 6 col 1) `}`>,
+  (_gen1: )
+)

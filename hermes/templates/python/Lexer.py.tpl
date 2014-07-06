@@ -3,14 +3,24 @@ import sys
 import base64
 import argparse
 from ..Common import Terminal, SyntaxError, TokenStream
-from .Parser import Parser
+from .Parser import terminals
+
+terminals = {
+{% for terminal in grammar.lexer.terminals %}
+    {{terminal.id}}: '{{terminal.string}}',
+{% endfor %}
+
+{% for terminal in grammar.lexer.terminals %}
+    '{{terminal.string.lower()}}': {{terminal.id}},
+{% endfor %}
+}
 
 # START USER CODE
 {{grammar.lexer.code}}
 # END USER CODE
 
 def default_action(context, mode, match, terminal, line, col):
-    tokens = [Terminal(Parser.terminals[terminal], terminal, match, 'resource', line, col)] if terminal else []
+    tokens = [Terminal(terminals[terminal], terminal, match, 'resource', line, col)] if terminal else []
     return (tokens, mode, context)
 
 class HermesLexer:
@@ -95,35 +105,3 @@ def lex(file_or_path, debug=False):
 
     lexer = HermesLexer()
     return TokenStream(lexer.lex(contents, debug))
-
-if __name__ == '__main__':
-    cli_parser = argparse.ArgumentParser(description='Grammar Lexer')
-    cli_parser.add_argument('--debug', action='store_true', help="Print lexical analysis progress to stdout, for debugging.")
-    cli_parser.add_argument('--color', action='store_true', help="With --debug, use colorized output.  Requires xtermcolor.")
-    cli_parser.add_argument('file')
-    cli = cli_parser.parse_args()
-
-    if cli.color:
-        from xtermcolor import colorize
-    else:
-        def colorize(string, **kwargs):
-            return string
-
-    try:
-        tokens = lex(cli.file, cli.debug)
-        if not cli.debug:
-            if len(tokens) == 0:
-                print('[]')
-            else:
-                serialized_tokens = []
-                for token in tokens:
-                  serialized_tokens.append(
-                      '{' + '"terminal": "{}", "resource": "{}", "line": {}, "col": {}, "source_string": "{}"'.format(
-                        token.str, token.resource, token.line, token.col, base64.b64encode(token.source_string.encode('utf-8')).decode('utf-8')
-                      ) + '}'
-                  )
-                sys.stdout.write('[\n    ')
-                sys.stdout.write(',\n    '.join(serialized_tokens))
-                sys.stdout.write('\n]')
-    except SyntaxError as error:
-        print(error)

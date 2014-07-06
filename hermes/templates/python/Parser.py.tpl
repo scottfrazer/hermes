@@ -1,5 +1,4 @@
 import sys
-import inspect
 from collections import OrderedDict
 from ..Common import *
 
@@ -320,32 +319,3 @@ def parse_{{name}}(ctx):
     {% endif %}
 
 {% endfor %}
-
-if __name__ == '__main__':
-    import json
-    import os
-
-    if len(sys.argv) != 3 or sys.argv[1] not in ['parsetree', 'ast']:
-        sys.exit("Usage: Parser.py <parsetree|ast> <tokens_file>")
-
-    tokens = TokenStream()
-    with open(os.path.expanduser(sys.argv[2])) as fp:
-        json_tokens = json.loads(fp.read())
-        for json_token in json_tokens:
-            tokens.append(Terminal(
-                terminals[json_token['terminal']],
-                json_token['terminal'],
-                json_token['source_string'],
-                json_token['resource'],
-                json_token['line'],
-                json_token['col']
-            ))
-
-    try:
-        tree = parse(tokens)
-        if sys.argv[1] == 'parsetree':
-            print(ParseTreePrettyPrintable(tree))
-        else:
-            print(AstPrettyPrintable(tree.toAst()))
-    except SyntaxError as error:
-        print(error)

@@ -112,7 +112,7 @@ function ParseTree(nonterminal) {
                 return new AstList([]);
             }
             var list = [this.children[0].to_ast()];
-            list.push.apply(this.children[2].to_ast().list);
+            list.push.apply(list, this.children[2].to_ast().list);
             return new AstList(list);
         }
         else if (this.list == 'mlist') {

@@ -1,5 +1,4 @@
-try:
-  from .Lexer import lex
-except ImportError:
-  pass
+{% if grammar.lexer %}
+from .Lexer import lex
+{% endif %}
 from .Parser import parse
