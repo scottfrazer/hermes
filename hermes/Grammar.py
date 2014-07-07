@@ -193,7 +193,7 @@ class CompositeGrammar:
   _empty = EmptyString(-1)
   _end = EndOfStream(-1)
 
-  def __init__(self, name, rules, lexer=Lexer()):
+  def __init__(self, name, rules, lexers):
     self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
     self.__dict__.update(locals())
     self.start = None
@@ -510,15 +510,11 @@ class CompositeGrammar:
   def str(self, theme=None):
     return self.__str__(theme)
 
+  # TODO: add tests for this?
   def __str__(self, theme=None):
-    lexer = ''
-    if self.lexer:
-      lexer = '  lexer {\n    '
-      if 'default' in self.lexer:
-        for regex in self.lexer['default']:
-          lexer += '\n    '.join(regex)
-      lexer = self.lexer.str(theme=theme)
-      lexer += '\n' if len(lexer) else ''
+    lexer_str = []
+    for lexer in self.lexers:
+      lexer_str.append(lexer.str(theme=theme))
 
     rules = []
     for rule in self.grammar.rules:
@@ -544,7 +540,7 @@ class CompositeGrammar:
     parser += '  }'
 
     string = 'grammar {{\n{0}{1}\n}}'.format(
-        lexer, parser
+        '\n'.join(lexer), parser
     )
     return string
 

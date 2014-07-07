@@ -4,15 +4,15 @@ import sys
 import base64
 
 from {{python_package}}.{{grammar.name}} import parse
-{% if grammar.lexer %}
+{% if lexer %}
 from {{python_package}}.{{grammar.name}} import lex
 {% endif %}
 from {{python_package}}.{{grammar.name}}.Parser import terminals
 from {{python_package}}.Common import *
 
-if len(sys.argv) != 3 or (sys.argv[1] not in ['parsetree', 'ast']{% if grammar.lexer %} and sys.argv[1] != 'tokens'{% endif %}):
+if len(sys.argv) != 3 or (sys.argv[1] not in ['parsetree', 'ast']{% if lexer %} and sys.argv[1] != 'tokens'{% endif %}):
     sys.stderr.write("Usage: Main.py <parsetree|ast> <tokens_file>\n")
-    {% if grammar.lexer %}
+    {% if lexer %}
     sys.stderr.write("Usage: Main.py <tokens> <source_file>\n")
     {% endif %}
     sys.exit(-1)

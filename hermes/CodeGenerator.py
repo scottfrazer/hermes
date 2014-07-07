@@ -235,8 +235,9 @@ class PythonTemplateFactory:
         PythonParserTemplate(),
         PythonInitTemplate()
     ]
-    if kwargs['grammar'].lexer:
-      templates.extend([PythonLexerTemplate()])
+    lexers = kwargs['grammar'].lexers
+    if lexers and 'python' in lexers:
+      templates.append(PythonLexerTemplate())
     if kwargs['add_main']:
       templates.append(PythonMainTemplate())
     return templates
@@ -304,19 +305,10 @@ class CodeGenerator:
 
   def generate(self, grammar, language, directory='.', add_main=False, java_package=None, python_package=None, nodejs=False):
       template_factory = self.get_template_factory(language)
-      templates = template_factory.create(
-          grammar=grammar,
-          directory=directory,
-          add_main=add_main,
-          java_package=java_package,
-          python_package=python_package,
-          nodejs=nodejs
-      )
+      args = locals()
+      del args['self']
+      args['lexer'] = grammar.lexers[language] if language in grammar.lexers else None
+      templates = template_factory.create(**args)
       for template in templates:
-          template.grammar = grammar
-          template.directory = directory
-          template.add_main = add_main
-          template.java_package = java_package
-          template.python_package = python_package
-          template.nodejs = nodejs
-          code = template.write()
+          template.__dict__.update(args)
+          template.write()

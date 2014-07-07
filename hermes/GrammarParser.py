@@ -17,16 +17,13 @@ class GrammarFactory:
     self.binding_power = 0
     self.macros = {}
 
-    lexer = None
-    lexer_ast = self.walk_ast(ast, 'Lexer')
-    lexer_terminals = {}
-    lexer_nonterminals = {}
-    if len(lexer_ast) > 1:
-      raise Exception('Expecting only one lexer')
-    elif len(lexer_ast) == 1:
-      lexer_ast = lexer_ast[0]
-      lexer = self.parse_lexer(lexer_ast, lexer_terminals, lexer_nonterminals)
-      lexer.code = ast.getAttr('code').source_string if ast.getAttr('code') else ''
+    lexers = {}
+    lexer_asts = self.walk_ast(ast, 'Lexer')
+    for lexer_ast in lexer_asts:
+      lexer = self.parse_lexer(lexer_ast)
+      if lexer.language in lexers:
+        raise Exception('More than one lexer for language target: ' + lexer.language)
+      lexers[lexer.language] = lexer
 
     all_rules = []
     all_nonterminals = {}
@@ -59,9 +56,9 @@ class GrammarFactory:
           rules = self.parse_expr_rule(expression_rule_ast, nonterminal, all_terminals, all_nonterminals, all_macros)
           all_rules.extend(rules)
 
-      if lexer:
+      for language, lexer in lexers.items():
         lexer.terminals = all_terminals.values()
-      return CompositeGrammar(name, all_rules, lexer)
+      return CompositeGrammar(name, all_rules, lexers)
 
   def get_macro_from_ast(self, ast, terminals, nonterminals):
     macro_string = self.macro_ast_to_string(ast)
@@ -83,7 +80,7 @@ class GrammarFactory:
       self.macros[macro_string] = macro
     return self.macros[macro_string]
 
-  def parse_lexer(self, lexer_ast, terminals, nonterminals):
+  def parse_lexer(self, lexer_ast, terminals={}, nonterminals={}):
     lexer = Lexer()
     for lexer_atom in lexer_ast.getAttr('atoms'):
       if lexer_atom.name == 'Regex':
@@ -93,6 +90,8 @@ class GrammarFactory:
       if lexer_atom.name == 'Mode':
         mode_name = lexer_atom.getAttr('name').source_string
         lexer[mode_name] = self.parse_lexer_mode(lexer_atom, terminals, nonterminals)
+    lexer.language = lexer_ast.getAttr('language').source_string
+    lexer.code = lexer_ast.getAttr('code').source_string if lexer_ast.getAttr('code') else ''
     return lexer
 
   def parse_regex(self, regex_ast, terminals, nonterminals):
