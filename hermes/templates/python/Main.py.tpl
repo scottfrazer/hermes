@@ -1,7 +1,6 @@
 import json
 import os
 import sys
-import base64
 
 from {{python_package}}.{{grammar.name}} import parse
 {% if lexer %}
@@ -43,27 +42,6 @@ if sys.argv[1] in ['parsetree', 'ast']:
 if sys.argv[1] == 'tokens':
     try:
         tokens = lex(sys.argv[2])
+        print(tokens.json())
     except SyntaxError as error:
         sys.exit(error)
-
-    if len(tokens) == 0:
-        print('[]')
-        sys.exit(0)
-
-    tokens_json = []
-    json_fmt = '"terminal": "{terminal}", "resource": "{resource}", "line": {line}, "col": {col}, "source_string": "{source_string}"'
-    for token in tokens:
-        tokens_json.append(
-            '{' +
-            json_fmt.format(
-              terminal=token.str,
-              resource=token.resource,
-              line=token.line,
-              col=token.col,
-              source_string=base64.b64encode(token.source_string.encode('utf-8')).decode('utf-8')
-            ) +
-            '}'
-        )
-    sys.stdout.write('[\n    ')
-    sys.stdout.write(',\n    '.join(tokens_json))
-    sys.stdout.write('\n]\n')

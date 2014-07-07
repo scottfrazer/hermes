@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import base64
 
 class Terminal:
   def __init__(self, id, str, source_string, resource, line, col):
@@ -222,6 +223,24 @@ class TokenStream(list):
     return self.current()
   def last(self):
     return self[-1]
+  def json(self):
+    if len(self) == 0:
+      return '[]'
+    tokens_json = []
+    json_fmt = '"terminal": "{terminal}", "resource": "{resource}", "line": {line}, "col": {col}, "source_string": "{source_string}"'
+    for token in self:
+        tokens_json.append(
+            '{' +
+            json_fmt.format(
+              terminal=token.str,
+              resource=token.resource,
+              line=token.line,
+              col=token.col,
+              source_string=base64.b64encode(token.source_string.encode('utf-8')).decode('utf-8')
+            ) +
+            '}'
+        )
+    return '[\n    ' + ',\n    '.join(tokens_json) + '\n]'
   def current(self):
     try:
       return self[self.index]
