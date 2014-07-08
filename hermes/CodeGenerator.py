@@ -235,7 +235,7 @@ class PythonTemplateFactory:
         PythonParserTemplate(),
         PythonInitTemplate()
     ]
-    if 'lexer' in kwargs:
+    if 'lexer' in kwargs and kwargs['lexer'] is not None:
       templates.append(PythonLexerTemplate())
     if kwargs['add_main']:
       templates.append(PythonMainTemplate())
