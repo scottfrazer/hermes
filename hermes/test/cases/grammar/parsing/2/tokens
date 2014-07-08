@@ -1,264 +1,266 @@
-<grammar (line 1 col 1) `grammar`>
-<lbrace (line 1 col 9) `{`>
-<parser_ll1 (line 2 col 3) `parser<ll1>`>
-<lbrace (line 2 col 15) `{`>
-<ll1_rule_hint (line 3 col 5) ``>
-<nonterminal (line 3 col 5) `start`>
-<equals (line 3 col 12) `=`>
-<identifier (line 3 col 14) `list`>
-<lparen (line 3 col 18) `(`>
-<nonterminal (line 3 col 19) `statement`>
-<comma (line 3 col 29) `,`>
-<terminal (line 3 col 31) `comma`>
-<rparen (line 3 col 37) `)`>
-<arrow (line 3 col 39) `->`>
-<identifier (line 3 col 42) `Program`>
-<lparen (line 3 col 49) `(`>
-<identifier (line 3 col 51) `statements`>
-<equals (line 3 col 61) `=`>
-<nonterminal_reference (line 3 col 62) `0`>
-<rparen (line 3 col 65) `)`>
-<ll1_rule_hint (line 4 col 5) ``>
-<nonterminal (line 4 col 5) `start`>
-<equals (line 4 col 12) `=`>
-<terminal (line 4 col 14) `_empty`>
-<ll1_rule_hint (line 5 col 5) ``>
-<nonterminal (line 5 col 5) `statement`>
-<equals (line 5 col 16) `=`>
-<nonterminal (line 5 col 18) `e`>
-<ll1_rule_hint (line 6 col 5) ``>
-<nonterminal (line 6 col 5) `statement`>
-<equals (line 6 col 16) `=`>
-<nonterminal (line 6 col 18) `assignstatement`>
-<ll1_rule_hint (line 7 col 5) ``>
-<nonterminal (line 7 col 5) `statement`>
-<equals (line 7 col 16) `=`>
-<nonterminal (line 7 col 18) `forstatement`>
-<ll1_rule_hint (line 8 col 5) ``>
-<nonterminal (line 8 col 5) `assignstatement`>
-<equals (line 8 col 22) `=`>
-<terminal (line 8 col 24) `identifier`>
-<terminal (line 8 col 36) `eq`>
-<nonterminal (line 8 col 40) `assignstatementsub`>
-<arrow (line 8 col 60) `->`>
-<identifier (line 8 col 63) `Assign`>
-<lparen (line 8 col 69) `(`>
-<identifier (line 8 col 71) `var`>
-<equals (line 8 col 74) `=`>
-<nonterminal_reference (line 8 col 75) `0`>
-<comma (line 8 col 77) `,`>
-<identifier (line 8 col 79) `val`>
-<equals (line 8 col 82) `=`>
-<nonterminal_reference (line 8 col 83) `2`>
-<rparen (line 8 col 86) `)`>
-<ll1_rule_hint (line 9 col 5) ``>
-<nonterminal (line 9 col 5) `assignstatementsub`>
-<equals (line 9 col 25) `=`>
-<nonterminal (line 9 col 27) `assignstatement`>
-<ll1_rule_hint (line 10 col 5) ``>
-<nonterminal (line 10 col 5) `assignstatementsub`>
-<equals (line 10 col 25) `=`>
-<nonterminal (line 10 col 27) `e`>
-<ll1_rule_hint (line 11 col 5) ``>
-<nonterminal (line 11 col 5) `complexexpression`>
-<equals (line 11 col 24) `=`>
-<nonterminal (line 11 col 26) `e`>
-<ll1_rule_hint (line 12 col 5) ``>
-<nonterminal (line 12 col 5) `complexexpression`>
-<equals (line 12 col 24) `=`>
-<nonterminal (line 12 col 26) `assignstatement`>
-<ll1_rule_hint (line 13 col 5) ``>
-<nonterminal (line 13 col 5) `forstatement`>
-<equals (line 13 col 19) `=`>
-<terminal (line 13 col 21) `for`>
-<terminal (line 13 col 26) `lparen`>
-<nonterminal (line 13 col 34) `fordeclstatement`>
-<terminal (line 13 col 52) `semi`>
-<nonterminal (line 13 col 58) `forcondstatement`>
-<terminal (line 13 col 76) `semi`>
-<nonterminal (line 13 col 82) `foriterstatement`>
-<terminal (line 13 col 100) `rparen`>
-<terminal (line 13 col 108) `lbrace`>
-<nonterminal (line 13 col 116) `forbody`>
-<terminal (line 13 col 125) `rbrace`>
-<arrow (line 13 col 133) `->`>
-<identifier (line 13 col 136) `For`>
-<lparen (line 13 col 139) `(`>
-<identifier (line 13 col 141) `decl`>
-<equals (line 13 col 145) `=`>
-<nonterminal_reference (line 13 col 146) `2`>
-<comma (line 13 col 148) `,`>
-<identifier (line 13 col 150) `cond`>
-<equals (line 13 col 154) `=`>
-<nonterminal_reference (line 13 col 155) `4`>
-<comma (line 13 col 157) `,`>
-<identifier (line 13 col 159) `iter`>
-<equals (line 13 col 163) `=`>
-<nonterminal_reference (line 13 col 164) `6`>
-<comma (line 13 col 166) `,`>
-<identifier (line 13 col 168) `body`>
-<equals (line 13 col 172) `=`>
-<nonterminal_reference (line 13 col 173) `9`>
-<rparen (line 13 col 176) `)`>
-<ll1_rule_hint (line 14 col 5) ``>
-<nonterminal (line 14 col 5) `fordeclstatement`>
-<equals (line 14 col 23) `=`>
-<nonterminal (line 14 col 25) `complexexpression`>
-<ll1_rule_hint (line 15 col 5) ``>
-<nonterminal (line 15 col 5) `fordeclstatement`>
-<equals (line 15 col 23) `=`>
-<terminal (line 15 col 25) `_empty`>
-<ll1_rule_hint (line 16 col 5) ``>
-<nonterminal (line 16 col 5) `forcondstatement`>
-<equals (line 16 col 23) `=`>
-<nonterminal (line 16 col 25) `e`>
-<ll1_rule_hint (line 17 col 5) ``>
-<nonterminal (line 17 col 5) `forcondstatement`>
-<equals (line 17 col 23) `=`>
-<terminal (line 17 col 25) `_empty`>
-<ll1_rule_hint (line 18 col 5) ``>
-<nonterminal (line 18 col 5) `foriterstatement`>
-<equals (line 18 col 23) `=`>
-<nonterminal (line 18 col 25) `complexexpression`>
-<ll1_rule_hint (line 19 col 5) ``>
-<nonterminal (line 19 col 5) `foriterstatement`>
-<equals (line 19 col 23) `=`>
-<terminal (line 19 col 25) `_empty`>
-<ll1_rule_hint (line 20 col 5) ``>
-<nonterminal (line 20 col 5) `forbody`>
-<equals (line 20 col 14) `=`>
-<nonterminal (line 20 col 16) `statement`>
-<terminal (line 20 col 27) `semi`>
-<nonterminal (line 20 col 33) `forbody`>
-<ll1_rule_hint (line 21 col 5) ``>
-<nonterminal (line 21 col 5) `forbody`>
-<equals (line 21 col 14) `=`>
-<terminal (line 21 col 16) `_empty`>
-<ll1_rule_hint (line 22 col 5) ``>
-<nonterminal (line 22 col 5) `e`>
-<equals (line 22 col 8) `=`>
-<parser_expression (line 22 col 10) `parser<expression>`>
-<lbrace (line 22 col 29) `{`>
-<lparen (line 23 col 7) `(`>
-<asterisk (line 23 col 7) `*`>
-<colon (line 23 col 7) `:`>
-<left (line 23 col 7) `left`>
-<rparen (line 23 col 7) `)`>
-<expr_rule_hint (line 23 col 16) ``>
-<nonterminal (line 23 col 16) `e`>
-<equals (line 23 col 16) `=`>
-<infix_rule_hint (line 23 col 16) ``>
-<nonterminal (line 23 col 16) `e`>
-<terminal (line 23 col 16) `add`>
-<nonterminal (line 23 col 16) `e`>
-<arrow (line 23 col 32) `->`>
-<identifier (line 23 col 35) `Add`>
-<lparen (line 23 col 38) `(`>
-<identifier (line 23 col 40) `lhs`>
-<equals (line 23 col 43) `=`>
-<nonterminal_reference (line 23 col 44) `0`>
-<comma (line 23 col 46) `,`>
-<identifier (line 23 col 48) `rhs`>
-<equals (line 23 col 51) `=`>
-<nonterminal_reference (line 23 col 52) `2`>
-<rparen (line 23 col 55) `)`>
-<lparen (line 24 col 7) `(`>
-<dash (line 24 col 7) `-`>
-<colon (line 24 col 7) `:`>
-<left (line 24 col 7) `left`>
-<rparen (line 24 col 7) `)`>
-<expr_rule_hint (line 24 col 16) ``>
-<nonterminal (line 24 col 16) `e`>
-<equals (line 24 col 16) `=`>
-<infix_rule_hint (line 24 col 16) ``>
-<nonterminal (line 24 col 16) `e`>
-<terminal (line 24 col 16) `sub`>
-<nonterminal (line 24 col 16) `e`>
-<arrow (line 24 col 32) `->`>
-<identifier (line 24 col 35) `Subtract`>
-<lparen (line 24 col 43) `(`>
-<identifier (line 24 col 45) `lhs`>
-<equals (line 24 col 48) `=`>
-<nonterminal_reference (line 24 col 49) `0`>
-<comma (line 24 col 51) `,`>
-<identifier (line 24 col 53) `rhs`>
-<equals (line 24 col 56) `=`>
-<nonterminal_reference (line 24 col 57) `2`>
-<rparen (line 24 col 60) `)`>
-<lparen (line 25 col 7) `(`>
-<asterisk (line 25 col 7) `*`>
-<colon (line 25 col 7) `:`>
-<left (line 25 col 7) `left`>
-<rparen (line 25 col 7) `)`>
-<expr_rule_hint (line 25 col 16) ``>
-<nonterminal (line 25 col 16) `e`>
-<equals (line 25 col 16) `=`>
-<infix_rule_hint (line 25 col 16) ``>
-<nonterminal (line 25 col 16) `e`>
-<terminal (line 25 col 16) `mul`>
-<nonterminal (line 25 col 16) `e`>
-<arrow (line 25 col 32) `->`>
-<identifier (line 25 col 35) `Multiply`>
-<lparen (line 25 col 43) `(`>
-<identifier (line 25 col 45) `lhs`>
-<equals (line 25 col 48) `=`>
-<nonterminal_reference (line 25 col 49) `0`>
-<comma (line 25 col 51) `,`>
-<identifier (line 25 col 53) `rhs`>
-<equals (line 25 col 56) `=`>
-<nonterminal_reference (line 25 col 57) `2`>
-<rparen (line 25 col 60) `)`>
-<lparen (line 26 col 7) `(`>
-<dash (line 26 col 7) `-`>
-<colon (line 26 col 7) `:`>
-<left (line 26 col 7) `left`>
-<rparen (line 26 col 7) `)`>
-<expr_rule_hint (line 26 col 16) ``>
-<nonterminal (line 26 col 16) `e`>
-<equals (line 26 col 16) `=`>
-<infix_rule_hint (line 26 col 16) ``>
-<nonterminal (line 26 col 16) `e`>
-<terminal (line 26 col 16) `div`>
-<nonterminal (line 26 col 16) `e`>
-<arrow (line 26 col 32) `->`>
-<identifier (line 26 col 35) `Divide`>
-<lparen (line 26 col 41) `(`>
-<identifier (line 26 col 43) `lhs`>
-<equals (line 26 col 46) `=`>
-<nonterminal_reference (line 26 col 47) `0`>
-<comma (line 26 col 49) `,`>
-<identifier (line 26 col 51) `rhs`>
-<equals (line 26 col 54) `=`>
-<nonterminal_reference (line 26 col 55) `2`>
-<rparen (line 26 col 58) `)`>
-<lparen (line 27 col 7) `(`>
-<asterisk (line 27 col 7) `*`>
-<colon (line 27 col 7) `:`>
-<unary (line 27 col 7) `unary`>
-<rparen (line 27 col 7) `)`>
-<expr_rule_hint (line 27 col 17) ``>
-<nonterminal (line 27 col 17) `e`>
-<equals (line 27 col 17) `=`>
-<prefix_rule_hint (line 27 col 17) ``>
-<terminal (line 27 col 17) `sub`>
-<nonterminal (line 27 col 17) `e`>
-<arrow (line 27 col 30) `->`>
-<identifier (line 27 col 33) `UMinus`>
-<lparen (line 27 col 39) `(`>
-<identifier (line 27 col 41) `arg`>
-<equals (line 27 col 44) `=`>
-<nonterminal_reference (line 27 col 45) `1`>
-<rparen (line 27 col 48) `)`>
-<expr_rule_hint (line 28 col 7) ``>
-<nonterminal (line 28 col 7) `e`>
-<equals (line 28 col 7) `=`>
-<mixfix_rule_hint (line 28 col 7) ``>
-<terminal (line 28 col 12) `n`>
-<expr_rule_hint (line 29 col 7) ``>
-<nonterminal (line 29 col 7) `e`>
-<equals (line 29 col 7) `=`>
-<mixfix_rule_hint (line 29 col 7) ``>
-<terminal (line 29 col 12) `s`>
-<rbrace (line 30 col 5) `}`>
-<rbrace (line 31 col 3) `}`>
-<rbrace (line 32 col 1) `}`>
+[
+    {"terminal": "grammar", "resource": "resource", "line": 1, "col": 1, "source_string": "Z3JhbW1hcg=="},
+    {"terminal": "lbrace", "resource": "resource", "line": 1, "col": 9, "source_string": "ew=="},
+    {"terminal": "parser_ll1", "resource": "resource", "line": 2, "col": 3, "source_string": "cGFyc2VyPGxsMT4="},
+    {"terminal": "lbrace", "resource": "resource", "line": 2, "col": 15, "source_string": "ew=="},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 3, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 3, "col": 5, "source_string": "c3RhcnQ="},
+    {"terminal": "equals", "resource": "resource", "line": 3, "col": 12, "source_string": "PQ=="},
+    {"terminal": "identifier", "resource": "resource", "line": 3, "col": 14, "source_string": "bGlzdA=="},
+    {"terminal": "lparen", "resource": "resource", "line": 3, "col": 18, "source_string": "KA=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 3, "col": 19, "source_string": "c3RhdGVtZW50"},
+    {"terminal": "comma", "resource": "resource", "line": 3, "col": 29, "source_string": "LA=="},
+    {"terminal": "terminal", "resource": "resource", "line": 3, "col": 31, "source_string": "Y29tbWE="},
+    {"terminal": "rparen", "resource": "resource", "line": 3, "col": 37, "source_string": "KQ=="},
+    {"terminal": "arrow", "resource": "resource", "line": 3, "col": 39, "source_string": "LT4="},
+    {"terminal": "identifier", "resource": "resource", "line": 3, "col": 42, "source_string": "UHJvZ3JhbQ=="},
+    {"terminal": "lparen", "resource": "resource", "line": 3, "col": 49, "source_string": "KA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 3, "col": 51, "source_string": "c3RhdGVtZW50cw=="},
+    {"terminal": "equals", "resource": "resource", "line": 3, "col": 61, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 3, "col": 62, "source_string": "MA=="},
+    {"terminal": "rparen", "resource": "resource", "line": 3, "col": 65, "source_string": "KQ=="},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 4, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 4, "col": 5, "source_string": "c3RhcnQ="},
+    {"terminal": "equals", "resource": "resource", "line": 4, "col": 12, "source_string": "PQ=="},
+    {"terminal": "terminal", "resource": "resource", "line": 4, "col": 14, "source_string": "X2VtcHR5"},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 5, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 5, "col": 5, "source_string": "c3RhdGVtZW50"},
+    {"terminal": "equals", "resource": "resource", "line": 5, "col": 16, "source_string": "PQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 5, "col": 18, "source_string": "ZQ=="},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 6, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 6, "col": 5, "source_string": "c3RhdGVtZW50"},
+    {"terminal": "equals", "resource": "resource", "line": 6, "col": 16, "source_string": "PQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 6, "col": 18, "source_string": "YXNzaWduc3RhdGVtZW50"},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 7, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 7, "col": 5, "source_string": "c3RhdGVtZW50"},
+    {"terminal": "equals", "resource": "resource", "line": 7, "col": 16, "source_string": "PQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 7, "col": 18, "source_string": "Zm9yc3RhdGVtZW50"},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 8, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 8, "col": 5, "source_string": "YXNzaWduc3RhdGVtZW50"},
+    {"terminal": "equals", "resource": "resource", "line": 8, "col": 22, "source_string": "PQ=="},
+    {"terminal": "terminal", "resource": "resource", "line": 8, "col": 24, "source_string": "aWRlbnRpZmllcg=="},
+    {"terminal": "terminal", "resource": "resource", "line": 8, "col": 36, "source_string": "ZXE="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 8, "col": 40, "source_string": "YXNzaWduc3RhdGVtZW50c3Vi"},
+    {"terminal": "arrow", "resource": "resource", "line": 8, "col": 60, "source_string": "LT4="},
+    {"terminal": "identifier", "resource": "resource", "line": 8, "col": 63, "source_string": "QXNzaWdu"},
+    {"terminal": "lparen", "resource": "resource", "line": 8, "col": 69, "source_string": "KA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 8, "col": 71, "source_string": "dmFy"},
+    {"terminal": "equals", "resource": "resource", "line": 8, "col": 74, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 8, "col": 75, "source_string": "MA=="},
+    {"terminal": "comma", "resource": "resource", "line": 8, "col": 77, "source_string": "LA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 8, "col": 79, "source_string": "dmFs"},
+    {"terminal": "equals", "resource": "resource", "line": 8, "col": 82, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 8, "col": 83, "source_string": "Mg=="},
+    {"terminal": "rparen", "resource": "resource", "line": 8, "col": 86, "source_string": "KQ=="},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 9, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 9, "col": 5, "source_string": "YXNzaWduc3RhdGVtZW50c3Vi"},
+    {"terminal": "equals", "resource": "resource", "line": 9, "col": 25, "source_string": "PQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 9, "col": 27, "source_string": "YXNzaWduc3RhdGVtZW50"},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 10, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 10, "col": 5, "source_string": "YXNzaWduc3RhdGVtZW50c3Vi"},
+    {"terminal": "equals", "resource": "resource", "line": 10, "col": 25, "source_string": "PQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 10, "col": 27, "source_string": "ZQ=="},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 11, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 11, "col": 5, "source_string": "Y29tcGxleGV4cHJlc3Npb24="},
+    {"terminal": "equals", "resource": "resource", "line": 11, "col": 24, "source_string": "PQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 11, "col": 26, "source_string": "ZQ=="},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 12, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 12, "col": 5, "source_string": "Y29tcGxleGV4cHJlc3Npb24="},
+    {"terminal": "equals", "resource": "resource", "line": 12, "col": 24, "source_string": "PQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 12, "col": 26, "source_string": "YXNzaWduc3RhdGVtZW50"},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 13, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 13, "col": 5, "source_string": "Zm9yc3RhdGVtZW50"},
+    {"terminal": "equals", "resource": "resource", "line": 13, "col": 19, "source_string": "PQ=="},
+    {"terminal": "terminal", "resource": "resource", "line": 13, "col": 21, "source_string": "Zm9y"},
+    {"terminal": "terminal", "resource": "resource", "line": 13, "col": 26, "source_string": "bHBhcmVu"},
+    {"terminal": "nonterminal", "resource": "resource", "line": 13, "col": 34, "source_string": "Zm9yZGVjbHN0YXRlbWVudA=="},
+    {"terminal": "terminal", "resource": "resource", "line": 13, "col": 52, "source_string": "c2VtaQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 13, "col": 58, "source_string": "Zm9yY29uZHN0YXRlbWVudA=="},
+    {"terminal": "terminal", "resource": "resource", "line": 13, "col": 76, "source_string": "c2VtaQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 13, "col": 82, "source_string": "Zm9yaXRlcnN0YXRlbWVudA=="},
+    {"terminal": "terminal", "resource": "resource", "line": 13, "col": 100, "source_string": "cnBhcmVu"},
+    {"terminal": "terminal", "resource": "resource", "line": 13, "col": 108, "source_string": "bGJyYWNl"},
+    {"terminal": "nonterminal", "resource": "resource", "line": 13, "col": 116, "source_string": "Zm9yYm9keQ=="},
+    {"terminal": "terminal", "resource": "resource", "line": 13, "col": 125, "source_string": "cmJyYWNl"},
+    {"terminal": "arrow", "resource": "resource", "line": 13, "col": 133, "source_string": "LT4="},
+    {"terminal": "identifier", "resource": "resource", "line": 13, "col": 136, "source_string": "Rm9y"},
+    {"terminal": "lparen", "resource": "resource", "line": 13, "col": 139, "source_string": "KA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 13, "col": 141, "source_string": "ZGVjbA=="},
+    {"terminal": "equals", "resource": "resource", "line": 13, "col": 145, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 13, "col": 146, "source_string": "Mg=="},
+    {"terminal": "comma", "resource": "resource", "line": 13, "col": 148, "source_string": "LA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 13, "col": 150, "source_string": "Y29uZA=="},
+    {"terminal": "equals", "resource": "resource", "line": 13, "col": 154, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 13, "col": 155, "source_string": "NA=="},
+    {"terminal": "comma", "resource": "resource", "line": 13, "col": 157, "source_string": "LA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 13, "col": 159, "source_string": "aXRlcg=="},
+    {"terminal": "equals", "resource": "resource", "line": 13, "col": 163, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 13, "col": 164, "source_string": "Ng=="},
+    {"terminal": "comma", "resource": "resource", "line": 13, "col": 166, "source_string": "LA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 13, "col": 168, "source_string": "Ym9keQ=="},
+    {"terminal": "equals", "resource": "resource", "line": 13, "col": 172, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 13, "col": 173, "source_string": "OQ=="},
+    {"terminal": "rparen", "resource": "resource", "line": 13, "col": 176, "source_string": "KQ=="},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 14, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 14, "col": 5, "source_string": "Zm9yZGVjbHN0YXRlbWVudA=="},
+    {"terminal": "equals", "resource": "resource", "line": 14, "col": 23, "source_string": "PQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 14, "col": 25, "source_string": "Y29tcGxleGV4cHJlc3Npb24="},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 15, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 15, "col": 5, "source_string": "Zm9yZGVjbHN0YXRlbWVudA=="},
+    {"terminal": "equals", "resource": "resource", "line": 15, "col": 23, "source_string": "PQ=="},
+    {"terminal": "terminal", "resource": "resource", "line": 15, "col": 25, "source_string": "X2VtcHR5"},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 16, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 16, "col": 5, "source_string": "Zm9yY29uZHN0YXRlbWVudA=="},
+    {"terminal": "equals", "resource": "resource", "line": 16, "col": 23, "source_string": "PQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 16, "col": 25, "source_string": "ZQ=="},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 17, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 17, "col": 5, "source_string": "Zm9yY29uZHN0YXRlbWVudA=="},
+    {"terminal": "equals", "resource": "resource", "line": 17, "col": 23, "source_string": "PQ=="},
+    {"terminal": "terminal", "resource": "resource", "line": 17, "col": 25, "source_string": "X2VtcHR5"},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 18, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 18, "col": 5, "source_string": "Zm9yaXRlcnN0YXRlbWVudA=="},
+    {"terminal": "equals", "resource": "resource", "line": 18, "col": 23, "source_string": "PQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 18, "col": 25, "source_string": "Y29tcGxleGV4cHJlc3Npb24="},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 19, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 19, "col": 5, "source_string": "Zm9yaXRlcnN0YXRlbWVudA=="},
+    {"terminal": "equals", "resource": "resource", "line": 19, "col": 23, "source_string": "PQ=="},
+    {"terminal": "terminal", "resource": "resource", "line": 19, "col": 25, "source_string": "X2VtcHR5"},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 20, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 20, "col": 5, "source_string": "Zm9yYm9keQ=="},
+    {"terminal": "equals", "resource": "resource", "line": 20, "col": 14, "source_string": "PQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 20, "col": 16, "source_string": "c3RhdGVtZW50"},
+    {"terminal": "terminal", "resource": "resource", "line": 20, "col": 27, "source_string": "c2VtaQ=="},
+    {"terminal": "nonterminal", "resource": "resource", "line": 20, "col": 33, "source_string": "Zm9yYm9keQ=="},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 21, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 21, "col": 5, "source_string": "Zm9yYm9keQ=="},
+    {"terminal": "equals", "resource": "resource", "line": 21, "col": 14, "source_string": "PQ=="},
+    {"terminal": "terminal", "resource": "resource", "line": 21, "col": 16, "source_string": "X2VtcHR5"},
+    {"terminal": "ll1_rule_hint", "resource": "ll1_rule_hint", "line": 22, "col": 5, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 22, "col": 5, "source_string": "ZQ=="},
+    {"terminal": "equals", "resource": "resource", "line": 22, "col": 8, "source_string": "PQ=="},
+    {"terminal": "parser_expression", "resource": "resource", "line": 22, "col": 10, "source_string": "cGFyc2VyPGV4cHJlc3Npb24+"},
+    {"terminal": "lbrace", "resource": "resource", "line": 22, "col": 29, "source_string": "ew=="},
+    {"terminal": "lparen", "resource": "lparen", "line": 23, "col": 7, "source_string": "KA=="},
+    {"terminal": "asterisk", "resource": "asterisk", "line": 23, "col": 7, "source_string": "Kg=="},
+    {"terminal": "colon", "resource": "colon", "line": 23, "col": 7, "source_string": "Og=="},
+    {"terminal": "left", "resource": "left", "line": 23, "col": 7, "source_string": "bGVmdA=="},
+    {"terminal": "rparen", "resource": "rparen", "line": 23, "col": 7, "source_string": "KQ=="},
+    {"terminal": "expr_rule_hint", "resource": "expr_rule_hint", "line": 23, "col": 16, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 23, "col": 16, "source_string": "ZQ=="},
+    {"terminal": "equals", "resource": "equals", "line": 23, "col": 16, "source_string": "PQ=="},
+    {"terminal": "infix_rule_hint", "resource": "infix_rule_hint", "line": 23, "col": 16, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 23, "col": 16, "source_string": "ZQ=="},
+    {"terminal": "terminal", "resource": "terminal", "line": 23, "col": 16, "source_string": "YWRk"},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 23, "col": 16, "source_string": "ZQ=="},
+    {"terminal": "arrow", "resource": "resource", "line": 23, "col": 32, "source_string": "LT4="},
+    {"terminal": "identifier", "resource": "resource", "line": 23, "col": 35, "source_string": "QWRk"},
+    {"terminal": "lparen", "resource": "resource", "line": 23, "col": 38, "source_string": "KA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 23, "col": 40, "source_string": "bGhz"},
+    {"terminal": "equals", "resource": "resource", "line": 23, "col": 43, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 23, "col": 44, "source_string": "MA=="},
+    {"terminal": "comma", "resource": "resource", "line": 23, "col": 46, "source_string": "LA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 23, "col": 48, "source_string": "cmhz"},
+    {"terminal": "equals", "resource": "resource", "line": 23, "col": 51, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 23, "col": 52, "source_string": "Mg=="},
+    {"terminal": "rparen", "resource": "resource", "line": 23, "col": 55, "source_string": "KQ=="},
+    {"terminal": "lparen", "resource": "lparen", "line": 24, "col": 7, "source_string": "KA=="},
+    {"terminal": "dash", "resource": "dash", "line": 24, "col": 7, "source_string": "LQ=="},
+    {"terminal": "colon", "resource": "colon", "line": 24, "col": 7, "source_string": "Og=="},
+    {"terminal": "left", "resource": "left", "line": 24, "col": 7, "source_string": "bGVmdA=="},
+    {"terminal": "rparen", "resource": "rparen", "line": 24, "col": 7, "source_string": "KQ=="},
+    {"terminal": "expr_rule_hint", "resource": "expr_rule_hint", "line": 24, "col": 16, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 24, "col": 16, "source_string": "ZQ=="},
+    {"terminal": "equals", "resource": "equals", "line": 24, "col": 16, "source_string": "PQ=="},
+    {"terminal": "infix_rule_hint", "resource": "infix_rule_hint", "line": 24, "col": 16, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 24, "col": 16, "source_string": "ZQ=="},
+    {"terminal": "terminal", "resource": "terminal", "line": 24, "col": 16, "source_string": "c3Vi"},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 24, "col": 16, "source_string": "ZQ=="},
+    {"terminal": "arrow", "resource": "resource", "line": 24, "col": 32, "source_string": "LT4="},
+    {"terminal": "identifier", "resource": "resource", "line": 24, "col": 35, "source_string": "U3VidHJhY3Q="},
+    {"terminal": "lparen", "resource": "resource", "line": 24, "col": 43, "source_string": "KA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 24, "col": 45, "source_string": "bGhz"},
+    {"terminal": "equals", "resource": "resource", "line": 24, "col": 48, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 24, "col": 49, "source_string": "MA=="},
+    {"terminal": "comma", "resource": "resource", "line": 24, "col": 51, "source_string": "LA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 24, "col": 53, "source_string": "cmhz"},
+    {"terminal": "equals", "resource": "resource", "line": 24, "col": 56, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 24, "col": 57, "source_string": "Mg=="},
+    {"terminal": "rparen", "resource": "resource", "line": 24, "col": 60, "source_string": "KQ=="},
+    {"terminal": "lparen", "resource": "lparen", "line": 25, "col": 7, "source_string": "KA=="},
+    {"terminal": "asterisk", "resource": "asterisk", "line": 25, "col": 7, "source_string": "Kg=="},
+    {"terminal": "colon", "resource": "colon", "line": 25, "col": 7, "source_string": "Og=="},
+    {"terminal": "left", "resource": "left", "line": 25, "col": 7, "source_string": "bGVmdA=="},
+    {"terminal": "rparen", "resource": "rparen", "line": 25, "col": 7, "source_string": "KQ=="},
+    {"terminal": "expr_rule_hint", "resource": "expr_rule_hint", "line": 25, "col": 16, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 25, "col": 16, "source_string": "ZQ=="},
+    {"terminal": "equals", "resource": "equals", "line": 25, "col": 16, "source_string": "PQ=="},
+    {"terminal": "infix_rule_hint", "resource": "infix_rule_hint", "line": 25, "col": 16, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 25, "col": 16, "source_string": "ZQ=="},
+    {"terminal": "terminal", "resource": "terminal", "line": 25, "col": 16, "source_string": "bXVs"},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 25, "col": 16, "source_string": "ZQ=="},
+    {"terminal": "arrow", "resource": "resource", "line": 25, "col": 32, "source_string": "LT4="},
+    {"terminal": "identifier", "resource": "resource", "line": 25, "col": 35, "source_string": "TXVsdGlwbHk="},
+    {"terminal": "lparen", "resource": "resource", "line": 25, "col": 43, "source_string": "KA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 25, "col": 45, "source_string": "bGhz"},
+    {"terminal": "equals", "resource": "resource", "line": 25, "col": 48, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 25, "col": 49, "source_string": "MA=="},
+    {"terminal": "comma", "resource": "resource", "line": 25, "col": 51, "source_string": "LA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 25, "col": 53, "source_string": "cmhz"},
+    {"terminal": "equals", "resource": "resource", "line": 25, "col": 56, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 25, "col": 57, "source_string": "Mg=="},
+    {"terminal": "rparen", "resource": "resource", "line": 25, "col": 60, "source_string": "KQ=="},
+    {"terminal": "lparen", "resource": "lparen", "line": 26, "col": 7, "source_string": "KA=="},
+    {"terminal": "dash", "resource": "dash", "line": 26, "col": 7, "source_string": "LQ=="},
+    {"terminal": "colon", "resource": "colon", "line": 26, "col": 7, "source_string": "Og=="},
+    {"terminal": "left", "resource": "left", "line": 26, "col": 7, "source_string": "bGVmdA=="},
+    {"terminal": "rparen", "resource": "rparen", "line": 26, "col": 7, "source_string": "KQ=="},
+    {"terminal": "expr_rule_hint", "resource": "expr_rule_hint", "line": 26, "col": 16, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 26, "col": 16, "source_string": "ZQ=="},
+    {"terminal": "equals", "resource": "equals", "line": 26, "col": 16, "source_string": "PQ=="},
+    {"terminal": "infix_rule_hint", "resource": "infix_rule_hint", "line": 26, "col": 16, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 26, "col": 16, "source_string": "ZQ=="},
+    {"terminal": "terminal", "resource": "terminal", "line": 26, "col": 16, "source_string": "ZGl2"},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 26, "col": 16, "source_string": "ZQ=="},
+    {"terminal": "arrow", "resource": "resource", "line": 26, "col": 32, "source_string": "LT4="},
+    {"terminal": "identifier", "resource": "resource", "line": 26, "col": 35, "source_string": "RGl2aWRl"},
+    {"terminal": "lparen", "resource": "resource", "line": 26, "col": 41, "source_string": "KA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 26, "col": 43, "source_string": "bGhz"},
+    {"terminal": "equals", "resource": "resource", "line": 26, "col": 46, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 26, "col": 47, "source_string": "MA=="},
+    {"terminal": "comma", "resource": "resource", "line": 26, "col": 49, "source_string": "LA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 26, "col": 51, "source_string": "cmhz"},
+    {"terminal": "equals", "resource": "resource", "line": 26, "col": 54, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 26, "col": 55, "source_string": "Mg=="},
+    {"terminal": "rparen", "resource": "resource", "line": 26, "col": 58, "source_string": "KQ=="},
+    {"terminal": "lparen", "resource": "lparen", "line": 27, "col": 7, "source_string": "KA=="},
+    {"terminal": "asterisk", "resource": "asterisk", "line": 27, "col": 7, "source_string": "Kg=="},
+    {"terminal": "colon", "resource": "colon", "line": 27, "col": 7, "source_string": "Og=="},
+    {"terminal": "unary", "resource": "unary", "line": 27, "col": 7, "source_string": "dW5hcnk="},
+    {"terminal": "rparen", "resource": "rparen", "line": 27, "col": 7, "source_string": "KQ=="},
+    {"terminal": "expr_rule_hint", "resource": "expr_rule_hint", "line": 27, "col": 17, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 27, "col": 17, "source_string": "ZQ=="},
+    {"terminal": "equals", "resource": "equals", "line": 27, "col": 17, "source_string": "PQ=="},
+    {"terminal": "prefix_rule_hint", "resource": "prefix_rule_hint", "line": 27, "col": 17, "source_string": ""},
+    {"terminal": "terminal", "resource": "terminal", "line": 27, "col": 17, "source_string": "c3Vi"},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 27, "col": 17, "source_string": "ZQ=="},
+    {"terminal": "arrow", "resource": "resource", "line": 27, "col": 30, "source_string": "LT4="},
+    {"terminal": "identifier", "resource": "resource", "line": 27, "col": 33, "source_string": "VU1pbnVz"},
+    {"terminal": "lparen", "resource": "resource", "line": 27, "col": 39, "source_string": "KA=="},
+    {"terminal": "identifier", "resource": "resource", "line": 27, "col": 41, "source_string": "YXJn"},
+    {"terminal": "equals", "resource": "resource", "line": 27, "col": 44, "source_string": "PQ=="},
+    {"terminal": "nonterminal_reference", "resource": "resource", "line": 27, "col": 45, "source_string": "MQ=="},
+    {"terminal": "rparen", "resource": "resource", "line": 27, "col": 48, "source_string": "KQ=="},
+    {"terminal": "expr_rule_hint", "resource": "expr_rule_hint", "line": 28, "col": 7, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 28, "col": 7, "source_string": "ZQ=="},
+    {"terminal": "equals", "resource": "equals", "line": 28, "col": 7, "source_string": "PQ=="},
+    {"terminal": "mixfix_rule_hint", "resource": "mixfix_rule_hint", "line": 28, "col": 7, "source_string": ""},
+    {"terminal": "terminal", "resource": "resource", "line": 28, "col": 12, "source_string": "bg=="},
+    {"terminal": "expr_rule_hint", "resource": "expr_rule_hint", "line": 29, "col": 7, "source_string": ""},
+    {"terminal": "nonterminal", "resource": "nonterminal", "line": 29, "col": 7, "source_string": "ZQ=="},
+    {"terminal": "equals", "resource": "equals", "line": 29, "col": 7, "source_string": "PQ=="},
+    {"terminal": "mixfix_rule_hint", "resource": "mixfix_rule_hint", "line": 29, "col": 7, "source_string": ""},
+    {"terminal": "terminal", "resource": "resource", "line": 29, "col": 12, "source_string": "cw=="},
+    {"terminal": "rbrace", "resource": "resource", "line": 30, "col": 5, "source_string": "fQ=="},
+    {"terminal": "rbrace", "resource": "resource", "line": 31, "col": 3, "source_string": "fQ=="},
+    {"terminal": "rbrace", "resource": "resource", "line": 32, "col": 1, "source_string": "fQ=="}
+]

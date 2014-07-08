@@ -67,7 +67,7 @@ def compare(test_dir, filename, actual):
 
 def tokens(test_dir):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
-    actual = '\n'.join([str(token) for token in lex(grammar_file)])
+    actual = lex(grammar_file).json()
     compare(test_dir, 'tokens', actual)
 
 def parse_tree(test_dir):
