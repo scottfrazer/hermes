@@ -17,25 +17,27 @@ class GrammarFactory:
     self.binding_power = 0
     self.macros = {}
 
-    lexers = {}
-    lexer_asts = self.walk_ast(ast, 'Lexer')
-    for lexer_ast in lexer_asts:
-      lexer = self.parse_lexer(lexer_ast)
-      if lexer.language in lexers:
-        raise Exception('More than one lexer for language target: ' + lexer.language)
-      lexers[lexer.language] = lexer
-
     all_rules = []
     all_nonterminals = {}
     all_terminals = {'_empty': EmptyString(-1)}
     all_macros = {}
+
+    lexers = {}
+    lexer_asts = self.walk_ast(ast, 'Lexer')
+    for lexer_ast in lexer_asts:
+      lexer = self.parse_lexer(lexer_ast, all_terminals)
+      if lexer.language in lexers:
+        raise Exception('More than one lexer for language target: ' + lexer.language)
+      lexers[lexer.language] = lexer
 
     expression_parser_asts = []
     start = None
     parser_ast = self.walk_ast(ast, 'Parser')
 
     if len(parser_ast) == 0:
-      return CompositeGrammar(name, [Rule(NonTerminal('start', 0), Production([all_terminals['_empty']]))], lexer)
+      for language, lexer in lexers.items():
+        lexer.terminals = all_terminals.values()
+      return CompositeGrammar(name, [Rule(NonTerminal('start', 0), Production([all_terminals['_empty']]))], lexers)
     elif len(parser_ast) > 1:
       raise Exception('Expecting only one parser')
     else:

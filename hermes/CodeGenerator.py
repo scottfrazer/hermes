@@ -235,8 +235,7 @@ class PythonTemplateFactory:
         PythonParserTemplate(),
         PythonInitTemplate()
     ]
-    lexers = kwargs['grammar'].lexers
-    if lexers and 'python' in lexers:
+    if 'lexer' in kwargs:
       templates.append(PythonLexerTemplate())
     if kwargs['add_main']:
       templates.append(PythonMainTemplate())
