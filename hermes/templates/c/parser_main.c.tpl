@@ -6,7 +6,9 @@
 
 #include "parser_common.h"
 #include "{{grammar.name}}_parser.h"
+{% if lexer %}
 #include "{{grammar.name}}_lexer.h"
+{% endif %}
 
 #define STDIN_BUF_SIZE 1024
 
@@ -1045,6 +1047,7 @@ main(int argc, char * argv[])
   char err[512];
   TOKEN_T ** tokens;
 
+  {% if lexer %}
   {{prefix}}lexer_init();
   if ( {{prefix}}lexer_has_errors() ) {
       {{prefix}}lexer_print_errors();
@@ -1058,6 +1061,7 @@ main(int argc, char * argv[])
   }
   {{prefix}}lexer_destroy();
   return 0;
+  {% endif %}
 
   if ( argc < 3 )
   {
