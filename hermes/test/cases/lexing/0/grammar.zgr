@@ -1,0 +1,29 @@
+grammar {
+  lexer<python> {
+    r'a' -> :a
+    r'b' -> :b
+    r'\n+' -> :newline
+  }
+  lexer<c> {
+    "a" -> :a
+    "b" -> :b
+    "\\n+" -> :newline
+    mode<test> {
+      "c" -> :test_c
+      "d" -> :test_d
+      "[^a-z]" -> :test_e
+      "f\"g\"" -> :test_fg
+      "\\n+" -> :newline
+    }
+  }
+  lexer<java> {
+    "a" -> :a
+    "b" -> :b
+    "\\n+" -> :newline
+  }
+  lexer<javascript> {
+    "a" -> :a
+    "b" -> :b
+    "\\n+" -> :newline
+  }
+}

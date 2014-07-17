@@ -1,6 +1,8 @@
 #ifndef __PARSER_COMMON_H
 #define __PARSER_COMMON_H
 
+#include <pcre.h>
+
 typedef struct terminal_t {
 
   int id;
@@ -9,7 +11,7 @@ typedef struct terminal_t {
 } TERMINAL_T;
 
 typedef struct token_t {
-  
+
   struct terminal_t * terminal;
   int lineno;
   int colno;
@@ -190,6 +192,33 @@ typedef struct ast_object_specification_init {
   int index;
 
 } AST_CREATE_OBJECT_INIT;
+
+typedef struct lexer_match_t {
+    int mode;
+    int match_length;
+    TOKEN_T ** tokens;
+    void * context;
+} LEXER_MATCH_T;
+
+typedef LEXER_MATCH_T *(*lexer_match_function)(
+    void * context,
+    int mode,
+    char ** match_groups,
+    TERMINAL_T * terminal,
+    int line,
+    int col
+);
+
+typedef struct lexer_regex_t {
+    pcre * regex;
+    const char * pcre_errptr;
+    int pcre_erroffset;
+    char * pattern;
+    TERMINAL_T * terminal;
+    lexer_match_function match_func;
+} LEXER_REGEX_T;
+
+typedef struct lexer_regex_t *** LEXER_T;
 
 char * ast_to_string( ABSTRACT_SYNTAX_TREE_T * tree, PARSER_CONTEXT_T * ctx );
 char * parsetree_to_string( PARSE_TREE_T * tree, PARSER_CONTEXT_T * ctx );

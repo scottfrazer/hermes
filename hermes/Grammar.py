@@ -184,7 +184,7 @@ class Regex:
   def __init__(self, regex, options, terminal, function=None):
     self.__dict__.update(locals())
 
-class Lexer(dict):
+class Lexer(OrderedDict):
   code = ''
   def str(self, theme=None):
     return ', '.join(self.keys())

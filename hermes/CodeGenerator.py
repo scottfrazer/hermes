@@ -210,8 +210,19 @@ class CCommonSourceTemplate(CTemplate):
   template = 'c/parser_common.c.tpl'
 
 class CMainSourceTemplate(CTemplate):
-  filename = 'parser_main.c'
   template = 'c/parser_main.c.tpl'
+  def get_filename(self):
+    return os.path.join(self.directory, self.grammar.name.lower() + '_main.c')
+
+class CLexerTemplate(CTemplate):
+  template = 'c/lexer.c.tpl'
+  def get_filename(self):
+    return os.path.join(self.directory, self.grammar.name.lower() + '_lexer.c')
+
+class CLexerHeaderTemplate(CTemplate):
+  template = 'c/lexer.h.tpl'
+  def get_filename(self):
+    return os.path.join(self.directory, self.grammar.name.lower() + '_lexer.h')
 
 class JavascriptParserTemplate(JavascriptTemplate):
   template = 'javascript/parser.js.tpl'
@@ -275,6 +286,9 @@ class CTemplateFactory:
         CSourceTemplate(),
         CHeaderTemplate()
     ]
+    if 'lexer' in kwargs and kwargs['lexer'] is not None:
+      templates.append(CLexerTemplate())
+      templates.append(CLexerHeaderTemplate())
     if kwargs['add_main']:
       templates.append(CMainSourceTemplate())
     return templates

@@ -6,16 +6,17 @@
 
 #include "parser_common.h"
 #include "{{grammar.name}}_parser.h"
+#include "{{grammar.name}}_lexer.h"
 
 #define STDIN_BUF_SIZE 1024
 
 typedef struct token_stream_t {
 
-	TOKEN_T * token;
-	struct token_stream_t * next;
+  TOKEN_T * token;
+  struct token_stream_t * next;
 
 } TOKEN_STREAM_T;
-	
+
 typedef enum token_field_e {
   TOKEN_FIELD_TERMINAL_E = 0x1,
   TOKEN_FIELD_LINE_E = 0x2,
@@ -479,7 +480,7 @@ json_value * json_parse_ex (json_settings * settings, const json_char * json, ch
                      if (state.first_pass)
                         (*(json_char **) &top->u.object.values) += string_length + 1;
                      else
-                     {  
+                     {
                         top->u.object.values [top->u.object.length].name
                            = (json_char *) top->_reserved.object_mem;
 
@@ -641,7 +642,7 @@ json_value * json_parse_ex (json_settings * settings, const json_char * json, ch
             switch (top->type)
             {
             case json_object:
-               
+
                switch (b)
                {
                   whitespace:
@@ -661,7 +662,7 @@ json_value * json_parse_ex (json_settings * settings, const json_char * json, ch
                      string_length = 0;
 
                      break;
-                  
+
                   case '}':
 
                      flags = (flags & ~ flag_need_comma) | flag_next;
@@ -741,7 +742,7 @@ json_value * json_parse_ex (json_settings * settings, const json_char * json, ch
 
             if (top->parent->type == json_array)
                flags |= flag_seek_value;
-               
+
             if (!state.first_pass)
             {
                json_value * parent = top->parent;
@@ -961,13 +962,13 @@ get_tokens(char * grammar, char * json_input, TOKEN_LIST_T * token_list) {
         fprintf(stderr, "'%s' field is invalid for a token", name);
         exit(-1);
       } else if ( field & (TOKEN_FIELD_TERMINAL_E | TOKEN_FIELD_RESOURCE_E | TOKEN_FIELD_SOURCE_STRING_E) && (value == NULL || value->type != json_string) ) {
-        fprintf(stderr, "'%s' field must have a string value", name); 
+        fprintf(stderr, "'%s' field must have a string value", name);
         exit(-1);
       } else if ( field == TOKEN_FIELD_TERMINAL_E && terminal_str_to_id(value->u.string.ptr) == -1 ) {
-        fprintf(stderr, "'%s' field does not have a valid terminal identifier (%s)", name, value->u.string.ptr); 
+        fprintf(stderr, "'%s' field does not have a valid terminal identifier (%s)", name, value->u.string.ptr);
         exit(-1);
       } else if ( field & (TOKEN_FIELD_COL_E | TOKEN_FIELD_LINE_E) && (value == NULL || (value->type != json_string && value->type != json_integer)) ) {
-        fprintf(stderr, "'%s' field must have a string or integer value", name); 
+        fprintf(stderr, "'%s' field must have a string or integer value", name);
         exit(-1);
       }
 
@@ -1041,13 +1042,30 @@ main(int argc, char * argv[])
   int stdin_len;
   FILE * fp;
 
+  char err[512];
+  TOKEN_T ** tokens;
+
+  {{prefix}}lexer_init();
+  if ( {{prefix}}lexer_has_errors() ) {
+      {{prefix}}lexer_print_errors();
+  }
+  tokens = {{prefix}}lex("aaaa\nbbbb", NULL, &err[0]);
+  if (tokens == NULL) {
+      printf("Error: %s\n", err);
+  }
+  for (i=0;tokens[i];tokens++) {
+      printf("%s\n", tokens[i]->terminal->string);
+  }
+  {{prefix}}lexer_destroy();
+  return 0;
+
   if ( argc < 3 )
   {
     fprintf(stderr, "Usage: %s <parsetree,ast> <tokens_file>\n", argv[0]);
     exit(-1);
   }
 
-  fp = fopen(argv[2], "r");  
+  fp = fopen(argv[2], "r");
   stdin_len = read_file( &stdin_content, fp );
 
   get_tokens("{{grammar.name}}", stdin_content, &token_list);

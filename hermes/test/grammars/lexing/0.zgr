@@ -1,0 +1,6 @@
+grammar {
+  lexer {
+    r'a' -> :a
+    r'b' -> :b
+  }
+}
