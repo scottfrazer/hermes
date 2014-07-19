@@ -28,7 +28,7 @@ static LEXER_MATCH_T * default_action(
     LEXER_MATCH_T * match = calloc(1, sizeof(LEXER_MATCH_T));
     match->match_length = strlen(match_groups[0]);
     match->tokens = calloc(2, sizeof(TOKEN_T*));
-    match->tokens[0] = calloc(1, sizeof(TOKEN_T)); //1-800-732-3400
+    match->tokens[0] = calloc(1, sizeof(TOKEN_T));
     match->tokens[0]->lineno = line;
     match->tokens[0]->colno = col;
     match->tokens[0]->source_string = strdup(match_groups[0]);
@@ -52,9 +52,13 @@ void {{prefix}}lexer_init() {
     r = calloc(1, sizeof(LEXER_REGEX_T));
     r->regex = pcre_compile({{regex.regex}}, 0, &r->pcre_errptr, &r->pcre_erroffset, NULL);
     r->pattern = {{regex.regex}};
+    {% if regex.terminal %}
     r->terminal = calloc(1, sizeof(TERMINAL_T));
-    r->terminal->string = {{'"' + regex.terminal.string.lower() + '"' if regex.terminal else 'NULL'}};
+    r->terminal->string = "{{regex.terminal.string.lower()}}";
     r->terminal->id = {{regex.terminal.id}};
+    {% else %}
+    r->terminal = NULL;
+    {% endif %}
     r->match_func = {{regex.function if regex.function else 'default_action'}};
     lexer[{{prefix.upper()}}LEXER_{{mode.upper()}}_MODE_E][{{i}}] = r;
   {% endfor %}
@@ -152,31 +156,45 @@ static void unrecognized_token(char * string, int line, int col, char * message)
     free(bad_line);
 }
 
-static LEXER_MATCH_T * next(char * string, {{prefix.upper()}}LEXER_MODE_E mode, void * context, int line, int col) {
+static void advance(char ** string, int length, int * line, int * col) {
+    update_line_col(*string, length, line, col);
+    *string += length;
+}
+
+static LEXER_MATCH_T * next(char ** string, {{prefix.upper()}}LEXER_MODE_E mode, void * context, int * line, int * col) {
     int error_offset, rc, i, j;
-    int ovector_count = 30;
+    int ovector_count = 30, match_length;
     int ovector[ovector_count];
+    int skip_match_func;
     char ** match_groups;
     LEXER_MATCH_T * match;
     for (i = 0; lexer[mode][i]; i++) {
-        rc = pcre_exec(lexer[mode][i]->regex, NULL, string, strlen(string), 0, 0, ovector, ovector_count);
+        rc = pcre_exec(lexer[mode][i]->regex, NULL, *string, strlen(*string), 0, PCRE_ANCHORED, ovector, ovector_count);
         if (rc >= 0) {
+            if (lexer[mode][i]->terminal == NULL && lexer[mode][i]->match_func != NULL) {
+                advance(string, ovector[1] - ovector[0], line, col);
+                i = -1;
+                continue;
+            }
+
             lexer_match_function match_func = lexer[mode][i]->match_func != NULL ? lexer[mode][i]->match_func : default_action;
 
             match_groups = calloc(rc+1, sizeof(char *));
             for (j = 0; j < rc; j++) {
-                char *substring_start = string + ovector[2*j];
-                int substring_length = ovector[2*j+1] - ovector[2*j];
-                match_groups[j] = calloc(substring_length+1, sizeof(char));
-                strncpy(match_groups[j], substring_start, substring_length);
+                char *substring_start = *string + ovector[2*j];
+                match_length = ovector[2*j+1] - ovector[2*j];
+                match_groups[j] = calloc(match_length+1, sizeof(char));
+                strncpy(match_groups[j], substring_start, match_length);
             }
 
-            match = match_func(context, mode, match_groups, lexer[mode][i]->terminal, line, col);
+            match = match_func(context, mode, match_groups, lexer[mode][i]->terminal, *line, *col);
 
             for (j = 0; match_groups[j]; j++) {
                 free(match_groups[j]);
             }
             free(match_groups);
+
+            advance(string, ovector[1] - ovector[0], line, col);
             return match;
         }
     }
@@ -192,7 +210,7 @@ TOKEN_T ** {{prefix}}lex(char * string, void * context, char * error) {
     TOKEN_T ** parsed_tokens = calloc(parsed_tokens_size, sizeof(TOKEN_T *));
 
     while (strlen(string_current)) {
-        LEXER_MATCH_T * match = next(string_current, mode, context, line, col);
+        LEXER_MATCH_T * match = next(&string_current, mode, context, &line, &col);
 
         if (match == NULL || match->match_length == 0) {
             unrecognized_token(string, line, col, error);
@@ -207,10 +225,7 @@ TOKEN_T ** {{prefix}}lex(char * string, void * context, char * error) {
             }
             parsed_tokens[parsed_tokens_index++] = match->tokens[i];
         }
-        update_line_col(string_current, match->match_length, &line, &col);
-
         mode = match->mode;
-        string_current += match->match_length;
     }
     parsed_tokens[parsed_tokens_index++] = NULL;
     return parsed_tokens;

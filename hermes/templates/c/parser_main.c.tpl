@@ -1052,7 +1052,7 @@ main(int argc, char * argv[])
   if ( {{prefix}}lexer_has_errors() ) {
       {{prefix}}lexer_print_errors();
   }
-  tokens = {{prefix}}lex("aaaa\nbbbb", NULL, &err[0]);
+  tokens = {{prefix}}lex("aaaa\n\n\n\nbbbb\naabb\na\nb", NULL, &err[0]);
   if (tokens == NULL) {
       printf("Error: %s\n", err);
   }
