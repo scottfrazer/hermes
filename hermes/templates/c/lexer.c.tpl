@@ -112,7 +112,7 @@ static void update_line_col(char * match, int length, int * line, int * col) {
     for (i = 0; i < length; i++) {
         if (match[i] == '\n') {
             *line += 1;
-            *col = 0;
+            *col = 1;
         } else {
             *col += 1;
         }
