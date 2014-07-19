@@ -1040,47 +1040,64 @@ main(int argc, char * argv[])
   TOKEN_LIST_T token_list;
   char * str;
   int i, j, rval;
-  char * stdin_content;
-  int stdin_len;
+  char * file_contents;
+  int file_length;
   FILE * fp;
 
   char err[512];
   TOKEN_T ** tokens;
 
-  {% if lexer %}
-  {{prefix}}lexer_init();
-  if ( {{prefix}}lexer_has_errors() ) {
-      {{prefix}}lexer_print_errors();
-  }
-  tokens = {{prefix}}lex("aaaa\n\n\n\nbbbb\naabb\na\nb", NULL, &err[0]);
-  if (tokens == NULL) {
-      printf("Error: %s\n", err);
-  }
-  for (i=0;tokens[i];tokens++) {
-      printf("%s\n", tokens[i]->terminal->string);
-  }
-  {{prefix}}lexer_destroy();
-  return 0;
-  {% endif %}
-
-  if ( argc < 3 )
-  {
-    fprintf(stderr, "Usage: %s <parsetree,ast> <tokens_file>\n", argv[0]);
-    exit(-1);
+  if (argc != 3 || (strcmp(argv[1], "parsetree") != 0 && strcmp(argv[1], "ast") != 0 {% if lexer %} && strcmp(argv[1], "tokens") != 0{% endif %})) {
+    fprintf(stderr, "Usage: %s <parsetree|ast> <tokens_file>\n", argv[0]);
+    {% if lexer %}
+    fprintf(stderr, "Usage: %s <tokens> <source_file>\n", argv[0]);
+    {% endif %}
+    return -1;
   }
 
   fp = fopen(argv[2], "r");
-  stdin_len = read_file( &stdin_content, fp );
+  file_length = read_file(&file_contents, fp);
 
-  get_tokens("{{grammar.name}}", stdin_content, &token_list);
+  {% if lexer %}
+  if (!strcmp(argv[1], "tokens")) {
+    {{prefix}}lexer_init();
+    if ( {{prefix}}lexer_has_errors() ) {
+        {{prefix}}lexer_print_errors();
+    }
+    tokens = {{prefix}}lex(file_contents, NULL, &err[0]);
+    if (tokens == NULL) {
+        printf("Error: %s\n", err);
+    }
+
+    printf("[\n");
+    for (i=0;tokens[i];tokens++) {
+        /* {"terminal": "a", "resource": "resource", "line": 1, "col": 1, "source_string": "YQ=="}, */
+        printf(
+          "    %c\"terminal\": \"%s\", \"resource\": \"%s\", \"line\": %d, \"col\": %d, \"source_string\": \"%s\"%c%s\n",
+          '{',
+          tokens[i]->terminal->string,
+          tokens[i]->resource,
+          tokens[i]->lineno,
+          tokens[i]->colno,
+          tokens[i]->source_string,
+          '}',
+          tokens[i+1] == NULL ? "" : ","
+        );
+    }
+    printf("]\n");
+    {{prefix}}lexer_destroy();
+    return 0;
+  }
+  {% endif %}
+
+  get_tokens("{{grammar.name}}", file_contents, &token_list);
   ctx = {{grammar.name}}_parser_init(&token_list);
   parse_tree = {{grammar.name}}_parse(&token_list, -1, ctx);
   abstract_syntax_tree = {{grammar.name}}_ast(parse_tree);
 
   if ( argc >= 3 && !strcmp(argv[1], "ast") ) {
     str = ast_to_string(abstract_syntax_tree, ctx);
-  }
-  else {
+  } else {
     str = parsetree_to_string(parse_tree, ctx);
   }
 
