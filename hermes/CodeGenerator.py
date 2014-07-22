@@ -209,6 +209,14 @@ class CCommonSourceTemplate(CTemplate):
   filename = 'parser_common.c'
   template = 'c/parser_common.c.tpl'
 
+class CUtilHeaderTemplate(CTemplate):
+  filename = 'parser_util.h'
+  template = 'c/parser_util.h.tpl'
+
+class CUtilSourceTemplate(CTemplate):
+  filename = 'parser_util.c'
+  template = 'c/parser_util.c.tpl'
+
 class CMainSourceTemplate(CTemplate):
   template = 'c/parser_main.c.tpl'
   def get_filename(self):
@@ -284,7 +292,9 @@ class CTemplateFactory:
         CCommonHeaderTemplate(),
         CCommonSourceTemplate(),
         CSourceTemplate(),
-        CHeaderTemplate()
+        CHeaderTemplate(),
+        CUtilSourceTemplate(),
+        CUtilHeaderTemplate()
     ]
     if 'lexer' in kwargs and kwargs['lexer'] is not None:
       templates.append(CLexerTemplate())

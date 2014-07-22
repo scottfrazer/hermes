@@ -205,6 +205,7 @@ typedef LEXER_MATCH_T *(*lexer_match_function)(
     int mode,
     char ** match_groups,
     TERMINAL_T * terminal,
+    char * resource,
     int line,
     int col
 );

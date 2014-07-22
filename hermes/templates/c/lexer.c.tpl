@@ -22,6 +22,7 @@ static LEXER_MATCH_T * default_action(
     int mode,
     char ** match_groups,
     TERMINAL_T * terminal,
+    char * resource,
     int line,
     int col)
 {
@@ -32,7 +33,7 @@ static LEXER_MATCH_T * default_action(
     match->tokens[0]->lineno = line;
     match->tokens[0]->colno = col;
     match->tokens[0]->source_string = strdup(match_groups[0]);
-    match->tokens[0]->resource = "blah";
+    match->tokens[0]->resource = strdup(resource);
     match->tokens[0]->terminal = calloc(1, sizeof(TERMINAL_T));
     memcpy(match->tokens[0]->terminal, terminal, sizeof(TERMINAL_T));
     match->context = context;
@@ -161,7 +162,7 @@ static void advance(char ** string, int length, int * line, int * col) {
     *string += length;
 }
 
-static LEXER_MATCH_T * next(char ** string, {{prefix.upper()}}LEXER_MODE_E mode, void * context, int * line, int * col) {
+static LEXER_MATCH_T * next(char ** string, {{prefix.upper()}}LEXER_MODE_E mode, void * context, char * resource, int * line, int * col) {
     int error_offset, rc, i, j;
     int ovector_count = 30, match_length;
     int ovector[ovector_count];
@@ -187,7 +188,7 @@ static LEXER_MATCH_T * next(char ** string, {{prefix.upper()}}LEXER_MODE_E mode,
                 strncpy(match_groups[j], substring_start, match_length);
             }
 
-            match = match_func(context, mode, match_groups, lexer[mode][i]->terminal, *line, *col);
+            match = match_func(context, mode, match_groups, lexer[mode][i]->terminal, resource, *line, *col);
 
             for (j = 0; match_groups[j]; j++) {
                 free(match_groups[j]);
@@ -201,7 +202,7 @@ static LEXER_MATCH_T * next(char ** string, {{prefix.upper()}}LEXER_MODE_E mode,
     return NULL;
 }
 
-TOKEN_T ** {{prefix}}lex(char * string, void * context, char * error) {
+TOKEN_T ** {{prefix}}lex(char * string, void * context, char * resource, char * error) {
     int line = 1, col = 1, i;
     {{prefix.upper()}}LEXER_MODE_E mode = {{prefix.upper()}}LEXER_DEFAULT_MODE_E;
     char * string_current = string;
@@ -210,7 +211,7 @@ TOKEN_T ** {{prefix}}lex(char * string, void * context, char * error) {
     TOKEN_T ** parsed_tokens = calloc(parsed_tokens_size, sizeof(TOKEN_T *));
 
     while (strlen(string_current)) {
-        LEXER_MATCH_T * match = next(&string_current, mode, context, &line, &col);
+        LEXER_MATCH_T * match = next(&string_current, mode, context, resource, &line, &col);
 
         if (match == NULL || match->match_length == 0) {
             unrecognized_token(string, line, col, error);
