@@ -230,18 +230,3 @@ TOKEN_T ** {{prefix}}lex(char * string, void * context, char * error) {
     parsed_tokens[parsed_tokens_index++] = NULL;
     return parsed_tokens;
 }
-
-/*def lex(file_or_path, debug=False):
-    if isinstance(file_or_path, str):
-        try:
-            with open(file_or_path) as fp:
-                contents = fp.read()
-        except FileNotFoundError:
-            contents = file_or_path
-    elif hasattr(file_or_path, 'read') and hasattr(file_or_path, 'close'):
-        contents = file_or_path.read()
-        file_or_path.close()
-
-    lexer = HermesLexer()
-    return TokenStream(lexer.lex(contents, debug))
-*/
