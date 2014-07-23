@@ -23,7 +23,7 @@ def test_all():
                 yield parse_tree, test_dir
                 yield ast, test_dir
 
-            grammar = GrammarParser().parse('grammar', open(grammar_path))
+            grammar = GrammarParser().parse('grammar', grammar_path)
             if grammar.conflicts:
                 if not os.path.exists(conflicts_path) and (not os.path.exists(first_sets_path) or not os.path.exists(follow_sets_path)):
                     with open(conflicts_path, 'w') as fp:
@@ -84,7 +84,7 @@ def ast(test_dir):
 
 def first_sets(test_dir, nonterminal, terminals):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
-    grammar = GrammarParser().parse('grammar', open(grammar_file))
+    grammar = GrammarParser().parse('grammar', grammar_file)
     grammar_first_sets = {str(k): [str(v1) for v1 in v] for k, v in grammar.first_sets.items()}
     assert len(grammar_first_sets[nonterminal]) == len(terminals)
     for terminal in terminals:
@@ -92,7 +92,7 @@ def first_sets(test_dir, nonterminal, terminals):
 
 def follow_sets(test_dir, nonterminal, terminals):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
-    grammar = GrammarParser().parse('grammar', open(grammar_file))
+    grammar = GrammarParser().parse('grammar', grammar_file)
     grammar_follow_sets = {str(k): [str(v1) for v1 in v] for k, v in grammar.follow_sets.items()}
     assert len(grammar_follow_sets[nonterminal]) == len(terminals)
     for terminal in terminals:
@@ -101,7 +101,7 @@ def follow_sets(test_dir, nonterminal, terminals):
 def conflicts(test_dir):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
     conflicts_file = os.path.join(test_dir, 'conflicts')
-    grammar = GrammarParser().parse('grammar', open(grammar_file))
+    grammar = GrammarParser().parse('grammar', grammar_file)
     assert os.path.exists(conflicts_file)
     with open(conflicts_file) as fp:
         expected = fp.read()

@@ -25,7 +25,7 @@ def test_all():
 def parse_python(test_dir, out):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
     tokens_file = os.path.join(test_dir, 'tokens')
-    grammar = GrammarParser().parse('grammar', open(grammar_file))
+    grammar = GrammarParser().parse('grammar', grammar_file)
     tmp_dir = tempfile.mkdtemp()
 
     try:
@@ -41,7 +41,7 @@ def parse_python(test_dir, out):
 def parser_c(test_dir, out):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
     tokens_file = os.path.join(test_dir, 'tokens')
-    grammar = GrammarParser().parse('grammar', open(grammar_file))
+    grammar = GrammarParser().parse('grammar', grammar_file)
 
     tmp_dir = tempfile.mkdtemp()
     try:
@@ -60,7 +60,7 @@ def parser_c(test_dir, out):
 def parser_java(test_dir, out):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
     tokens_file = os.path.join(test_dir, 'tokens')
-    grammar = GrammarParser().parse('grammar', open(grammar_file))
+    grammar = GrammarParser().parse('grammar', grammar_file)
 
     tmp_dir = tempfile.mkdtemp()
     try:
@@ -86,7 +86,7 @@ def parser_java(test_dir, out):
 def parse_javascript(test_dir, out):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
     tokens_file = os.path.join(test_dir, 'tokens')
-    grammar = GrammarParser().parse('grammar', open(grammar_file))
+    grammar = GrammarParser().parse('grammar', grammar_file)
     tmp_dir = tempfile.mkdtemp()
 
     try:
