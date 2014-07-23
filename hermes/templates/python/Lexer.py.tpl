@@ -5,6 +5,8 @@ import argparse
 from ..Common import Terminal, SyntaxError, TokenStream
 from .Parser import terminals
 
+{% import re %}
+
 terminals = {
 {% for terminal in lexer.terminals %}
     {{terminal.id}}: '{{terminal.string}}',
@@ -19,9 +21,21 @@ terminals = {
 {{lexer.code}}
 # END USER CODE
 
+{% if re.search(r'def\s+default_action', lexer.code) is None %}
 def default_action(context, mode, match, terminal, line, col):
     tokens = [Terminal(terminals[terminal], terminal, match, 'resource', line, col)] if terminal else []
     return (tokens, mode, context)
+{% endif %}
+
+{% if re.search(r'def\s+init', lexer.code) is None %}
+def init():
+    return {}
+{% endif %}
+
+{% if re.search(r'def\s+destroy', lexer.code) is None %}
+def destroy(context):
+    pass
+{% endif %}
 
 class HermesLexer:
     regex = {
@@ -62,7 +76,7 @@ class HermesLexer:
 
     def lex(self, string, debug=False):
         (mode, line, col) = ('default', 1, 1)
-        context = {'lexer_brace': 0, 'grammar_brace': 0, 'parser_brace': 0}
+        context = init()
         string_copy = string
         parsed_tokens = []
         while len(string):
@@ -90,6 +104,7 @@ class HermesLexer:
                         colorize(mode, ansi=4),
                         colorize(str(context), ansi=13)
                     ))
+        destroy(context)
         return parsed_tokens
 
 def lex(file_or_path, debug=False):

@@ -71,6 +71,8 @@ grammar {
     }
 
     <code>
+def init():
+    return {'lexer_brace': 0, 'grammar_brace': 0, 'parser_brace': 0}
 def normalize_morpheme(morpheme):
     if morpheme == '$$': return '$'
     return morpheme.lstrip(':').lstrip('$')
