@@ -13,6 +13,6 @@ void {{prefix}}lexer_init();
 int {{prefix}}lexer_has_errors();
 void {{prefix}}lexer_print_errors();
 void {{prefix}}lexer_destroy();
-TOKEN_T ** {{prefix}}lex(char * string, void * context, char * resource, char * error);
+TOKEN_T ** {{prefix}}lex(char * string, char * resource, char * error);
 
 #endif

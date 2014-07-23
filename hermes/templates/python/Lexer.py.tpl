@@ -2,6 +2,7 @@ import re
 import sys
 import base64
 import argparse
+import os
 from ..Common import Terminal, SyntaxError, TokenStream
 from .Parser import terminals
 
@@ -22,8 +23,8 @@ terminals = {
 # END USER CODE
 
 {% if re.search(r'def\s+default_action', lexer.code) is None %}
-def default_action(context, mode, match, terminal, line, col):
-    tokens = [Terminal(terminals[terminal], terminal, match, 'resource', line, col)] if terminal else []
+def default_action(context, mode, match, terminal, resource, line, col):
+    tokens = [Terminal(terminals[terminal], terminal, match, resource, line, col)] if terminal else []
     return (tokens, mode, context)
 {% endif %}
 
@@ -65,22 +66,22 @@ class HermesLexer:
         )
         raise SyntaxError(message)
 
-    def _next(self, string, mode, context, line, col):
+    def _next(self, string, mode, context, resource, line, col):
         for (regex, terminal, function) in self.regex[mode]:
             match = regex.match(string)
             if match:
                 function = function if function else default_action
-                (tokens, mode, context) = function(context, mode, match.group(0), terminal, line, col)
+                (tokens, mode, context) = function(context, mode, match.group(0), terminal, resource, line, col)
                 return (tokens, match.group(0), mode)
         return ([], '', mode)
 
-    def lex(self, string, debug=False):
+    def lex(self, string, resource, debug=False):
         (mode, line, col) = ('default', 1, 1)
         context = init()
         string_copy = string
         parsed_tokens = []
         while len(string):
-            (tokens, match, mode) = self._next(string, mode, context, line, col)
+            (tokens, match, mode) = self._next(string, mode, context, resource, line, col)
 
             if len(match) == 0:
                 self._unrecognized_token(string_copy, line, col)
@@ -112,11 +113,10 @@ def lex(file_or_path, debug=False):
         try:
             with open(file_or_path) as fp:
                 contents = fp.read()
+                resource = os.path.basename(os.path.expanduser(file_or_path))
         except FileNotFoundError:
             contents = file_or_path
-    elif hasattr(file_or_path, 'read') and hasattr(file_or_path, 'close'):
-        contents = file_or_path.read()
-        file_or_path.close()
+            resource = '<string>'
 
     lexer = HermesLexer()
-    return TokenStream(lexer.lex(contents, debug))
+    return TokenStream(lexer.lex(contents, resource, debug))

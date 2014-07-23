@@ -4,10 +4,12 @@
 #include "parser_common.h"
 #include "{{prefix}}lexer.h"
 
+{% import re %}
+
 /* index with {{prefix.upper()}}TERMINAL_E */
 static char * {{prefix}}morphemes[] = {
 {% for terminal in sorted(lexer.terminals, key=lambda x: x.id) %}
-  "{{terminal.string}}", /* {{terminal.id}} */
+    "{{terminal.string}}", /* {{terminal.id}} */
 {% endfor %}
 };
 
@@ -17,6 +19,7 @@ static char * {{prefix}}morphemes[] = {
 
 static LEXER_REGEX_T *** lexer = NULL;
 
+{% if re.search(r'LEXER_MATCH_T\s*\*\s*default_action', lexer.code) is None %}
 static LEXER_MATCH_T * default_action(
     void * context,
     int mode,
@@ -40,6 +43,19 @@ static LEXER_MATCH_T * default_action(
     match->mode = mode;
     return match;
 }
+{% endif %}
+
+{% if re.search(r'void\s*\*\s*init', lexer.code) is None %}
+static void * init() {
+    return NULL;
+}
+{% endif %}
+
+{% if re.search(r'void\s*destroy', lexer.code) is None %}
+static void destroy(void * context) {
+    return;
+}
+{% endif %}
 
 void {{prefix}}lexer_init() {
     LEXER_REGEX_T * r;
@@ -202,12 +218,13 @@ static LEXER_MATCH_T * next(char ** string, {{prefix.upper()}}LEXER_MODE_E mode,
     return NULL;
 }
 
-TOKEN_T ** {{prefix}}lex(char * string, void * context, char * resource, char * error) {
+TOKEN_T ** {{prefix}}lex(char * string, char * resource, char * error) {
     int line = 1, col = 1, i;
     {{prefix.upper()}}LEXER_MODE_E mode = {{prefix.upper()}}LEXER_DEFAULT_MODE_E;
     char * string_current = string;
     int parsed_tokens_size = 100;
     int parsed_tokens_index = 0;
+    void * context = init();
     TOKEN_T ** parsed_tokens = calloc(parsed_tokens_size, sizeof(TOKEN_T *));
 
     while (strlen(string_current)) {
@@ -229,5 +246,6 @@ TOKEN_T ** {{prefix}}lex(char * string, void * context, char * resource, char * 
         mode = match->mode;
     }
     parsed_tokens[parsed_tokens_index++] = NULL;
+    destroy(context);
     return parsed_tokens;
 }
