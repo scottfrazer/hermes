@@ -79,6 +79,17 @@ public class {{prefix}}Lexer {
         }));
 {% endfor %}
     }
+
+    private void updateLineAndColumn(String match, int line, int col) {
+        match_lines = match.split('\n')
+        line += len(match_lines) - 1
+        if (len(match_lines) == 1) {
+            col += len(match_lines[0]);
+        }
+        else:
+            col = len(match_lines[-1]) + 1
+        return (line, col)
+    }
 }
 
 /*

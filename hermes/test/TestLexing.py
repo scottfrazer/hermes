@@ -48,6 +48,7 @@ def lex_c(test_dir):
         command = './lexer tokens source'
         return subprocess.check_output(command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as error:
+        print(error)
         return error.output.decode('utf-8').strip()
     finally:
         shutil.rmtree(tmp_dir)
