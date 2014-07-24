@@ -82,8 +82,9 @@ public class {{prefix}}Parser {
 
     public enum {{prefix}}TerminalIdentifier implements TerminalIdentifier {
 {% for index, terminal in enumerate(grammar.standard_terminals) %}
-        TERMINAL_{{terminal.string.upper()}}({{terminal.id}}, "{{terminal.string}}"){{',' if index!=len(grammar.standard_terminals)-1 else ';'}}
+        TERMINAL_{{terminal.string.upper()}}({{terminal.id}}, "{{terminal.string}}"),
 {% endfor %}
+        END_SENTINAL(-3, "END_SENTINAL");
 
         private final int id;
         private final String string;

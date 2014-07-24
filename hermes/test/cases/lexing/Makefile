@@ -1,11 +1,11 @@
-all: c_parser python_lexer java_parser js_parser
-java_parser: java_files java_compile
+all: c_lexer python_lexer java_lexer js_lexer
+java_lexer: java_files java_compile
 java_compile:
 	javac -cp java java/*.java
-	-java -cp java ParserMain tokens source_code &> java/tokens
+	-java -cp java ParserMain tokens source &> java/tokens
 python_lexer: python_files
 js_parser: js_files
-	-node js/main.js tokens source_code &> js/tokens
+	-node js/main.js tokens source &> js/tokens
 c_lexer: c_files
 	gcc -lpcre -o c/lexer c/*.c -g -std=c99
 	-c/lexer tokens source &> c/tokens

@@ -119,6 +119,13 @@ class JavaParserTemplate(JavaTemplate):
     prefix = underscore_to_camelcase(self.grammar.name)
     return os.path.join(self.directory, self.java_package_to_path(), prefix + self.filename)
 
+class JavaLexerTemplate(JavaTemplate):
+  filename = 'Lexer.java'
+  template = 'java/LexerTemplate.java.tpl'
+  def get_filename(self):
+    prefix = underscore_to_camelcase(self.grammar.name)
+    return os.path.join(self.directory, self.java_package_to_path(), prefix + self.filename)
+
 class JavaUtilityTemplate(JavaTemplate):
   filename = 'Utility.java'
   template = 'java/Utility.java.tpl'
@@ -280,7 +287,8 @@ class JavaTemplateFactory:
       JavaSourceCodeTemplate(),
       JavaTerminalIdentifierTemplate(),
       JavaSyntaxErrorFormatterTemplate(),
-      JavaParserTemplate()
+      JavaParserTemplate(),
+      JavaLexerTemplate()
     ]
     if kwargs['add_main']:
       templates.append(JavaMainTemplate())
