@@ -1,5 +1,7 @@
 language: python
 python:
   - "3.4"
+before_install:
+  - apt-get install -y libpcre3
 install: python setup.py install
 script: nosetests
