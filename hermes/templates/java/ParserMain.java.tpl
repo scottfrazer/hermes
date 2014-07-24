@@ -53,6 +53,7 @@ public class ParserMain {
 
         {% if lexer %}
         if (!"tokens".equals(args[0])) {
+          /*
           {{prefix}}lexer_init();
           if ( {{prefix}}lexer_has_errors() ) {
               {{prefix}}lexer_print_errors();
@@ -78,8 +79,6 @@ public class ParserMain {
                   }
               }
 
-
-              /* {"terminal": "a", "resource": "resource", "line": 1, "col": 1, "source_string": "YQ=="}, */
               printf(
                 "    %c\"terminal\": \"%s\", \"resource\": \"%s\", \"line\": %d, \"col\": %d, \"source_string\": \"%s\"%c%s\n",
                 '{',
@@ -95,6 +94,7 @@ public class ParserMain {
           printf("]\n");
           {{prefix}}lexer_destroy();
           return 0;
+          */
         }
         {% endif %}
     }

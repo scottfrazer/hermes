@@ -2,11 +2,12 @@
 package {{java_package}};
 {% endif %}
 
-import java.util.Pattern;
+import java.util.regex.Pattern;
 import java.util.HashMap;
-import java.util.Map
+import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 {% import re %}
 
@@ -24,7 +25,7 @@ public class {{prefix}}Lexer {
         }
     }
 
-    private Map<String, List<HermesRegex>> regex;
+    private Map<String, List<HermesRegex>> regex = null;
 
     public enum {{prefix}}TerminalIdentifier implements TerminalIdentifier {
     {% for terminal in lexer.terminals %}
@@ -49,7 +50,7 @@ public class {{prefix}}Lexer {
     /* END USER CODE */
 
     {% if re.search(r'private\s+Token\s+default_action', lexer.code) is None %}
-    private Token default_action(context, mode, match, terminal, resource, line, col) {
+    private Terminal default_action(Object context, String mode, String match, {{prefix}}TerminalIdentifier terminal, String resource, int line, int col) {
         //tokens = [Terminal(terminals[terminal], terminal, match, resource, line, col)] if terminal else []
         //return (tokens, mode, context)
         return null;
@@ -68,16 +69,15 @@ public class {{prefix}}Lexer {
     }
     {% endif %}
 
-    static {
-        Map<String, List<HermesRegex>> map = new HashMap<String, List<HermesRegex>>();
+    public {{prefix}}Lexer() {
+        this.regex = new HashMap<String, List<HermesRegex>>();
 {% for mode, regex_list in lexer.items() %}
-        map.put({{mode}}, Arrays.asList(new HermesRegex[] {
+        this.regex.put("{{mode}}", Arrays.asList(new HermesRegex[] {
   {% for regex in regex_list %}
-            new HermesRegex(Pattern.compile({{regex.regex}}), {{"'" + regex.terminal.string.lower() + "'" if regex.terminal else 'null'}}, {{regex.function}}),
+            new HermesRegex(Pattern.compile({{regex.regex}}), {{prefix+'TerminalIdentifier.TERMINAL_' + regex.terminal.string.upper() if regex.terminal else 'null'}}, {{regex.function if regex.function is not None else 'null'}}),
   {% endfor %}
         }));
 {% endfor %}
-        regex = Collections.unmodifiableMap(map);
     }
 }
 
@@ -85,9 +85,9 @@ public class {{prefix}}Lexer {
 class HermesLexer:
     regex = {
       {% for mode, regex_list in lexer.items() %}
-        '{{mode}}': [
+        "{{mode}}": [
           {% for regex in regex_list %}
-          (re.compile({{regex.regex}}{{", "+' | '.join(['re.'+x for x in regex.options]) if regex.options else ''}}), {{"'" + regex.terminal.string.lower() + "'" if regex.terminal else 'None'}}, {{regex.function}}),
+          (re.compile({{regex.regex}}{{", "+' | '.join(['re.'+x for x in regex.options]) if regex.options else ''}}), {{"'" + regex.terminal.string.lower() + "'" if regex.terminal else 'null'}}, {{regex.function}}),
           {% endfor %}
         ],
       {% endfor %}

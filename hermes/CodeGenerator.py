@@ -287,9 +287,10 @@ class JavaTemplateFactory:
       JavaSourceCodeTemplate(),
       JavaTerminalIdentifierTemplate(),
       JavaSyntaxErrorFormatterTemplate(),
-      JavaParserTemplate(),
-      JavaLexerTemplate()
+      JavaParserTemplate()
     ]
+    if 'lexer' in kwargs and kwargs['lexer'] is not None:
+      templates.append(JavaLexerTemplate())
     if kwargs['add_main']:
       templates.append(JavaMainTemplate())
     return templates
