@@ -45,6 +45,7 @@ def lex_c(test_dir):
         c_files = list(filter(lambda x: x.endswith('.c'), os.listdir(tmp_dir)))
         command = 'gcc -o lexer -I/usr/local/include -I/usr/include -L/usr/local/lib -L/usr/lib -lpcre {sources} -g -Wall -pedantic -ansi -std=c99 2>&1'.format(sources=' '.join(c_files))
         subprocess.check_call(command, cwd=tmp_dir, shell=True, stderr=None)
+        print(subprocess.check_output('cat /usr/include/pcre.h', cwd=tmp_dir, shell=True, stderr=None))
         command = './lexer tokens source'
         return subprocess.check_output(command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as error:
