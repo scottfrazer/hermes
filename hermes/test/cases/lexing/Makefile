@@ -7,7 +7,7 @@ python_lexer: python_files
 js_parser: js_files
 	-node js/main.js tokens source &> js/tokens
 c_lexer: c_files
-	gcc -lpcre -o c/lexer c/*.c -g -std=c99
+	gcc -o c/lexer c/*.c -g -Wall -pedantic -std=c99 -lpcre
 	-c/lexer tokens source &> c/tokens
 java_files: java_dir
 	hermes generate --language=java --add-main --directory=java grammar.zgr

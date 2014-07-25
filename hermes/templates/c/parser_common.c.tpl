@@ -35,6 +35,8 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
   ast->type = AST_NODE_TYPE_LIST;
   ast->object = NULL;
 
+  lnode = ast_list = tail = NULL;
+
   if ( tree->nchildren == 0 )
     return ast;
 
@@ -79,7 +81,6 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
     this = parsetree_node_to_ast(&tree->children[0]);
     next = parsetree_node_to_ast(&tree->children[2]);
 
-    ast_list = NULL;
     if ( this != NULL )
     {
       ast_list = calloc(1, sizeof(AST_LIST_T));
@@ -96,7 +97,6 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
   }
   else if ( !strcmp(tree->list, "mlist") )
   {
-    lnode = ast_list = tail = NULL;
     for ( i = 0; i < tree->nchildren - 1; i++ )
     {
       lnode = calloc(1, sizeof(AST_LIST_T));
@@ -320,7 +320,6 @@ static char *
 _parsetree_to_string( PARSE_TREE_NODE_T * node, int indent, PARSER_CONTEXT_T * ctx )
 {
   PARSE_TREE_T * tree;
-  TOKEN_T * token;
   char * str, * tmp, * indent_str;
   int bytes, i, len;
 
@@ -419,7 +418,6 @@ _ast_to_string_bytes( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_
 {
   AST_OBJECT_T * ast_object;
   AST_LIST_T * ast_list, * list_node;
-  TOKEN_T * token;
   ABSTRACT_SYNTAX_TREE_T * child;
   char * attr;
   int i, bytes;
@@ -493,10 +491,8 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_T * ct
 {
   AST_LIST_T * ast_list, * lnode;
   AST_OBJECT_T * ast_object;
-  TOKEN_T * token;
   char * str, * key, * value, * indent_str, * tmp;
   int bytes, i;
-  int initial_indent = (indent < 0) ? 0 : indent;
   indent = (indent < 0) ? -indent : indent;
 
   bytes = _ast_to_string_bytes(node, indent, ctx) + 1;

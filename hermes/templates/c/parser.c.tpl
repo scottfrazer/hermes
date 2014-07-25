@@ -418,7 +418,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 {
   int current;
   TOKEN_LIST_T * tokens = ctx->tokens;
-  PARSE_TREE_T * tree, * subtree;
+  PARSE_TREE_T * tree;
   char * message, * fmt;
   int rule = -1;
 

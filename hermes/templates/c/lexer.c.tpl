@@ -84,7 +84,7 @@ void {{prefix}}lexer_init() {
 
 int {{prefix}}lexer_has_errors() {
     int i, j;
-    for (int i = 0; lexer[i]; i++) {
+    for (i = 0; lexer[i]; i++) {
         for (j = 0; lexer[i][j]; j++) {
             if (lexer[i][j]->regex == NULL) {
                 return 1;
@@ -96,7 +96,7 @@ int {{prefix}}lexer_has_errors() {
 
 void {{prefix}}lexer_print_errors() {
     int i, j, k;
-    for (int i = 0; lexer[i]; i++) {
+    for (i = 0; lexer[i]; i++) {
         for (j = 0; lexer[i][j]; j++) {
             if (lexer[i][j]->regex == NULL) {
                 char * prefix = "Error compiling regex: ";
@@ -113,7 +113,7 @@ void {{prefix}}lexer_print_errors() {
 
 void {{prefix}}lexer_destroy() {
     int i, j;
-    for (int i = 0; lexer[i]; i++) {
+    for (i = 0; lexer[i]; i++) {
         for (j = 0; lexer[i][j]; j++) {
             pcre_free(lexer[i][j]->regex);
             free(lexer[i][j]->terminal);
@@ -125,7 +125,7 @@ void {{prefix}}lexer_destroy() {
 }
 
 static void update_line_col(char * match, int length, int * line, int * col) {
-    int newline_count = 0, i;
+    int i;
     for (i = 0; i < length; i++) {
         if (match[i] == '\n') {
             *line += 1;
@@ -179,10 +179,9 @@ static void advance(char ** string, int length, int * line, int * col) {
 }
 
 static LEXER_MATCH_T * next(char ** string, {{prefix.upper()}}LEXER_MODE_E mode, void * context, char * resource, int * line, int * col) {
-    int error_offset, rc, i, j;
+    int rc, i, j;
     int ovector_count = 30, match_length;
     int ovector[ovector_count];
-    int skip_match_func;
     char ** match_groups;
     LEXER_MATCH_T * match;
     for (i = 0; lexer[mode][i]; i++) {

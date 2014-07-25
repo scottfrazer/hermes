@@ -172,7 +172,7 @@ main(int argc, char * argv[])
   ABSTRACT_SYNTAX_TREE_T * abstract_syntax_tree;
   TOKEN_LIST_T token_list;
   char * str;
-  int i, j, rval, rc;
+  int i, rval, rc;
   char * file_contents, * b64;
   int file_length;
   size_t b64_size = 2;
