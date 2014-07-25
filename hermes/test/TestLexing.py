@@ -44,7 +44,7 @@ def lex_c(test_dir):
         CodeGenerator().generate(grammar, 'c', directory=tmp_dir, add_main=True)
         c_files = list(filter(lambda x: x.endswith('.c'), os.listdir(tmp_dir)))
         #print(subprocess.check_output('cat /usr/local/include/pcre.h', cwd=tmp_dir, shell=True, stderr=None))
-        command = 'gcc -o lexer -lpcre {sources} -g -Wall -pedantic -ansi -std=c99 2>&1'.format(sources=' '.join(c_files))
+        command = 'gcc -o lexer {sources} -g -Wall -pedantic -ansi -std=c99 -lpcre 2>&1'.format(sources=' '.join(c_files))
         subprocess.check_call(command, cwd=tmp_dir, shell=True, stderr=None)
         command = './lexer tokens source'
         return subprocess.check_output(command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
