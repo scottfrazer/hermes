@@ -124,18 +124,6 @@ void {{prefix}}lexer_destroy() {
     lexer = NULL;
 }
 
-static void update_line_col(char * match, int length, int * line, int * col) {
-    int i;
-    for (i = 0; i < length; i++) {
-        if (match[i] == '\n') {
-            *line += 1;
-            *col = 1;
-        } else {
-            *col += 1;
-        }
-    }
-}
-
 static char * get_line(char * s, int line) {
     char * p, * start, * rval;
     int current_line = 1, length = 0;
@@ -174,7 +162,16 @@ static void unrecognized_token(char * string, int line, int col, char * message)
 }
 
 static void advance(char ** string, int length, int * line, int * col) {
-    update_line_col(*string, length, line, col);
+    int i;
+    for (i = 0; i < length; i++) {
+        if (*string[i] == '\n') {
+            *line += 1;
+            *col = 1;
+        } else {
+            *col += 1;
+        }
+    }
+
     *string += length;
 }
 
@@ -187,7 +184,7 @@ static LEXER_MATCH_T * next(char ** string, {{prefix.upper()}}LEXER_MODE_E mode,
     for (i = 0; lexer[mode][i]; i++) {
         rc = pcre_exec(lexer[mode][i]->regex, NULL, *string, strlen(*string), 0, PCRE_ANCHORED, ovector, ovector_count);
         if (rc >= 0) {
-            if (lexer[mode][i]->terminal == NULL && lexer[mode][i]->match_func != NULL) {
+            if (lexer[mode][i]->terminal == NULL && lexer[mode][i]->match_func == NULL) {
                 advance(string, ovector[1] - ovector[0], line, col);
                 i = -1;
                 continue;
