@@ -50,7 +50,7 @@ public class Terminal implements AstNode, ParseTreeNode
   public String toString() {
     StringBuilder sb = new StringBuilder();
     Formatter formatter = new Formatter(sb, Locale.US);
-    formatter.format("{\"terminal\": \"%s\", \"line\": %d, \"col\": %d, \"resource\": \"%s\", \"source_string\": \"%s\"}", this.getTerminalStr(), this.getLine(), this.getColumn(), this.getResource(), Utility.base64_encode(this.getSourceString().getBytes()));
+    formatter.format("{\"terminal\": \"%s\", \"resource\": \"%s\", \"line\": %d, \"col\": %d, \"source_string\": \"%s\"}", this.getTerminalStr(), this.getResource(), this.getLine(), this.getColumn(), Utility.base64_encode(this.getSourceString().getBytes()));
     return formatter.toString();
   }
 

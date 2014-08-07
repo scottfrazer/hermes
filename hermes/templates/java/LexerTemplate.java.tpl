@@ -27,6 +27,10 @@ public class {{prefix}}Lexer {
             this.terminal = terminal;
             this.function = function;
         }
+
+        public String toString() {
+            return String.format("<HermesRegex pattern=%s, terminal=%s, func=%s>", this.pattern, this.terminal, this.function);
+        }
     }
 
     private class LexerMatch {
@@ -38,6 +42,17 @@ public class {{prefix}}Lexer {
             this.terminals = terminals;
             this.mode = mode;
             this.context = context;
+        }
+
+        public String toString() {
+          StringBuffer t = new StringBuffer();
+          for (Terminal x : this.terminals) {
+            t.append(x.getTerminalStr() + " ");
+          }
+          return String.format(
+            "<LexerMatch terminals=%s, mode=%s>",
+            t, this.mode
+          );
         }
     }
 
@@ -92,22 +107,22 @@ public class {{prefix}}Lexer {
     {{lexer.code}}
     /* END USER CODE */
 
-    {% if re.search(r'private\s+LexerMatch\s+default_action', lexer.code) is None %}
-    private LexerMatch default_action(Object context, String mode, String match, {{prefix}}TerminalIdentifier terminal, String resource, int line, int col) {
-        //tokens = [Terminal(terminals[terminal], terminal, match, resource, line, col)] if terminal else []
-        //return (tokens, mode, context)
+    {% if re.search(r'public\s+LexerMatch\s+default_action', lexer.code) is None %}
+    public LexerMatch default_action(Object context, String mode, String match, {{prefix}}TerminalIdentifier terminal, String resource, int line, int col) {
+        List<Terminal> terminals = new ArrayList<Terminal>();
+        terminals.add(new Terminal(terminal.id(), terminal.string(), match, resource, line, col));
+        return new LexerMatch(terminals, mode, context);
+    }
+    {% endif %}
+
+    {% if re.search(r'public\s+Object\s+init', lexer.code) is None %}
+    public Object init() {
         return null;
     }
     {% endif %}
 
-    {% if re.search(r'private\s+Object\s+init', lexer.code) is None %}
-    private Object init() {
-        return null;
-    }
-    {% endif %}
-
-    {% if re.search(r'private\s+void\s+destroy', lexer.code) is None %}
-    private void destroy(Object context) {
+    {% if re.search(r'public\s+void\s+destroy', lexer.code) is None %}
+    public void destroy(Object context) {
         return;
     }
     {% endif %}
@@ -170,6 +185,7 @@ public class {{prefix}}Lexer {
                     lctx.advance(matcher.group(0));
                     return lexer_match.terminals;
                 } catch (Exception e) {
+                    System.err.println("Error in lexical analysis: " + e);
                     continue;
                 }
             }

@@ -4,6 +4,7 @@ package {{java_package}};
 
 import org.json.*;
 import java.io.*;
+import java.util.List;
 
 public class ParserMain {
     public static void main(String args[]) {
@@ -52,49 +53,16 @@ public class ParserMain {
         }
 
         {% if lexer %}
-        if (!"tokens".equals(args[0])) {
-          /*
-          {{prefix}}lexer_init();
-          if ( {{prefix}}lexer_has_errors() ) {
-              {{prefix}}lexer_print_errors();
+        if ("tokens".equals(args[0])) {
+          {{prefix}}Lexer lexer = new {{prefix}}Lexer();
+          try {
+            String contents = Utility.readFile(args[1]);
+            List<Terminal> terminals = lexer.lex(contents, args[1]);
+            System.out.println(String.format("[\n    %s\n]", Utility.join(terminals, ",\n    ")));
+          } catch (Exception e) {
+            System.err.println(e.getMessage());
+            System.exit(-1);
           }
-          tokens = {{prefix}}lex(file_contents, argv[2], &err[0]);
-          if (tokens == NULL) {
-              printf("Error: %s\n", err);
-          }
-
-          System.out.print("[\n");
-          for (int i = 0; tokens[i]; tokens++) {
-              while(1) {
-                  rc = base64_encode((const char *) tokens[i]->source_string, strlen(tokens[i]->source_string), b64, b64_size);
-                  if (rc == 0) break;
-                  else if (rc == BASE64_OUTPUT_TOO_SMALL) {
-                      b64_size *= 2;
-                      b64 = realloc(b64, b64_size);
-                      continue;
-                  }
-                  else {
-                      printf("Error\n");
-                      exit(-1);
-                  }
-              }
-
-              printf(
-                "    %c\"terminal\": \"%s\", \"resource\": \"%s\", \"line\": %d, \"col\": %d, \"source_string\": \"%s\"%c%s\n",
-                '{',
-                tokens[i]->terminal->string,
-                tokens[i]->resource,
-                tokens[i]->lineno,
-                tokens[i]->colno,
-                b64,
-                '}',
-                tokens[i+1] == NULL ? "" : ","
-              );
-          }
-          printf("]\n");
-          {{prefix}}lexer_destroy();
-          return 0;
-          */
         }
         {% endif %}
     }
