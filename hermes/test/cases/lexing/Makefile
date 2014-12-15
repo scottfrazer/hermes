@@ -4,7 +4,7 @@ java_compile:
 	javac -cp java java/*.java
 	-java -cp java ParserMain tokens source &> java/tokens
 python_lexer: python_files
-js_parser: js_files
+js_lexer: js_files
 	-node js/main.js tokens source &> js/tokens
 c_lexer: c_files
 	gcc -o c/lexer c/*.c -g -Wall -pedantic -std=c99 -lpcre
