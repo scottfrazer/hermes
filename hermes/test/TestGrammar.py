@@ -103,6 +103,6 @@ def conflicts(test_dir):
     conflicts_file = os.path.join(test_dir, 'conflicts')
     grammar = GrammarParser().parse('grammar', grammar_file)
     assert os.path.exists(conflicts_file)
-    with open(conflicts_file) as fp:
+    with open(conflicts_file, encoding='utf-8') as fp:
         expected = fp.read()
     assert expected == conflicts_to_string(grammar.conflicts)

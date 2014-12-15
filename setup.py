@@ -10,7 +10,7 @@ setup(
   author='Scott Frazer',
   author_email='scott.d.frazer@gmail.com',
   packages=['hermes', 'hermes.parser', 'hermes.parser.hermes'],
-  package_dir={'hermes': 'hermes'},
+  #package_dir={'hermes': 'hermes'},
   package_data={
       'hermes': [
           'templates/python/*.tpl',
