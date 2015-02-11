@@ -9,7 +9,7 @@ Hermes is a parser generator for LL(1) grammars with extensions to parse express
 
 # Dependencies
 
-* Python 3.3+
+* Python 3.4+
 * moody-templates 0.9
 * xtermcolor 1.2
 
@@ -31,12 +31,17 @@ For full documentation, go to: http://hermes.readthedocs.org/
 
 ## Introduction
 
-Hermes is a parser generator that takes as input a grammar file and generates a parser in one of three languages (Java, C, Python).  The generated parser will take as input a list of tokens.  The tokenization process must be done outside of Hermes.
+Hermes is a parser generator that takes as input a grammar file and generates a parser in one of four target languages (Python, C, Java, JavaScript).  The generated code can be used as part of a separate code base or stand-alone via a front-end interface.
 
-The following grammar will accept input, and return a parse tree, if the input tokens contains any number of `a` tokens followed by the same number of `b` tokens:
+The following grammar will accept input, and return a parse tree, if the input tokens contains any number of `:a` tokens followed by the same number of `:b` tokens, followed by a terminating semicolon (`:semi`):
 
 ```
 grammar {
+  lexer<python> {
+    r'a' -> :a
+    r'b' -> :b
+    r';' -> :semi
+  }
   parser<ll1> {
     $start = $sub + :semi
     $sub := :a + $sub + :b | :_empty
@@ -46,10 +51,13 @@ grammar {
 
 ## Grammar File Specification
 
-Grammar files are specified as a JSON object that typically has the `.gr` extension.  A skeleton grammar file looks like this:
+Grammar files are specified in Hermes Grammar Format that typically has the `.gr` extension.  A skeleton grammar file looks like this:
 
 ```
 grammar {
+  lexer<c> {
+    ... lexer regular expressions ...
+  }
   parser<ll1> {
     ... rules ...
     $e = parser<expression> {
@@ -59,7 +67,31 @@ grammar {
 }
 ```
 
-There are two main sections here: LL(1) and Expression grammars.  LL(1) grammars are the simplest, requiring only a set of rules and a starting nonterminal.  Expression parsers are similar, except they require a bit more information, like which nonterminal to represent the expression as.
+Breaking down the grammar definition a little bit
+
+### Lexer definition
+
+```
+lexer<c> {
+  "[a-z]+" -> :word
+  "[0-9]+" -> :number
+}
+```
+
+This defines that a lexer will be generated in the target language specified.  Inside the braces will be rules in the form of `regex -> terminal`.  In the example above, if the *beginning* of the input string matches "[a-z]+", then a `:word` terminal will be emitted from the lexical analyzer.  If the beginning of the input stream does not match "[a-z]+", then the next expression is tried.
+
+The lexer is optional.  If one is not provided, then an external lexer needs to be provided that outputs the right data structures that the parser can understand.
+
+Regular expressions for the lexer are language dependent.  Here are the supported languages and the way they interpret the regular expressions:
+
+* Python: [regex](https://docs.python.org/3.4/library/re.html) module in standard library
+* C: [libpcre2](http://www.pcre.org/)
+* Java: [java.util.regex](http://docs.oracle.com/javase/7/docs/api/java/util/regex/package-summary.html)
+* JavaScript: [RegExp()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) class
+
+### LL(1) Parser Rules
+
+LL(1) rules define how terminals (from the lexer) group together to form nonterminals.
 
 The syntax for expressing grammar rules is:
 
@@ -67,8 +99,8 @@ The syntax for expressing grammar rules is:
 $Nonterminal := [$Nonterminal | :Terminal]+
 ```
 
-Nonterminals must conform to the regular expression: `\$[a-zA-Z0-9_]+` (i.e. variable names preceded by a $)
-Terminals must conform to the regular expression: `:[a-zA-Z0-9_]+` (i.e. variable names preceded by a :)
+Nonterminals must conform to the regular expression: `\$[a-zA-Z0-9_]+` (i.e. variable names preceded by a `$`)
+Terminals must conform to the regular expression: `:[a-zA-Z0-9_]+` (i.e. variable names preceded by a `:`)
 
 Some examples of grammar rules:
 
@@ -82,15 +114,21 @@ $items_sub = :_empty
 Grammar rules can be combined for brevity:
 
 ```
-$N := :a
-$N := :b
+$N = :a
+$N = :b
 ```
 
 Is the same as:
 
 ```
-$N := :a | :b
+$N = :a | :b
 ```
+
+The special terminal, `:_empty` refers to the empty string.  The rule `$N = :a :_empty :b` is the same as `$N = :a :b`.
+
+### Expression Sub-Parsers
+
+...
 
 ## Generating a Parser
 
