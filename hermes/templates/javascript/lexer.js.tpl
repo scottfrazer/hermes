@@ -59,7 +59,7 @@ function _update_line_col(string, lexer_context) {
     }
 }
 
-function _unrecognized_token(self, string, line, col) {
+function _unrecognized_token(string, line, col) {
     var lines = string.split('\n')
     var bad_line = lines[line-1]
     var message = 'Unrecognized token on line {0}, column {1}:\n\n{2}\n{3}'.format(

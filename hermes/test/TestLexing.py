@@ -75,7 +75,7 @@ def lex_java(test_dir):
 
 def lex_javascript(test_dir):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
-    source_file = os.path.join(test_dir, 'tokens')
+    source_file = os.path.join(test_dir, 'source')
     grammar = GrammarParser().parse('grammar', grammar_file)
     tmp_dir = tempfile.mkdtemp(prefix='hermes-')
 
