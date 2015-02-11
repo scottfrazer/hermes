@@ -1,6 +1,22 @@
 grammar {
-  lexer {
+  lexer<python> {
     r'a' -> :a
     r'b' -> :b
+    r'\n+' -> :newline
+  }
+  lexer<c> {
+    "a" -> :a
+    "b" -> :b
+    "\\n+" -> :newline
+  }
+  lexer<java> {
+    "a" -> :a
+    "b" -> :b
+    "\\n+" -> :newline
+  }
+  lexer<javascript> {
+    "a" -> :a
+    "b" -> :b
+    "\\n+" -> :newline
   }
 }

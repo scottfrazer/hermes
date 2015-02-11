@@ -145,7 +145,7 @@ public class {{prefix}}Lexer {
     private void unrecognized_token(String string, int line, int col) throws SyntaxError {
         String bad_line = string.split("\n")[line-1];
         StringBuffer spaces = new StringBuffer();
-        for (int i = 0; i < col; i++) {
+        for (int i = 0; i < col-1; i++) {
           spaces.append(' ');
         }
         String message = String.format(
@@ -200,7 +200,7 @@ public class {{prefix}}Lexer {
         while (lctx.string.length() > 0) {
             List<Terminal> matched_terminals = this.next(lctx, resource);
 
-            if (matched_terminals.size() == 0) {
+            if (matched_terminals == null || matched_terminals.size() == 0) {
                 this.unrecognized_token(string_copy, lctx.line, lctx.col);
             }
         }

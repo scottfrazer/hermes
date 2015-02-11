@@ -1,0 +1,26 @@
+grammar {
+  lexer<python> {
+    r'[a-z]+' -> :identifier
+    r'[0-9]+' -> :number
+    r'\n+' -> :newline
+    r'\s+' -> null
+  }
+  lexer<c> {
+    "[a-z]+" -> :identifier
+    "[0-9]+" -> :number
+    "\\n+" -> :newline
+    "\\s+" -> null
+  }
+  lexer<java> {
+    "[a-z]+" -> :identifier
+    "[0-9]+" -> :number
+    "\\n+" -> :newline
+    "\\s+" -> null
+  }
+  lexer<javascript> {
+    "[a-z]+" -> :identifier
+    "[0-9]+" -> :number
+    "\\n+" -> :newline
+    "\\s+" -> null
+  }
+}

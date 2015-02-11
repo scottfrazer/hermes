@@ -31,14 +31,16 @@ static LEXER_MATCH_T * default_action(
 {
     LEXER_MATCH_T * match = calloc(1, sizeof(LEXER_MATCH_T));
     match->match_length = strlen(match_groups[0]);
-    match->tokens = calloc(2, sizeof(TOKEN_T*));
-    match->tokens[0] = calloc(1, sizeof(TOKEN_T));
-    match->tokens[0]->lineno = line;
-    match->tokens[0]->colno = col;
-    match->tokens[0]->source_string = strdup(match_groups[0]);
-    match->tokens[0]->resource = strdup(resource);
-    match->tokens[0]->terminal = calloc(1, sizeof(TERMINAL_T));
-    memcpy(match->tokens[0]->terminal, terminal, sizeof(TERMINAL_T));
+    if (terminal != NULL) {
+        match->tokens = calloc(2, sizeof(TOKEN_T*));
+        match->tokens[0] = calloc(1, sizeof(TOKEN_T));
+        match->tokens[0]->lineno = line;
+        match->tokens[0]->colno = col;
+        match->tokens[0]->source_string = strdup(match_groups[0]);
+        match->tokens[0]->resource = strdup(resource);
+        match->tokens[0]->terminal = calloc(1, sizeof(TERMINAL_T));
+        memcpy(match->tokens[0]->terminal, terminal, sizeof(TERMINAL_T));
+    }
     match->context = context;
     match->mode = mode;
     return match;
@@ -164,7 +166,7 @@ static void unrecognized_token(char * string, int line, int col, char * message)
 static void advance(char ** string, int length, int * line, int * col) {
     int i;
     for (i = 0; i < length; i++) {
-        if (*string[i] == '\n') {
+        if ((*string)[i] == '\n') {
             *line += 1;
             *col = 1;
         } else {

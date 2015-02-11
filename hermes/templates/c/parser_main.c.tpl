@@ -202,7 +202,8 @@ main(int argc, char * argv[])
     }
     tokens = {{prefix}}lex(file_contents, argv[2], &err[0]);
     if (tokens == NULL) {
-        printf("Error: %s\n", err);
+        printf("%s\n", err);
+        exit(1);
     }
 
     printf("[\n");
@@ -221,8 +222,6 @@ main(int argc, char * argv[])
             }
         }
 
-
-        /* {"terminal": "a", "resource": "resource", "line": 1, "col": 1, "source_string": "YQ=="}, */
         printf(
           "    %c\"terminal\": \"%s\", \"resource\": \"%s\", \"line\": %d, \"col\": %d, \"source_string\": \"%s\"%c%s\n",
           '{',

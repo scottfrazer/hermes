@@ -22,7 +22,14 @@ fs.readFile(file, 'utf-8', function (err, data) {
     if (err) throw err;
     if (output == 'tokens') {
       var lexer = require('./{{prefix}}lexer.js');
-      var tokens = lexer.lex(data, 'source');
+
+      try {
+          var tokens = lexer.lex(data, 'source');
+      } catch(err) {
+          console.log(err.to_string());
+          process.exit(0);
+      }
+
       if (tokens.length == 0) {
           console.log('[]');
       } else {

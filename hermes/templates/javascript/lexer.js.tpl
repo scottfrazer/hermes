@@ -63,7 +63,7 @@ function _unrecognized_token(string, line, col) {
     var lines = string.split('\n')
     var bad_line = lines[line-1]
     var message = 'Unrecognized token on line {0}, column {1}:\n\n{2}\n{3}'.format(
-        line, col, bad_line, Array(col-1).join(' ') + '^'
+        line, col, bad_line, Array(col).join(' ') + '^'
     )
     throw new common.SyntaxError(message)
 }
@@ -109,7 +109,7 @@ function lex(string, resource) {
             _unrecognized_token(string_copy, lexer_context.line, lexer_context.col)
         }
 
-        string = string.substring(match.length)
+        string = string.substring(match[0].length)
 
         if (lexer_match.tokens == null) {
             _unrecognized_token(string_copy, lexer_context.line, lexer_context.col)
