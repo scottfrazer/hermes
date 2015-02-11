@@ -244,6 +244,11 @@ class JavascriptParserTemplate(JavascriptTemplate):
   def get_filename(self):
     return os.path.join(self.directory, self.grammar.name.lower() + '_parser.js')
 
+class JavascriptLexerTemplate(JavascriptTemplate):
+  template = 'javascript/lexer.js.tpl'
+  def get_filename(self):
+    return os.path.join(self.directory, self.grammar.name.lower() + '_lexer.js')
+
 class JavascriptCommonTemplate(JavascriptTemplate):
   template = 'javascript/common.js.tpl'
   def get_filename(self):
@@ -318,6 +323,8 @@ class JavascriptTemplateFactory:
         JavascriptCommonTemplate(),
         JavascriptParserTemplate()
     ]
+    if 'lexer' in kwargs and kwargs['lexer'] is not None:
+      templates.append(JavascriptLexerTemplate())
     if kwargs['add_main'] and kwargs['nodejs']:
       templates.append(JavascriptMainTemplate())
     return templates
