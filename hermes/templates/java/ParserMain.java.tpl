@@ -58,7 +58,11 @@ public class ParserMain {
           try {
             String contents = Utility.readFile(args[1]);
             List<Terminal> terminals = lexer.lex(contents, args[1]);
-            System.out.println(String.format("[\n    %s\n]", Utility.join(terminals, ",\n    ")));
+            if (terminals.size() == 0) {
+                System.out.println("[]");
+            } else {
+                System.out.println(String.format("[\n    %s\n]", Utility.join(terminals, ",\n    ")));
+            }
           } catch (Exception e) {
             System.err.println(e.getMessage());
             System.exit(-1);

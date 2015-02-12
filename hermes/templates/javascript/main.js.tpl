@@ -30,7 +30,7 @@ fs.readFile(file, 'utf-8', function (err, data) {
           process.exit(0);
       }
 
-      if (tokens.length == 0) {
+      if (tokens.list.length == 0) {
           console.log('[]');
       } else {
           console.log('[');

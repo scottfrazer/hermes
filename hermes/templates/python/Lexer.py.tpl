@@ -82,7 +82,6 @@ class HermesLexer:
         parsed_tokens = []
         while len(string):
             (tokens, match, mode) = self._next(string, mode, context, resource, line, col)
-
             if len(match) == 0:
                 self._unrecognized_token(string_copy, line, col)
 

@@ -13,16 +13,30 @@ static char * {{prefix}}morphemes[] = {
 {% endfor %}
 };
 
-/* START USER CODE */
-{{lexer.code}}
-/* END USER CODE */
+{{prefix.upper()}}LEXER_MODE_E {{prefix}}lexer_mode_enum(const char * mode) {
+{% for mode, regex_list in lexer.items() %}
+    if (strcmp(mode, "{{mode}}") == 0) {
+        return {{prefix.upper()}}LEXER_{{mode.upper()}}_MODE_E;
+    }
+{% endfor %}
+    return {{prefix.upper()}}LEXER_INVALID_MODE_E;
+}
+
+char * {{prefix}}lexer_mode_string({{prefix.upper()}}LEXER_MODE_E mode) {
+{% for mode, regex_list in lexer.items() %}
+    if ({{prefix.upper()}}LEXER_{{mode.upper()}}_MODE_E == mode) {
+        return "{{mode}}";
+    }
+{% endfor %}
+    return NULL;
+}
 
 static LEXER_REGEX_T *** lexer = NULL;
 
 {% if re.search(r'LEXER_MATCH_T\s*\*\s*default_action', lexer.code) is None %}
 static LEXER_MATCH_T * default_action(
     void * context,
-    int mode,
+    char * mode,
     char ** match_groups,
     TERMINAL_T * terminal,
     char * resource,
@@ -42,10 +56,14 @@ static LEXER_MATCH_T * default_action(
         memcpy(match->tokens[0]->terminal, terminal, sizeof(TERMINAL_T));
     }
     match->context = context;
-    match->mode = mode;
+    match->mode = {{prefix}}lexer_mode_enum(mode);
     return match;
 }
 {% endif %}
+
+/* START USER CODE */
+{{lexer.code}}
+/* END USER CODE */
 
 {% if re.search(r'void\s*\*\s*init', lexer.code) is None %}
 static void * init() {
@@ -202,7 +220,7 @@ static LEXER_MATCH_T * next(char ** string, {{prefix.upper()}}LEXER_MODE_E mode,
                 strncpy(match_groups[j], substring_start, match_length);
             }
 
-            match = match_func(context, mode, match_groups, lexer[mode][i]->terminal, resource, *line, *col);
+            match = match_func(context, {{prefix}}lexer_mode_string(mode), match_groups, lexer[mode][i]->terminal, resource, *line, *col);
 
             for (j = 0; match_groups[j]; j++) {
                 free(match_groups[j]);

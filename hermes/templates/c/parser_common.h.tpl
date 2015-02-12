@@ -202,7 +202,7 @@ typedef struct lexer_match_t {
 
 typedef LEXER_MATCH_T *(*lexer_match_function)(
     void * context,
-    int mode,
+    char * mode,
     char ** match_groups,
     TERMINAL_T * terminal,
     char * resource,

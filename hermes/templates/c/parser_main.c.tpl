@@ -206,8 +206,13 @@ main(int argc, char * argv[])
         exit(1);
     }
 
+    if (tokens[0] == NULL) {
+        printf("[]\n");
+        exit(0);
+    }
+
     printf("[\n");
-    for (i=0;tokens[i];tokens++) {
+    for (i = 0; tokens[i]; tokens++) {
         while(1) {
             rc = base64_encode((const char *) tokens[i]->source_string, strlen(tokens[i]->source_string), b64, b64_size);
             if (rc == 0) break;

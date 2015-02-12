@@ -36,6 +36,7 @@ public class {{prefix}}Lexer {
     private class LexerMatch {
         public List<Terminal> terminals;
         public String mode;
+        public String match;
         public Object context;
 
         public LexerMatch(List<Terminal> terminals, String mode, Object context) {
@@ -103,17 +104,19 @@ public class {{prefix}}Lexer {
         }
     }
 
-    /* START USER CODE */
-    {{lexer.code}}
-    /* END USER CODE */
-
     {% if re.search(r'public\s+LexerMatch\s+default_action', lexer.code) is None %}
     public LexerMatch default_action(Object context, String mode, String match, {{prefix}}TerminalIdentifier terminal, String resource, int line, int col) {
         List<Terminal> terminals = new ArrayList<Terminal>();
-        terminals.add(new Terminal(terminal.id(), terminal.string(), match, resource, line, col));
+        if (terminal != null) {
+            terminals.add(new Terminal(terminal.id(), terminal.string(), match, resource, line, col));
+        }
         return new LexerMatch(terminals, mode, context);
     }
     {% endif %}
+
+    /* START USER CODE */
+    {{lexer.code}}
+    /* END USER CODE */
 
     {% if re.search(r'public\s+Object\s+init', lexer.code) is None %}
     public Object init() {
@@ -132,7 +135,7 @@ public class {{prefix}}Lexer {
 {% for mode, regex_list in lexer.items() %}
         this.regex.put("{{mode}}", Arrays.asList(new HermesRegex[] {
   {% for regex in regex_list %}
-            new HermesRegex(Pattern.compile({{regex.regex}}), {{prefix+'TerminalIdentifier.TERMINAL_' + regex.terminal.string.upper() if regex.terminal else 'null'}}, {{regex.function if regex.function is not None else 'null'}}),
+            new HermesRegex(Pattern.compile({{regex.regex}}), {{prefix+'TerminalIdentifier.TERMINAL_' + regex.terminal.string.upper() if regex.terminal else 'null'}}, {{'"'+regex.function+'"' if regex.function is not None else 'null'}}),
   {% endfor %}
         }));
 {% endfor %}
@@ -143,6 +146,7 @@ public class {{prefix}}Lexer {
     }
 
     private void unrecognized_token(String string, int line, int col) throws SyntaxError {
+        String[] a = string.split("\n");
         String bad_line = string.split("\n")[line-1];
         StringBuffer spaces = new StringBuffer();
         for (int i = 0; i < col-1; i++) {
@@ -155,12 +159,12 @@ public class {{prefix}}Lexer {
         throw new SyntaxError(message);
     }
 
-    private List<Terminal> next(LexerContext lctx, String resource) {
+    private LexerMatch next(LexerContext lctx, String resource) {
         for (int i = 0; i < this.regex.get(lctx.mode).size(); i++) {
             HermesRegex regex = this.regex.get(lctx.mode).get(i);
             Matcher matcher = regex.pattern.matcher(lctx.string);
             if (matcher.lookingAt()) {
-                if (regex.terminal == null && regex.function == null) {
+                if (false && regex.terminal == null) {
                     lctx.advance(matcher.group(0));
                     i = -1;
                     continue;
@@ -179,13 +183,14 @@ public class {{prefix}}Lexer {
                         lctx.col
                     );
 
+                    lexer_match.match = matcher.group(0);
                     lctx.terminals.addAll(lexer_match.terminals);
                     lctx.mode = lexer_match.mode;
                     lctx.context = lexer_match.context;
                     lctx.advance(matcher.group(0));
-                    return lexer_match.terminals;
+                    return lexer_match;
                 } catch (Exception e) {
-                    System.err.println("Error in lexical analysis: " + e);
+                    e.printStackTrace(System.err);
                     continue;
                 }
             }
@@ -198,9 +203,9 @@ public class {{prefix}}Lexer {
         Object context = this.init();
         String string_copy = new String(string);
         while (lctx.string.length() > 0) {
-            List<Terminal> matched_terminals = this.next(lctx, resource);
+            LexerMatch match = this.next(lctx, resource);
 
-            if (matched_terminals == null || matched_terminals.size() == 0) {
+            if (match == null || match.match.length() == 0) {
                 this.unrecognized_token(string_copy, lctx.line, lctx.col);
             }
         }

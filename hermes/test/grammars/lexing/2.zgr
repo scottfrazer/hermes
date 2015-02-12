@@ -1,0 +1,86 @@
+grammar {
+  lexer<python> {
+    r'[a-z]' -> :letter
+    r'{' -> numbers_start(:lbrace)
+    r'\s+' -> null
+
+    mode<numbers> {
+      r'[0-9]' -> :number
+      r'}' -> numbers_end(:rbrace)
+      r'\s+' -> null
+    }
+
+    <code>
+def numbers_start(context, mode, match, terminal, resource, line, col):
+    return default_action(context, 'numbers', match, terminal, resource, line, col)
+def numbers_end(context, mode, match, terminal, resource, line, col):
+    return default_action(context, 'default', match, terminal, resource, line, col)
+    </code>
+  }
+
+  lexer<c> {
+    "[a-z]" -> :letter
+    "{" -> numbers_start(:lbrace)
+    "\\s+" -> null
+
+    mode<numbers> {
+      "[0-9]" -> :number
+      "}" -> numbers_end(:rbrace)
+      "\\s+" -> null
+    }
+
+    <code>
+static LEXER_MATCH_T * numbers_start(void * context, char * mode, char ** match_groups, TERMINAL_T * terminal, char * resource, int line, int col)
+{
+    return default_action(context, "numbers", match_groups, terminal, resource, line, col);
+}
+static LEXER_MATCH_T * numbers_end(void * context, char * mode, char ** match_groups, TERMINAL_T * terminal, char * resource, int line, int col)
+{
+    return default_action(context, "default", match_groups, terminal, resource, line, col);
+}
+    </code>
+  }
+
+  lexer<java> {
+    "[a-z]" -> :letter
+    "\\{" -> numbers_start(:lbrace)
+    "\\s+" -> null
+
+    mode<numbers> {
+      "[0-9]" -> :number
+      "\\}" -> numbers_end(:rbrace)
+      "\\s+" -> null
+    }
+
+    <code>
+public LexerMatch numbers_start(Object context, String mode, String match, GrammarTerminalIdentifier terminal, String resource, int line, int col) {
+    return default_action(context, "numbers", match, terminal, resource, line, col);
+}
+
+public LexerMatch numbers_end(Object context, String mode, String match, GrammarTerminalIdentifier terminal, String resource, int line, int col) {
+    return default_action(context, "default", match, terminal, resource, line, col);
+}
+    </code>
+  }
+
+  lexer<javascript> {
+    "[a-z]" -> :letter
+    "{" -> numbers_start(:lbrace)
+    "\\s+" -> null
+
+    mode<numbers> {
+      "[0-9]" -> :number
+      "}" -> numbers_end(:rbrace)
+      "\\s+" -> null
+    }
+
+    <code>
+function numbers_start(context, mode, match, terminal, resource, line, col) {
+    return default_action(context, "numbers", match, terminal, resource, line, col);
+}
+function numbers_end(context, mode, match, terminal, resource, line, col) {
+    return default_action(context, "default", match, terminal, resource, line, col);
+}
+    </code>
+  }
+}
