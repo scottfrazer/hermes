@@ -1,13 +1,15 @@
 import sys
 from collections import OrderedDict
+{% if not python_internal %}
 from ..Common import *
+{% endif %}
 
 {% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
 {% from hermes.Grammar import PrefixOperator, InfixOperator %}
 {% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro %}
 {% from hermes.Morpheme import Terminal, NonTerminal %}
 
-terminals = {
+parser_terminals = {
 {% for terminal in grammar.standard_terminals %}
     {{terminal.id}}: '{{terminal.string}}',
 {% endfor %}
@@ -75,9 +77,9 @@ def parse(tokens, error_formatter=None, start=None):
 def expect(ctx, terminal_id):
     current = ctx.tokens.current()
     if not current:
-        raise SyntaxError(ctx.error_formatter.no_more_tokens(ctx.nonterminal, terminals[terminal_id], ctx.tokens.last()))
+        raise SyntaxError(ctx.error_formatter.no_more_tokens(ctx.nonterminal, parser_terminals[terminal_id], ctx.tokens.last()))
     if current.id != terminal_id:
-        raise SyntaxError(ctx.error_formatter.unexpected_symbol(ctx.nonterminal, current, [terminals[terminal_id]], ctx.rule))
+        raise SyntaxError(ctx.error_formatter.unexpected_symbol(ctx.nonterminal, current, [parser_terminals[terminal_id]], ctx.rule))
     next = ctx.tokens.advance()
     if next and not is_terminal(next.id):
         raise SyntaxError(ctx.error_formatter.invalid_terminal(ctx.nonterminal, next))
@@ -311,7 +313,7 @@ def parse_{{name}}(ctx):
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [terminals[x] for x in nonterminal_first[{{nonterminal.id}}]],
+      [parser_terminals[x] for x in nonterminal_first[{{nonterminal.id}}]],
       rules[{{rule.id}}]
     ))
     {% else %}

@@ -56,6 +56,7 @@ class GrammarTemplate:
       pass
     with open(out_file_path, 'w') as fp:
       fp.write(self.render())
+    return out_file_path
 
 class PythonTemplate(GrammarTemplate):
   def get_filename(self):
@@ -272,6 +273,16 @@ class PythonTemplateFactory:
       templates.append(PythonMainTemplate())
     return templates
 
+class PythonInternalTemplateFactory:
+  def create(self, **kwargs):
+    templates = [
+        PythonCommonTemplate(),
+        PythonParserTemplate(),
+    ]
+    if 'lexer' in kwargs and kwargs['lexer'] is not None:
+      templates.append(PythonLexerTemplate())
+    return templates
+
 class JavaTemplateFactory:
   def create(self, **kwargs):
     templates = [
@@ -330,24 +341,44 @@ class JavascriptTemplateFactory:
     return templates
 
 class CodeGenerator:
-  templates = {
-    'python': PythonTemplateFactory,
-    'c': CTemplateFactory,
-    'java': JavaTemplateFactory,
-    'javascript': JavascriptTemplateFactory
-  }
-  def get_template_factory(self, language):
-    for (template_language, template_class) in self.templates.items():
-      if template_language == language:
-        return template_class()
-    raise Exception('Invalid language: ' + language)
+    templates = {
+        'python': PythonTemplateFactory,
+        'python_internal': PythonInternalTemplateFactory,
+        'c': CTemplateFactory,
+        'java': JavaTemplateFactory,
+        'javascript': JavascriptTemplateFactory
+    }
 
-  def generate(self, grammar, language, directory='.', add_main=False, java_package=None, python_package=None, nodejs=False):
-      template_factory = self.get_template_factory(language)
-      args = locals()
-      del args['self']
-      args['lexer'] = grammar.lexers[language] if language in grammar.lexers else None
-      templates = template_factory.create(**args)
-      for template in templates:
-          template.__dict__.update(args)
-          template.write()
+    def get_template_factory(self, language):
+        for (template_language, template_class) in self.templates.items():
+            if template_language == language:
+                return template_class()
+        raise Exception('Invalid language: ' + language)
+
+    def generate_internal(self, grammar):
+        template_factory = self.get_template_factory('python_internal')
+        args = {
+            'grammar': grammar,
+            'language': 'python',
+            'lexer': grammar.lexers['python'] if 'python' in grammar.lexers else None,
+            'python_internal': True
+        }
+
+        code = ''
+        templates = template_factory.create(**args)
+        for template in templates:
+            template.__dict__.update(args)
+            code += template.render()
+            code += '\n'
+        return code
+
+    def generate(self, grammar, language, directory='.', add_main=False, java_package=None, python_package=None, nodejs=False):
+        template_factory = self.get_template_factory(language)
+        args = locals()
+        del args['self']
+        args['lexer'] = grammar.lexers[language] if language in grammar.lexers else None
+        args['python_internal'] = False
+        templates = template_factory.create(**args)
+        for template in templates:
+            template.__dict__.update(args)
+            template.write()

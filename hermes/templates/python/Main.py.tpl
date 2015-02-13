@@ -6,7 +6,7 @@ from {{python_package}}.{{grammar.name}} import parse
 {% if lexer %}
 from {{python_package}}.{{grammar.name}} import lex
 {% endif %}
-from {{python_package}}.{{grammar.name}}.Parser import terminals
+from {{python_package}}.{{grammar.name}}.Parser import parser_terminals
 from {{python_package}}.Common import *
 
 if len(sys.argv) != 3 or (sys.argv[1] not in ['parsetree', 'ast']{% if lexer %} and sys.argv[1] != 'tokens'{% endif %}):
@@ -22,7 +22,7 @@ if sys.argv[1] in ['parsetree', 'ast']:
         json_tokens = json.loads(fp.read())
         for json_token in json_tokens:
             tokens.append(Terminal(
-                terminals[json_token['terminal']],
+                parser_terminals[json_token['terminal']],
                 json_token['terminal'],
                 json_token['source_string'],
                 json_token['resource'],

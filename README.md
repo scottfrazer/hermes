@@ -43,8 +43,8 @@ grammar {
     r';' -> :semi
   }
   parser<ll1> {
-    $start = $sub + :semi
-    $sub := :a + $sub + :b | :_empty
+    $start = $sub :semi
+    $sub = :a $sub :b | :_empty
   }
 }
 ```

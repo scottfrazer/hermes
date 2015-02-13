@@ -3,12 +3,13 @@ import sys
 import base64
 import argparse
 import os
+{% if not python_internal %}
 from ..Common import Terminal, SyntaxError, TokenStream
-from .Parser import terminals
+{% endif %}
 
 {% import re %}
 
-terminals = {
+lexer_terminals = {
 {% for terminal in lexer.terminals %}
     {{terminal.id}}: '{{terminal.string}}',
 {% endfor %}
@@ -24,7 +25,7 @@ terminals = {
 
 {% if re.search(r'def\s+default_action', lexer.code) is None %}
 def default_action(context, mode, match, terminal, resource, line, col):
-    tokens = [Terminal(terminals[terminal], terminal, match, resource, line, col)] if terminal else []
+    tokens = [Terminal(lexer_terminals[terminal], terminal, match, resource, line, col)] if terminal else []
     return (tokens, mode, context)
 {% endif %}
 

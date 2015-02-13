@@ -20,7 +20,7 @@ def Cli():
         "bootstrap": "Generate the parser for Hermes to parse its own grammar file format"
     }
 
-    parser = argparse.ArgumentParser(description='Hermes Parser Generator', epilog='(c) 2011-2014 Scott Frazer')
+    parser = argparse.ArgumentParser(description='Hermes Parser Generator', epilog='(c) 2011-2015 Scott Frazer')
     parser.add_argument(
         '--version', action='version', version=str(pkg_resources.get_distribution('hermes-parser'))
     )

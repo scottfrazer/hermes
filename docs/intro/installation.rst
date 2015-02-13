@@ -21,9 +21,6 @@ Hermes should also be importable as a module:
 .. code-block:: bash
 
     $ python
-    Python 3.2 (r32:88445, Apr  1 2011, 17:20:58) 
-    [GCC 4.2.1 (Apple Inc. build 5666) (dot 3)] on darwin
-    Type "help", "copyright", "credits" or "license" for more information.
     >>> import hermes
     >>>
 
