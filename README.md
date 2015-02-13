@@ -86,7 +86,7 @@ Regular expressions for the lexer are language dependent.  Here are the supporte
 
 * Python: [regex](https://docs.python.org/3.4/library/re.html) module in standard library
 * C: [libpcre2](http://www.pcre.org/)
-* Java: [java.util.regex](http://docs.oracle.com/javase/7/docs/api/java/util/regex/package-summary.html)
+* Java: [java.util.regex](http://docs.oracle.com/javase/7/docs/api/java/util/regex/package-summary.html).  Specifically, the parameter to [Pattern.compile()](http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html#compile(java.lang.String))
 * JavaScript: [RegExp()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp) class
 
 ### LL(1) Parser Rules
