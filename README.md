@@ -93,16 +93,21 @@ Regular expressions for the lexer are language dependent.  Here are the supporte
 
 LL(1) rules define how terminals (from the lexer) group together to form nonterminals.
 
-The syntax for expressing grammar rules is:
+The syntax for a grammar rule is an equality with a *single* nonterminal on the left hand and one or more terminals/nonterminals on the right side of the quality.  Then, there's an optional AST transformation.  For example, consider the grammar rule a Python-style for loop:
 
 ```
-$Nonterminal := [$Nonterminal | :Terminal]+
+$loop = :for :identifier :in :identifier :colon list($statement) -> Loop(item=$1, collection=$3, body=%5)
 ```
 
-Nonterminals must conform to the regular expression: `\$[a-zA-Z0-9_]+` (i.e. variable names preceded by a `$`)
-Terminals must conform to the regular expression: `:[a-zA-Z0-9_]+` (i.e. variable names preceded by a `:`)
+This states that a `$loop` is made up of a `:for` terminal followed by `:identifier`, `:in`, `:identifier`, `:colon`, then a list of `$statement`, the definiton for which is omitted in this example.
 
-Some examples of grammar rules:
+If this rule matches, the last part of the rule defines the data structure to return.  This is called an Abstract Syntax Tree, or AST.  In this case, the AST definition is `Loop(item=$1, collection=$3, body=%5)`.  Abstract Syntax Trees add some more symantics while also filtering out unnecessary tokens (like `:in` and `:colon`).
+
+
+Nonterminals must conform to the regular expression: `\$[a-zA-Z0-9_]+` (i.e. variable names preceded by a $)
+Terminals must conform to the regular expression: `:[a-zA-Z0-9_]+` (i.e. variable names preceded by a :)
+
+Here are some more examples of grammar rules:
 
 ```
 $properties = :lbrace $items :rbrace
@@ -124,11 +129,51 @@ Is the same as:
 $N = :a | :b
 ```
 
-The special terminal, `:_empty` refers to the empty string.  The rule `$N = :a :_empty :b` is the same as `$N = :a :b`.
+The special terminal, `:_empty` refers to the empty string.  These rules are all equivalent:
+
+```
+$N = :a :_empty :b
+$N = :a :b
+$N = :_empty :a :_empty :b :_empty
+```
 
 ### Expression Sub-Parsers
 
-...
+Sometimes LL(1) rules don't provide the flexibility to parse common structures.  One example of this is trying to parse mathematical expressions, such as `1+2*a-(b^2)`.  Attempting to write LL(1) grammar rules for this kind of expression, with order of operations, would result in a complex grammar or one full of conflicts.  For example, imagine the following rules:
+
+```
+$e = :number | :variable
+$e = $e :plus $e -> Add(l=$0, r=$2)
+$e = $e :dash $e -> Subtract(l=$0, r=$2)
+$e = $e :asterisk $e -> Multiply(l=$0, r=$2)
+$e = $e :slash $e -> Divide(l=$0, r=$2)
+```
+
+Right away we can see that there are conflicts in this grammar, suppose we were to try to parse the tokens `:number :plus :number`.  After the first `:number` is parsed, it's impossible to tell with one token of lookahead which of the infix-notation rules to choose.  We need to either have another token of lookahead or take another approach.
+
+Expression parsers should be called *pivot parsing*.  Instead of interpreting each rule as one rule, interpret them as a rule with a pivot point.  I'll use the token `<=>` as the pivot signifier:
+
+```
+$e = :number | :variable
+$e = $e <=> :plus $e -> Add(l=$0, r=$2)
+$e = $e <=> :dash $e -> Subtract(l=$0, r=$2)
+$e = $e <=> :asterisk $e -> Multiply(l=$0, r=$2)
+$e = $e <=> :slash $e -> Divide(l=$0, r=$2)
+```
+
+This can alternatively be thought of as this:
+
+```
+$e = :number | :variable
+
+         +--> :plus $e -> Add(l=$0, r=$2)
+         |
+$e = $e -+--> :dash $e -> Subtract(l=$0, r=$2)
+         |
+         +--> :asterisk $e -> Multiply(l=$0, r=$2)
+         |
+         +--> :slash $e -> Divide(l=$0, r=$2)
+```
 
 ## Generating a Parser
 
