@@ -143,10 +143,10 @@ Sometimes LL(1) rules don't provide the flexibility to parse common structures. 
 
 ```
 $e = :number | :variable
-$e = $e :plus $e -> Add(l=$0, r=$2)
-$e = $e :dash $e -> Subtract(l=$0, r=$2)
-$e = $e :asterisk $e -> Multiply(l=$0, r=$2)
-$e = $e :slash $e -> Divide(l=$0, r=$2)
+(*:left) $e = $e :plus $e -> Add(l=$0, r=$2)
+(-:left) $e = $e :dash $e -> Subtract(l=$0, r=$2)
+(*:left) $e = $e :asterisk $e -> Multiply(l=$0, r=$2)
+(-:left) $e = $e :slash $e -> Divide(l=$0, r=$2)
 ```
 
 Right away we can see that there are conflicts in this grammar, suppose we were to try to parse the tokens `:number :plus :number`.  After the first `:number` is parsed, it's impossible to tell with one token of lookahead which of the infix-notation rules to choose.  We need to either have another token of lookahead or take another approach.
@@ -155,10 +155,10 @@ Expression parsers should be called *pivot parsing*.  Instead of interpreting ea
 
 ```
 $e = :number | :variable
-$e = $e <=> :plus $e -> Add(l=$0, r=$2)
-$e = $e <=> :dash $e -> Subtract(l=$0, r=$2)
-$e = $e <=> :asterisk $e -> Multiply(l=$0, r=$2)
-$e = $e <=> :slash $e -> Divide(l=$0, r=$2)
+(*:left) $e = $e <=> :plus $e -> Add(l=$0, r=$2)
+(-:left) $e = $e <=> :dash $e -> Subtract(l=$0, r=$2)
+(*:left) $e = $e <=> :asterisk $e -> Multiply(l=$0, r=$2)
+(-:left) $e = $e <=> :slash $e -> Divide(l=$0, r=$2)
 ```
 
 This can alternatively be thought of as this:
@@ -166,13 +166,13 @@ This can alternatively be thought of as this:
 ```
 $e = :number | :variable
 
-         +--> :plus $e -> Add(l=$0, r=$2)
+         +--> (*:left) :plus $e -> Add(l=$0, r=$2)
          |
-$e = $e -+--> :dash $e -> Subtract(l=$0, r=$2)
+$e = $e -+--> (-:left) :dash $e -> Subtract(l=$0, r=$2)
          |
-         +--> :asterisk $e -> Multiply(l=$0, r=$2)
+         +--> (*:left) :asterisk $e -> Multiply(l=$0, r=$2)
          |
-         +--> :slash $e -> Divide(l=$0, r=$2)
+         +--> (-:left) :slash $e -> Divide(l=$0, r=$2)
 ```
 
 ## Generating a Parser
