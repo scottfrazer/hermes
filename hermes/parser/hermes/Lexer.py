@@ -4,82 +4,81 @@ import base64
 import argparse
 import os
 from ..Common import Terminal, SyntaxError, TokenStream
-from .Parser import terminals
-terminals = {
-    28: 'right',
+lexer_terminals = {
+    15: 'parser_expression',
     -1: '_empty',
-    11: 'integer',
+    10: 'lbrace',
+    1: 'grammar',
+    34: 'nonterminal_reference',
+    13: 'langle',
+    32: 'prefix_rule_hint',
+    16: 'expression_divider',
+    24: 'infix_rule_hint',
     12: 'pipe',
-    19: 'mixfix_rule_hint',
-    24: 'lbrace',
-    7: 'terminal',
-    13: 'grammar',
-    1: 'left',
-    18: 'colon',
-    20: 'langle',
-    10: 'expr_rule_hint',
-    3: 'rparen',
-    21: 'null',
-    14: 'arrow',
-    15: 'rangle',
-    33: 'code',
-    31: 'mode',
-    25: 'dash',
-    8: 'infix_rule_hint',
-    29: 'rbrace',
-    0: 'lexer',
-    6: 'lparen',
-    26: 'nonterminal',
-    30: 'identifier',
-    16: 'unary',
-    17: 'comma',
-    27: 'prefix_rule_hint',
+    17: 'null',
+    5: 'mode',
     2: 'parser_ll1',
-    32: 'nonterminal_reference',
-    23: 'parser_expression',
-    35: 'string',
-    34: 'll1_rule_hint',
-    22: 'asterisk',
-    4: 'expression_divider',
-    5: 'equals',
-    9: 'regex',
-    'right': 28,
+    28: 'string',
+    31: 'asterisk',
+    9: 'right',
+    11: 'dash',
+    3: 'equals',
+    26: 'rparen',
+    4: 'integer',
+    7: 'lexer',
+    27: 'comma',
+    22: 'regex',
+    18: 'rbrace',
+    20: 'lparen',
+    6: 'rangle',
+    0: 'colon',
+    19: 'll1_rule_hint',
+    14: 'nonterminal',
+    30: 'identifier',
+    35: 'mixfix_rule_hint',
+    33: 'terminal',
+    8: 'expr_rule_hint',
+    23: 'arrow',
+    25: 'code',
+    29: 'unary',
+    21: 'left',
+    'parser_expression': 15,
     '_empty': -1,
-    'integer': 11,
+    'lbrace': 10,
+    'grammar': 1,
+    'nonterminal_reference': 34,
+    'langle': 13,
+    'prefix_rule_hint': 32,
+    'expression_divider': 16,
+    'infix_rule_hint': 24,
     'pipe': 12,
-    'mixfix_rule_hint': 19,
-    'lbrace': 24,
-    'terminal': 7,
-    'grammar': 13,
-    'left': 1,
-    'colon': 18,
-    'langle': 20,
-    'expr_rule_hint': 10,
-    'rparen': 3,
-    'null': 21,
-    'arrow': 14,
-    'rangle': 15,
-    'code': 33,
-    'mode': 31,
-    'dash': 25,
-    'infix_rule_hint': 8,
-    'rbrace': 29,
-    'lexer': 0,
-    'lparen': 6,
-    'nonterminal': 26,
-    'identifier': 30,
-    'unary': 16,
-    'comma': 17,
-    'prefix_rule_hint': 27,
+    'null': 17,
+    'mode': 5,
     'parser_ll1': 2,
-    'nonterminal_reference': 32,
-    'parser_expression': 23,
-    'string': 35,
-    'll1_rule_hint': 34,
-    'asterisk': 22,
-    'expression_divider': 4,
-    'equals': 5,
-    'regex': 9,
+    'string': 28,
+    'asterisk': 31,
+    'right': 9,
+    'dash': 11,
+    'equals': 3,
+    'rparen': 26,
+    'integer': 4,
+    'lexer': 7,
+    'comma': 27,
+    'regex': 22,
+    'rbrace': 18,
+    'lparen': 20,
+    'rangle': 6,
+    'colon': 0,
+    'll1_rule_hint': 19,
+    'nonterminal': 14,
+    'identifier': 30,
+    'mixfix_rule_hint': 35,
+    'terminal': 33,
+    'expr_rule_hint': 8,
+    'arrow': 23,
+    'code': 25,
+    'unary': 29,
+    'left': 21,
 }
 # START USER CODE
 def init():
@@ -91,11 +90,11 @@ def binding_power(context, mode, match, terminal, resource, line, col):
     (precedence, associativity) = match[1:-1].split(':')
     marker = 'asterisk' if precedence == '*' else 'dash'
     tokens = [
-        Terminal(terminals['lparen'], 'lparen', '(', resource, line, col),
-        Terminal(terminals[marker], marker, precedence, resource, line, col),
-        Terminal(terminals['colon'], 'colon', ':', resource, line, col),
-        Terminal(terminals[associativity], associativity, associativity, resource, line, col),
-        Terminal(terminals['rparen'], 'rparen', ')', resource, line, col)
+        Terminal(lexer_terminals['lparen'], 'lparen', '(', resource, line, col),
+        Terminal(lexer_terminals[marker], marker, precedence, resource, line, col),
+        Terminal(lexer_terminals['colon'], 'colon', ':', resource, line, col),
+        Terminal(lexer_terminals[associativity], associativity, associativity, resource, line, col),
+        Terminal(lexer_terminals['rparen'], 'rparen', ')', resource, line, col)
     ]
     return (tokens, mode, context)
 def morpheme(context, mode, match, terminal, resource, line, col):
@@ -105,10 +104,10 @@ def grammar_start(context, mode, match, terminal, resource, line, col):
 def lexer_start(context, mode, match, terminal, resource, line, col):
     identifier = match.replace('lexer', '').replace('<', '').replace('>', '').strip()
     tokens = [
-        Terminal(terminals['lexer'], 'lexer', 'lexer', resource, line, col),
-        Terminal(terminals['langle'], 'langle', '<', resource, line, col),
-        Terminal(terminals['identifier'], 'identifier', identifier, resource, line, col),
-        Terminal(terminals['rangle'], 'rangle', '>', resource, line, col),
+        Terminal(lexer_terminals['lexer'], 'lexer', 'lexer', resource, line, col),
+        Terminal(lexer_terminals['langle'], 'langle', '<', resource, line, col),
+        Terminal(lexer_terminals['identifier'], 'identifier', identifier, resource, line, col),
+        Terminal(lexer_terminals['rangle'], 'rangle', '>', resource, line, col),
     ]
     return (tokens, 'lexer', context)
 def parser_ll1_start(context, mode, match, terminal, resource, line, col):
@@ -118,15 +117,15 @@ def parser_expr_start(context, mode, match, terminal, resource, line, col):
 def parse_mode(context, mode, match, terminal, resource, line, col):
     identifier = match.replace('mode', '').replace('<', '').replace('>', '').strip()
     tokens = [
-        Terminal(terminals['mode'], 'mode', 'mode', resource, line, col),
-        Terminal(terminals['langle'], 'langle', '<', resource, line, col),
-        Terminal(terminals['identifier'], 'identifier', identifier, resource, line, col),
-        Terminal(terminals['rangle'], 'rangle', '>', resource, line, col),
+        Terminal(lexer_terminals['mode'], 'mode', 'mode', resource, line, col),
+        Terminal(lexer_terminals['langle'], 'langle', '<', resource, line, col),
+        Terminal(lexer_terminals['identifier'], 'identifier', identifier, resource, line, col),
+        Terminal(lexer_terminals['rangle'], 'rangle', '>', resource, line, col),
     ]
     return (tokens, mode, context)
 def lexer_code(context, mode, match, terminal, resource, line, col):
     code = match[6:-7].strip()
-    tokens = [Terminal(terminals[terminal], terminal, code, resource, line, col)]
+    tokens = [Terminal(lexer_terminals[terminal], terminal, code, resource, line, col)]
     return (tokens, mode, context)
 def lexer_lbrace(context, mode, match, terminal, resource, line, col):
     context['lexer_brace'] += 1
@@ -144,42 +143,42 @@ def parser_rbrace(context, mode, match, terminal, resource, line, col):
     return default_action(context, mode, match, terminal, resource, line, col)
 def parser_rule_start(context, mode, match, terminal, resource, line, col):
     tokens = [
-        Terminal(terminals['ll1_rule_hint'], 'll1_rule_hint', '', resource, line, col),
-        Terminal(terminals[terminal], terminal, normalize_morpheme(match), resource, line, col)
+        Terminal(lexer_terminals['ll1_rule_hint'], 'll1_rule_hint', '', resource, line, col),
+        Terminal(lexer_terminals[terminal], terminal, normalize_morpheme(match), resource, line, col)
     ]
     return (tokens, mode, context)
 def infix_rule_start(context, mode, match, terminal, resource, line, col):
     nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
     operator = normalize_morpheme(re.search(':[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
     tokens = [
-        Terminal(terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
-        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-        Terminal(terminals['equals'], 'equals', '=', resource, line, col),
-        Terminal(terminals['infix_rule_hint'], 'infix_rule_hint', '', resource, line, col),
-        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-        Terminal(terminals['terminal'], 'terminal', operator, resource, line, col),
-        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
+        Terminal(lexer_terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
+        Terminal(lexer_terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
+        Terminal(lexer_terminals['equals'], 'equals', '=', resource, line, col),
+        Terminal(lexer_terminals['infix_rule_hint'], 'infix_rule_hint', '', resource, line, col),
+        Terminal(lexer_terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
+        Terminal(lexer_terminals['terminal'], 'terminal', operator, resource, line, col),
+        Terminal(lexer_terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
     ]
     return (tokens, mode, context)
 def prefix_rule_start(context, mode, match, terminal, resource, line, col):
     nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
     operator = normalize_morpheme(re.search(':[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
     tokens = [
-        Terminal(terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
-        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-        Terminal(terminals['equals'], 'equals', '=', resource, line, col),
-        Terminal(terminals['prefix_rule_hint'], 'prefix_rule_hint', '', resource, line, col),
-        Terminal(terminals['terminal'], 'terminal', operator, resource, line, col),
-        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
+        Terminal(lexer_terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
+        Terminal(lexer_terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
+        Terminal(lexer_terminals['equals'], 'equals', '=', resource, line, col),
+        Terminal(lexer_terminals['prefix_rule_hint'], 'prefix_rule_hint', '', resource, line, col),
+        Terminal(lexer_terminals['terminal'], 'terminal', operator, resource, line, col),
+        Terminal(lexer_terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
     ]
     return (tokens, mode, context)
 def expr_rule_start(context, mode, match, terminal, resource, line, col):
     nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
     tokens = [
-        Terminal(terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
-        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-        Terminal(terminals['equals'], 'equals', '=', resource, line, col),
-        Terminal(terminals['mixfix_rule_hint'], 'mixfix_rule_hint', '',resource, line, col),
+        Terminal(lexer_terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
+        Terminal(lexer_terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
+        Terminal(lexer_terminals['equals'], 'equals', '=', resource, line, col),
+        Terminal(lexer_terminals['mixfix_rule_hint'], 'mixfix_rule_hint', '',resource, line, col),
     ]
     return (tokens, mode, context)
 def grammar_lbrace(context, mode, match, terminal, resource, line, col):
@@ -191,7 +190,7 @@ def grammar_rbrace(context, mode, match, terminal, resource, line, col):
     return default_action(context, mode, match, terminal, resource, line, col)
 # END USER CODE
 def default_action(context, mode, match, terminal, resource, line, col):
-    tokens = [Terminal(terminals[terminal], terminal, match, resource, line, col)] if terminal else []
+    tokens = [Terminal(lexer_terminals[terminal], terminal, match, resource, line, col)] if terminal else []
     return (tokens, mode, context)
 def destroy(context):
     pass
