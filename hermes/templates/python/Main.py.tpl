@@ -41,7 +41,8 @@ if sys.argv[1] in ['parsetree', 'ast']:
 
 if sys.argv[1] == 'tokens':
     try:
-        tokens = lex(sys.argv[2])
+        with open(sys.argv[2]) as fp:
+            tokens = lex(fp.read(), os.path.basename(sys.argv[2]))
         print(tokens.json())
     except SyntaxError as error:
         sys.exit(error)

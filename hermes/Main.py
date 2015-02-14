@@ -127,6 +127,3 @@ def Cli():
         from hermes.parser.Common import AstPrettyPrintable
         ast = GrammarParser().get_ast('test', cli.grammar)
         print(AstPrettyPrintable(ast))
-
-if __name__ == '__main__':
-    Cli()

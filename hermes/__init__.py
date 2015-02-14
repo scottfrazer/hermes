@@ -7,9 +7,9 @@ def get_grammar(str_or_fp):
         code = str_or_fp
     else:
         code = str_or_fp.read()
-    return GrammarParser().parse("internal", str_or_fp)
+    return GrammarParser().parse("internal", code)
 
-def load(str_or_fp, module=None):
+def compile(str_or_fp, module=None):
     grammar = get_grammar(str_or_fp)
     code = CodeGenerator().generate_internal(grammar)
     #compile(code, '<string>', 'exec')

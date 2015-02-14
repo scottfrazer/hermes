@@ -8,7 +8,7 @@ from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMa
 from hermes.Logger import Factory as LoggerFactory
 
 from hermes.parser.hermes.Lexer import Terminal as HermesTerminal
-from hermes.parser.Common import Ast, AstList, AstPrettyPrintable
+from hermes.parser.Common import Ast, AstList
 
 class GrammarFactory:
   # TODO: I want to get rid of name and start parameters

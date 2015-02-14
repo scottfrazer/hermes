@@ -108,15 +108,5 @@ class HermesLexer:
         destroy(context)
         return parsed_tokens
 
-def lex(file_or_path, debug=False):
-    if isinstance(file_or_path, str):
-        try:
-            with open(file_or_path) as fp:
-                contents = fp.read()
-                resource = os.path.basename(os.path.expanduser(file_or_path))
-        except FileNotFoundError:
-            contents = file_or_path
-            resource = '<string>'
-
-    lexer = HermesLexer()
-    return TokenStream(lexer.lex(contents, resource, debug))
+def lex(source, resource, debug=False):
+    return TokenStream(HermesLexer().lex(source, resource, debug))
