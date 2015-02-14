@@ -33,7 +33,7 @@ if sys.argv[1] in ['parsetree', 'ast']:
     try:
         tree = parse(tokens)
         if sys.argv[1] == 'parsetree':
-            print(ParseTreePrettyPrintable(tree))
+            print(tree.dumps(indent=2))
         else:
             print(AstPrettyPrintable(tree.toAst()))
     except SyntaxError as error:

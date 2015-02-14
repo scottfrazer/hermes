@@ -14,8 +14,11 @@ class Terminal:
     return self.id
   def toAst(self):
     return self
+  def dumps(self, b64_source=False):
+    source_string = base64.b64encode(self.source_string.encode('utf-8')).decode('utf-8') if b64_source else self.source_string
+    return '<{} (line {} col {}) `{}`>'.format(self.str, self.line, self.col, source_string)
   def __str__(self):
-    return '<{} (line {} col {}) `{}`>'.format(self.str, self.line, self.col, self.source_string)
+    return self.dumps()
 
 class NonTerminal():
   def __init__(self, id, str):
@@ -137,60 +140,26 @@ class ParseTree():
       else:
         return None
 
-  def dumps(self, indent=None, color=False):
-    if indent is None:
-      return self._to_string(color)
-    else:
-      return self._to_string_indented(indent, color)
+  def dumps(self, indent=None, color=no_color, b64_source=False):
+    args = locals()
+    del args['self']
+    return parse_tree_string(self, **args)
 
-  def _to_string(self, color):
-    colored = term_color if color else no_color
-    children = []
-    for child in self.children:
-      if isinstance(child, list):
-        children.append('[' + ', '.join([str(a) for a in child]) + ']')
-      else:
-        children.append(str(child))
-    return '({0}: {1})'.format(colored(self.nonterminal, 10), ', '.join(children))
-
-  def _to_string_indented(self, indent, color):
-    colored = term_color if color else no_color
-    indent_str = ''.join([' ' for x in range(indent)])
+def parse_tree_string(parsetree, indent=None, color=no_color, b64_source=False, indent_level=0):
+    indent_str = (' ' * indent * indent_level) if indent else ''
     if isinstance(parsetree, ParseTree):
-      if len(parsetree.children) == 0:
-        return '(%s: )' % (colored(parsetree.nonterminal, 10))
-      string = '%s(%s:\n' % (indent_str, colored(parsetree.nonterminal, 10))
-      string += ',\n'.join([ \
-        '%s  %s' % (indent_str, self._prettyPrint(value, indent + 2).lstrip()) for value in parsetree.children \
-      ])
-      string += '\n%s)' % (indent_str)
-      return string
+        children = [parse_tree_string(child, indent, color, b64_source, indent_level+1) for child in parsetree.children]
+        if indent is None or len(children) == 0:
+            return '{0}({1}: {2})'.format(indent_str, color(parsetree.nonterminal, 10), ', '.join(children))
+        else:
+            return '{0}({1}:\n{2}\n{3})'.format(
+                indent_str,
+                color(parsetree.nonterminal, 10),
+                ',\n'.join(['{0}'.format(child) for child in children]),
+                indent_str
+            )
     elif isinstance(parsetree, Terminal):
-      return '%s%s' % (indent_str, colored(str(parsetree), 9))
-    else:
-      return '%s%s' % (indent_str, colored(parsetree, 9))
-
-class ParseTreePrettyPrintable:
-  def __init__(self, ast, color=False):
-    self.__dict__.update(locals())
-  def __str__(self):
-    return self._prettyPrint(self.ast, 0)
-  def _prettyPrint(self, parsetree, indent = 0):
-    colored = term_color if self.color else no_color
-    indentStr = ''.join([' ' for x in range(indent)])
-    if isinstance(parsetree, ParseTree):
-      if len(parsetree.children) == 0:
-        return '(%s: )' % (colored(parsetree.nonterminal, 10))
-      string = '%s(%s:\n' % (indentStr, colored(parsetree.nonterminal, 10))
-      string += ',\n'.join([ \
-        '%s  %s' % (indentStr, self._prettyPrint(value, indent + 2).lstrip()) for value in parsetree.children \
-      ])
-      string += '\n%s)' % (indentStr)
-      return string
-    elif isinstance(parsetree, Terminal):
-      return '%s%s' % (indentStr, colored(str(parsetree), 9))
-    else:
-      return '%s%s' % (indentStr, colored(parsetree, 9))
+        return indent_str + color(parsetree.dumps(b64_source=b64_source), 6)
 
 class Ast():
   def __init__(self, name, attributes):
@@ -208,7 +177,7 @@ class AstPrettyPrintable:
   def __str__(self):
     return self._prettyPrint(self.ast, 0)
   def _prettyPrint(self, ast, indent = 0):
-    indent_str = ''.join([' ' for x in range(indent)])
+    indent_str = ' ' * indent
     colored = no_color
     if self.color:
       colored = term_color

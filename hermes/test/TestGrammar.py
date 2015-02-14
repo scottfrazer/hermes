@@ -4,7 +4,7 @@ import json
 from hermes.GrammarParser import GrammarParser
 from hermes.Morpheme import NonTerminal
 from hermes.parser.hermes import parse, lex
-from hermes.parser.Common import ParseTreePrettyPrintable, AstPrettyPrintable
+from hermes.parser.Common import AstPrettyPrintable
 
 base_dir = os.path.join(os.path.dirname(__file__), 'cases/grammar')
 
@@ -81,7 +81,7 @@ def parse_tree(test_dir):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
     with open(grammar_file) as fp:
         tree = parse(lex(fp.read(), 'grammar.zgr'))
-    actual = str(ParseTreePrettyPrintable(tree))
+    actual = str(tree.dumps(indent=2))
     compare(test_dir, 'parse_tree', actual)
 
 def ast(test_dir):

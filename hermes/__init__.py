@@ -7,10 +7,14 @@ def get_grammar(str_or_fp):
         code = str_or_fp
     else:
         code = str_or_fp.read()
-    return GrammarParser().parse("internal", code)
+    return GrammarParser().parse(code, "internal")
 
-def compile(str_or_fp, module=None):
+def compile(str_or_fp, module=None, debug=False):
     grammar = get_grammar(str_or_fp)
+    module = module if module else str(uuid.uuid1())
     code = CodeGenerator().generate_internal(grammar)
-    #compile(code, '<string>', 'exec')
-    return imp.load_module(module if module else str(uuid.uuid1()), io.StringIO(code), '<string>', ('.py', 'r', 1))
+    if debug:
+        filename = module if module.endswith('.py') else module+'.py'
+        with open(filename, 'w') as fp:
+            fp.write(code)
+    return imp.load_module(module, io.StringIO(code), '<hermes {}>'.format(module), ('.py', 'r', 1))
