@@ -92,10 +92,12 @@ def Cli():
         if not os.path.isfile(grammar_path):
             sys.stderr.write("Error: Grammar file {0} doesn't exist\n".format(grammar_path))
             sys.exit(-1)
-        return GrammarParser().parse(get_grammar_name(cli), cli.grammar)
+        with open(cli.grammar) as fp:
+            return GrammarParser().parse(fp.read(), get_grammar_name(cli))
 
     if cli.action == 'bootstrap':
-        grammar = GrammarParser().parse('hermes', 'hermes.zgr')
+        with open('hermes.zgr') as fp:
+            grammar = GrammarParser().parse(fp.read(), 'hermes')
         CodeGenerator().generate(grammar, 'python', python_package="parser", directory='hermes')
 
     elif cli.action == 'analyze':
@@ -125,5 +127,6 @@ def Cli():
 
     elif cli.action == 'parse':
         from hermes.parser.Common import AstPrettyPrintable
-        ast = GrammarParser().get_ast('test', cli.grammar)
+        with open(cli.grammar) as fp:
+            ast = GrammarParser().get_ast(fp.read())
         print(AstPrettyPrintable(ast))

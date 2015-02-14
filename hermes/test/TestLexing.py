@@ -9,6 +9,10 @@ from hermes.GrammarParser import GrammarParser
 
 base_dir = os.path.join(os.path.dirname(__file__), 'cases/lexing')
 
+def get_grammar(directory, name='grammar.zgr'):
+    with open(os.path.join(directory, name)) as fp:
+        return GrammarParser().parse(fp.read(), 'grammar')
+
 def test_all():
     for directory in os.listdir(base_dir):
         test_dir = os.path.join(base_dir, directory)
@@ -19,9 +23,8 @@ def test_all():
             yield javascript_tokens, test_dir
 
 def lex_python(test_dir):
-    grammar_file = os.path.join(test_dir, 'grammar.zgr')
     source_file = os.path.join(test_dir, 'source')
-    grammar = GrammarParser().parse('grammar', grammar_file)
+    grammar = get_grammar(test_dir)
     tmp_dir = tempfile.mkdtemp(prefix='hermes-')
 
     try:
@@ -34,9 +37,8 @@ def lex_python(test_dir):
         shutil.rmtree(tmp_dir)
 
 def lex_c(test_dir):
-    grammar_file = os.path.join(test_dir, 'grammar.zgr')
     source_file = os.path.join(test_dir, 'source')
-    grammar = GrammarParser().parse('grammar', grammar_file)
+    grammar = get_grammar(test_dir)
     tmp_dir = tempfile.mkdtemp(prefix='hermes-')
 
     try:
@@ -54,9 +56,8 @@ def lex_c(test_dir):
         shutil.rmtree(tmp_dir)
 
 def lex_java(test_dir):
-    grammar_file = os.path.join(test_dir, 'grammar.zgr')
     source_file = os.path.join(test_dir, 'source')
-    grammar = GrammarParser().parse('grammar', grammar_file)
+    grammar = get_grammar(test_dir)
     tmp_dir = tempfile.mkdtemp(prefix='hermes-')
 
     try:
@@ -74,9 +75,8 @@ def lex_java(test_dir):
         shutil.rmtree(tmp_dir)
 
 def lex_javascript(test_dir):
-    grammar_file = os.path.join(test_dir, 'grammar.zgr')
     source_file = os.path.join(test_dir, 'source')
-    grammar = GrammarParser().parse('grammar', grammar_file)
+    grammar = get_grammar(test_dir)
     tmp_dir = tempfile.mkdtemp(prefix='hermes-')
 
     try:

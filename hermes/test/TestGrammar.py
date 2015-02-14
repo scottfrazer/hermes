@@ -8,6 +8,10 @@ from hermes.parser.Common import ParseTreePrettyPrintable, AstPrettyPrintable
 
 base_dir = os.path.join(os.path.dirname(__file__), 'cases/grammar')
 
+def get_grammar(directory, name='grammar.zgr'):
+    with open(os.path.join(directory, name)) as fp:
+        return GrammarParser().parse(fp.read(), 'grammar')
+
 def test_all():
     for test_dir, dirs, files in os.walk(base_dir):
         if 'grammar.zgr' not in files:
@@ -23,7 +27,9 @@ def test_all():
                 yield parse_tree, test_dir
                 yield ast, test_dir
 
-            grammar = GrammarParser().parse('grammar', grammar_path)
+            with open(grammar_path) as fp:
+                grammar = GrammarParser().parse(fp.read(), 'grammar')
+
             if grammar.conflicts:
                 if not os.path.exists(conflicts_path) and (not os.path.exists(first_sets_path) or not os.path.exists(follow_sets_path)):
                     with open(conflicts_path, 'w') as fp:
@@ -67,41 +73,41 @@ def compare(test_dir, filename, actual):
 
 def tokens(test_dir):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
-    actual = lex(grammar_file).json()
+    with open(grammar_file) as fp:
+        actual = lex(fp.read(), 'grammar.zgr').json()
     compare(test_dir, 'tokens', actual)
 
 def parse_tree(test_dir):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
-    tree = parse(lex(grammar_file))
+    with open(grammar_file) as fp:
+        tree = parse(lex(fp.read(), 'grammar.zgr'))
     actual = str(ParseTreePrettyPrintable(tree))
     compare(test_dir, 'parse_tree', actual)
 
 def ast(test_dir):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
-    tree = parse(lex(grammar_file))
+    with open(grammar_file) as fp:
+        tree = parse(lex(fp.read(), 'grammar.zgr'))
     actual = str(AstPrettyPrintable(tree.toAst()))
     compare(test_dir, 'ast', actual)
 
 def first_sets(test_dir, nonterminal, terminals):
-    grammar_file = os.path.join(test_dir, 'grammar.zgr')
-    grammar = GrammarParser().parse('grammar', grammar_file)
+    grammar = get_grammar(test_dir)
     grammar_first_sets = {str(k): [str(v1) for v1 in v] for k, v in grammar.first_sets.items()}
     assert len(grammar_first_sets[nonterminal]) == len(terminals)
     for terminal in terminals:
         assert str(terminal) in grammar_first_sets[nonterminal]
 
 def follow_sets(test_dir, nonterminal, terminals):
-    grammar_file = os.path.join(test_dir, 'grammar.zgr')
-    grammar = GrammarParser().parse('grammar', grammar_file)
+    grammar = get_grammar(test_dir)
     grammar_follow_sets = {str(k): [str(v1) for v1 in v] for k, v in grammar.follow_sets.items()}
     assert len(grammar_follow_sets[nonterminal]) == len(terminals)
     for terminal in terminals:
         assert str(terminal) in grammar_follow_sets[nonterminal]
 
 def conflicts(test_dir):
-    grammar_file = os.path.join(test_dir, 'grammar.zgr')
     conflicts_file = os.path.join(test_dir, 'conflicts')
-    grammar = GrammarParser().parse('grammar', grammar_file)
+    grammar = get_grammar(test_dir)
     assert os.path.exists(conflicts_file)
     with open(conflicts_file, encoding='utf-8') as fp:
         expected = fp.read()

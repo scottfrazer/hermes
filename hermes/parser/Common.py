@@ -1,5 +1,9 @@
 from collections import OrderedDict
 import base64
+def no_color(string, color):
+  return string
+def term_color(string, intcolor):
+  return "\033[38;5;%dm%s\033[0m" % (intcolor, string)
 class Terminal:
   def __init__(self, id, str, source_string, resource, line, col):
     self.__dict__.update(locals())
@@ -122,64 +126,43 @@ class ParseTree():
         return self.children[0].toAst()
       else:
         return None
-  def __str__( self ):
+  def dumps(self, indent=None, color=False):
+    if indent is None:
+      return self._to_string(color)
+    else:
+      return self._to_string_indented(indent, color)
+  def _to_string(self, color):
+    colored = term_color if color else no_color
     children = []
     for child in self.children:
       if isinstance(child, list):
         children.append('[' + ', '.join([str(a) for a in child]) + ']')
       else:
         children.append(str(child))
-    return '(' + str(self.nonterminal) + ': ' + ', '.join(children) + ')'
-class Ast():
-  def __init__(self, name, attributes):
-    self.__dict__.update(locals())
-  def getAttr(self, attr):
-    return self.attributes[attr]
-  def __str__(self):
-    return '(%s: %s)' % (self.name, ', '.join('%s=%s'%(str(k), '[' + ', '.join([str(x) for x in v]) + ']' if isinstance(v, list) else str(v) ) for k,v in self.attributes.items()))
-def noColor(string, color):
-  return string
-def termColor(string, intcolor):
-  return "\033[38;5;%dm%s\033[0m" % (intcolor, string)
-class AstPrettyPrintable:
-  def __init__(self, ast, color=False):
-    self.__dict__.update(locals())
-  def getAttr(self, attr):
-    return self.ast.getAttr(attr)
-  def __str__(self):
-    return self._prettyPrint(self.ast, 0)
-  def _prettyPrint(self, ast, indent = 0):
-    indentStr = ''.join([' ' for x in range(indent)])
-    colored = noColor
-    if self.color:
-      colored = termColor
-    if isinstance(ast, Ast):
-      string = '%s(%s:\n' % (indentStr, colored(ast.name, 12))
+    return '({0}: {1})'.format(colored(self.nonterminal, 10), ', '.join(children))
+  def _to_string_indented(self, indent, color):
+    colored = term_color if color else no_color
+    indent_str = ''.join([' ' for x in range(indent)])
+    if isinstance(parsetree, ParseTree):
+      if len(parsetree.children) == 0:
+        return '(%s: )' % (colored(parsetree.nonterminal, 10))
+      string = '%s(%s:\n' % (indent_str, colored(parsetree.nonterminal, 10))
       string += ',\n'.join([ \
-        '%s  %s=%s' % (indentStr, colored(name, 10), self._prettyPrint(value, indent + 2).lstrip()) for name, value in ast.attributes.items() \
+        '%s  %s' % (indent_str, self._prettyPrint(value, indent + 2).lstrip()) for value in parsetree.children \
       ])
-      string += '\n%s)' % (indentStr)
+      string += '\n%s)' % (indent_str)
       return string
-    elif isinstance(ast, list):
-      if len(ast) == 0:
-        return '%s[]' % (indentStr)
-      string = '%s[\n' % (indentStr)
-      string += ',\n'.join([self._prettyPrint(element, indent + 2) for element in ast])
-      string += '\n%s]' % (indentStr)
-      return string
-    elif isinstance(ast, Terminal):
-      return '%s%s' % (indentStr, colored(str(ast), 9))
+    elif isinstance(parsetree, Terminal):
+      return '%s%s' % (indent_str, colored(str(parsetree), 9))
     else:
-      return '%s%s' % (indentStr, colored(str(ast), 9))
+      return '%s%s' % (indent_str, colored(parsetree, 9))
 class ParseTreePrettyPrintable:
   def __init__(self, ast, color=False):
     self.__dict__.update(locals())
   def __str__(self):
     return self._prettyPrint(self.ast, 0)
   def _prettyPrint(self, parsetree, indent = 0):
-    colored = noColor
-    if self.color:
-      colored = termColor
+    colored = term_color if self.color else no_color
     indentStr = ''.join([' ' for x in range(indent)])
     if isinstance(parsetree, ParseTree):
       if len(parsetree.children) == 0:
@@ -194,6 +177,43 @@ class ParseTreePrettyPrintable:
       return '%s%s' % (indentStr, colored(str(parsetree), 9))
     else:
       return '%s%s' % (indentStr, colored(parsetree, 9))
+class Ast():
+  def __init__(self, name, attributes):
+    self.__dict__.update(locals())
+  def getAttr(self, attr):
+    return self.attributes[attr]
+  def __str__(self):
+    return '(%s: %s)' % (self.name, ', '.join('%s=%s'%(str(k), '[' + ', '.join([str(x) for x in v]) + ']' if isinstance(v, list) else str(v) ) for k,v in self.attributes.items()))
+class AstPrettyPrintable:
+  def __init__(self, ast, color=False):
+    self.__dict__.update(locals())
+  def getAttr(self, attr):
+    return self.ast.getAttr(attr)
+  def __str__(self):
+    return self._prettyPrint(self.ast, 0)
+  def _prettyPrint(self, ast, indent = 0):
+    indent_str = ''.join([' ' for x in range(indent)])
+    colored = no_color
+    if self.color:
+      colored = term_color
+    if isinstance(ast, Ast):
+      string = '%s(%s:\n' % (indent_str, colored(ast.name, 12))
+      string += ',\n'.join([ \
+        '%s  %s=%s' % (indent_str, colored(name, 10), self._prettyPrint(value, indent + 2).lstrip()) for name, value in ast.attributes.items() \
+      ])
+      string += '\n%s)' % (indent_str)
+      return string
+    elif isinstance(ast, list):
+      if len(ast) == 0:
+        return '%s[]' % (indent_str)
+      string = '%s[\n' % (indent_str)
+      string += ',\n'.join([self._prettyPrint(element, indent + 2) for element in ast])
+      string += '\n%s]' % (indent_str)
+      return string
+    elif isinstance(ast, Terminal):
+      return '%s%s' % (indent_str, colored(str(ast), 9))
+    else:
+      return '%s%s' % (indent_str, colored(str(ast), 9))
 class SyntaxError(Exception):
   def __init__(self, message):
     self.__dict__.update(locals())

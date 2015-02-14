@@ -475,11 +475,11 @@ class GrammarFactory:
     return nodes
 
 class GrammarParser:
-  def get_ast(self, name, file_or_string):
+  def get_ast(self, source, resource='<string>'):
     from hermes.parser.hermes import lex, parse
-    tree = parse(lex(file_or_string))
+    tree = parse(lex(source, resource))
     return tree.toAst()
 
-  def parse(self, name, file_or_string):
-    ast = self.get_ast(name, file_or_string)
+  def parse(self, source, name, resource='<string>'):
+    ast = self.get_ast(source, resource)
     return GrammarFactory().create(name, ast)
