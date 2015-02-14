@@ -9,8 +9,8 @@ def get_grammar(str_or_fp):
         code = str_or_fp.read()
     return GrammarParser().parse("internal", str_or_fp)
 
-def load(str_or_fp):
+def load(str_or_fp, module=None):
     grammar = get_grammar(str_or_fp)
     code = CodeGenerator().generate_internal(grammar)
-    m = imp.load_module(str(uuid.uuid1()), io.StringIO(code), '', ('.py', 'r', 1))
-    return m
+    #compile(code, '<string>', 'exec')
+    return imp.load_module(module if module else str(uuid.uuid1()), io.StringIO(code), '<string>', ('.py', 'r', 1))

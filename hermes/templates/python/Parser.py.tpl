@@ -66,6 +66,8 @@ rules = {
 def is_terminal(id): return isinstance(id, int) and 0 <= id <= {{len(grammar.standard_terminals) - 1}}
 
 def parse(tokens, error_formatter=None, start=None):
+    if isinstance(tokens, str):
+        tokens = lex(tokens)
     if error_formatter is None:
         error_formatter = DefaultSyntaxErrorFormatter()
     ctx = ParserContext(tokens, error_formatter)

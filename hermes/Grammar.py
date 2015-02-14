@@ -253,7 +253,7 @@ class CompositeGrammar:
         self.warnings.append(UnusedNonterminalWarning(nonterminal))
 
       nRules = self.get_expanded_rules( nonterminal )
-      if len(nRules) == 0 and nonterminal is not grammar.start and nonterminal not in [x.nonterminal for x in exprgrammars]:
+      if len(nRules) == 0 and nonterminal is not self.start and nonterminal not in self.expression_nonterminals:
         self.conflicts.append( UndefinedNonterminalConflict(nonterminal) )
     self._assignIds()
 
@@ -506,47 +506,3 @@ class CompositeGrammar:
     if nonterminal:
       return [rule for rule in all_rules if str(rule.nonterminal) == str(nonterminal)]
     return all_rules
-
-  def str(self, theme=None):
-    return self.__str__(theme)
-
-  # TODO: add tests for this?
-  def __str__(self, theme=None):
-    lexer_str = []
-    for lexer in self.lexers:
-      lexer_str.append(lexer.str(theme=theme))
-
-    rules = []
-    for rule in self.grammar.rules:
-      if isinstance(rule, Rule) and not isinstance(rule, MacroGeneratedRule):
-        rules.append('    ' + str(rule))
-    parser = '  parser<ll1> {\n'
-    parser += '\n'.join(rules) + '\n'
-    for grammar in self.exprgrammars:
-      rules = []
-      counter = 0
-      for rule in grammar.rules:
-        if not isinstance(rule, MacroGeneratedRule):
-          precedence = ''
-          if rule.operator:
-            if rule.operator.binding_power > counter:
-              counter = rule.operator.binding_power
-              marker = '*'
-            else:
-              marker = '-'
-            precedence = '({}:{}) '.format(marker, rule.operator.associativity)
-          rules.append('      {}{}'.format(precedence, rule))
-      parser += '    {0} = parser<expression> {{\n{1}\n    }}\n'.format(grammar.nonterminal.str(theme), '\n'.join(rules))
-    parser += '  }'
-
-    string = 'grammar {{\n{0}{1}\n}}'.format(
-        '\n'.join(lexer), parser
-    )
-    return string
-
-    rules = []
-    for grammar in self.exprgrammars:
-      for rule in grammar.rules:
-        rules.append(str(rule))
-      string += '\n    '.join(rules)
-    return string
