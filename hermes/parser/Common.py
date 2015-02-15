@@ -46,147 +46,144 @@ class AstList(list):
     return retval
 class ParseTree():
   def __init__(self, nonterminal):
-    self.__dict__.update(locals())
-    self.children = []
-    self.astTransform = None
-    self.isExpr = False
-    self.isNud = False
-    self.isPrefix = False
-    self.isInfix = False
-    self.nudMorphemeCount = 0
-    self.isExprNud = False # true for rules like _expr := {_expr} + {...}
-    self.listSeparator = None
-    self.list = False
+      self.__dict__.update(locals())
+      self.children = []
+      self.astTransform = None
+      self.isExpr = False
+      self.isNud = False
+      self.isPrefix = False
+      self.isInfix = False
+      self.nudMorphemeCount = 0
+      self.isExprNud = False # true for rules like _expr := {_expr} + {...}
+      self.listSeparator = None
+      self.list = False
   def add( self, tree ):
-    self.children.append( tree )
+      self.children.append( tree )
   def toAst( self ):
-    if self.list == 'slist' or self.list == 'nlist':
-      if len(self.children) == 0:
-        return AstList()
-      offset = 1 if self.children[0] == self.listSeparator else 0
-      first = self.children[offset].toAst()
-      r = AstList()
-      if first is not None:
-        r.append(first)
-      r.extend(self.children[offset+1].toAst())
-      return r
-    elif self.list == 'otlist':
-      if len(self.children) == 0:
-        return AstList()
-      r = AstList()
-      if self.children[0] != self.listSeparator:
-        r.append(self.children[0].toAst())
-      r.extend(self.children[1].toAst())
-      return r
-    elif self.list == 'tlist':
-      if len(self.children) == 0:
-        return AstList()
-      r = AstList([self.children[0].toAst()])
-      r.extend(self.children[2].toAst())
-      return r
-    elif self.list == 'mlist':
-      r = AstList()
-      if len(self.children) == 0:
-        return r
-      lastElement = len(self.children) - 1
-      for i in range(lastElement):
-        r.append(self.children[i].toAst())
-      r.extend(self.children[lastElement].toAst())
-      return r
-    elif self.isExpr:
-      if isinstance(self.astTransform, AstTransformSubstitution):
-        return self.children[self.astTransform.idx].toAst()
-      elif isinstance(self.astTransform, AstTransformNodeCreator):
-        parameters = OrderedDict()
-        for name, idx in self.astTransform.parameters.items():
-          if idx == '$':
-            child = self.children[0]
-          elif isinstance(self.children[0], ParseTree) and \
-               self.children[0].isNud and \
-               not self.children[0].isPrefix and \
-               not self.isExprNud and \
-               not self.isInfix:
-            if idx < self.children[0].nudMorphemeCount:
-              child = self.children[0].children[idx]
-            else:
-              index = idx - self.children[0].nudMorphemeCount + 1
-              child = self.children[index]
-          elif len(self.children) == 1 and not isinstance(self.children[0], ParseTree) and not isinstance(self.children[0], list):
-            return self.children[0]
-          else:
-            child = self.children[idx]
-          parameters[name] = child.toAst()
-        return Ast(self.astTransform.name, parameters)
-    else:
-      if isinstance(self.astTransform, AstTransformSubstitution):
-        return self.children[self.astTransform.idx].toAst()
-      elif isinstance(self.astTransform, AstTransformNodeCreator):
-        parameters = OrderedDict()
-        for name, idx in self.astTransform.parameters.items():
-          parameters[name] = self.children[idx].toAst()
-        return Ast(self.astTransform.name, parameters)
-      elif len(self.children):
-        return self.children[0].toAst()
+      if self.list == 'slist' or self.list == 'nlist':
+          if len(self.children) == 0:
+              return AstList()
+          offset = 1 if self.children[0] == self.listSeparator else 0
+          first = self.children[offset].toAst()
+          r = AstList()
+          if first is not None:
+              r.append(first)
+          r.extend(self.children[offset+1].toAst())
+          return r
+      elif self.list == 'otlist':
+          if len(self.children) == 0:
+              return AstList()
+          r = AstList()
+          if self.children[0] != self.listSeparator:
+              r.append(self.children[0].toAst())
+          r.extend(self.children[1].toAst())
+          return r
+      elif self.list == 'tlist':
+          if len(self.children) == 0:
+              return AstList()
+          r = AstList([self.children[0].toAst()])
+          r.extend(self.children[2].toAst())
+          return r
+      elif self.list == 'mlist':
+          r = AstList()
+          if len(self.children) == 0:
+              return r
+          lastElement = len(self.children) - 1
+          for i in range(lastElement):
+              r.append(self.children[i].toAst())
+          r.extend(self.children[lastElement].toAst())
+          return r
+      elif self.isExpr:
+          if isinstance(self.astTransform, AstTransformSubstitution):
+              return self.children[self.astTransform.idx].toAst()
+          elif isinstance(self.astTransform, AstTransformNodeCreator):
+              parameters = OrderedDict()
+              for name, idx in self.astTransform.parameters.items():
+                  if idx == '$':
+                      child = self.children[0]
+                  elif isinstance(self.children[0], ParseTree) and \
+                       self.children[0].isNud and \
+                       not self.children[0].isPrefix and \
+                       not self.isExprNud and \
+                       not self.isInfix:
+                      if idx < self.children[0].nudMorphemeCount:
+                          child = self.children[0].children[idx]
+                      else:
+                          index = idx - self.children[0].nudMorphemeCount + 1
+                          child = self.children[index]
+                  elif len(self.children) == 1 and not isinstance(self.children[0], ParseTree) and not isinstance(self.children[0], list):
+                      return self.children[0]
+                  else:
+                      child = self.children[idx]
+                  parameters[name] = child.toAst()
+              return Ast(self.astTransform.name, parameters)
       else:
-        return None
+          if isinstance(self.astTransform, AstTransformSubstitution):
+              return self.children[self.astTransform.idx].toAst()
+          elif isinstance(self.astTransform, AstTransformNodeCreator):
+              parameters = OrderedDict()
+              for name, idx in self.astTransform.parameters.items():
+                  parameters[name] = self.children[idx].toAst()
+              return Ast(self.astTransform.name, parameters)
+          elif len(self.children):
+              return self.children[0].toAst()
+          else:
+              return None
   def dumps(self, indent=None, color=no_color, b64_source=False):
-    args = locals()
-    del args['self']
-    return parse_tree_string(self, **args)
-def parse_tree_string(parsetree, indent=None, color=no_color, b64_source=False):
-    return _parse_tree_string(parsetree, indent, color, b64_source, 0)
-def _parse_tree_string(parsetree, indent, color, b64_source, indent_level):
+      args = locals()
+      del args['self']
+      return parse_tree_string(self, **args)
+def parse_tree_string(parsetree, indent=None, color=no_color, b64_source=False, indent_level=0):
     indent_str = (' ' * indent * indent_level) if indent else ''
     if isinstance(parsetree, ParseTree):
-        children = [_parse_tree_string(child, indent, color, b64_source, indent_level+1) for child in parsetree.children]
+        children = [parse_tree_string(child, indent, color, b64_source, indent_level+1) for child in parsetree.children]
         if indent is None or len(children) == 0:
             return '{0}({1}: {2})'.format(indent_str, color(parsetree.nonterminal, 10), ', '.join(children))
         else:
             return '{0}({1}:\n{2}\n{3})'.format(
                 indent_str,
                 color(parsetree.nonterminal, 10),
-                ',\n'.join(['{0}'.format(child) for child in children]),
+                ',\n'.join(children),
                 indent_str
             )
     elif isinstance(parsetree, Terminal):
         return indent_str + color(parsetree.dumps(b64_source=b64_source), 6)
 class Ast():
-  def __init__(self, name, attributes):
-    self.__dict__.update(locals())
-  def getAttr(self, attr):
-    return self.attributes[attr]
-  def __str__(self):
-    return '(%s: %s)' % (self.name, ', '.join('%s=%s'%(str(k), '[' + ', '.join([str(x) for x in v]) + ']' if isinstance(v, list) else str(v) ) for k,v in self.attributes.items()))
-class AstPrettyPrintable:
-  def __init__(self, ast, color=False):
-    self.__dict__.update(locals())
-  def getAttr(self, attr):
-    return self.ast.getAttr(attr)
-  def __str__(self):
-    return self._prettyPrint(self.ast, 0)
-  def _prettyPrint(self, ast, indent = 0):
-    indent_str = ' ' * indent
-    colored = no_color
-    if self.color:
-      colored = term_color
+    def __init__(self, name, attributes):
+        self.__dict__.update(locals())
+    def getAttr(self, attr):
+        return self.attributes[attr]
+    def dumps(self, indent=None, color=no_color, b64_source=False):
+        args = locals()
+        del args['self']
+        return ast_string(self, **args)
+def ast_string(ast, indent=None, color=no_color, b64_source=False, indent_level=0):
+    indent_str = (' ' * indent * indent_level) if indent else ''
+    next_indent_str = (' ' * indent * (indent_level+1)) if indent else ''
     if isinstance(ast, Ast):
-      string = '%s(%s:\n' % (indent_str, colored(ast.name, 12))
-      string += ',\n'.join([ \
-        '%s  %s=%s' % (indent_str, colored(name, 10), self._prettyPrint(value, indent + 2).lstrip()) for name, value in ast.attributes.items() \
-      ])
-      string += '\n%s)' % (indent_str)
-      return string
+        children = OrderedDict([(k, ast_string(v, indent, color, b64_source, indent_level+1)) for k, v in ast.attributes.items()])
+        if indent is None:
+            return '({0}: {1})'.format(
+                color(ast.name, 9),
+                ', '.join('{0}={1}'.format(color(k, 2), v) for k, v in children.items())
+            )
+        else:
+            return '({0}:\n{1}\n{2})'.format(
+                color(ast.name, 9),
+                ',\n'.join(['{0}{1}={2}'.format(next_indent_str, color(k, 2), v) for k, v in children.items()]),
+                indent_str
+            )
     elif isinstance(ast, list):
-      if len(ast) == 0:
-        return '%s[]' % (indent_str)
-      string = '%s[\n' % (indent_str)
-      string += ',\n'.join([self._prettyPrint(element, indent + 2) for element in ast])
-      string += '\n%s]' % (indent_str)
-      return string
+        children = [ast_string(element, indent, color, b64_source, indent_level+1) for element in ast]
+        if indent is None or len(children) == 0:
+            return '[{0}]'.format(', '.join(children))
+        else:
+            return '[\n{1}\n{0}]'.format(
+                indent_str,
+                ',\n'.join(['{0}{1}'.format(next_indent_str, child) for child in children]),
+            )
     elif isinstance(ast, Terminal):
-      return '%s%s' % (indent_str, colored(str(ast), 9))
-    else:
-      return '%s%s' % (indent_str, colored(str(ast), 9))
+        return color(ast.dumps(b64_source=b64_source), 6)
 class SyntaxError(Exception):
   def __init__(self, message):
     self.__dict__.update(locals())

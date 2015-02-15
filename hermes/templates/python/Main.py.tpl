@@ -35,7 +35,8 @@ if sys.argv[1] in ['parsetree', 'ast']:
         if sys.argv[1] == 'parsetree':
             print(tree.dumps(indent=2))
         else:
-            print(AstPrettyPrintable(tree.toAst()))
+            ast = tree.toAst()
+            print(ast.dumps(indent=2) if ast else ast)
     except SyntaxError as error:
         print(error)
 

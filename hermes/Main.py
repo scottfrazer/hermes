@@ -126,7 +126,7 @@ def Cli():
         )
 
     elif cli.action == 'parse':
-        from hermes.parser.Common import AstPrettyPrintable
+        import hermes
         with open(cli.grammar) as fp:
             ast = GrammarParser().get_ast(fp.read())
-        print(AstPrettyPrintable(ast))
+        print(ast.dumps(indent=2, color=hermes.parser.Common.term_color))
