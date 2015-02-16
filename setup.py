@@ -9,7 +9,7 @@ setup(
   description=long_description,
   author='Scott Frazer',
   author_email='scott.d.frazer@gmail.com',
-  packages=['hermes', 'hermes.parser', 'hermes.parser.hermes'],
+  packages=['hermes'],
   #package_dir={'hermes': 'hermes'},
   package_data={
       'hermes': [
