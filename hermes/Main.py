@@ -98,7 +98,7 @@ def Cli():
     if cli.action == 'bootstrap':
         with open('hermes.zgr') as fp:
             grammar = GrammarParser().parse(fp.read(), 'hermes')
-        CodeGenerator().generate(grammar, 'python', python_package="parser", directory='hermes')
+        CodeGenerator().generate(grammar, 'python', directory='hermes')
 
     elif cli.action == 'analyze':
         grammar = get_grammars(cli)
@@ -109,19 +109,19 @@ def Cli():
     elif cli.action == 'generate':
         grammar = get_grammars(cli)
         cli.directory = os.path.abspath(os.path.expanduser(cli.directory))
-        if not os.path.isdir( cli.directory ):
+        if not os.path.isdir(cli.directory):
             sys.stderr.write("Error: --directory {0} doesn't exist\n".format(cli.directory))
             sys.exit(-1)
         elif not os.access(cli.directory, os.W_OK):
             sys.stderr.write("Error: --directory {0} not writable\n".format(cli.directory))
             sys.exit(-1)
+
         CodeGenerator().generate(
             grammar,
             cli.language.lower(),
             directory=cli.directory,
             add_main=cli.add_main,
             java_package=cli.java_package,
-            python_package=cli.python_package,
             nodejs=cli.nodejs
         )
 

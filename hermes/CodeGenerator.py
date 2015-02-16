@@ -50,6 +50,7 @@ class GrammarTemplate:
     return remove_blank_lines(code)
   def write(self):
     out_file_path = self.get_filename()
+    print(out_file_path)
     try:
       os.makedirs(os.path.dirname(out_file_path))
     except FileExistsError:
@@ -60,7 +61,7 @@ class GrammarTemplate:
 
 class PythonTemplate(GrammarTemplate):
   def get_filename(self):
-    return os.path.join(self.directory, self.python_package, self.grammar.name, self.filename)
+    return os.path.join(self.directory, '{0}_parser.py'.format(self.grammar.name))
 
 class JavaTemplate(GrammarTemplate):
   def get_filename(self):
@@ -100,6 +101,9 @@ class PythonParserTemplate(PythonTemplate):
 class PythonLexerTemplate(PythonTemplate):
   filename = 'Lexer.py'
   template = 'python/Lexer.py.tpl'
+
+class PythonAllTemplate(PythonTemplate):
+  template = 'python/All.py.tpl'
 
 class PythonCommonTemplate(PythonTemplate):
   filename = 'Common.py'
@@ -262,6 +266,7 @@ class JavascriptMainTemplate(JavascriptTemplate):
 
 class PythonTemplateFactory:
   def create(self, **kwargs):
+    return [PythonAllTemplate()]
     templates = [
         PythonCommonTemplate(),
         PythonParserTemplate(),
@@ -275,6 +280,7 @@ class PythonTemplateFactory:
 
 class PythonInternalTemplateFactory:
   def create(self, **kwargs):
+    return [PythonAllTemplate()]
     templates = [
         PythonCommonTemplate(),
         PythonParserTemplate(),
@@ -361,7 +367,8 @@ class CodeGenerator:
             'grammar': grammar,
             'language': 'python',
             'lexer': grammar.lexers['python'] if 'python' in grammar.lexers else None,
-            'python_internal': True
+            'python_internal': True,
+            'add_main': False
         }
 
         code = ''

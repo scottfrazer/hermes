@@ -28,8 +28,8 @@ def lex_python(test_dir):
     tmp_dir = tempfile.mkdtemp(prefix='hermes-')
 
     try:
-        CodeGenerator().generate(grammar, 'python', directory=tmp_dir, python_package='parsers', add_main=True)
-        command = 'python grammar_main.py tokens {0} 2>&1'.format(os.path.abspath(source_file))
+        CodeGenerator().generate(grammar, 'python', directory=tmp_dir, add_main=True)
+        command = 'python grammar_parser.py tokens {0} 2>&1'.format(os.path.abspath(source_file))
         return subprocess.check_output(command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as exception:
         return exception.output.decode('utf-8').strip()

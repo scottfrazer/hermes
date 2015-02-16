@@ -32,8 +32,8 @@ def parse_python(test_dir, out):
     tmp_dir = tempfile.mkdtemp()
 
     try:
-      CodeGenerator().generate(grammar, 'python', directory=tmp_dir, python_package='parsers', add_main=True)
-      command = 'python grammar_main.py {0} {1} 2>&1'.format(out, os.path.abspath(tokens_file))
+      CodeGenerator().generate(grammar, 'python', directory=tmp_dir, add_main=True)
+      command = 'python grammar_parser.py {0} {1} 2>&1'.format(out, os.path.abspath(tokens_file))
       return subprocess.check_output(command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as exception:
       return exception.output.decode('utf-8').strip()
