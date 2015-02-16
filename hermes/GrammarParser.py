@@ -7,8 +7,9 @@ from hermes.Grammar import InfixOperator, PrefixOperator, MixfixOperator
 from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro
 from hermes.Logger import Factory as LoggerFactory
 
-from hermes.parser.hermes.Lexer import Terminal as HermesTerminal
-from hermes.parser.Common import Ast, AstList
+from hermes.hermes_parser import Terminal as HermesTerminal
+from hermes.hermes_parser import Ast, AstList
+from hermes.hermes_parser import lex, parse
 
 class GrammarFactory:
   # TODO: I want to get rid of name and start parameters
@@ -476,7 +477,6 @@ class GrammarFactory:
 
 class GrammarParser:
   def get_ast(self, source, resource='<string>'):
-    from hermes.parser.hermes import lex, parse
     tree = parse(lex(source, resource))
     return tree.toAst()
 

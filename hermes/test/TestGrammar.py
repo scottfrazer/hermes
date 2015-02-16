@@ -3,7 +3,7 @@ import json
 
 from hermes.GrammarParser import GrammarParser
 from hermes.Morpheme import NonTerminal
-from hermes.parser.hermes import parse, lex
+from hermes.hermes_parser import parse, lex
 
 base_dir = os.path.join(os.path.dirname(__file__), 'cases/grammar')
 

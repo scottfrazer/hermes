@@ -129,4 +129,4 @@ def Cli():
         import hermes
         with open(cli.grammar) as fp:
             ast = GrammarParser().get_ast(fp.read())
-        print(ast.dumps(indent=2, color=hermes.parser.Common.term_color))
+        print(ast.dumps(indent=2, color=hermes.hermes_parser.term_color))

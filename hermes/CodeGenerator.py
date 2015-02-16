@@ -50,7 +50,6 @@ class GrammarTemplate:
     return remove_blank_lines(code)
   def write(self):
     out_file_path = self.get_filename()
-    print(out_file_path)
     try:
       os.makedirs(os.path.dirname(out_file_path))
     except FileExistsError:
