@@ -1,9 +1,7 @@
 import re, moody, os
 from pkg_resources import resource_filename
-from hermes.Logger import Factory as LoggerFactory
 from collections import OrderedDict
 
-moduleLogger = LoggerFactory().getModuleLogger(__name__)
 templates_dir = resource_filename(__name__, 'templates')
 loader = moody.make_loader(templates_dir)
 
@@ -30,7 +28,6 @@ def underscore_to_camelcase(value):
 #   .lexer
 # prefix
 # java_package
-# python_package
 # nodejs
 # directory
 # add_main
@@ -39,7 +36,6 @@ def underscore_to_camelcase(value):
 class GrammarTemplate:
   def __init__(self):
     super().__init__()
-    self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
     self.__dict__.update(locals())
   def render(self):
     kwargs = {k: v for k, v in self.__dict__.items() if k not in ['self']}
@@ -57,10 +53,6 @@ class GrammarTemplate:
     with open(out_file_path, 'w') as fp:
       fp.write(self.render())
     return out_file_path
-
-class PythonTemplate(GrammarTemplate):
-  def get_filename(self):
-    return os.path.join(self.directory, '{0}_parser.py'.format(self.grammar.name))
 
 class JavaTemplate(GrammarTemplate):
   def get_filename(self):
@@ -86,35 +78,10 @@ class JavascriptTemplate(GrammarTemplate):
     self.prefix = self.grammar.name + '_'
     return super().render()
 
-class PythonInitTemplate(PythonTemplate):
-  filename = '__init__.py'
-  template = 'python/Init.py.tpl'
-  def render(self, **kwargs):
-    self.prefix = self.grammar.name + '_'
-    return super().render()
-
-class PythonParserTemplate(PythonTemplate):
-  filename = 'Parser.py'
-  template = 'python/Parser.py.tpl'
-
-class PythonLexerTemplate(PythonTemplate):
-  filename = 'Lexer.py'
-  template = 'python/Lexer.py.tpl'
-
-class PythonAllTemplate(PythonTemplate):
-  template = 'python/All.py.tpl'
-
-class PythonCommonTemplate(PythonTemplate):
-  filename = 'Common.py'
-  template = 'python/Common.py.tpl'
+class PythonTemplate(GrammarTemplate):
+  template = 'python/Template.py.tpl'
   def get_filename(self):
-    return os.path.join(self.directory, self.python_package, self.filename)
-
-class PythonMainTemplate(PythonTemplate):
-  filename = 'main.py'
-  template = 'python/Main.py.tpl'
-  def get_filename(self):
-    return os.path.join(self.directory, self.grammar.name + '_' + self.filename)
+    return os.path.join(self.directory, '{0}_parser.py'.format(self.grammar.name))
 
 class JavaParserTemplate(JavaTemplate):
   filename = 'Parser.java'
@@ -265,28 +232,7 @@ class JavascriptMainTemplate(JavascriptTemplate):
 
 class PythonTemplateFactory:
   def create(self, **kwargs):
-    return [PythonAllTemplate()]
-    templates = [
-        PythonCommonTemplate(),
-        PythonParserTemplate(),
-        PythonInitTemplate()
-    ]
-    if 'lexer' in kwargs and kwargs['lexer'] is not None:
-      templates.append(PythonLexerTemplate())
-    if kwargs['add_main']:
-      templates.append(PythonMainTemplate())
-    return templates
-
-class PythonInternalTemplateFactory:
-  def create(self, **kwargs):
-    return [PythonAllTemplate()]
-    templates = [
-        PythonCommonTemplate(),
-        PythonParserTemplate(),
-    ]
-    if 'lexer' in kwargs and kwargs['lexer'] is not None:
-      templates.append(PythonLexerTemplate())
-    return templates
+    return [PythonTemplate()]
 
 class JavaTemplateFactory:
   def create(self, **kwargs):
@@ -348,7 +294,6 @@ class JavascriptTemplateFactory:
 class CodeGenerator:
     templates = {
         'python': PythonTemplateFactory,
-        'python_internal': PythonInternalTemplateFactory,
         'c': CTemplateFactory,
         'java': JavaTemplateFactory,
         'javascript': JavascriptTemplateFactory
@@ -361,12 +306,11 @@ class CodeGenerator:
         raise Exception('Invalid language: ' + language)
 
     def generate_internal(self, grammar):
-        template_factory = self.get_template_factory('python_internal')
+        template_factory = self.get_template_factory('python')
         args = {
             'grammar': grammar,
             'language': 'python',
             'lexer': grammar.lexers['python'] if 'python' in grammar.lexers else None,
-            'python_internal': True,
             'add_main': False
         }
 
@@ -378,7 +322,7 @@ class CodeGenerator:
             code += '\n'
         return code
 
-    def generate(self, grammar, language, directory='.', add_main=False, java_package=None, python_package=None, nodejs=False):
+    def generate(self, grammar, language, directory='.', add_main=False, java_package=None, nodejs=False):
         template_factory = self.get_template_factory(language)
         args = locals()
         del args['self']

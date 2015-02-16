@@ -194,68 +194,73 @@ class CompositeGrammar:
   _end = EndOfStream(-1)
 
   def __init__(self, name, rules, lexers):
-    self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
-    self.__dict__.update(locals())
-    self.start = None
-    self.terminals = set()
-    self.nonterminals = set()
-    self.macros = set()
-    self.expression_terminals = dict()
-    self.expression_nonterminals = set()
-    self.expanded_rules = list()
+      self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
+      self.__dict__.update(locals())
+      self.start = None
+      self.terminals = set()
+      self.nonterminals = set()
+      self.macros = set()
+      self.expression_terminals = dict()
+      self.expression_nonterminals = set()
+      self.expanded_rules = list()
 
-    expanded_rules = OrderedDict()
-    for rule in rules.copy():
-      self.nonterminals.add(rule.nonterminal)
-      if self.start is None:
-        self.start = rule.nonterminal
-      if isinstance(rule, ExprRule):
-        expression_terminal = Terminal(rule.nonterminal.string.lower())
-        if expression_terminal not in self.terminals:
-          self.expression_nonterminals.add(rule.nonterminal)
-          self.expression_terminals[rule.nonterminal] = expression_terminal
-          self.terminals.add(expression_terminal)
-      for expanded_rule in rule.expand():
-        if expanded_rule not in self.expanded_rules:
-          self.expanded_rules.append(expanded_rule)
-          for morpheme in expanded_rule.production.morphemes:
-            if isinstance(morpheme, Terminal):
-              self.terminals.add(morpheme)
-            elif isinstance(morpheme, NonTerminal):
-              self.nonterminals.add(morpheme)
-              if morpheme.macro:
-                self.macros.add(morpheme.macro)
+      expanded_rules = OrderedDict()
+      for rule in rules.copy():
+          self.nonterminals.add(rule.nonterminal)
+          if self.start is None:
+              self.start = rule.nonterminal
+          if isinstance(rule, ExprRule):
+              expression_terminal = Terminal(rule.nonterminal.string.lower())
+              if expression_terminal not in self.terminals:
+                  self.expression_nonterminals.add(rule.nonterminal)
+                  self.expression_terminals[rule.nonterminal] = expression_terminal
+                  self.terminals.add(expression_terminal)
+          for expanded_rule in rule.expand():
+              if expanded_rule not in self.expanded_rules:
+                  self.expanded_rules.append(expanded_rule)
+                  for morpheme in expanded_rule.production.morphemes:
+                      if isinstance(morpheme, Terminal):
+                          self.terminals.add(morpheme)
+                      elif isinstance(morpheme, NonTerminal):
+                          self.nonterminals.add(morpheme)
+                          if morpheme.macro:
+                              self.macros.add(morpheme.macro)
 
-    self.first_sets = None
-    self.follow_sets = None
-    progress = True
+      for language, lexer in lexers.items():
+          for mode, regexps in lexer.items():
+              for regex in regexps:
+                  if regex.terminal is not None:
+                      self.terminals.add(regex.terminal)
 
-    # Calculate first/follow sets
-    while progress:
-      self.first_sets, first_set_changed = self._compute_first(self.first_sets)
-      self.follow_sets, follow_set_changed = self._compute_follow(self.first_sets, self.follow_sets)
-      progress = first_set_changed | follow_set_changed
+      self.first_sets = None
+      self.follow_sets = None
+      progress = True
 
-    self._compute_conflicts()
+      # Calculate first/follow sets
+      while progress:
+          self.first_sets, first_set_changed = self._compute_first(self.first_sets)
+          self.follow_sets, follow_set_changed = self._compute_follow(self.first_sets, self.follow_sets)
+          progress = first_set_changed | follow_set_changed
 
-    for conflict in self.conflicts:
-      if isinstance(conflict, FirstFirstConflict):
-        conflict.grammar = self
+      self._compute_conflicts()
 
-    nonterminal_rules = {str(n): list() for n in self.nonterminals}
-    for rule in self.expanded_rules:
-      for morpheme in rule.morphemes:
-        if isinstance(morpheme, NonTerminal):
-          nonterminal_rules[str(morpheme)].append(rule)
+      for conflict in self.conflicts:
+          if isinstance(conflict, FirstFirstConflict):
+              conflict.grammar = self
 
-    for nonterminal in self.nonterminals:
-      if not len(nonterminal_rules[str(nonterminal)]) and not nonterminal.generated and nonterminal is not self.start:
-        self.warnings.append(UnusedNonterminalWarning(nonterminal))
+      nonterminal_rules = {str(n): list() for n in self.nonterminals}
+      for rule in self.expanded_rules:
+          for morpheme in rule.morphemes:
+              if isinstance(morpheme, NonTerminal):
+                  nonterminal_rules[str(morpheme)].append(rule)
 
-      nRules = self.get_expanded_rules( nonterminal )
-      if len(nRules) == 0 and nonterminal is not self.start and nonterminal not in self.expression_nonterminals:
-        self.conflicts.append( UndefinedNonterminalConflict(nonterminal) )
-    self._assignIds()
+      for nonterminal in self.nonterminals:
+          if not len(nonterminal_rules[str(nonterminal)]) and not nonterminal.generated and nonterminal is not self.start:
+              self.warnings.append(UnusedNonterminalWarning(nonterminal))
+          nRules = self.get_expanded_rules( nonterminal )
+          if len(nRules) == 0 and nonterminal is not self.start and nonterminal not in self.expression_nonterminals:
+            self.conflicts.append( UndefinedNonterminalConflict(nonterminal) )
+      self._assignIds()
 
   def __getattr__(self, name):
     if name == 'll1_nonterminals':

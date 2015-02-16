@@ -284,7 +284,7 @@ class ParserContext:
 # Parser Code #
 ###############
 
-parser_terminals = {
+terminals = {
 {% for terminal in grammar.standard_terminals %}
     {{terminal.id}}: '{{terminal.string}}',
 {% endfor %}
@@ -354,9 +354,9 @@ def parse(tokens, error_formatter=None, start=None):
 def expect(ctx, terminal_id):
     current = ctx.tokens.current()
     if not current:
-        raise SyntaxError(ctx.error_formatter.no_more_tokens(ctx.nonterminal, parser_terminals[terminal_id], ctx.tokens.last()))
+        raise SyntaxError(ctx.error_formatter.no_more_tokens(ctx.nonterminal, terminals[terminal_id], ctx.tokens.last()))
     if current.id != terminal_id:
-        raise SyntaxError(ctx.error_formatter.unexpected_symbol(ctx.nonterminal, current, [parser_terminals[terminal_id]], ctx.rule))
+        raise SyntaxError(ctx.error_formatter.unexpected_symbol(ctx.nonterminal, current, [terminals[terminal_id]], ctx.rule))
     next = ctx.tokens.advance()
     if next and not is_terminal(next.id):
         raise SyntaxError(ctx.error_formatter.invalid_terminal(ctx.nonterminal, next))
@@ -590,7 +590,7 @@ def parse_{{name}}(ctx):
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[{{nonterminal.id}}]],
+      [terminals[x] for x in nonterminal_first[{{nonterminal.id}}]],
       rules[{{rule.id}}]
     ))
     {% else %}
@@ -605,23 +605,13 @@ def parse_{{name}}(ctx):
 # Lexer Code #
 ##############
 
-lexer_terminals = {
-{% for terminal in lexer.terminals %}
-    {{terminal.id}}: '{{terminal.string}}',
-{% endfor %}
-
-{% for terminal in lexer.terminals %}
-    '{{terminal.string.lower()}}': {{terminal.id}},
-{% endfor %}
-}
-
 # START USER CODE
 {{lexer.code}}
 # END USER CODE
 
 {% if re.search(r'def\s+default_action', lexer.code) is None %}
 def default_action(context, mode, match, terminal, resource, line, col):
-    tokens = [Terminal(lexer_terminals[terminal], terminal, match, resource, line, col)] if terminal else []
+    tokens = [Terminal(terminals[terminal], terminal, match, resource, line, col)] if terminal else []
     return (tokens, mode, context)
 {% endif %}
 
@@ -729,7 +719,7 @@ def cli():
             json_tokens = json.loads(fp.read())
             for json_token in json_tokens:
                 tokens.append(Terminal(
-                    parser_terminals[json_token['terminal']],
+                    terminals[json_token['terminal']],
                     json_token['terminal'],
                     json_token['source_string'],
                     json_token['resource'],
