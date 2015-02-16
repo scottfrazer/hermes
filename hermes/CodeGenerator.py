@@ -169,46 +169,15 @@ class JavaMainTemplate(JavaTemplate):
   filename = 'ParserMain.java'
   template = 'java/ParserMain.java.tpl'
 
-class CHeaderTemplate(CTemplate):
-  template = 'c/parser.h.tpl'
-  def get_filename(self):
-    return os.path.join(self.directory, self.grammar.name.lower() + '_parser.h')
-
-class CSourceTemplate(CTemplate):
-  template = 'c/parser.c.tpl'
+class CSource(CTemplate):
+  template = 'c/template.c.tpl'
   def get_filename(self):
     return os.path.join(self.directory, self.grammar.name.lower() + '_parser.c')
 
-class CCommonHeaderTemplate(CTemplate):
-  filename = 'parser_common.h'
-  template = 'c/parser_common.h.tpl'
-
-class CCommonSourceTemplate(CTemplate):
-  filename = 'parser_common.c'
-  template = 'c/parser_common.c.tpl'
-
-class CUtilHeaderTemplate(CTemplate):
-  filename = 'parser_util.h'
-  template = 'c/parser_util.h.tpl'
-
-class CUtilSourceTemplate(CTemplate):
-  filename = 'parser_util.c'
-  template = 'c/parser_util.c.tpl'
-
-class CMainSourceTemplate(CTemplate):
-  template = 'c/parser_main.c.tpl'
+class CHeader(CTemplate):
+  template = 'c/template.h.tpl'
   def get_filename(self):
-    return os.path.join(self.directory, self.grammar.name.lower() + '_main.c')
-
-class CLexerTemplate(CTemplate):
-  template = 'c/lexer.c.tpl'
-  def get_filename(self):
-    return os.path.join(self.directory, self.grammar.name.lower() + '_lexer.c')
-
-class CLexerHeaderTemplate(CTemplate):
-  template = 'c/lexer.h.tpl'
-  def get_filename(self):
-    return os.path.join(self.directory, self.grammar.name.lower() + '_lexer.h')
+    return os.path.join(self.directory, self.grammar.name.lower() + '_parser.h')
 
 class JavascriptParserTemplate(JavascriptTemplate):
   template = 'javascript/parser.js.tpl'
@@ -264,20 +233,7 @@ class JavaTemplateFactory:
 
 class CTemplateFactory:
   def create(self, **kwargs):
-    templates = [
-        CCommonHeaderTemplate(),
-        CCommonSourceTemplate(),
-        CSourceTemplate(),
-        CHeaderTemplate(),
-        CUtilSourceTemplate(),
-        CUtilHeaderTemplate()
-    ]
-    if 'lexer' in kwargs and kwargs['lexer'] is not None:
-      templates.append(CLexerTemplate())
-      templates.append(CLexerHeaderTemplate())
-    if kwargs['add_main']:
-      templates.append(CMainSourceTemplate())
-    return templates
+    return [CSource(), CHeader()]
 
 class JavascriptTemplateFactory:
   def create(self, **kwargs):
