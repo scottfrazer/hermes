@@ -1,0 +1,34 @@
+grammar {
+  lexer<python> {
+    r'{' -> :lbrace
+    r'}' -> :rbrace
+    r'"([^"]+)"' -> :string
+    r'\[' -> :lsquare
+    r'\]' -> :rsquare
+    r'[0-9]+' -> :integer
+    r':' -> :colon
+    r',' -> :comma
+    r'true|false' -> :boolean
+    r'\s+' -> null
+  }
+  lexer<c> {
+    "\\{" -> :lbrace
+    "\\}" -> :rbrace
+    "\\\"([^\"]+)\\\"" -> :string
+    "\\[" -> :lsquare
+    "\\]" -> :rsquare
+    "[0-9]+" -> :integer
+    ":" -> :colon
+    "," -> :comma
+    "true|false" -> :boolean
+    "\\s+" -> null
+  }
+  parser<ll1> {
+    $json = $obj | $list
+    $obj = :lbrace list($key_value_pair, :comma) :rbrace
+    $key_value_pair = $key :colon $value
+    $key = :string | :integer
+    $value = :string | :integer | :boolean | $obj | $list
+    $list = :lsquare list($value, :comma) :rsquare
+  }
+}
