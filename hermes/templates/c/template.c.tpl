@@ -214,11 +214,6 @@ typedef struct _json_value {
 
 } json_value;
 
-json_value * json_parse(const json_char * json);
-json_value * json_parse_ex (json_settings * settings, const json_char * json, char * error);
-
-void json_value_free (json_value *);
-
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
@@ -264,6 +259,9 @@ typedef struct {
     unsigned long ulong_max;
 
 } json_state;
+
+static void json_value_free (json_value * value);
+static json_value * json_parse_ex (json_settings * settings, const json_char * json, char * error_buf);
 
 static unsigned char
 hex_value (json_char c)
@@ -372,7 +370,7 @@ new_value(json_state * state, json_value ** top, json_value ** root, json_value 
     return 1;
 }
 
-json_value *
+static json_value *
 json_parse_ex (json_settings * settings, const json_char * json, char * error_buf)
 {
     json_char error [128];
@@ -832,7 +830,8 @@ e_failed:
     return 0;
 }
 
-json_value * json_parse (const json_char * json)
+static json_value *
+json_parse (const json_char * json)
 {
     json_settings settings;
     memset (&settings, 0, sizeof (json_settings));
@@ -840,7 +839,8 @@ json_value * json_parse (const json_char * json)
     return json_parse_ex (&settings, json, 0);
 }
 
-void json_value_free (json_value * value)
+static void
+json_value_free (json_value * value)
 {
     json_value * cur_value;
 
@@ -909,8 +909,8 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
   if ( !strcmp(tree->list, "slist") || !strcmp(tree->list, "nlist") )
   {
     offset = (tree->children[0].object == tree->listSeparator) ? 1 : 0;
-    this = parsetree_node_to_ast(&tree->children[offset]);
-    next = parsetree_node_to_ast(&tree->children[offset + 1]);
+    this = {{prefix}}parsetree_node_to_ast(&tree->children[offset]);
+    next = {{prefix}}parsetree_node_to_ast(&tree->children[offset + 1]);
 
     ast_list = NULL;
     if ( this != NULL )
@@ -929,8 +929,8 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
   }
   else if ( !strcmp(tree->list, "otlist") )
   {
-    this = parsetree_node_to_ast(&tree->children[0]);
-    next = parsetree_node_to_ast(&tree->children[1]);
+    this = {{prefix}}parsetree_node_to_ast(&tree->children[0]);
+    next = {{prefix}}parsetree_node_to_ast(&tree->children[1]);
     if ( tree->children[0].object == tree->listSeparator )
     {
       ast_list = (AST_LIST_T *) next->object;
@@ -944,8 +944,8 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
   }
   else if ( !strcmp(tree->list, "tlist") )
   {
-    this = parsetree_node_to_ast(&tree->children[0]);
-    next = parsetree_node_to_ast(&tree->children[2]);
+    this = {{prefix}}parsetree_node_to_ast(&tree->children[0]);
+    next = {{prefix}}parsetree_node_to_ast(&tree->children[2]);
 
     if ( this != NULL )
     {
@@ -966,7 +966,7 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
     for ( i = 0; i < tree->nchildren - 1; i++ )
     {
       lnode = calloc(1, sizeof(AST_LIST_T));
-      lnode->tree = parsetree_node_to_ast(&tree->children[i]);
+      lnode->tree = {{prefix}}parsetree_node_to_ast(&tree->children[i]);
 
       if ( ast_list == NULL )
       {
@@ -978,7 +978,7 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
       tail = tail->next;
     }
 
-    next = parsetree_node_to_ast(&tree->children[tree->nchildren - 1]);
+    next = {{prefix}}parsetree_node_to_ast(&tree->children[tree->nchildren - 1]);
 
     if ( next == NULL ) tail->next = NULL;
     else tail->next = (AST_LIST_T *) next->object;
@@ -1002,7 +1002,7 @@ __parsetree_node_to_ast_expr( PARSE_TREE_NODE_T * node )
 
   if ( tree->ast_converter->type == AST_RETURN_INDEX )
   {
-    ast = parsetree_node_to_ast( &tree->children[ast_return_index->index] );
+    ast = {{prefix}}parsetree_node_to_ast( &tree->children[ast_return_index->index] );
   }
 
   if ( tree->ast_converter->type == AST_CREATE_OBJECT )
@@ -1046,14 +1046,14 @@ __parsetree_node_to_ast_expr( PARSE_TREE_NODE_T * node )
       }
       else if ( tree->nchildren == 1 && tree->children[0].type != PARSE_TREE_NODE_TYPE_PARSETREE )
       {
-        return parsetree_node_to_ast( &tree->children[0] );
+        return {{prefix}}parsetree_node_to_ast( &tree->children[0] );
       }
       else
       {
         child = &tree->children[index];
       }
 
-      ast_object->children[i].tree = parsetree_node_to_ast(child);
+      ast_object->children[i].tree = {{prefix}}parsetree_node_to_ast(child);
     }
 
     return ast;
@@ -1089,7 +1089,7 @@ __parsetree_node_to_ast_normal( PARSE_TREE_NODE_T * node )
 
   if ( ast_conversion_type == AST_RETURN_INDEX )
   {
-    ast = parsetree_node_to_ast( &tree->children[ast_return_index->index] );
+    ast = {{prefix}}parsetree_node_to_ast( &tree->children[ast_return_index->index] );
   }
 
   if ( ast_conversion_type == AST_CREATE_OBJECT )
@@ -1108,44 +1108,19 @@ __parsetree_node_to_ast_normal( PARSE_TREE_NODE_T * node )
     for ( i = 0; i < ast_object_spec->nattrs; i++ )
     {
       ast_object->children[i].name = ast_object_spec->attrs[i].name;
-      ast_object->children[i].tree = parsetree_node_to_ast(&tree->children[ast_object_spec->attrs[i].index]);
+      ast_object->children[i].tree = {{prefix}}parsetree_node_to_ast(&tree->children[ast_object_spec->attrs[i].index]);
     }
   }
 
   return ast;
 }
 
-int
+static int
 token_to_string_bytes(TOKEN_T * token, int indent, PARSER_CONTEXT_T * ctx)
 {
   /* format: "<identifier (line 0 col 0) ``>" */
   int source_string_len = token->source_string ? strlen(token->source_string) : 5;
   return indent + 1 + strlen(ctx->morpheme_to_str(token->terminal->id)) + 7 + 5 + 5 + 5 + 3 + source_string_len + 2;
-}
-
-char *
-token_to_string(TOKEN_T * token, int indent, PARSER_CONTEXT_T * ctx)
-{
-  int bytes;
-  char * str, * indent_str = "";
-
-  bytes = token_to_string_bytes(token, indent, ctx);
-  bytes += 1; /* null byte */
-
-  if ( bytes == -1 )
-    return NULL;
-
-  str = calloc( bytes, sizeof(char) );
-
-  if ( indent )
-    indent_str = _get_indent_str(indent);
-
-  sprintf(str, "%s<%s (line %d col %d) `%s`>", indent_str, ctx->morpheme_to_str(token->terminal->id), token->lineno, token->colno, token->source_string);
-
-  if ( indent )
-    free(indent_str);
-
-  return str;
 }
 
 static int
@@ -1231,7 +1206,7 @@ _parsetree_to_string( PARSE_TREE_NODE_T * node, int indent, PARSER_CONTEXT_T * c
 
   if ( node->type == PARSE_TREE_NODE_TYPE_TERMINAL )
   {
-    return token_to_string((TOKEN_T *) node->object, 0, ctx);
+    return {{prefix}}token_to_string((TOKEN_T *) node->object, 0, ctx);
   }
 
   return NULL;
@@ -1430,7 +1405,7 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_T * ct
 
   if ( node->type == AST_NODE_TYPE_TERMINAL )
   {
-    return token_to_string((TOKEN_T *) node->object, indent, ctx);
+    return {{prefix}}token_to_string((TOKEN_T *) node->object, indent, ctx);
   }
 
   strcpy(str, "None");
@@ -1438,13 +1413,38 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_T * ct
 }
 
 char *
-ast_to_string( ABSTRACT_SYNTAX_TREE_T * tree, PARSER_CONTEXT_T * ctx )
+{{prefix}}token_to_string(TOKEN_T * token, int indent, PARSER_CONTEXT_T * ctx)
+{
+  int bytes;
+  char * str, * indent_str = "";
+
+  bytes = token_to_string_bytes(token, indent, ctx);
+  bytes += 1; /* null byte */
+
+  if ( bytes == -1 )
+    return NULL;
+
+  str = calloc( bytes, sizeof(char) );
+
+  if ( indent )
+    indent_str = _get_indent_str(indent);
+
+  sprintf(str, "%s<%s (line %d col %d) `%s`>", indent_str, ctx->morpheme_to_str(token->terminal->id), token->lineno, token->colno, token->source_string);
+
+  if ( indent )
+    free(indent_str);
+
+  return str;
+}
+
+char *
+{{prefix}}ast_to_string( ABSTRACT_SYNTAX_TREE_T * tree, PARSER_CONTEXT_T * ctx )
 {
   return _ast_to_string(tree, 0, ctx);
 }
 
 char *
-parsetree_to_string( PARSE_TREE_T * tree, PARSER_CONTEXT_T * ctx )
+{{prefix}}parsetree_to_string( PARSE_TREE_T * tree, PARSER_CONTEXT_T * ctx )
 {
   PARSE_TREE_NODE_T node;
   char * str;
@@ -1463,7 +1463,7 @@ parsetree_to_string( PARSE_TREE_T * tree, PARSER_CONTEXT_T * ctx )
 }
 
 ABSTRACT_SYNTAX_TREE_T *
-parsetree_node_to_ast( PARSE_TREE_NODE_T * node )
+{{prefix}}parsetree_node_to_ast( PARSE_TREE_NODE_T * node )
 {
   ABSTRACT_SYNTAX_TREE_T * ast = NULL;
   PARSE_TREE_T * tree;
@@ -1499,7 +1499,7 @@ parsetree_node_to_ast( PARSE_TREE_NODE_T * node )
 }
 
 void
-free_parse_tree( PARSE_TREE_T * tree )
+{{prefix}}free_parse_tree( PARSE_TREE_T * tree )
 {
   PARSE_TREE_NODE_T node;
 
@@ -1512,7 +1512,7 @@ free_parse_tree( PARSE_TREE_T * tree )
 }
 
 void
-free_ast( ABSTRACT_SYNTAX_TREE_T * ast )
+{{prefix}}free_ast( ABSTRACT_SYNTAX_TREE_T * ast )
 {
   AST_OBJECT_T * ast_object;
   AST_LIST_T * ast_list, * current, * tmp;
@@ -1527,7 +1527,7 @@ free_ast( ABSTRACT_SYNTAX_TREE_T * ast )
 
       for ( i = 0; i < ast_object->nchildren; i++ )
       {
-        free_ast(ast_object->children[i].tree);
+        {{prefix}}free_ast(ast_object->children[i].tree);
       }
 
       free(ast_object->children);
@@ -1541,7 +1541,7 @@ free_ast( ABSTRACT_SYNTAX_TREE_T * ast )
       for ( current = ast_list; current != NULL; current = current->next )
       {
         if ( current->tree != NULL )
-          free_ast(current->tree);
+          {{prefix}}free_ast(current->tree);
       }
 
       current = ast_list;
@@ -1574,7 +1574,7 @@ static PARSE_TREE_T * parse_{{expression_nonterminal.string.lower()}}(PARSER_CON
 static PARSE_TREE_T * _parse_{{expression_nonterminal.string.lower()}}(int, PARSER_CONTEXT_T *);
 {% endfor %}
 
-void syntax_error( PARSER_CONTEXT_T * ctx, char * message );
+static void syntax_error( PARSER_CONTEXT_T * ctx, char * message );
 
 /* index with {{prefix.upper()}}TERMINAL_E or {{prefix.upper()}}NONTERMINAL_E */
 static char * {{prefix}}morphemes[] = {
@@ -1717,7 +1717,7 @@ expect(int terminal_id, PARSER_CONTEXT_T * ctx)
 
   if ( current != terminal_id )
   {
-    char * token_string = (current != {{prefix.upper()}}TERMINAL_END_OF_STREAM) ?  token_to_string(current_token, 0, ctx) : strdup("(end of stream)");
+    char * token_string = (current != {{prefix.upper()}}TERMINAL_END_OF_STREAM) ?  {{prefix}}token_to_string(current_token, 0, ctx) : strdup("(end of stream)");
     fmt = "Unexpected symbol (line %d, col %d) when parsing %s.  Expected %s, got %s.";
     message = calloc( strlen(fmt) + strlen({{prefix}}morpheme_to_str(terminal_id)) + strlen(token_string) + strlen(ctx->current_function) + 20, sizeof(char) );
     sprintf(message, fmt, current_token->lineno, current_token->colno, ctx->current_function, {{prefix}}morpheme_to_str(terminal_id), token_string);
@@ -2205,7 +2205,7 @@ ABSTRACT_SYNTAX_TREE_T *
   PARSE_TREE_NODE_T node;
   node.type = PARSE_TREE_NODE_TYPE_PARSETREE;
   node.object = (PARSE_TREE_NODE_U *) tree;
-  return parsetree_node_to_ast(&node);
+  return {{prefix}}parsetree_node_to_ast(&node);
 }
 
 /* Section: Lexer */
@@ -2451,13 +2451,13 @@ main(int argc, char * argv[])
   abstract_syntax_tree = {{grammar.name}}_ast(parse_tree);
 
   if ( argc >= 3 && !strcmp(argv[1], "ast") ) {
-    str = ast_to_string(abstract_syntax_tree, ctx);
+    str = {{prefix}}ast_to_string(abstract_syntax_tree, ctx);
   } else {
-    str = parsetree_to_string(parse_tree, ctx);
+    str = {{prefix}}parsetree_to_string(parse_tree, ctx);
   }
 
-  free_parse_tree(parse_tree);
-  free_ast(abstract_syntax_tree);
+  {{prefix}}free_parse_tree(parse_tree);
+  {{prefix}}free_ast(abstract_syntax_tree);
 
   if ( ctx->syntax_errors ) {
     rval = 1;

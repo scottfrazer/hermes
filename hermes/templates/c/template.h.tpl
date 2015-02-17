@@ -1,5 +1,5 @@
-#ifndef __PARSER_COMMON_H
-#define __PARSER_COMMON_H
+#ifndef HERMES_PARSER_COMMON_H
+#define HERMES_PARSER_COMMON_H
 
 #include <pcre.h>
 
@@ -221,12 +221,16 @@ typedef struct lexer_regex_t {
 
 typedef struct lexer_regex_t *** LEXER_T;
 
-char * ast_to_string( ABSTRACT_SYNTAX_TREE_T * tree, PARSER_CONTEXT_T * ctx );
-char * parsetree_to_string( PARSE_TREE_T * tree, PARSER_CONTEXT_T * ctx );
-char * token_to_string(TOKEN_T * token, int indent, PARSER_CONTEXT_T * ctx);
-ABSTRACT_SYNTAX_TREE_T * parsetree_node_to_ast( PARSE_TREE_NODE_T * node );
-void free_parse_tree( PARSE_TREE_T * tree );
-void free_ast( ABSTRACT_SYNTAX_TREE_T * ast );
+#endif
+
+char * {{prefix}}ast_to_string( ABSTRACT_SYNTAX_TREE_T * tree, PARSER_CONTEXT_T * ctx );
+char * {{prefix}}parsetree_to_string( PARSE_TREE_T * tree, PARSER_CONTEXT_T * ctx );
+char * {{prefix}}token_to_string(TOKEN_T * token, int indent, PARSER_CONTEXT_T * ctx);
+ABSTRACT_SYNTAX_TREE_T * {{prefix}}parsetree_node_to_ast( PARSE_TREE_NODE_T * node );
+void {{prefix}}free_parse_tree( PARSE_TREE_T * tree );
+void {{prefix}}free_ast( ABSTRACT_SYNTAX_TREE_T * ast );
+
+#ifndef __HERMES_{{prefix.upper()}}PARSER_H
 
 /* Section: Parser */
 
