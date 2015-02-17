@@ -1705,12 +1705,12 @@ static int
 advance(PARSER_CONTEXT_T * ctx)
 {
   TOKEN_LIST_T * token_list = ctx->tokens;
-  if ( token_list->current_index == token_list->ntokens )
-  {
-    return {{prefix.upper()}}TERMINAL_END_OF_STREAM;
+  if ( token_list->current_index == token_list->ntokens ) {
+    token_list->current = {{prefix.upper()}}TERMINAL_END_OF_STREAM;
+    return token_list->current;
   }
   token_list->current_index += 1;
-  token_list->current = token_list->tokens[token_list->current_index].terminal->id;
+  token_list->current = token_list->tokens[token_list->current_index]->terminal->id;
   return token_list->current;
 }
 
@@ -1730,8 +1730,8 @@ expect(int terminal_id, PARSER_CONTEXT_T * ctx)
     syntax_error(ctx, message);
   }
 
-  current = token_list->tokens[token_list->current_index].terminal->id;
-  current_token = &token_list->tokens[token_list->current_index];
+  current = token_list->tokens[token_list->current_index]->terminal->id;
+  current_token = token_list->tokens[token_list->current_index];
 
   if ( current != terminal_id )
   {
@@ -2071,8 +2071,8 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 
     {% if not grammar.must_consume_tokens(nonterminal) %}
   fmt = "Error: Unexpected symbol (%s) when parsing %s";
-  message = calloc( strlen(fmt) + strlen({{prefix}}morpheme_to_str(tokens->tokens[tokens->current_index].terminal->id)) + strlen("parse_{{nonterminal.string.lower()}}") + 1, sizeof(char) );
-  sprintf(message, fmt, {{prefix}}morpheme_to_str(tokens->tokens[tokens->current_index].terminal->id), "parse_{{nonterminal.string.lower()}}");
+  message = calloc( strlen(fmt) + strlen({{prefix}}morpheme_to_str(tokens->tokens[tokens->current_index]->terminal->id)) + strlen("parse_{{nonterminal.string.lower()}}") + 1, sizeof(char) );
+  sprintf(message, fmt, {{prefix}}morpheme_to_str(tokens->tokens[tokens->current_index]->terminal->id), "parse_{{nonterminal.string.lower()}}");
   syntax_error(ctx, message);
   return NULL;
     {% else %}
@@ -2139,7 +2139,7 @@ PARSER_CONTEXT_T *
   ctx->tokens = tokens;
   ctx->morpheme_to_str = {{prefix}}morpheme_to_str;
   tokens->current_index = 0;
-  tokens->current = tokens->tokens[0].terminal->id;
+  tokens->current = tokens->tokens[0]->terminal->id;
   return ctx;
 }
 
@@ -2161,7 +2161,7 @@ syntax_error( PARSER_CONTEXT_T * ctx, char * message )
 {
   SYNTAX_ERROR_T * syntax_error = calloc(1, sizeof(SYNTAX_ERROR_T));
   syntax_error->message = message;
-  syntax_error->terminal = ctx->tokens->tokens[ctx->tokens->current_index].terminal;
+  syntax_error->terminal = ctx->tokens->tokens[ctx->tokens->current_index]->terminal;
   syntax_error->next = NULL;
 
   if ( ctx->syntax_errors == NULL )
@@ -2177,17 +2177,17 @@ syntax_error( PARSER_CONTEXT_T * ctx, char * message )
 }
 
 PARSE_TREE_T *
-{{prefix}}parse(TOKEN_LIST_T * tokens, int start, PARSER_CONTEXT_T * ctx)
+{{prefix}}parse(PARSER_CONTEXT_T * ctx, ENUM_{{prefix.upper()}}NONTERMINAL start)
 {
   PARSE_TREE_T * tree;
 
-  if ( start == -1 )
+  if ( start == -1 ) {
     start = {{prefix.upper()}}NONTERMINAL_{{grammar.start.string.upper()}};
+  }
 
   tree = functions[start - {{len(grammar.standard_terminals)}}](ctx);
 
-  if ( tokens->current != {{prefix.upper()}}TERMINAL_END_OF_STREAM )
-  {
+  if ( ctx->tokens->current != {{prefix.upper()}}TERMINAL_END_OF_STREAM ) {
     syntax_error(ctx, strdup("Finished parsing without consuming all tokens."));
   }
 
@@ -2264,8 +2264,8 @@ static char * strdup2(const char *str) {
 
 TOKEN_LIST_T *
 get_tokens(char * grammar, char * json_input, TOKEN_LIST_T * token_list) {
-  TOKEN_T * tokens;
-  TOKEN_T end_of_stream;
+  TOKEN_T ** tokens;
+  TOKEN_T * end_of_stream;
   int i, j, ntokens;
   json_value * json;
   TOKEN_FIELD_E field, field_mask;
@@ -2275,9 +2275,9 @@ get_tokens(char * grammar, char * json_input, TOKEN_LIST_T * token_list) {
     terminal_str_to_id = {{grammar.name}}_str_to_morpheme;
   }
 
-  memset(&end_of_stream, 0, sizeof(TOKEN_T));
-  end_of_stream.terminal = calloc(1, sizeof(TERMINAL_T));
-  end_of_stream.terminal->id = -1;
+  end_of_stream = calloc(1, sizeof(TOKEN_T));
+  end_of_stream->terminal = calloc(1, sizeof(TERMINAL_T));
+  end_of_stream->terminal->id = -1;
 
   json = json_parse(json_input);
 
@@ -2292,13 +2292,14 @@ get_tokens(char * grammar, char * json_input, TOKEN_LIST_T * token_list) {
   }
 
   ntokens = json->u.array.length;
-  tokens = calloc(ntokens+1, sizeof(TOKEN_T));
-  memcpy(&tokens[ntokens], &end_of_stream, sizeof(TOKEN_T));
+  tokens = calloc(ntokens + 1, sizeof(TOKEN_T *));
+  tokens[ntokens] = end_of_stream;
 
   for ( i = 0; i < json->u.array.length; i++ ) {
 
     json_value * json_token = json->u.array.values[i];
-    TOKEN_T * token = &tokens[i];
+    TOKEN_T * token;
+    token = tokens[i] = calloc(1, sizeof(TOKEN_T));
     token->terminal = calloc(1, sizeof(TERMINAL_T));
 
     if ( json_token->type != json_object ) {
@@ -2377,7 +2378,7 @@ get_tokens(char * grammar, char * json_input, TOKEN_LIST_T * token_list) {
 
   token_list->tokens = tokens;
   token_list->ntokens = ntokens;
-  token_list->current = tokens[0].terminal->id;
+  token_list->current = tokens[0]->terminal->id;
   token_list->current_index = -1;
   return token_list;
 }
@@ -2399,7 +2400,7 @@ main(int argc, char * argv[])
   b64 = malloc(b64_size);
 
   char err[512];
-  TOKEN_T ** tokens;
+  TOKEN_LIST_T * lexer_tokens;
 
   if (argc != 3 || (strcmp(argv[1], "parsetree") != 0 && strcmp(argv[1], "ast") != 0 {% if lexer %} && strcmp(argv[1], "tokens") != 0{% endif %})) {
     fprintf(stderr, "Usage: %s <parsetree|ast> <tokens_file>\n", argv[0]);
@@ -2418,21 +2419,25 @@ main(int argc, char * argv[])
     if ( {{prefix}}lexer_has_errors() ) {
         {{prefix}}lexer_print_errors();
     }
-    tokens = {{prefix}}lex(file_contents, argv[2], &err[0]);
-    if (tokens == NULL) {
+    lexer_tokens = {{prefix}}lex(file_contents, argv[2], &err[0]);
+    if (lexer_tokens == NULL) {
         printf("%s\n", err);
         exit(1);
     }
 
-    if (tokens[0] == NULL) {
+    if (lexer_tokens->tokens[0]->terminal->id == {{prefix.upper()}}TERMINAL_END_OF_STREAM) {
         printf("[]\n");
         exit(0);
     }
 
     printf("[\n");
-    for (i = 0; tokens[i]; tokens++) {
+    for (i = 0; lexer_tokens->tokens[i]->terminal->id != {{prefix.upper()}}TERMINAL_END_OF_STREAM; i++) {
         while(1) {
-            rc = base64_encode((const char *) tokens[i]->source_string, strlen(tokens[i]->source_string), b64, b64_size);
+            rc = base64_encode(
+                (const char *) lexer_tokens->tokens[i]->source_string,
+                strlen(lexer_tokens->tokens[i]->source_string),
+                b64, b64_size
+            );
             if (rc == 0) break;
             else if (rc == BASE64_OUTPUT_TOO_SMALL) {
                 b64_size *= 2;
@@ -2448,13 +2453,13 @@ main(int argc, char * argv[])
         printf(
           "    %c\"terminal\": \"%s\", \"resource\": \"%s\", \"line\": %d, \"col\": %d, \"source_string\": \"%s\"%c%s\n",
           '{',
-          tokens[i]->terminal->string,
-          tokens[i]->resource,
-          tokens[i]->lineno,
-          tokens[i]->colno,
+          lexer_tokens->tokens[i]->terminal->string,
+          lexer_tokens->tokens[i]->resource,
+          lexer_tokens->tokens[i]->lineno,
+          lexer_tokens->tokens[i]->colno,
           b64,
           '}',
-          tokens[i+1] == NULL ? "" : ","
+          lexer_tokens->tokens[i+1]->terminal->id == {{prefix.upper()}}TERMINAL_END_OF_STREAM ? "" : ","
         );
     }
     printf("]\n");
@@ -2464,8 +2469,8 @@ main(int argc, char * argv[])
   {% endif %}
 
   get_tokens("{{grammar.name}}", file_contents, &token_list);
-  ctx = {{grammar.name}}_parser_init(&token_list);
-  parse_tree = {{grammar.name}}_parse(&token_list, -1, ctx);
+  ctx = {{prefix}}parser_init(&token_list);
+  parse_tree = {{prefix}}parse(ctx, -1);
   abstract_syntax_tree = {{grammar.name}}_ast(parse_tree);
 
   if ( argc >= 3 && !strcmp(argv[1], "ast") ) {
@@ -2747,7 +2752,8 @@ next(char ** string, {{prefix.upper()}}LEXER_MODE_E mode, void * context, char *
     return NULL;
 }
 
-TOKEN_T ** {{prefix}}lex(char * string, char * resource, char * error) {
+TOKEN_LIST_T *
+{{prefix}}lex(char * string, char * resource, char * error) {
     int line = 1, col = 1, i;
     {{prefix.upper()}}LEXER_MODE_E mode = {{prefix.upper()}}LEXER_DEFAULT_MODE_E;
     char * string_current = string;
@@ -2755,6 +2761,11 @@ TOKEN_T ** {{prefix}}lex(char * string, char * resource, char * error) {
     int parsed_tokens_index = 0;
     void * context = init();
     TOKEN_T ** parsed_tokens = calloc(parsed_tokens_size, sizeof(TOKEN_T *));
+    TOKEN_T * end_of_stream = calloc(1, sizeof(TOKEN_T));
+    TOKEN_LIST_T * token_list = calloc(1, sizeof(TOKEN_LIST_T));
+
+    end_of_stream->terminal = calloc(1, sizeof(TERMINAL_T));
+    end_of_stream->terminal->id = {{prefix.upper()}}TERMINAL_END_OF_STREAM;
 
     while (strlen(string_current)) {
         LEXER_MATCH_T * match = next(&string_current, mode, context, resource, &line, &col);
@@ -2762,20 +2773,33 @@ TOKEN_T ** {{prefix}}lex(char * string, char * resource, char * error) {
         if (match == NULL || match->match_length == 0) {
             unrecognized_token(string, line, col, error);
             free(parsed_tokens);
+            free(token_list);
             return NULL;
         }
 
         for (i = 0; match->tokens && match->tokens[i]; i++) {
-            if (parsed_tokens_index + 1 == parsed_tokens_size) {
+            if (parsed_tokens_index + 2 == parsed_tokens_size) {
                 parsed_tokens_size += 100;
                 parsed_tokens = realloc(parsed_tokens, parsed_tokens_size * sizeof(TOKEN_T *));
             }
             parsed_tokens[parsed_tokens_index++] = match->tokens[i];
+            token_list->ntokens++;
         }
         mode = match->mode;
     }
+    parsed_tokens[parsed_tokens_index++] = end_of_stream;
     parsed_tokens[parsed_tokens_index++] = NULL;
     destroy(context);
-    return parsed_tokens;
+
+    token_list->tokens = parsed_tokens;
+    return token_list;
+}
+
+void
+{{prefix}}free_token_list(TOKEN_LIST_T * list) {
+    if (list != NULL) {
+        if (list->tokens != NULL) free(list->tokens);
+        free(list);
+    }
 }
 {% endif %}

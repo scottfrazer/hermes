@@ -25,10 +25,10 @@ grammar {
   }
   parser<ll1> {
     $json = $obj | $list
-    $obj = :lbrace list($key_value_pair, :comma) :rbrace
-    $key_value_pair = $key :colon $value
+    $obj = :lbrace list($key_value_pair, :comma) :rbrace -> JsonObject(values=$1)
+    $key_value_pair = $key :colon $value -> KeyValue(key=$0, value=$2)
     $key = :string | :integer
     $value = :string | :integer | :boolean | $obj | $list
-    $list = :lsquare list($value, :comma) :rsquare
+    $list = :lsquare list($value, :comma) :rsquare -> JsonList(values=$1)
   }
 }

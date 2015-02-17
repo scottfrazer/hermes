@@ -158,7 +158,7 @@ typedef struct token_list_t {
 
   int current; /* terminal id */
   int current_index;
-  TOKEN_T * tokens;
+  TOKEN_T ** tokens;
   int ntokens;
 
 } TOKEN_LIST_T;
@@ -263,7 +263,7 @@ typedef enum {{prefix}}nonterminal_e {
 
 PARSER_CONTEXT_T * {{prefix}}parser_init( TOKEN_LIST_T * tokens );
 void {{prefix}}parser_exit( PARSER_CONTEXT_T * ctx);
-PARSE_TREE_T * {{prefix}}parse( TOKEN_LIST_T * tokens, int start, PARSER_CONTEXT_T * ctx );
+PARSE_TREE_T * {{prefix}}parse(PARSER_CONTEXT_T * ctx, ENUM_{{prefix.upper()}}NONTERMINAL start);
 ABSTRACT_SYNTAX_TREE_T *{{prefix}}ast( PARSE_TREE_T * parse_tree );
 void * {{prefix}}eval( PARSE_TREE_T * parse_tree );
 char * {{prefix}}morpheme_to_str(int id);
@@ -286,8 +286,8 @@ void {{prefix}}lexer_print_errors();
 void {{prefix}}lexer_destroy();
 {{prefix.upper()}}LEXER_MODE_E {{prefix}}lexer_mode(const char * mode);
 char * {{prefix}}lexer_mode_string({{prefix.upper()}}LEXER_MODE_E mode);
-
-TOKEN_T ** {{prefix}}lex(char * string, char * resource, char * error);
+TOKEN_LIST_T * {{prefix}}lex(char * string, char * resource, char * error);
+void {{prefix}}free_token_list(TOKEN_LIST_T * list);
 
 {% endif %}
 
