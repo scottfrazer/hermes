@@ -64,6 +64,19 @@ _lstrip(char * string)
   return stripped;
 }
 
+static void
+_prepend(char * s, const char * t)
+{
+    size_t len = strlen(t);
+    size_t i;
+
+    memmove(s + len, s, strlen(s) + 1);
+
+    for (i = 0; i < len; ++i) {
+        s[i] = t[i];
+    }
+}
+
 /* Section: Base64 encoding/decoding */
 
 #define BASE64_OUTPUT_TOO_SMALL 1
@@ -1116,11 +1129,11 @@ __parsetree_node_to_ast_normal( PARSE_TREE_NODE_T * node )
 }
 
 static int
-token_to_string_bytes(TOKEN_T * token, int indent)
+token_to_string_bytes(TOKEN_T * token)
 {
   /* format: "<identifier (line 0 col 0) ``>" */
   int source_string_len = token->source_string ? strlen(token->source_string) : 5;
-  return indent + 1 + strlen({{prefix}}morpheme_to_str(token->terminal->id)) + 7 + 5 + 5 + 5 + 3 + source_string_len + 2;
+  return 1 + strlen({{prefix}}morpheme_to_str(token->terminal->id)) + 7 + 5 + 5 + 5 + 3 + source_string_len + 2;
 }
 
 static int
@@ -1152,7 +1165,7 @@ _parsetree_to_string_bytes( PARSE_TREE_NODE_T * node, int indent, PARSER_CONTEXT
 
   if ( node->type == PARSE_TREE_NODE_TYPE_TERMINAL )
   {
-    return 2 + token_to_string_bytes((TOKEN_T *) node->object, indent);
+    return 2 + token_to_string_bytes((TOKEN_T *) node->object) + indent;
   }
 
   return -1;
@@ -1206,7 +1219,7 @@ _parsetree_to_string( PARSE_TREE_NODE_T * node, int indent, PARSER_CONTEXT_T * c
 
   if ( node->type == PARSE_TREE_NODE_TYPE_TERMINAL )
   {
-    return {{prefix}}token_to_string((TOKEN_T *) node->object, 0);
+    return {{prefix}}token_to_string((TOKEN_T *) node->object);
   }
 
   return NULL;
@@ -1322,7 +1335,7 @@ _ast_to_string_bytes( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_
 
   if ( node->type == AST_NODE_TYPE_TERMINAL )
   {
-    return initial_indent + token_to_string_bytes((TOKEN_T *) node->object, indent);
+    return initial_indent + token_to_string_bytes((TOKEN_T *) node->object) + indent;
   }
 
   return 4; /* "None" */
@@ -1405,7 +1418,14 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_T * ct
 
   if ( node->type == AST_NODE_TYPE_TERMINAL )
   {
-    return {{prefix}}token_to_string((TOKEN_T *) node->object, indent);
+    char * token_str = {{prefix}}token_to_string((TOKEN_T *) node->object);
+    indent_str = _get_indent_str(indent);
+    if (indent_str != NULL) {
+      token_str = realloc(token_str, strlen(token_str) + strlen(indent_str) + 1);
+      _prepend(token_str, indent_str);
+      free(indent_str);
+    }
+    return token_str;
   }
 
   strcpy(str, "None");
@@ -1413,12 +1433,12 @@ _ast_to_string( ABSTRACT_SYNTAX_TREE_T * node, int indent, PARSER_CONTEXT_T * ct
 }
 
 char *
-{{prefix}}token_to_string(TOKEN_T * token, int indent)
+{{prefix}}token_to_string(TOKEN_T * token)
 {
   int bytes;
-  char * str, * indent_str = "";
+  char * str;
 
-  bytes = token_to_string_bytes(token, indent);
+  bytes = token_to_string_bytes(token);
   bytes += 1; /* null byte */
 
   if ( bytes == -1 )
@@ -1426,17 +1446,11 @@ char *
 
   str = calloc( bytes, sizeof(char) );
 
-  if ( indent )
-    indent_str = _get_indent_str(indent);
-
   sprintf(
       str,
-      "%s<%s (line %d col %d) `%s`>",
-      indent_str, {{prefix}}morpheme_to_str(token->terminal->id), token->lineno, token->colno, token->source_string
+      "<%s (line %d col %d) `%s`>",
+      {{prefix}}morpheme_to_str(token->terminal->id), token->lineno, token->colno, token->source_string
   );
-
-  if ( indent )
-    free(indent_str);
 
   return str;
 }
@@ -1721,7 +1735,7 @@ expect(int terminal_id, PARSER_CONTEXT_T * ctx)
 
   if ( current != terminal_id )
   {
-    char * token_string = (current != {{prefix.upper()}}TERMINAL_END_OF_STREAM) ?  {{prefix}}token_to_string(current_token, 0) : strdup("(end of stream)");
+    char * token_string = (current != {{prefix.upper()}}TERMINAL_END_OF_STREAM) ?  {{prefix}}token_to_string(current_token) : strdup("(end of stream)");
     fmt = "Unexpected symbol (line %d, col %d) when parsing %s.  Expected %s, got %s.";
     message = calloc( strlen(fmt) + strlen({{prefix}}morpheme_to_str(terminal_id)) + strlen(token_string) + strlen(ctx->current_function) + 20, sizeof(char) );
     sprintf(message, fmt, current_token->lineno, current_token->colno, ctx->current_function, {{prefix}}morpheme_to_str(terminal_id), token_string);

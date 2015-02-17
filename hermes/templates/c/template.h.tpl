@@ -225,7 +225,7 @@ typedef struct lexer_regex_t *** LEXER_T;
 
 char * {{prefix}}ast_to_string( ABSTRACT_SYNTAX_TREE_T * tree, PARSER_CONTEXT_T * ctx );
 char * {{prefix}}parsetree_to_string( PARSE_TREE_T * tree, PARSER_CONTEXT_T * ctx );
-char * {{prefix}}token_to_string(TOKEN_T * token, int indent);
+char * {{prefix}}token_to_string(TOKEN_T * token);
 ABSTRACT_SYNTAX_TREE_T * {{prefix}}parsetree_node_to_ast( PARSE_TREE_NODE_T * node );
 void {{prefix}}free_parse_tree( PARSE_TREE_T * tree );
 void {{prefix}}free_ast( ABSTRACT_SYNTAX_TREE_T * ast );
