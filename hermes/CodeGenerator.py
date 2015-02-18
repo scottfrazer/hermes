@@ -95,25 +95,10 @@ class JavascriptTemplate(GrammarTemplate):
     self.prefix = self.grammar.name + '_'
     return super().render()
 
-class JavascriptParserTemplate(JavascriptTemplate):
-  template = 'javascript/parser.js.tpl'
+class JavascriptAllTemplate(JavascriptTemplate):
+  template = 'javascript/all.js.tpl'
   def get_filename(self):
     return os.path.join(self.directory, self.grammar.name.lower() + '_parser.js')
-
-class JavascriptLexerTemplate(JavascriptTemplate):
-  template = 'javascript/lexer.js.tpl'
-  def get_filename(self):
-    return os.path.join(self.directory, self.grammar.name.lower() + '_lexer.js')
-
-class JavascriptCommonTemplate(JavascriptTemplate):
-  template = 'javascript/common.js.tpl'
-  def get_filename(self):
-    return os.path.join(self.directory, 'common.js')
-
-class JavascriptMainTemplate(JavascriptTemplate):
-  template = 'javascript/main.js.tpl'
-  def get_filename(self):
-    return os.path.join(self.directory, 'main.js')
 
 class PythonTemplateFactory:
   def create(self, **kwargs):
@@ -129,15 +114,7 @@ class CTemplateFactory:
 
 class JavascriptTemplateFactory:
   def create(self, **kwargs):
-    templates = [
-        JavascriptCommonTemplate(),
-        JavascriptParserTemplate()
-    ]
-    if 'lexer' in kwargs and kwargs['lexer'] is not None:
-      templates.append(JavascriptLexerTemplate())
-    if kwargs['add_main'] and kwargs['nodejs']:
-      templates.append(JavascriptMainTemplate())
-    return templates
+    return [JavascriptAllTemplate()]
 
 class CodeGenerator:
     templates = {

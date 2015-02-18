@@ -87,7 +87,7 @@ def parse_javascript(test_dir, out):
 
     try:
       CodeGenerator().generate(grammar, 'javascript', directory=tmp_dir, nodejs=True, add_main=True)
-      command = 'node main.js {0} {1} 2>&1'.format(out, os.path.abspath(tokens_file))
+      command = 'node grammar_parser.js {0} {1} 2>&1'.format(out, os.path.abspath(tokens_file))
       return subprocess.check_output(command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as exception:
       return exception.output.decode('utf-8').strip()

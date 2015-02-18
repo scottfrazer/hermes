@@ -80,7 +80,7 @@ def lex_javascript(test_dir):
 
     try:
         CodeGenerator().generate(grammar, 'javascript', directory=tmp_dir, nodejs=True, add_main=True)
-        command = 'node main.js tokens {0} 2>&1'.format(os.path.abspath(source_file))
+        command = 'node grammar_parser.js tokens {0} 2>&1'.format(os.path.abspath(source_file))
         return subprocess.check_output(command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as exception:
         return exception.output.decode('utf-8').strip()

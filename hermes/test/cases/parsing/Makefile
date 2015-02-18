@@ -7,8 +7,8 @@ java_compile:
 	-java -cp java GrammarParser ast tokens &>java/ast
 python_parser: python_files
 js_parser: js_files
-	-node js/main.js parsetree tokens &>js/parsetree
-	-node js/main.js ast tokens &>js/ast
+	-node js/grammar_parser.js parsetree tokens &>js/parsetree
+	-node js/grammar_parser.js ast tokens &>js/ast
 c_parser: c_files
 	gcc -o c/parser c/*.c -g -std=c99
 	-c/parser parsetree tokens &>c/parsetree
