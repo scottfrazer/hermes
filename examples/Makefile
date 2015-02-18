@@ -6,8 +6,8 @@ c:
 python:
 	python python.py
 java:
-	hermes generate --language=java test.gr --add-main
-	javac TestParser.java
-	java TestParser
+	hermes generate --language=java test.gr
+	javac *.java
+	java JavaTest
 clean:
 	rm -rf *.dSYM ctest *_parser.c *_parser.h *.pyc *Parser.java *.class
