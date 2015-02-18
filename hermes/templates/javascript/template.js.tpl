@@ -17,6 +17,94 @@ String.prototype.lstrip = function() {
     return this.replace(/^\s*/g, "");
 }
 
+function parse_tree_string(parsetree, indent, b64_source) {
+    return _parse_tree_string(parsetree, indent, b64_source, 0);
+}
+
+function _parse_tree_string(parsetree, indent, b64_source, indent_level) {
+    if (typeof(indent) != 'number' || indent <= 0) {
+        indent = undefined
+    }
+    var indent_str = typeof(indent) !== 'undefined' ? Array(indent * indent_level + 1).join(' ') : ''
+    if (parsetree instanceof ParseTree) {
+        var children = []
+        for (var i in parsetree.children) {
+            children.push(_parse_tree_string(parsetree.children[i], indent, b64_source, indent_level + 1))
+        }
+        if (typeof(indent) == 'undefined' || children.length == 0) {
+            return '{0}({1}: {2})'.format(indent_str, parsetree.nonterminal.to_string(), children.join(', '))
+        } else {
+            return '{0}({1}:\n{2}\n{3})'.format(
+                indent_str,
+                parsetree.nonterminal.to_string(),
+                children.join(',\n'),
+                indent_str
+            )
+        }
+    } else if (parsetree instanceof Terminal) {
+        return indent_str + parsetree.to_string(b64_source)
+    }
+}
+
+function ast_string(ast, indent, b64_source) {
+    return _ast_string(ast, indent, b64_source, 0);
+}
+
+function _ast_string(ast, indent, b64_source, indent_level) {
+    if (typeof(indent) != 'number' || indent <= 0) {
+        indent = undefined
+    }
+    var indent_str = typeof(indent) !== 'undefined' ? Array(indent * indent_level + 1).join(' ') : ''
+    var next_indent_str = typeof(indent) !== 'undefined' ? Array(indent * (indent_level+1) + 1).join(' ') : ''
+    if (ast instanceof Ast) {
+        var children = {}
+        for (var key in ast.attributes) {
+            children[key] = _ast_string(ast.attributes[key], indent, b64_source, indent_level + 1)
+        }
+        if (typeof(indent) == 'undefined') {
+            var strs = []
+            for (var key in children) {
+                strs.push('{0}={1}'.format(key, children[key]))
+            }
+            return '({0}: {1})'.format(
+                ast.name,
+                strs.join(', ')
+            )
+        } else {
+            var strs = []
+            for (var key in children) {
+                strs.push('{0}{1}={2}'.format(next_indent_str, key, children[key]))
+            }
+            return '({0}:\n{1}\n{2})'.format(
+                ast.name,
+                strs.join(',\n'),
+                indent_str
+            )
+        }
+    } else if (ast instanceof AstList) {
+        var children = []
+        for (var key in ast.list) {
+            children.push(_ast_string(ast.list[key], indent, b64_source, indent_level + 1))
+        }
+        if (typeof(indent) == 'undefined' || children.length == 0) {
+            return '[{0}]'.format(children.join(', '))
+        } else {
+            var strs = []
+            for (var index in children) {
+                strs.push('{0}{1}'.format(next_indent_str, children[index]))
+            }
+            return '[\n{0}\n{1}]'.format(
+                strs.join(',\n'),
+                indent_str
+            )
+        }
+    } else if (ast instanceof Terminal) {
+        return ast.to_string(b64_source)
+    } else {
+        return (ast == null) ? 'None' : ast.to_string()
+    }
+}
+
 function Terminal(id, str, source_string, resource, line, col) {
     this.id = id;
     this.str = str;
@@ -27,8 +115,11 @@ function Terminal(id, str, source_string, resource, line, col) {
     this.to_ast = function() {
         return this;
     };
-    this.to_string = function() {
-        return '<{0} (line {1} col {2}) `{3}`>'.format(this.str, this.line, this.col, this.source_string);
+    this.to_string = function(b64_source) {
+        return '<{0} (line {1} col {2}) `{3}`>'.format(
+            this.str, this.line, this.col,
+            b64_source ? Base64.encode(this.source_string) : this.source_string
+        );
     };
 }
 
@@ -209,76 +300,6 @@ function Ast(name, attributes) {
             arr.push('{0}={1}'.format(key.to_string(), value))
         }
         return '({0}: {1})'.format(this.name, arr.join(', '));
-    }
-}
-
-function AstPrettyPrintable(ast) {
-    this.ast = ast;
-    this.to_string = function() {
-        return this._to_string(this.ast, 0);
-    }
-    this._to_string = function(ast, indent) {
-        var arr = new Array(indent);
-        for (i = 0; i < indent; i++) {arr[i] = ' ';}
-        var indent_str = arr.join('');
-
-        if (ast instanceof Ast) {
-            var string = '{0}({1}:\n'.format(indent_str, ast.name);
-            var arr = [];
-            for (name in ast.attributes) {
-                arr.push('{0}  {1}={2}'.format(indent_str, name, this._to_string(ast.attributes[name], indent+2).lstrip()));
-            }
-            string += arr.join(',\n');
-            string += '\n{0})'.format(indent_str);
-            return string;
-        } else if (ast instanceof AstList) {
-            if (ast.list.length == 0) {
-                return '{0}[]'.format(indent_str)
-            }
-            var string = '{0}[\n'.format(indent_str);
-            var arr = [];
-            for (i in ast.list) {
-                arr.push(this._to_string(ast.list[i], indent+2));
-            }
-            string += arr.join(',\n');
-            string += '\n{0}]'.format(indent_str);
-            return string
-        } else if (ast instanceof Terminal) {
-            return '{0}{1}'.format(indent_str, ast.to_string());
-        } else {
-            return '{0}{1}'.format(indent_str, (ast == null) ? 'None' : ast.to_string());
-        }
-    }
-}
-
-function ParseTreePrettyPrintable(parsetree) {
-    this.parsetree = parsetree;
-    this.to_string = function() {
-        return this._to_string(this.parsetree, 0);
-    }
-    this._to_string = function(parsetree, indent) {
-        var arr = new Array(indent);
-        for (i = 0; i < indent; i++) {arr[i] = ' ';}
-        var indent_str = arr.join('');
-
-        if (parsetree instanceof ParseTree) {
-            if (parsetree.children.length == 0) {
-                return '({0}: )'.format(parsetree.nonterminal.to_string());
-            }
-            var string = '{0}({1}:\n'.format(indent_str, parsetree.nonterminal.to_string())
-            var arr = [];
-            for (i in parsetree.children) {
-                child = parsetree.children[i];
-                arr.push('{0}  {1}'.format(indent_str, this._to_string(child, indent+2).lstrip()));
-            }
-            string += arr.join(',\n');
-            string += '\n{0})'.format(indent_str);
-            return string
-        } else if (parsetree instanceof Terminal) {
-            return '{0}{1}'.format(indent_str, parsetree.to_string());
-        } else {
-            return '{0}{1}'.format(indent_str, parsetree.to_string());
-        }
     }
 }
 
@@ -1013,9 +1034,9 @@ var main = function() {
         try {
             tree = parse(new TokenStream(tokens));
             if (output == 'parsetree') {
-                console.log(new ParseTreePrettyPrintable(tree).to_string());
+                console.log(parse_tree_string(tree, 2));
             } else if (output == 'ast') {
-                console.log(new AstPrettyPrintable(tree.to_ast()).to_string());
+                console.log(ast_string(tree.to_ast(), 2));
             }
         } catch (err) {
             console.log(err.message);
@@ -1037,6 +1058,8 @@ module.exports = {
   lex: lex,
   {% endif %}
   parse: parse,
-  terminals: terminals
+  terminals: terminals,
+  parse_tree_string: parse_tree_string,
+  ast_string: ast_string
 }
 {% endif %}

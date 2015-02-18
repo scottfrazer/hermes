@@ -6,18 +6,17 @@ templates_dir = resource_filename(__name__, 'templates')
 loader = moody.make_loader(templates_dir)
 
 def remove_blank_lines(string):
-  linereduce = re.compile('^[ \t]*$', re.M)
-  string = linereduce.sub('', string)
-  string = re.sub('\n+', '\n', string)
-  return string
+    linereduce = re.compile('^[ \t]*$', re.M)
+    string = linereduce.sub('', string)
+    string = re.sub('\n+', '\n', string)
+    return string
 
 def underscore_to_camelcase(value):
-  def camelcase():
-    while True:
-      yield str.capitalize
-
-  c = camelcase()
-  return "".join(next(c)(x) if x else '_' for x in value.split("_"))
+    def camelcase():
+        while True:
+            yield str.capitalize
+    c = camelcase()
+    return "".join(next(c)(x) if x else '_' for x in value.split("_"))
 
 #####
 # All templates will have the following things specified:
