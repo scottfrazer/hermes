@@ -55,12 +55,12 @@ class GrammarTemplate:
         return out_file_path
 
 class PythonTemplate(GrammarTemplate):
-    template = 'python/Template.py.tpl'
+    template = 'python/template.py.tpl'
     def get_filename(self):
         return os.path.join(self.directory, '{0}_parser.py'.format(self.grammar.name))
 
 class JavaTemplate(GrammarTemplate):
-    template = 'java/Template.java.tpl'
+    template = 'java/template.java.tpl'
     def get_filename(self):
         prefix = underscore_to_camelcase(self.grammar.name)
         return os.path.join(self.directory, self.java_package_to_path(), prefix + "Parser.java")
