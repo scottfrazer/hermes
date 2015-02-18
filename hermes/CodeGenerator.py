@@ -85,7 +85,7 @@ class PythonTemplate(GrammarTemplate):
 
 class JavaAllTemplate(JavaTemplate):
   filename = 'Parser.java'
-  template = 'java/All.java.tpl'
+  template = 'java/Template.java.tpl'
   def get_filename(self):
     prefix = underscore_to_camelcase(self.grammar.name)
     return os.path.join(self.directory, self.java_package_to_path(), prefix + self.filename)
