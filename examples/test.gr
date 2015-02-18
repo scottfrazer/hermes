@@ -23,6 +23,18 @@ grammar {
     "true|false" -> :boolean
     "\\s+" -> null
   }
+  lexer<java> {
+    "\\{" -> :lbrace
+    "\\}" -> :rbrace
+    "\\\"([^\"]+)\\\"" -> :string
+    "\\[" -> :lsquare
+    "\\]" -> :rsquare
+    "[0-9]+" -> :integer
+    ":" -> :colon
+    "," -> :comma
+    "true|false" -> :boolean
+    "\\s+" -> null
+  }
   parser<ll1> {
     $json = $obj | $list
     $obj = :lbrace list($key_value_pair, :comma) :rbrace -> JsonObject(values=$1)

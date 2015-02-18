@@ -2,7 +2,7 @@ all: c_lexer python_lexer java_lexer js_lexer
 java_lexer: java_files java_compile
 java_compile:
 	javac -cp java java/*.java
-	-java -cp java ParserMain tokens source &> java/tokens
+	-java -cp java GrammarParser tokens source &> java/tokens
 python_lexer: python_files
 js_lexer: js_files
 	-node js/main.js tokens source &> js/tokens

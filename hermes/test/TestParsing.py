@@ -74,7 +74,7 @@ def parser_java(test_dir, out):
         shutil.rmtree(tmp_dir)
 
     try:
-        run_command = 'java ParserMain {type} tokens 2>&1'.format(type=out)
+        run_command = 'java GrammarParser {type} tokens 2>&1'.format(type=out)
         return subprocess.check_output(run_command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as exception:
         return exception.output.decode('utf-8').strip()

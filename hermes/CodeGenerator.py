@@ -83,91 +83,12 @@ class PythonTemplate(GrammarTemplate):
   def get_filename(self):
     return os.path.join(self.directory, '{0}_parser.py'.format(self.grammar.name))
 
-class JavaParserTemplate(JavaTemplate):
+class JavaAllTemplate(JavaTemplate):
   filename = 'Parser.java'
-  template = 'java/ParserTemplate.java.tpl'
+  template = 'java/All.java.tpl'
   def get_filename(self):
     prefix = underscore_to_camelcase(self.grammar.name)
     return os.path.join(self.directory, self.java_package_to_path(), prefix + self.filename)
-
-class JavaLexerTemplate(JavaTemplate):
-  filename = 'Lexer.java'
-  template = 'java/LexerTemplate.java.tpl'
-  def get_filename(self):
-    prefix = underscore_to_camelcase(self.grammar.name)
-    return os.path.join(self.directory, self.java_package_to_path(), prefix + self.filename)
-
-class JavaUtilityTemplate(JavaTemplate):
-  filename = 'Utility.java'
-  template = 'java/Utility.java.tpl'
-
-class JavaTerminalTemplate(JavaTemplate):
-  filename = 'Terminal.java'
-  template = 'java/Terminal.java.tpl'
-
-class JavaNonTerminalTemplate(JavaTemplate):
-  filename = 'NonTerminal.java'
-  template = 'java/NonTerminal.java.tpl'
-
-class JavaAstTransformTemplate(JavaTemplate):
-  filename = 'AstTransform.java'
-  template = 'java/AstTransform.java.tpl'
-
-class JavaAstTransformSubstitutionTemplate(JavaTemplate):
-  filename = 'AstTransformSubstitution.java'
-  template = 'java/AstTransformSubstitution.java.tpl'
-
-class JavaAstTransformNodeCreatorTemplate(JavaTemplate):
-  filename = 'AstTransformNodeCreator.java'
-  template = 'java/AstTransformNodeCreator.java.tpl'
-
-class JavaAstNodeTemplate(JavaTemplate):
-  filename = 'AstNode.java'
-  template = 'java/AstNode.java.tpl'
-
-class JavaAstListTemplate(JavaTemplate):
-  filename = 'AstList.java'
-  template = 'java/AstList.java.tpl'
-
-class JavaAstTemplate(JavaTemplate):
-  filename = 'Ast.java'
-  template = 'java/Ast.java.tpl'
-
-class JavaParseTreeNodeTemplate(JavaTemplate):
-  filename = 'ParseTreeNode.java'
-  template = 'java/ParseTreeNode.java.tpl'
-
-class JavaParseTreeTemplate(JavaTemplate):
-  filename = 'ParseTree.java'
-  template = 'java/ParseTree.java.tpl'
-
-class JavaTerminalIdentifierTemplate(JavaTemplate):
-  filename = 'TerminalIdentifier.java'
-  template = 'java/TerminalIdentifier.java.tpl'
-
-class JavaTerminalMapTemplate(JavaTemplate):
-  filename = 'TerminalMap.java'
-  template = 'java/TerminalMap.java.tpl'
-
-class JavaSyntaxErrorTemplate(JavaTemplate):
-  filename = 'SyntaxError.java'
-  template = 'java/SyntaxError.java.tpl'
-
-class JavaTokenStreamTemplate(JavaTemplate):
-  filename = 'TokenStream.java'
-  template = 'java/TokenStream.java.tpl'
-
-class JavaSourceCodeTemplate(JavaTemplate):
-  filename = 'SourceCode.java'
-  template = 'java/SourceCode.java.tpl'
-
-class JavaSyntaxErrorFormatterTemplate(JavaTemplate):
-  filename = 'SyntaxErrorFormatter.java'
-  template = 'java/SyntaxErrorFormatter.java.tpl'
-
-class JavaMainTemplate(JavaTemplate):
-  filename = 'ParserMain.java'
-  template = 'java/ParserMain.java.tpl'
 
 class CSource(CTemplate):
   template = 'c/template.c.tpl'
@@ -205,31 +126,7 @@ class PythonTemplateFactory:
 
 class JavaTemplateFactory:
   def create(self, **kwargs):
-    templates = [
-      JavaTerminalTemplate(),
-      JavaUtilityTemplate(),
-      JavaNonTerminalTemplate(),
-      JavaAstTransformTemplate(),
-      JavaAstTransformSubstitutionTemplate(),
-      JavaAstTransformNodeCreatorTemplate(),
-      JavaAstListTemplate(),
-      JavaAstTemplate(),
-      JavaAstNodeTemplate(),
-      JavaParseTreeTemplate(),
-      JavaTerminalMapTemplate(),
-      JavaParseTreeNodeTemplate(),
-      JavaSyntaxErrorTemplate(),
-      JavaTokenStreamTemplate(),
-      JavaSourceCodeTemplate(),
-      JavaTerminalIdentifierTemplate(),
-      JavaSyntaxErrorFormatterTemplate(),
-      JavaParserTemplate()
-    ]
-    if 'lexer' in kwargs and kwargs['lexer'] is not None:
-      templates.append(JavaLexerTemplate())
-    if kwargs['add_main']:
-      templates.append(JavaMainTemplate())
-    return templates
+    return [JavaAllTemplate()]
 
 class CTemplateFactory:
   def create(self, **kwargs):

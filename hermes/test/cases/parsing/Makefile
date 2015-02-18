@@ -3,8 +3,8 @@ all: c_parser python_parser java_parser js_parser
 java_parser: java_files java_compile
 java_compile:
 	javac -cp java java/*.java
-	-java -cp java ParserMain parsetree tokens &>java/parsetree
-	-java -cp java ParserMain ast tokens &>java/ast
+	-java -cp java GrammarParser parsetree tokens &>java/parsetree
+	-java -cp java GrammarParser ast tokens &>java/ast
 python_parser: python_files
 js_parser: js_files
 	-node js/main.js parsetree tokens &>js/parsetree

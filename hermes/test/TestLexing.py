@@ -67,7 +67,7 @@ def lex_java(test_dir):
         CodeGenerator().generate(grammar, 'java', directory=tmp_dir, add_main=True)
         compile_command = 'javac *.java 2>/dev/null'
         subprocess.check_call(compile_command, cwd=tmp_dir, shell=True, stderr=None)
-        run_command = 'java ParserMain tokens source 2>&1'
+        run_command = 'java GrammarParser tokens source 2>&1'
         return subprocess.check_output(run_command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as error:
         return error.output.decode('utf-8').strip()
