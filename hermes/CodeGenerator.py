@@ -54,10 +54,17 @@ class GrammarTemplate:
       fp.write(self.render())
     return out_file_path
 
+class PythonTemplate(GrammarTemplate):
+  template = 'python/Template.py.tpl'
+  def get_filename(self):
+    return os.path.join(self.directory, '{0}_parser.py'.format(self.grammar.name))
+
 class JavaTemplate(GrammarTemplate):
+  filename = 'Parser.java'
+  template = 'java/Template.java.tpl'
   def get_filename(self):
     prefix = underscore_to_camelcase(self.grammar.name)
-    return os.path.join(self.directory, self.java_package_to_path(), self.filename)
+    return os.path.join(self.directory, self.java_package_to_path(), prefix + self.filename)
   def java_package_to_path(self):
     return '/'.join(self.java_package.split('.')) if self.java_package else ''
   def render(self, **kwargs):
@@ -71,25 +78,6 @@ class CTemplate(GrammarTemplate):
     self.prefix = self.grammar.name + '_'
     return super().render()
 
-class JavascriptTemplate(GrammarTemplate):
-  def get_filename(self):
-    return os.path.join(self.directory, self.filename)
-  def render(self, **kwargs):
-    self.prefix = self.grammar.name + '_'
-    return super().render()
-
-class PythonTemplate(GrammarTemplate):
-  template = 'python/Template.py.tpl'
-  def get_filename(self):
-    return os.path.join(self.directory, '{0}_parser.py'.format(self.grammar.name))
-
-class JavaAllTemplate(JavaTemplate):
-  filename = 'Parser.java'
-  template = 'java/Template.java.tpl'
-  def get_filename(self):
-    prefix = underscore_to_camelcase(self.grammar.name)
-    return os.path.join(self.directory, self.java_package_to_path(), prefix + self.filename)
-
 class CSource(CTemplate):
   template = 'c/template.c.tpl'
   def get_filename(self):
@@ -99,6 +87,13 @@ class CHeader(CTemplate):
   template = 'c/template.h.tpl'
   def get_filename(self):
     return os.path.join(self.directory, self.grammar.name.lower() + '_parser.h')
+
+class JavascriptTemplate(GrammarTemplate):
+  def get_filename(self):
+    return os.path.join(self.directory, self.filename)
+  def render(self, **kwargs):
+    self.prefix = self.grammar.name + '_'
+    return super().render()
 
 class JavascriptParserTemplate(JavascriptTemplate):
   template = 'javascript/parser.js.tpl'
@@ -126,7 +121,7 @@ class PythonTemplateFactory:
 
 class JavaTemplateFactory:
   def create(self, **kwargs):
-    return [JavaAllTemplate()]
+    return [JavaTemplate()]
 
 class CTemplateFactory:
   def create(self, **kwargs):
