@@ -11,7 +11,6 @@ c_lexer: c_files
 	-c/lexer tokens source &> c/tokens
 java_files: java_dir
 	hermes generate --language=java --add-main --directory=java grammar.zgr
-	cp -r ../../javacp/org java/
 python_files: python_dir
 	hermes generate --language=python --add-main --directory=python grammar.zgr
 	-python python/grammar_parser.py tokens source &> python/tokens

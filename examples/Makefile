@@ -7,7 +7,7 @@ python:
 	python python.py
 java:
 	hermes generate --language=java test.gr --add-main
-	javac -cp ../hermes/test/cases/javacp/:. TestParser.java
-	java -cp ../hermes/test/cases/javacp/:. TestParser
+	javac TestParser.java
+	java TestParser
 clean:
 	rm -rf *.dSYM ctest *_parser.c *_parser.h *.pyc *Parser.java *.class
