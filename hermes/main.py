@@ -4,8 +4,8 @@ import argparse
 import pkg_resources
 
 import hermes.factory
-from hermes.CodeGenerator import CodeGenerator
-from hermes.Theme import TerminalDefaultTheme, TerminalColorTheme
+import hermes.code
+from hermes.theme import TerminalDefaultTheme, TerminalColorTheme
 
 def cli():
     version = sys.version_info
@@ -100,7 +100,7 @@ def cli():
     if cli.action == 'bootstrap':
         with open('hermes.zgr') as fp:
             grammar = hermes.factory.parse(fp.read(), 'hermes')
-        CodeGenerator().generate(grammar, 'python', directory='hermes')
+        hermes.code.generate(grammar, 'python', directory='hermes')
 
     elif cli.action == 'analyze':
         grammar = get_grammars(cli)
@@ -117,7 +117,7 @@ def cli():
             sys.stderr.write("Error: --directory {0} not writable\n".format(cli.directory))
             sys.exit(-1)
 
-        CodeGenerator().generate(
+        hermes.code.generate(
             grammar,
             cli.language.lower(),
             directory=cli.directory,
@@ -171,6 +171,6 @@ def analyze(grammar, format='human', theme=None, file=sys.stdout):
         file.write(theme.conflict('Conflicts'))
         for conflict in grammar.conflicts:
             file.write(str(conflict) + '\n\n')
-        file.write(theme.conflictsFound('%d conflicts found\n' % len(grammar.conflicts)))
+        file.write(theme.conflicts_found('%d conflicts found\n' % len(grammar.conflicts)))
     else:
-        file.write(theme.noConflicts("\nGrammar contains no conflicts!\n"))
+        file.write(theme.no_conflicts("\nGrammar contains no conflicts!\n"))

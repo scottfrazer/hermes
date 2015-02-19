@@ -1,12 +1,7 @@
 import re
 from collections import OrderedDict
-from hermes.Morpheme import NonTerminal, Terminal, EmptyString
-from hermes.Grammar import CompositeGrammar, Lexer, Regex
-from hermes.Grammar import Rule, ExprRule, MacroGeneratedRule, Production, AstSpecification, AstTranslation
-from hermes.Grammar import InfixOperator, PrefixOperator, MixfixOperator
-from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro, \
-    OptionallyTerminatedListMacro
 
+from hermes.grammar import *
 from hermes.hermes_parser import Terminal as HermesTerminal
 from hermes.hermes_parser import Ast, AstList
 from hermes.hermes_parser import lex as hermes_lex

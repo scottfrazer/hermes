@@ -7,10 +7,7 @@ import json
 from collections import OrderedDict
 
 {% import re %}
-{% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
-{% from hermes.Grammar import PrefixOperator, InfixOperator %}
-{% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro %}
-{% from hermes.Morpheme import Terminal, NonTerminal %}
+{% from hermes.grammar import * %}
 
 ###############
 # Common Code #

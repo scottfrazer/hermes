@@ -4,7 +4,7 @@ import shutil
 import re
 import subprocess
 
-from hermes.CodeGenerator import CodeGenerator
+import hermes.code
 import hermes.factory
 
 base_dir = os.path.join(os.path.dirname(__file__), 'cases/parsing')
@@ -32,7 +32,7 @@ def parse_python(test_dir, out):
     tmp_dir = tempfile.mkdtemp()
 
     try:
-      CodeGenerator().generate(grammar, 'python', directory=tmp_dir, add_main=True)
+      hermes.code.generate(grammar, 'python', directory=tmp_dir, add_main=True)
       command = 'python grammar_parser.py {0} {1} 2>&1'.format(out, os.path.abspath(tokens_file))
       return subprocess.check_output(command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as exception:
@@ -47,7 +47,7 @@ def parser_c(test_dir, out):
     tmp_dir = tempfile.mkdtemp()
     try:
         shutil.copy(tokens_file, tmp_dir)
-        CodeGenerator().generate(grammar, 'c', directory=tmp_dir, add_main=True)
+        hermes.code.generate(grammar, 'c', directory=tmp_dir, add_main=True)
         c_files = list(filter(lambda x: x.endswith('.c'), os.listdir(tmp_dir)))
         command = 'gcc -o parser {sources} -g -Wall -pedantic -ansi -std=c99 2>/dev/null'.format(sources=' '.join(c_files))
         subprocess.check_call(command, cwd=tmp_dir, shell=True, stderr=None)
@@ -66,7 +66,7 @@ def parser_java(test_dir, out):
     try:
         shutil.copy(tokens_file, tmp_dir)
         java_sources = list(filter(lambda filename: filename.endswith('.java'), os.listdir(tmp_dir)))
-        CodeGenerator().generate(grammar, 'java', directory=tmp_dir, add_main=True)
+        hermes.code.generate(grammar, 'java', directory=tmp_dir, add_main=True)
         compile_command = 'javac *.java 2>/dev/null'
         subprocess.check_call(compile_command, cwd=tmp_dir, shell=True, stderr=None)
     except subprocess.CalledProcessError as error:
@@ -86,7 +86,7 @@ def parse_javascript(test_dir, out):
     tmp_dir = tempfile.mkdtemp()
 
     try:
-      CodeGenerator().generate(grammar, 'javascript', directory=tmp_dir, nodejs=True, add_main=True)
+      hermes.code.generate(grammar, 'javascript', directory=tmp_dir, nodejs=True, add_main=True)
       command = 'node grammar_parser.js {0} {1} 2>&1'.format(out, os.path.abspath(tokens_file))
       return subprocess.check_output(command, shell=True, stderr=None, cwd=tmp_dir).decode('utf-8').strip()
     except subprocess.CalledProcessError as exception:

@@ -11,10 +11,7 @@ package {{java_package}};
  */
 
 {% import re %}
-{% from hermes.Grammar import AstTranslation, AstSpecification, ExprRule %}
-{% from hermes.Grammar import PrefixOperator, InfixOperator %}
-{% from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro %}
-{% from hermes.Morpheme import Terminal, NonTerminal %}
+{% from hermes.grammar import * %}
 
 import java.util.*;
 import java.io.IOException;
