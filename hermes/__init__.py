@@ -1,4 +1,4 @@
-import hermes.parser
+import hermes.factory
 from hermes.CodeGenerator import CodeGenerator
 import imp, io, uuid
 
@@ -7,7 +7,7 @@ def get_grammar(str_or_fp):
         code = str_or_fp
     else:
         code = str_or_fp.read()
-    return hermes.parser.parse(code, "internal")
+    return hermes.factory.parse(code, "internal")
 
 def compile(str_or_fp, module=None, debug=False):
     grammar = get_grammar(str_or_fp)

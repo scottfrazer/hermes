@@ -3,7 +3,7 @@ import os
 import argparse
 import pkg_resources
 
-import hermes.parser
+import hermes.factory
 from hermes.GrammarAnalyzer import GrammarAnalyzer
 from hermes.CodeGenerator import CodeGenerator
 from hermes.Theme import TerminalDefaultTheme, TerminalColorTheme
@@ -93,11 +93,11 @@ def cli():
             sys.stderr.write("Error: Grammar file {0} doesn't exist\n".format(grammar_path))
             sys.exit(-1)
         with open(cli.grammar) as fp:
-            return hermes.parser.parse(fp.read(), get_grammar_name(cli))
+            return hermes.factory.parse(fp.read(), get_grammar_name(cli))
 
     if cli.action == 'bootstrap':
         with open('hermes.zgr') as fp:
-            grammar = hermes.parser.parse(fp.read(), 'hermes')
+            grammar = hermes.factory.parse(fp.read(), 'hermes')
         CodeGenerator().generate(grammar, 'python', directory='hermes')
 
     elif cli.action == 'analyze':
@@ -128,5 +128,5 @@ def cli():
     elif cli.action == 'parse':
         import hermes
         with open(cli.grammar) as fp:
-            ast = hermes.parser.get_ast(fp.read())
+            ast = hermes.factory.get_ast(fp.read())
         print(ast.dumps(indent=2, color=hermes.hermes_parser.term_color))
