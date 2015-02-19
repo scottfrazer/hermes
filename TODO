@@ -1,6 +1,23 @@
 2.0 TODO
 ========
 
+Package Structure
+-----------------
+
+PEP-8: "Modules should have short, all-lowercase names. Underscores can be used in the module name if it improves readability. Python packages should also have short, all-lowercase names, although the use of underscores is discouraged."
+
+PEP-8: "Class names should normally use the CapWords convention."
+
+PEP-8: "Function names should be lowercase, with words separated by underscores as necessary to improve readability."
+
+hermes - compile() to get back a parser, get_grammar() to get a CompositeGrammar
+hermes.hermes_parser - bootstraped parser
+hermes.factory - (currently hermes.parser) create() return CompositeGrammar
+hermes.grammar
+    CompositeGrammar, Rule, Production, Conflicts, Lexer, etc.  Internal data structures.
+hermes.main - cli() and analyze() methods
+hermes.code - Generates source code to parse grammar.  generate(), generate_internal()
+
 Minor things
 ------------
 
@@ -10,11 +27,6 @@ Minor things
 4) Make test with macro for first part of expression rule.  Should this be a syntax error?
 5) Test capital letters, numbers, underscores in terminal/nonterminal
 6) All syntax errors need a test
-
-Lexer for C, Java, Javascript
------------------------------
-
-+ tests
 
 Syntax Error Formatting for C
 -----------------------------
@@ -32,7 +44,7 @@ ParserContext
 Document public interface for all targets
 -----------------------------------------
 
-Document the interface for the public classes in Grammar.py:
+Document the interface for the public classes (just CompositeGrammar?) in hermes.grammar:
 
   HermesGrammar:
     __init__(name, rules)
@@ -123,30 +135,21 @@ Document the interface for the public classes in Grammar.py:
 Document Python parser output format
 ------------------------------------
 
-hermes
-  - __init__.py
-  - Common.py
-  - grammar1
-    - __init__.py
-    - Lexer.py
-    - Parser.py
-  - grammar2
-    - __init__.py
-    - Lexer.py
-    - Parser.py
+Python:
+    default prefix = my_grammar.gr -> my_grammar
+    files = <prefix>_parser.py
 
-grammar/grammar[x]/__init__.py should define:
+C:
+    default prefix = my_grammar.gr -> my_grammar
+    files = <prefix>_parser.c, <prefix>_parser.h
 
-    - def parse(string|list)
-    - def lex(string)
+Java:
+    default prefix = my_grammar.gr -> MyGrammar
+    files = <prefix>Parser.java
 
-public API for tree and ast:
-
-    - [tree|ast].walk('hpath query')
-    - [tree|ast].string()
-    - [tree|ast].name()
-    - tree.children(), tree.child(3)
-    - ast.keys(), ast[name], name in ast, (dict?)
+JavaScript:
+    default prefix = my_grammar.gr -> my_grammar
+    files = <prefix>_parser.js
 
 HPath (implement and document)
 ------------------------------

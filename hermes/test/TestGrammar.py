@@ -1,7 +1,7 @@
 import os
 import json
 
-from hermes.GrammarParser import GrammarParser
+import hermes.parser
 from hermes.Morpheme import NonTerminal
 from hermes.hermes_parser import parse, lex
 
@@ -9,7 +9,7 @@ base_dir = os.path.join(os.path.dirname(__file__), 'cases/grammar')
 
 def get_grammar(directory, name='grammar.zgr'):
     with open(os.path.join(directory, name)) as fp:
-        return GrammarParser().parse(fp.read(), 'grammar')
+        return hermes.parser.parse(fp.read(), 'grammar')
 
 def test_all():
     for test_dir, dirs, files in os.walk(base_dir):
@@ -27,7 +27,7 @@ def test_all():
                 yield ast, test_dir
 
             with open(grammar_path) as fp:
-                grammar = GrammarParser().parse(fp.read(), 'grammar')
+                grammar = hermes.parser.parse(fp.read(), 'grammar')
 
             if grammar.conflicts:
                 if not os.path.exists(conflicts_path) and (not os.path.exists(first_sets_path) or not os.path.exists(follow_sets_path)):

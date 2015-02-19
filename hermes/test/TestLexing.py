@@ -5,13 +5,13 @@ import re
 import subprocess
 
 from hermes.CodeGenerator import CodeGenerator
-from hermes.GrammarParser import GrammarParser
+import hermes.parser
 
 base_dir = os.path.join(os.path.dirname(__file__), 'cases/lexing')
 
 def get_grammar(directory, name='grammar.zgr'):
     with open(os.path.join(directory, name)) as fp:
-        return GrammarParser().parse(fp.read(), 'grammar')
+        return hermes.parser.parse(fp.read(), 'grammar')
 
 def test_all():
     for directory in os.listdir(base_dir):

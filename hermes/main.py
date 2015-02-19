@@ -1,12 +1,14 @@
-import sys, os, argparse, pkg_resources
-from hermes.GrammarParser import GrammarParser
+import sys
+import os
+import argparse
+import pkg_resources
+
+import hermes.parser
 from hermes.GrammarAnalyzer import GrammarAnalyzer
 from hermes.CodeGenerator import CodeGenerator
-from hermes.Logger import Factory as LoggerFactory
 from hermes.Theme import TerminalDefaultTheme, TerminalColorTheme
 
-def Cli():
-
+def cli():
     version = sys.version_info
 
     if version.major < 3 or (version.major == 3 and version.minor < 3):
@@ -77,8 +79,6 @@ def Cli():
     )
 
     cli = parser.parse_args()
-    logger = LoggerFactory().initialize(cli.debug)
-    logger.debug('CLI Parameters: %s' % (cli))
 
     def get_grammar_name(cli):
         if 'name' in cli and cli.name:
@@ -93,11 +93,11 @@ def Cli():
             sys.stderr.write("Error: Grammar file {0} doesn't exist\n".format(grammar_path))
             sys.exit(-1)
         with open(cli.grammar) as fp:
-            return GrammarParser().parse(fp.read(), get_grammar_name(cli))
+            return hermes.parser.parse(fp.read(), get_grammar_name(cli))
 
     if cli.action == 'bootstrap':
         with open('hermes.zgr') as fp:
-            grammar = GrammarParser().parse(fp.read(), 'hermes')
+            grammar = hermes.parser.parse(fp.read(), 'hermes')
         CodeGenerator().generate(grammar, 'python', directory='hermes')
 
     elif cli.action == 'analyze':
@@ -128,5 +128,5 @@ def Cli():
     elif cli.action == 'parse':
         import hermes
         with open(cli.grammar) as fp:
-            ast = GrammarParser().get_ast(fp.read())
+            ast = hermes.parser.get_ast(fp.read())
         print(ast.dumps(indent=2, color=hermes.hermes_parser.term_color))

@@ -1,4 +1,7 @@
-import re, moody, os
+import re
+import os
+import moody
+
 from pkg_resources import resource_filename
 from collections import OrderedDict
 
@@ -18,24 +21,9 @@ def underscore_to_camelcase(value):
     c = camelcase()
     return "".join(next(c)(x) if x else '_' for x in value.split("_"))
 
-#####
-# All templates will have the following things specified:
-#
-# grammar
-#   .standard_terminals
-#   .ll1_nonterminals
-#   .lexer
-# prefix
-# java_package
-# nodejs
-# directory
-# add_main
-#####
-
 class GrammarTemplate:
-    def __init__(self):
-        super().__init__()
-        self.__dict__.update(locals())
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
     def render(self):
         kwargs = {k: v for k, v in self.__dict__.items() if k not in ['self']}
         code = loader.render(
@@ -96,10 +84,10 @@ class JavascriptTemplate(GrammarTemplate):
 
 class CodeGenerator:
     templates = {
-        'python': [PythonTemplate()],
-        'c': [CSource(), CHeader()],
-        'java': [JavaTemplate()],
-        'javascript': [JavascriptTemplate()]
+        'python': [PythonTemplate],
+        'c': [CSource, CHeader],
+        'java': [JavaTemplate],
+        'javascript': [JavascriptTemplate]
     }
 
     def generate_internal(self, grammar):
@@ -111,8 +99,8 @@ class CodeGenerator:
         }
 
         code = ''
-        for template in self.templates['python']:
-            template.__dict__.update(args)
+        for template_class in self.templates['python']:
+            template = template_class(**args)
             code += template.render()
             code += '\n'
         return code
@@ -120,9 +108,8 @@ class CodeGenerator:
     def generate(self, grammar, language, directory='.', add_main=False, java_package=None, nodejs=False):
         if language not in self.templates:
             raise Exception('Invalid language: ' + language)
-        args = locals()
-        del args['self']
+        args = {k: v for k, v in locals().items() if k != 'self'}
         args['lexer'] = grammar.lexers[language] if language in grammar.lexers else None
-        for template in self.templates[language]:
-            template.__dict__.update(args)
+        for template_class in self.templates[language]:
+            template = template_class(**args)
             template.write()

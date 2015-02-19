@@ -5,11 +5,7 @@ from hermes.Morpheme import EmptyString
 from hermes.Morpheme import EndOfStream
 from hermes.Morpheme import NonTerminal
 from hermes.Morpheme import Morpheme, AbstractTerminal
-from hermes.Conflict import FirstFirstConflict, FirstFollowConflict, ListFirstFollowConflict, NudConflict, LedConflict, UndefinedNonterminalConflict, UnusedNonterminalWarning
 from hermes.Macro import ListMacro, LL1ListMacro, SeparatedListMacro, MorphemeListMacro
-from hermes.Logger import Factory as LoggerFactory
-
-moduleLogger = LoggerFactory().getModuleLogger(__name__)
 
 class Production:
   def __init__( self, morphemes = [] ):
@@ -32,7 +28,6 @@ class Production:
 class Rule:
   def __init__( self, nonterminal, production, id=None, root=None, ast=None):
     self.__dict__.update(locals())
-    self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
   def __copy__( self ):
     return Rule(self.nonterminal, Production(copy(self.production.morphemes)), self.id, self.root, self.ast)
   def expand(self):
@@ -45,7 +40,6 @@ class Rule:
       else:
         morphemes.append(m)
     rules.append(Rule(self.nonterminal, Production(morphemes), self.id, self.root, self.ast))
-    self.logger.debug('[rule expansion] %s becomes %s' % (self, ', '.join([str(x) for x in rules])))
     return rules
   def __getattr__(self, name):
     if name == 'is_empty':
@@ -194,7 +188,6 @@ class CompositeGrammar:
   _end = EndOfStream(-1)
 
   def __init__(self, name, rules, lexers):
-      self.logger = LoggerFactory().getClassLogger(__name__, self.__class__.__name__)
       self.__dict__.update(locals())
       self.start = None
       self.terminals = set()
@@ -511,3 +504,89 @@ class CompositeGrammar:
     if nonterminal:
       return [rule for rule in all_rules if str(rule.nonterminal) == str(nonterminal)]
     return all_rules
+
+class Conflict:
+  pass
+
+class Warning:
+  pass
+
+class UnusedNonterminalWarning(Warning):
+  def __init__(self, nonterminal):
+    self.__dict__.update(locals())
+
+  def __str__(self):
+    string = ' -- Unused Nonterminal -- \n'
+    string += 'Nonterminal %s is defined but not used' % (self.nonterminal)
+    return string
+
+class UndefinedNonterminalConflict(Conflict):
+  def __init__(self, nonterminal):
+    self.__dict__.update(locals())
+
+  def __str__(self):
+    string = ' -- Undefined Nonterminal Conflict-- \n'
+    string += 'Nonterminal %s is used but not defined' % (self.nonterminal)
+    return string
+
+class ExprConflict(Conflict):
+  def __init__( self, terminal, rules ):
+    self.terminal = terminal
+    self.rules = rules
+  def __str__( self ):
+    string = " -- %s conflict -- \n" % (self.type)
+    string += "Terminal %s requires two different %s() functions.  Cannot choose between these rules:\n\n"%(self.terminal, self.type)
+    for rule in self.rules:
+      string += "%s\n" % (rule)
+    return string
+
+class NudConflict(ExprConflict):
+  type = "NUD"
+
+class LedConflict(ExprConflict):
+  type = "LED"
+
+class ListFirstFollowConflict(Conflict):
+  def __init__( self, listMacro, firstNonterminal, followList ):
+    self.listMacro = listMacro
+    self.firstNonterminal = firstNonterminal
+    self.followList = followList
+
+  def __str__( self ):
+    string = " -- LIST FIRST/FOLLOW conflict --\n"
+    string += "FIRST(%s) = {%s}\n" %(self.listMacro.nonterminal, ', '.join([str(e) for e in self.firstNonterminal]))
+    string += "FOLLOW(%s) = {%s}\n" %(self.listMacro, ', '.join([str(e) for e in self.followList]))
+    string += "FIRST(%s) ∩ FOLLOW(%s): {%s}\n" %(self.listMacro.nonterminal, self.listMacro, ', '.join([str(e) for e in self.firstNonterminal.intersection(self.followList)]))
+    return string
+
+class FirstFirstConflict(Conflict):
+  def __init__( self, rule1, rule2, grammar ):
+    self.__dict__.update(locals())
+
+  def __str__( self ):
+    rule1_first = self.grammar.first(self.rule1.production)
+    rule2_first = self.grammar.first(self.rule2.production)
+    string = " -- FIRST/FIRST conflict --\n"
+    string += "Two rules for nonterminal %s have intersecting first sets.  Can't decide which rule to choose based on terminal.\n\n" %(self.rule1.nonterminal)
+    string += "(Rule-%d)  %s\n" %(self.rule1.id, self.rule1)
+    string += "(Rule-%d)  %s\n\n" %(self.rule2.id, self.rule2)
+    string += "first(Rule-%d) = {%s}\n" %(self.rule1.id, ', '.join(sorted([str(e) for e in rule1_first])))
+    string += "first(Rule-%d) = {%s}\n" %(self.rule2.id, ', '.join(sorted([str(e) for e in rule2_first])))
+    string += "first(Rule-%d) ∩ first(Rule-%d): {%s}\n" % (self.rule1.id, self.rule2.id, ', '.join(sorted([str(e) for e in rule1_first.intersection(rule2_first)])))
+
+    return string
+
+class FirstFollowConflict(Conflict):
+  def __init__( self, N, firstN, followN ):
+    self.N = N
+    self.firstN = firstN
+    self.followN = followN
+
+  def __str__( self ):
+    string = ' -- FIRST/FOLLOW conflict --\n'
+    string += 'Nonterminal %s has a first and follow set that overlap.\n\n' % (self.N)
+    string += "first(%s) = {%s}\n" % (self.N, ', '.join(sorted([str(e) for e in self.firstN])))
+    string += "follow(%s) = {%s}\n\n" % (self.N, ', '.join(sorted([str(e) for e in self.followN])))
+    string += 'first(%s) ∩ follow(%s) = {%s}\n' % (self.N, self.N, ', '.join([str(e) for e in self.firstN.intersection(self.followN)]))
+
+    return string

@@ -1,15 +1,15 @@
-import re, json
+import re
 from collections import OrderedDict
 from hermes.Morpheme import NonTerminal, Terminal, EmptyString
 from hermes.Grammar import CompositeGrammar, Lexer, Regex
 from hermes.Grammar import Rule, ExprRule, MacroGeneratedRule, Production, AstSpecification, AstTranslation
 from hermes.Grammar import InfixOperator, PrefixOperator, MixfixOperator
 from hermes.Macro import SeparatedListMacro, MorphemeListMacro, TerminatedListMacro, MinimumListMacro, OptionalMacro, OptionallyTerminatedListMacro
-from hermes.Logger import Factory as LoggerFactory
 
 from hermes.hermes_parser import Terminal as HermesTerminal
 from hermes.hermes_parser import Ast, AstList
-from hermes.hermes_parser import lex, parse
+from hermes.hermes_parser import lex as hermes_lex
+from hermes.hermes_parser import parse as hermes_parse
 
 class GrammarFactory:
   # TODO: I want to get rid of name and start parameters
@@ -475,11 +475,10 @@ class GrammarFactory:
           nodes.extend(self.walk_ast(ast, node_name))
     return nodes
 
-class GrammarParser:
-  def get_ast(self, source, resource='<string>'):
-    tree = parse(lex(source, resource))
+def get_ast(source, resource='<string>'):
+    tree = hermes_parse(hermes_lex(source, resource))
     return tree.toAst()
 
-  def parse(self, source, name, resource='<string>'):
-    ast = self.get_ast(source, resource)
+def parse(source, name, resource='<string>'):
+    ast = get_ast(source, resource)
     return GrammarFactory().create(name, ast)
