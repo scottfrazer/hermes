@@ -4,7 +4,6 @@ import argparse
 import pkg_resources
 
 import hermes.factory
-from hermes.GrammarAnalyzer import GrammarAnalyzer
 from hermes.CodeGenerator import CodeGenerator
 from hermes.Theme import TerminalDefaultTheme, TerminalColorTheme
 
@@ -77,6 +76,9 @@ def cli():
     commands['parse'].add_argument(
         'grammar', metavar='GRAMMAR', help='Grammar file'
     )
+    commands['parse'].add_argument(
+        '--base64', action='store_true', help='Base64 encode source'
+    )
 
     cli = parser.parse_args()
 
@@ -103,8 +105,7 @@ def cli():
     elif cli.action == 'analyze':
         grammar = get_grammars(cli)
         theme = TerminalColorTheme() if cli.color else TerminalDefaultTheme()
-        analyzer = GrammarAnalyzer(grammar)
-        analyzer.analyze( theme=theme )
+        analyze(grammar, theme=theme)
 
     elif cli.action == 'generate':
         grammar = get_grammars(cli)
@@ -126,7 +127,50 @@ def cli():
         )
 
     elif cli.action == 'parse':
-        import hermes
         with open(cli.grammar) as fp:
             ast = hermes.factory.get_ast(fp.read())
-        print(ast.dumps(indent=2, color=hermes.hermes_parser.term_color))
+        print(ast.dumps(indent=2, color=hermes.hermes_parser.term_color, b64_source=cli.base64))
+
+def analyze(grammar, format='human', theme=None, file=sys.stdout):
+    if theme == None:
+        theme = TerminalDefaultTheme()
+
+    file.write(theme.title('Terminals'))
+    file.write(', '.join([x.str(theme) for x in sorted(grammar.terminals, key=lambda x: x.string)]) + "\n\n")
+    file.write(theme.title('Non-Terminals'))
+    file.write(
+        ', '.join([x.str(theme) for x in sorted(grammar.nonterminals, key=lambda x: x.string)]) + "\n\n")
+    file.write(theme.title('Expanded LL(1) Rules'))
+    file.write("\n".join(
+        [rule.str(theme) for rule in sorted(grammar.getExpandedLL1Rules(), key=lambda x: x.str())]) + "\n\n")
+
+    for expression_nonterminal in grammar.expression_nonterminals:
+        rules = grammar.get_expanded_rules(expression_nonterminal)
+        file.write(theme.title('Expanded Expression Grammar ({})'.format(expression_nonterminal)))
+        file.write("\n".join([rule.str(theme) for rule in sorted(rules, key=lambda x: x.str())]) + "\n\n")
+
+    file.write(theme.title('First sets'))
+    for nonterminal in sorted(grammar.nonterminals, key=lambda x: x.string):
+        terminals = [theme.terminal(str(x)) for x in sorted(grammar.first(nonterminal), key=lambda x: x.str())]
+        file.write("%s: {%s}\n" % (theme.nonterminal(str(nonterminal)), ', '.join(terminals)))
+    file.write('\n')
+
+    file.write(theme.title('Follow sets'))
+    for nonterminal in sorted(grammar.nonterminals, key=lambda x: x.string):
+        terminals = [theme.terminal(str(x)) for x in
+                     sorted(grammar.follow(nonterminal), key=lambda x: x.str())]
+        file.write("%s: {%s}\n" % (theme.nonterminal(str(nonterminal)), ', '.join(terminals)))
+    file.write('\n')
+
+    if ( len(grammar.warnings) ):
+        file.write(theme.warning('Warnings'))
+        for warning in grammar.warnings:
+            file.write(str(warning) + '\n\n')
+
+    if ( len(grammar.conflicts) ):
+        file.write(theme.conflict('Conflicts'))
+        for conflict in grammar.conflicts:
+            file.write(str(conflict) + '\n\n')
+        file.write(theme.conflictsFound('%d conflicts found\n' % len(grammar.conflicts)))
+    else:
+        file.write(theme.noConflicts("\nGrammar contains no conflicts!\n"))
