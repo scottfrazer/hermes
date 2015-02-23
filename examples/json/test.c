@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <pcre.h>
 #include <string.h>
-#include "simple_parser.h"
 #include "json_parser.h"
 
 int main(int argc, char * argv[]) {
@@ -9,7 +8,7 @@ int main(int argc, char * argv[]) {
   char * buf;
   int i;
   TOKEN_LIST_T * json_tokens;
-  PARSER_CONTEXT_T * json_ctx, * simple_ctx;
+  PARSER_CONTEXT_T * json_ctx;
   PARSE_TREE_T * tree;
   ABSTRACT_SYNTAX_TREE_T * ast;
 
@@ -18,8 +17,6 @@ int main(int argc, char * argv[]) {
       json_lexer_print_errors();
       exit(-1);
   }
-
-  simple_lexer_init();
 
   json_tokens = json_lex("{\"a\": 0, \"b\":[true,2e4,true]}, \"cde\": 0.44e5", "<string>", &error[0]);
 

@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.regex.*;
 
-public class JavaTest {
+public class test {
     public static void main(String[] args) {
         JsonParser parser = new JsonParser();
         try {
