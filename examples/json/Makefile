@@ -12,4 +12,4 @@ javascript:
 	hermes generate --language=javascript --nodejs json.hgr
 	node test.js
 clean:
-	rm -rf *.dSYM ctest *_parser.c *_parser.h *.pyc *Parser.java *.class *_parser.js
+	rm -rf *.dSYM test *_parser.c *_parser.h *.pyc *Parser.java *.class *_parser.js
