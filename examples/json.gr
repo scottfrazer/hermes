@@ -1,0 +1,64 @@
+grammar {
+  lexer<python> {
+    r'\s+' -> null
+    r'{' -> :lbrace
+    r'}' -> :rbrace
+    r'\[' -> :lsquare
+    r'\]' -> :rsquare
+    r':' -> :colon
+    r',' -> :comma
+    r'true' -> :true
+    r'false' -> :false
+    r'null' -> :null
+    r'"((?:[^"\\]|\\["\\/bfnrt]|\\u[0-9A-Fa-f]{4})*)"' -> :string
+    r'-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][\+-]?[0-9]+)?' -> :number
+  }
+  lexer<c> {
+    "\\s+" -> null
+    "\\{" -> :lbrace
+    "\\}" -> :rbrace
+    "\\[" -> :lsquare
+    "\\]" -> :rsquare
+    ":" -> :colon
+    "," -> :comma
+    "true" -> :true
+    "false" -> :false
+    "null" -> :null
+    "\"(([^\"\\\\]|\\\\[\"\\/bfnrt]|\\\\u[0-9A-Fa-f]{4})*)\"" -> :string
+    "-?(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][\\+-]?[0-9]+)?" -> :number
+  }
+  lexer<java> {
+    "\\s+" -> null
+    "\\{" -> :lbrace
+    "\\}" -> :rbrace
+    "\\[" -> :lsquare
+    "\\]" -> :rsquare
+    ":" -> :colon
+    "," -> :comma
+    "true" -> :true
+    "false" -> :false
+    "null" -> :null
+    "\\\"(([^\"\\\\]|\\\\[\"\\/bfnrt]|\\\\u[0-9A-Fa-f]{4})*)\\\"" -> :string
+    "-?(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][\\+-]?[0-9]+)?" -> :number
+  }
+  lexer<javascript> {
+    "\\s+" -> null
+    "\\{" -> :lbrace
+    "\\}" -> :rbrace
+    "\\[" -> :lsquare
+    "\\]" -> :rsquare
+    ":" -> :colon
+    "," -> :comma
+    "true" -> :true
+    "false" -> :false
+    "null" -> :null
+    "\\\"(([^\"\\\\]|\\\\[\"\\/bfnrt]|\\\\u[0-9A-Fa-f]{4})*)\\\"" -> :string
+    "-?(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][\\+-]?[0-9]+)?" -> :number
+  }
+  parser<ll1> {
+    $value = :string | :number | $object | $array | :true | :false | :null
+    $object = :lbrace list($key_value_pair, :comma) :rbrace -> Object(values=$1)
+    $key_value_pair = :string :colon $value -> KeyValue(key=$0, value=$2)
+    $array = :lsquare list($value, :comma) :rsquare -> Array(values=$1)
+  }
+}

@@ -161,6 +161,7 @@ base64_decode(const char * input, char * output, size_t output_length, size_t * 
 
 /* Section: JSON Parsing */
 
+{% if add_main %}
 #ifndef json_char
    #define json_char char
 #endif
@@ -895,6 +896,8 @@ json_value_free (json_value * value)
         free (cur_value);
     }
 }
+
+{% endif %}
 
 /* Section: AST and ParseTree functions */
 
@@ -2222,8 +2225,6 @@ ABSTRACT_SYNTAX_TREE_T *
   node.object = (PARSE_TREE_NODE_U *) tree;
   return {{prefix}}parsetree_node_to_ast(&node);
 }
-
-/* Section: Lexer */
 
 /* Section: Main */
 
