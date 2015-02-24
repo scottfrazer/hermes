@@ -23,8 +23,19 @@ grammar {
       r'->' -> :arrow
       r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> morpheme(:terminal)
       r'mode<[a-zA-Z0-9_]+>' -> parse_mode(:mode)
+      r'partials' -> parse_partials(:partials)
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
       r'<code>(.*?)</code>' {DOTALL} -> lexer_code(:code)
+    }
+
+    mode<partials> {
+      r'\s+' -> null
+      r'r\'(\\\'|[^\'])*\'' -> :regex
+      r'"(\\\"|[^\"])*"' -> :regex
+      r'->' -> :arrow
+      r'_([a-zA-Z][a-zA-Z0-9_]*)' -> :regex_partial
+      r'{' -> :lbrace
+      r'}' -> partials_rbrace(:rbrace)
     }
 
     mode<parser_ll1> {
@@ -113,6 +124,10 @@ def parse_mode(context, mode, match, groups, terminal, resource, line, col):
         Terminal(terminals['rangle'], 'rangle', '>', resource, line, col),
     ]
     return (tokens, mode, context)
+def parse_partials(context, mode, match, groups, terminal, resource, line, col):
+    return default_action(context, 'partials', match, groups, terminal, resource, line, col)
+def partials_rbrace(context, mode, match, groups, terminal, resource, line, col):
+    return default_action(context, 'lexer', match, groups, terminal, resource, line, col)
 def lexer_code(context, mode, match, groups, terminal, resource, line, col):
     code = match[6:-7].strip()
     tokens = [Terminal(terminals[terminal], terminal, code, resource, line, col)]
@@ -186,7 +201,9 @@ def grammar_rbrace(context, mode, match, groups, terminal, resource, line, col):
     $body_element = $body_element_sub -> $0
     $body_element_sub = $lexer | $parser
     $lexer = :lexer :langle :identifier :rangle :lbrace list($lexer_atom) optional(:code) :rbrace -> Lexer(language=$2, atoms=$5, code=$6)
-    $lexer_atom = $lexer_regex | $lexer_mode
+    $lexer_atom = $lexer_regex | $lexer_mode | $lexer_partials
+    $lexer_partials = :partials :lbrace list($regex_partial) :rbrace -> RegexPartials(list=$2)
+    $regex_partial = :regex :arrow :regex_partial -> RegexPartial(regex=$0, name=$2)
     $lexer_regex = :regex optional($regex_options) :arrow $lexer_target -> Regex(regex=$0, options=$1, onmatch=$3)
     $regex_options = :lbrace list(:identifier) :rbrace -> $1
     $lexer_target = :terminal

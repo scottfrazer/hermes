@@ -93,8 +93,16 @@ class GrammarFactory:
             if lexer_atom.name == 'Mode':
                 mode_name = lexer_atom.getAttr('name').source_string
                 lexer[mode_name] = self.parse_lexer_mode(lexer_atom, terminals, nonterminals)
+            if lexer_atom.name == 'RegexPartials':
+                for partial in lexer_atom.getAttr('list'):
+                    name = partial.getAttr('name').source_string
+                    regex = partial.getAttr('regex').source_string
+                    if regex.startswith("r'"): regex = regex[2:-1]
+                    if regex.startswith("'") or regex.startswith('"'): regex = regex[1:-1]
+                    lexer.regex_partials[name] = regex
         lexer.language = lexer_ast.getAttr('language').source_string
         lexer.code = lexer_ast.getAttr('code').source_string if lexer_ast.getAttr('code') else ''
+        lexer.replace_partials()
         return lexer
 
     def parse_regex(self, regex_ast, terminals, nonterminals):
@@ -475,6 +483,9 @@ class GrammarFactory:
                 for ast in sub:
                     nodes.extend(self.walk_ast(ast, node_name))
         return nodes
+
+def get_parse_tree(source, resource='<string>'):
+    return hermes_parse(hermes_lex(source, resource))
 
 def get_ast(source, resource='<string>'):
     tree = hermes_parse(hermes_lex(source, resource))

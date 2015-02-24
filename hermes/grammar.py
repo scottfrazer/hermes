@@ -290,6 +290,16 @@ class Regex:
 class Lexer(OrderedDict):
     code = ''
 
+    def __init__(self):
+        super().__init__()
+        self.regex_partials = {}
+
+    def replace_partials(self):
+        for mode, regex_list in self.items():
+            for regex in regex_list:
+                for partial_name, partial in self.regex_partials.items():
+                    regex.regex = regex.regex.replace('{{%{0}%}}'.format(partial_name), partial)
+
     def str(self, theme=None):
         return ', '.join(self.keys())
 

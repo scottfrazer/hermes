@@ -8,63 +8,63 @@
           (parser_ll1:
             <parser_ll1 (line 2 col 3) `parser<ll1>`>,
             <lbrace (line 2 col 15) `{`>,
-            (_gen6:
+            (_gen7:
               (ll1_rule:
                 <ll1_rule_hint (line 3 col 5) ``>,
                 <nonterminal (line 3 col 5) `s`>,
                 <equals (line 3 col 8) `=`>,
                 (ll1_rule_rhs:
-                  (_gen7:
+                  (_gen8:
                     (rule:
-                      (_gen9:
+                      (_gen10:
                         (morpheme:
                           (macro:
                             <identifier (line 3 col 10) `mlist`>,
                             <lparen (line 3 col 15) `(`>,
-                            (_gen16:
+                            (_gen17:
                               (macro_parameter:
                                 <nonterminal (line 3 col 16) `t`>
                               ),
-                              (_gen17:
+                              (_gen18:
                                 <comma (line 3 col 18) `,`>,
                                 (macro_parameter:
                                   <integer (line 3 col 20) `2`>
                                 ),
-                                (_gen17: )
+                                (_gen18: )
                               )
                             ),
                             <rparen (line 3 col 21) `)`>
                           )
                         ),
-                        (_gen9: )
+                        (_gen10: )
                       ),
-                      (_gen10: )
+                      (_gen11: )
                     ),
-                    (_gen8: )
+                    (_gen9: )
                   )
                 )
               ),
-              (_gen6:
+              (_gen7:
                 (ll1_rule:
                   <ll1_rule_hint (line 4 col 5) ``>,
                   <nonterminal (line 4 col 5) `t`>,
                   <equals (line 4 col 8) `=`>,
                   (ll1_rule_rhs:
-                    (_gen7:
+                    (_gen8:
                       (rule:
-                        (_gen9:
+                        (_gen10:
                           (morpheme:
                             <terminal (line 4 col 10) `nt`>
                           ),
-                          (_gen9: )
+                          (_gen10: )
                         ),
-                        (_gen10: )
+                        (_gen11: )
                       ),
-                      (_gen8: )
+                      (_gen9: )
                     )
                   )
                 ),
-                (_gen6: )
+                (_gen7: )
               )
             ),
             <rbrace (line 5 col 3) `}`>

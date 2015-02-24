@@ -79,6 +79,12 @@ def cli():
     commands['parse'].add_argument(
         '--base64', action='store_true', help='Base64 encode source'
     )
+    commands['parse'].add_argument(
+        '--tree', action='store_true', help='Output Parse Tree instead of AST'
+    )
+    commands['parse'].add_argument(
+        '--no-color', action='store_true', help='Don\'t colorize output'
+    )
 
     cli = parser.parse_args()
 
@@ -128,8 +134,10 @@ def cli():
 
     elif cli.action == 'parse':
         with open(cli.grammar) as fp:
-            ast = hermes.factory.get_ast(fp.read())
-        print(ast.dumps(indent=2, color=hermes.hermes_parser.term_color, b64_source=cli.base64))
+            tree = hermes.factory.get_parse_tree(fp.read())
+        colorizer = hermes.hermes_parser.no_color if cli.no_color else hermes.hermes_parser.term_color
+        element = tree if cli.tree else tree.toAst()
+        print(element.dumps(indent=2, color=colorizer, b64_source=cli.base64))
 
 def analyze(grammar, format='human', theme=None, file=sys.stdout):
     if theme == None:
