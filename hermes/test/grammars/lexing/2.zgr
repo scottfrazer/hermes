@@ -11,10 +11,10 @@ grammar {
     }
 
     <code>
-def numbers_start(context, mode, match, terminal, resource, line, col):
-    return default_action(context, 'numbers', match, terminal, resource, line, col)
-def numbers_end(context, mode, match, terminal, resource, line, col):
-    return default_action(context, 'default', match, terminal, resource, line, col)
+def numbers_start(context, mode, match, groups, terminal, resource, line, col):
+    return default_action(context, 'numbers', match, groups, terminal, resource, line, col)
+def numbers_end(context, mode, match, groups, terminal, resource, line, col):
+    return default_action(context, 'default', match, groups, terminal, resource, line, col)
     </code>
   }
 

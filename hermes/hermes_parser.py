@@ -254,490 +254,490 @@ class ParserContext:
     self.nonterminal_string = None
     self.rule_string = None
 # Parser Code #
-parser_terminals = {
-    0: 'lexer',
-    1: 'asterisk',
-    2: 'mixfix_rule_hint',
-    3: 'll1_rule_hint',
-    4: 'null',
-    5: 'parser_ll1',
-    6: 'parser_expression',
-    7: 'unary',
-    8: 'grammar',
-    9: 'rparen',
-    10: 'prefix_rule_hint',
-    11: 'nonterminal_reference',
-    12: 'equals',
-    13: 'comma',
-    14: 'regex',
-    15: 'infix_rule_hint',
+terminals = {
+    0: 'regex',
+    1: 'rbrace',
+    2: 'rparen',
+    3: 'nonterminal',
+    4: 'infix_rule_hint',
+    5: 'nonterminal_reference',
+    6: 'dash',
+    7: 'equals',
+    8: 'arrow',
+    9: 'integer',
+    10: 'lbrace',
+    11: 'lparen',
+    12: 'string',
+    13: 'right',
+    14: 'identifier',
+    15: 'expression_divider',
     16: 'terminal',
-    17: 'dash',
-    18: 'mode',
-    19: 'rangle',
+    17: 'colon',
+    18: 'grammar',
+    19: 'll1_rule_hint',
     20: 'langle',
-    21: 'arrow',
-    22: 'expr_rule_hint',
-    23: 'lbrace',
-    24: 'lparen',
-    25: 'colon',
-    26: 'left',
-    27: 'pipe',
-    28: 'rbrace',
-    29: 'identifier',
-    30: 'string',
-    31: 'integer',
-    32: 'right',
-    33: 'code',
-    34: 'nonterminal',
-    35: 'expression_divider',
-    'lexer': 0,
-    'asterisk': 1,
-    'mixfix_rule_hint': 2,
-    'll1_rule_hint': 3,
-    'null': 4,
-    'parser_ll1': 5,
-    'parser_expression': 6,
-    'unary': 7,
-    'grammar': 8,
-    'rparen': 9,
-    'prefix_rule_hint': 10,
-    'nonterminal_reference': 11,
-    'equals': 12,
-    'comma': 13,
-    'regex': 14,
-    'infix_rule_hint': 15,
+    21: 'null',
+    22: 'rangle',
+    23: 'lexer',
+    24: 'mixfix_rule_hint',
+    25: 'unary',
+    26: 'mode',
+    27: 'prefix_rule_hint',
+    28: 'code',
+    29: 'asterisk',
+    30: 'left',
+    31: 'pipe',
+    32: 'comma',
+    33: 'expr_rule_hint',
+    34: 'parser_ll1',
+    35: 'parser_expression',
+    'regex': 0,
+    'rbrace': 1,
+    'rparen': 2,
+    'nonterminal': 3,
+    'infix_rule_hint': 4,
+    'nonterminal_reference': 5,
+    'dash': 6,
+    'equals': 7,
+    'arrow': 8,
+    'integer': 9,
+    'lbrace': 10,
+    'lparen': 11,
+    'string': 12,
+    'right': 13,
+    'identifier': 14,
+    'expression_divider': 15,
     'terminal': 16,
-    'dash': 17,
-    'mode': 18,
-    'rangle': 19,
+    'colon': 17,
+    'grammar': 18,
+    'll1_rule_hint': 19,
     'langle': 20,
-    'arrow': 21,
-    'expr_rule_hint': 22,
-    'lbrace': 23,
-    'lparen': 24,
-    'colon': 25,
-    'left': 26,
-    'pipe': 27,
-    'rbrace': 28,
-    'identifier': 29,
-    'string': 30,
-    'integer': 31,
-    'right': 32,
-    'code': 33,
-    'nonterminal': 34,
-    'expression_divider': 35,
+    'null': 21,
+    'rangle': 22,
+    'lexer': 23,
+    'mixfix_rule_hint': 24,
+    'unary': 25,
+    'mode': 26,
+    'prefix_rule_hint': 27,
+    'code': 28,
+    'asterisk': 29,
+    'left': 30,
+    'pipe': 31,
+    'comma': 32,
+    'expr_rule_hint': 33,
+    'parser_ll1': 34,
+    'parser_expression': 35,
 }
 # table[nonterminal][terminal] = rule
 table = [
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, 69, -1, -1, -1, 68, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, 29, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, 70, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 67, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 43, -1, 43, -1, -1, -1, 44, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14, -1, 13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, 33, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 32, 33, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 73, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 11, -1, -1, -1, 12, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, 23, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 19, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 22, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 72, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 71, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, 77, -1, -1, -1, -1, -1, -1, 74, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 74, 74, -1, -1, 74, -1],
-    [-1, -1, -1, 40, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 40, -1, -1, -1, -1, 40, -1, -1, -1, -1, -1, 40, 40, 40, -1, -1, -1, -1, 40, -1],
-    [10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 56, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, 51, -1, -1, -1, -1, -1, -1, -1, 52, -1, -1, -1, -1, 53, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [4, -1, -1, -1, -1, 5, 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 17, 16, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, 25, 26, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 66, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 47, -1, 46, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, 21, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 55],
-    [-1, 57, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 57, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, 58, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 59, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6, -1, -1, -1, 6, -1, -1, -1, -1, -1, -1, -1, -1, -1, 7, -1, -1, -1, -1, 7, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, 37, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 36, -1, -1, -1, -1, 37, 37, -1, 37, -1, -1, 37, 37, 36, -1, -1, -1, -1, 36, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 18, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 54, -1, -1, -1, -1, 54, 54, -1, 54, -1, -1, -1, 54, 54, -1, -1, -1, -1, 54, -1],
-    [-1, -1, -1, 35, 41, 42, 42, -1, -1, -1, -1, -1, -1, -1, -1, -1, 35, -1, -1, -1, -1, 35, -1, -1, -1, -1, -1, 35, 35, 35, -1, -1, -1, -1, 35, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 50, 50, -1, 50, -1, -1, -1, 50, -1, -1, -1, -1, -1, -1, 49],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 63, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 65, -1, -1, -1, -1, 64, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 78, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, 39, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 38, 39, -1, 39, -1, -1, 39, 39, -1, -1, -1, -1, -1, -1, 39],
-    [-1, -1, -1, 27, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 28, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 24, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, 31, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 31, -1, -1, -1, -1, 31, -1, -1, -1, -1, -1, 31, 31, 31, -1, -1, -1, -1, 31, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 48, -1, 48, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 60, -1, -1, -1, -1, -1, 61, -1, -1, -1],
-    [3, -1, -1, -1, -1, 3, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 80, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 81, 82, -1, -1, 79, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, 76, -1, -1, -1, 75, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [0, -1, -1, -1, -1, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, 45, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
-    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 9, -1, -1, -1, -1, 8, -1, -1],
+    [-1, 33, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 33, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 32, -1, -1, -1, -1],
+    [-1, 54, -1, 54, -1, -1, -1, -1, 54, -1, -1, 54, -1, -1, 54, -1, 54, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 54, -1, -1],
+    [-1, -1, -1, -1, -1, -1, 57, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 57, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 61, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, -1, -1, -1, -1, 60, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 22, -1, 19, -1, -1, -1, -1, 23, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, 50, -1, -1, -1, -1, -1, -1, 50, -1, -1, 50, -1, -1, -1, 49, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 50, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 78, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, 39, -1, -1, -1, -1, -1, -1, 38, -1, -1, 39, -1, -1, -1, 39, -1, -1, -1, 39, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 39, -1, 39, -1, -1],
+    [-1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 46, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 47, -1, -1],
+    [-1, -1, 69, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 68, -1, -1, -1],
+    [-1, 44, -1, -1, -1, -1, -1, -1, -1, -1, -1, 43, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 43, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, 66, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 25, 26],
+    [-1, -1, 70, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 67, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, 40, -1, 40, -1, -1, -1, -1, 40, -1, -1, -1, -1, -1, 40, -1, 40, -1, -1, 40, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 40, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, 72, -1, -1, -1, -1, -1, -1, -1, -1, 71, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 56, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 18, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, 37, -1, 36, -1, -1, -1, -1, 37, -1, -1, 37, -1, -1, 36, -1, 36, -1, -1, 37, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 37, -1, 37, -1, -1],
+    [-1, -1, -1, 79, -1, -1, -1, -1, -1, 82, -1, -1, 81, -1, -1, -1, 80, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 24, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, 21, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, 59, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 58, -1, -1, -1, -1, -1, -1],
+    [-1, 17, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 16, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, 64, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 65, -1, 63, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 55, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, 53, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 51, -1, -1, 52, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [15, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, 9, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 8, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 73, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, 35, -1, 35, -1, -1, -1, -1, 35, -1, -1, -1, -1, -1, 35, -1, 35, -1, -1, 35, -1, 41, -1, -1, -1, -1, -1, -1, -1, -1, -1, 35, -1, -1, 42, 42],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 3, 3],
+    [-1, 31, -1, 31, -1, -1, -1, -1, 31, -1, -1, -1, -1, -1, 31, -1, 31, -1, -1, 31, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 31, -1, -1, -1, -1],
+    [-1, -1, 76, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 75, -1, -1, -1],
+    [-1, 28, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 27, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, 77, 74, -1, -1, -1, -1, -1, 74, -1, -1, 74, -1, -1, -1, 74, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 29, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 48, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 48, -1, -1],
+    [6, 7, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 6, -1, 7, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 45],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 5, 5],
+    [11, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
+    [-1, -1, -1, -1, -1, -1, -1, -1, 14, -1, 13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1],
 ]
 nonterminal_first = {
-    36: [13, -1],
-    37: [5],
-    38: [-1, 29],
-    39: [-1, 22, 24],
-    40: [-1, 23],
-    41: [-1, 27],
-    42: [29],
-    43: [18, 14],
-    44: [4, 29, 16],
-    45: [11, 29],
-    46: [30, 34, 31, -1, 16],
-    47: [21, 16, 34, -1, 29],
-    48: [0],
-    49: [24],
-    50: [2, 10, 15],
-    51: [0, 5, 6],
-    52: [-1, 29],
-    53: [5, 6],
-    54: [21],
-    55: [-1, 24],
-    56: [-1, 16],
-    57: [35],
-    58: [1, 17],
-    59: [1, 17],
-    60: [18, 14, -1],
-    61: [14],
-    62: [3],
-    63: [16, 34, -1, 29],
-    64: [23],
-    65: [34, -1, 29, 16],
-    66: [27, 4, 5, 6, -1, 29, 21, 16, 34],
-    67: [-1, 35],
-    68: [34, 29, 16],
-    69: [29],
-    70: [21, -1],
-    71: [-1, 3],
-    72: [18],
-    73: [21, 27, 16, 34, -1, 29],
-    74: [8],
-    75: [22, 24],
-    76: [7, 32, 26],
-    77: [0, 5, 6],
-    78: [30, 34, 31, 16],
-    79: [13, -1],
-    80: [0, 5, 6, -1],
-    81: [6],
-    82: [33, -1],
+    36: [-1, 31],
+    37: [3, -1, 16, 14],
+    38: [6, 29],
+    39: [13, 25, 30],
+    40: [16, 14, 21],
+    41: [-1, 15],
+    42: [14],
+    43: [-1, 8],
+    44: [-1, 23, 34, 35],
+    45: [-1, 11],
+    46: [-1, 32],
+    47: [-1, 11, 33],
+    48: [8],
+    49: [34, 35],
+    50: [-1, 14],
+    51: [3, 14, -1, 8, 16],
+    52: [23],
+    53: [5, 14],
+    54: [11],
+    55: [10],
+    56: [3, 14, -1, 16],
+    57: [3, 12, 16, 9],
+    58: [26],
+    59: [-1, 16],
+    60: [6, 29],
+    61: [-1, 14],
+    62: [3, 16, 14],
+    63: [15],
+    64: [27, 24, 4],
+    65: [18],
+    66: [0],
+    67: [28, -1],
+    68: [14],
+    69: [14, 16, 31, 3, -1, 34, 8, 35, 21],
+    70: [34, 23, 35],
+    71: [3, 14, -1, 8, 16, 31],
+    72: [-1, 32],
+    73: [-1, 19],
+    74: [-1, 3, 12, 16, 9],
+    75: [34],
+    76: [11, 33],
+    77: [0, -1, 26],
+    78: [35],
+    79: [34, 23, 35],
+    80: [0, 26],
+    81: [19],
+    82: [10, -1],
 }
 nonterminal_follow = {
-    36: [9],
-    37: [0, 3, 5, 6, 28],
-    38: [9],
-    39: [28],
-    40: [21],
-    41: [28, 3],
-    42: [9, 13],
-    43: [18, 14, 33, 28],
-    44: [14, 33, 18, 28],
-    45: [27, 3, 28, 22, 24, 35],
-    46: [9],
-    47: [27, 28, 3],
-    48: [0, 5, 6, 28],
-    49: [22],
-    50: [22, 28, 24],
-    51: [0, 5, 6, 28],
-    52: [28],
-    53: [0, 3, 5, 6, 28],
-    54: [27, 3, 28, 22, 24, 35],
-    55: [22],
-    56: [9],
-    57: [21, 22, 24, 28],
-    58: [9],
-    59: [25],
-    60: [33, 28],
-    61: [14, 33, 18, 28],
-    62: [28, 3],
-    63: [3, 27, 28, 21, 22, 24],
-    64: [21],
-    65: [21, 22, 24, 28],
-    66: [28, 3],
-    67: [21, 22, 24, 28],
-    68: [27, 3, 28, 29, 21, 22, 16, 24, 34],
-    69: [3, 21, 22, 24, 27, 28, 29, 16, 34],
-    70: [27, 3, 28, 22, 24, 35],
-    71: [28],
-    72: [14, 33, 18, 28],
-    73: [28, 3],
-    74: [-1],
-    75: [22, 28, 24],
-    76: [9],
-    77: [0, 5, 6, 28],
-    78: [9, 13],
-    79: [9],
-    80: [28],
-    81: [0, 3, 5, 6, 28],
-    82: [28],
+    36: [1, 19],
+    37: [11, 33, 1, 8],
+    38: [2],
+    39: [2],
+    40: [26, 0, 1, 28],
+    41: [11, 33, 1, 8],
+    42: [1, 3, 8, 11, 14, 16, 31, 33, 19],
+    43: [11, 15, 1, 31, 33, 19],
+    44: [1],
+    45: [33],
+    46: [2],
+    47: [1],
+    48: [11, 15, 1, 31, 33, 19],
+    49: [1, 23, 19, 34, 35],
+    50: [2],
+    51: [1, 19, 31],
+    52: [1, 34, 23, 35],
+    53: [11, 15, 1, 31, 33, 19],
+    54: [33],
+    55: [8],
+    56: [11, 1, 31, 33, 19, 8],
+    57: [2, 32],
+    58: [26, 0, 1, 28],
+    59: [2],
+    60: [17],
+    61: [1],
+    62: [11, 14, 1, 16, 31, 3, 33, 19, 8],
+    63: [11, 33, 1, 8],
+    64: [1, 11, 33],
+    65: [-1],
+    66: [26, 0, 1, 28],
+    67: [1],
+    68: [2, 32],
+    69: [1, 19],
+    70: [1, 34, 23, 35],
+    71: [1, 19],
+    72: [2],
+    73: [1],
+    74: [2],
+    75: [1, 23, 19, 34, 35],
+    76: [1, 11, 33],
+    77: [1, 28],
+    78: [1, 23, 19, 34, 35],
+    79: [1, 34, 23, 35],
+    80: [0, 1, 28, 26],
+    81: [1, 19],
+    82: [8],
 }
 rule_first = {
-    0: [0, 5, 6],
+    0: [34, 23, 35],
     1: [-1],
-    2: [8],
-    3: [0, 5, 6],
-    4: [0],
-    5: [5, 6],
-    6: [18, 14],
+    2: [18],
+    3: [34, 23, 35],
+    4: [23],
+    5: [34, 35],
+    6: [0, 26],
     7: [-1],
-    8: [33],
+    8: [28],
     9: [-1],
-    10: [0],
-    11: [14],
-    12: [18],
-    13: [23],
+    10: [23],
+    11: [0],
+    12: [26],
+    13: [10],
     14: [-1],
-    15: [14],
-    16: [29],
+    15: [0],
+    16: [14],
     17: [-1],
-    18: [23],
+    18: [10],
     19: [16],
     20: [16],
     21: [-1],
-    22: [29],
-    23: [4],
-    24: [18],
-    25: [5],
-    26: [6],
-    27: [3],
+    22: [14],
+    23: [21],
+    24: [26],
+    25: [34],
+    26: [35],
+    27: [19],
     28: [-1],
-    29: [5],
-    30: [3],
-    31: [27, -1, 29, 21, 16, 34],
-    32: [27],
+    29: [34],
+    30: [19],
+    31: [14, 16, 31, 3, -1, 8],
+    32: [31],
     33: [-1],
     34: [-1],
-    35: [27, -1, 29, 21, 16, 34],
-    36: [34, 29, 16],
+    35: [14, 16, 31, 3, -1, 8],
+    36: [3, 16, 14],
     37: [-1],
-    38: [21],
+    38: [8],
     39: [-1],
-    40: [34, 21, -1, 29, 16],
-    41: [4],
-    42: [5, 6],
-    43: [22, 24],
+    40: [3, 8, 16, -1, 14],
+    41: [21],
+    42: [34, 35],
+    43: [11, 33],
     44: [-1],
-    45: [6],
-    46: [24],
+    45: [35],
+    46: [11],
     47: [-1],
-    48: [22, 24],
-    49: [35],
+    48: [11, 33],
+    49: [15],
     50: [-1],
-    51: [2],
-    52: [10],
-    53: [15],
-    54: [34, -1, 29, 16],
-    55: [35],
-    56: [24],
-    57: [1, 17],
-    58: [1],
-    59: [17],
-    60: [26],
-    61: [32],
-    62: [7],
+    51: [24],
+    52: [27],
+    53: [4],
+    54: [3, -1, 16, 14],
+    55: [15],
+    56: [11],
+    57: [6, 29],
+    58: [29],
+    59: [6],
+    60: [30],
+    61: [13],
+    62: [25],
     63: [16],
-    64: [34],
-    65: [29],
-    66: [21],
-    67: [29],
-    68: [13],
+    64: [3],
+    65: [14],
+    66: [8],
+    67: [14],
+    68: [32],
     69: [-1],
     70: [-1],
-    71: [29],
-    72: [11],
-    73: [29],
-    74: [30, 34, 31, 16],
-    75: [13],
+    71: [14],
+    72: [5],
+    73: [14],
+    74: [3, 12, 16, 9],
+    75: [32],
     76: [-1],
     77: [-1],
-    78: [29],
-    79: [34],
+    78: [14],
+    79: [3],
     80: [16],
-    81: [30],
-    82: [31],
+    81: [12],
+    82: [9],
 }
 nonterminal_rules = {
     36: [
-        "$_gen15 = :comma $ast_parameter $_gen15",
-        "$_gen15 = :_empty",
-    ],
-    37: [
-        "$parser_ll1 = :parser_ll1 :lbrace $_gen6 :rbrace -> Parser( rules=$2 )",
-    ],
-    38: [
-        "$_gen14 = $ast_parameter $_gen15",
-        "$_gen14 = :_empty",
-    ],
-    39: [
-        "$_gen11 = $expression_rule $_gen11",
-        "$_gen11 = :_empty",
-    ],
-    40: [
-        "$_gen3 = $regex_options",
-        "$_gen3 = :_empty",
-    ],
-    41: [
         "$_gen8 = :pipe $rule $_gen8",
         "$_gen8 = :_empty",
     ],
-    42: [
-        "$ast_parameter = :identifier :equals :nonterminal_reference -> AstParameter( name=$0, index=$2 )",
-    ],
-    43: [
-        "$lexer_atom = $lexer_regex",
-        "$lexer_atom = $lexer_mode",
-    ],
-    44: [
-        "$lexer_target = :terminal",
-        "$lexer_target = :identifier :lparen $_gen5 :rparen -> LexerFunctionCall( name=$0, terminal=$2 )",
-        "$lexer_target = :null -> Null(  )",
-    ],
-    45: [
-        "$ast_transform_sub = :identifier :lparen $_gen14 :rparen -> AstTransformation( name=$0, parameters=$2 )",
-        "$ast_transform_sub = :nonterminal_reference",
-    ],
-    46: [
-        "$_gen16 = $macro_parameter $_gen17",
-        "$_gen16 = :_empty",
-    ],
-    47: [
-        "$rule = $_gen9 $_gen10 -> Production( morphemes=$0, ast=$1 )",
-    ],
-    48: [
-        "$lexer = :lexer :langle :identifier :rangle :lbrace $_gen1 $_gen2 :rbrace -> Lexer( language=$2, atoms=$5, code=$6 )",
-    ],
-    49: [
-        "$binding_power = :lparen $precedence :rparen -> $1",
-    ],
-    50: [
-        "$expression_rule_production = :mixfix_rule_hint $nud $_gen10 $_gen13 $_gen10 -> MixfixProduction( nud=$1, nud_ast=$2, led=$3, ast=$4 )",
-        "$expression_rule_production = :prefix_rule_hint $_gen9 $_gen10 -> PrefixProduction( morphemes=$1, ast=$2 )",
-        "$expression_rule_production = :infix_rule_hint $_gen9 $_gen10 -> InfixProduction( morphemes=$1, ast=$2 )",
-    ],
-    51: [
-        "$body_element_sub = $lexer",
-        "$body_element_sub = $parser",
-    ],
-    52: [
-        "$_gen4 = :identifier $_gen4",
-        "$_gen4 = :_empty",
-    ],
-    53: [
-        "$parser = $parser_ll1",
-        "$parser = $parser_expression",
-    ],
-    54: [
-        "$ast_transform = :arrow $ast_transform_sub -> $1",
-    ],
-    55: [
-        "$_gen12 = $binding_power",
-        "$_gen12 = :_empty",
-    ],
-    56: [
-        "$_gen5 = :terminal",
-        "$_gen5 = :_empty",
-    ],
-    57: [
-        "$led = :expression_divider $_gen9 -> $1",
-    ],
-    58: [
-        "$precedence = $binding_power_marker :colon $associativity -> Precedence( marker=$0, associativity=$2 )",
-    ],
-    59: [
-        "$binding_power_marker = :asterisk",
-        "$binding_power_marker = :dash",
-    ],
-    60: [
-        "$_gen1 = $lexer_atom $_gen1",
-        "$_gen1 = :_empty",
-    ],
-    61: [
-        "$lexer_regex = :regex $_gen3 :arrow $lexer_target -> Regex( regex=$0, options=$1, onmatch=$3 )",
-    ],
-    62: [
-        "$ll1_rule = :ll1_rule_hint :nonterminal :equals $ll1_rule_rhs -> Rule( nonterminal=$1, production=$3 )",
-    ],
-    63: [
-        "$_gen9 = $morpheme $_gen9",
-        "$_gen9 = :_empty",
-    ],
-    64: [
-        "$regex_options = :lbrace $_gen4 :rbrace -> $1",
-    ],
-    65: [
+    37: [
         "$nud = $_gen9",
     ],
-    66: [
-        "$ll1_rule_rhs = $_gen7",
-        "$ll1_rule_rhs = :null -> NullProduction(  )",
-        "$ll1_rule_rhs = $parser",
+    38: [
+        "$precedence = $binding_power_marker :colon $associativity -> Precedence( marker=$0, associativity=$2 )",
     ],
-    67: [
-        "$_gen13 = $led",
-        "$_gen13 = :_empty",
-    ],
-    68: [
-        "$morpheme = :terminal",
-        "$morpheme = :nonterminal",
-        "$morpheme = $macro",
-    ],
-    69: [
-        "$macro = :identifier :lparen $_gen16 :rparen -> Macro( name=$0, parameters=$2 )",
-    ],
-    70: [
-        "$_gen10 = $ast_transform",
-        "$_gen10 = :_empty",
-    ],
-    71: [
-        "$_gen6 = $ll1_rule $_gen6",
-        "$_gen6 = :_empty",
-    ],
-    72: [
-        "$lexer_mode = :mode :langle :identifier :rangle :lbrace $_gen1 :rbrace -> Mode( name=$2, atoms=$5 )",
-    ],
-    73: [
-        "$_gen7 = $rule $_gen8",
-        "$_gen7 = :_empty",
-    ],
-    74: [
-        "$grammar = :grammar :lbrace $_gen0 :rbrace -> Grammar( body=$2 )",
-    ],
-    75: [
-        "$expression_rule = $_gen12 :expr_rule_hint :nonterminal :equals $expression_rule_production -> ExpressionRule( precedence=$0, nonterminal=$2, production=$4 )",
-    ],
-    76: [
+    39: [
         "$associativity = :left",
         "$associativity = :right",
         "$associativity = :unary",
     ],
-    77: [
-        "$body_element = $body_element_sub",
+    40: [
+        "$lexer_target = :terminal",
+        "$lexer_target = :identifier :lparen $_gen5 :rparen -> LexerFunctionCall( name=$0, terminal=$2 )",
+        "$lexer_target = :null -> Null(  )",
     ],
-    78: [
+    41: [
+        "$_gen13 = $led",
+        "$_gen13 = :_empty",
+    ],
+    42: [
+        "$macro = :identifier :lparen $_gen16 :rparen -> Macro( name=$0, parameters=$2 )",
+    ],
+    43: [
+        "$_gen10 = $ast_transform",
+        "$_gen10 = :_empty",
+    ],
+    44: [
+        "$_gen0 = $body_element $_gen0",
+        "$_gen0 = :_empty",
+    ],
+    45: [
+        "$_gen12 = $binding_power",
+        "$_gen12 = :_empty",
+    ],
+    46: [
+        "$_gen15 = :comma $ast_parameter $_gen15",
+        "$_gen15 = :_empty",
+    ],
+    47: [
+        "$_gen11 = $expression_rule $_gen11",
+        "$_gen11 = :_empty",
+    ],
+    48: [
+        "$ast_transform = :arrow $ast_transform_sub -> $1",
+    ],
+    49: [
+        "$parser = $parser_ll1",
+        "$parser = $parser_expression",
+    ],
+    50: [
+        "$_gen14 = $ast_parameter $_gen15",
+        "$_gen14 = :_empty",
+    ],
+    51: [
+        "$rule = $_gen9 $_gen10 -> Production( morphemes=$0, ast=$1 )",
+    ],
+    52: [
+        "$lexer = :lexer :langle :identifier :rangle :lbrace $_gen1 $_gen2 :rbrace -> Lexer( language=$2, atoms=$5, code=$6 )",
+    ],
+    53: [
+        "$ast_transform_sub = :identifier :lparen $_gen14 :rparen -> AstTransformation( name=$0, parameters=$2 )",
+        "$ast_transform_sub = :nonterminal_reference",
+    ],
+    54: [
+        "$binding_power = :lparen $precedence :rparen -> $1",
+    ],
+    55: [
+        "$regex_options = :lbrace $_gen4 :rbrace -> $1",
+    ],
+    56: [
+        "$_gen9 = $morpheme $_gen9",
+        "$_gen9 = :_empty",
+    ],
+    57: [
         "$macro_parameter = :nonterminal",
         "$macro_parameter = :terminal",
         "$macro_parameter = :string",
         "$macro_parameter = :integer",
     ],
-    79: [
+    58: [
+        "$lexer_mode = :mode :langle :identifier :rangle :lbrace $_gen1 :rbrace -> Mode( name=$2, atoms=$5 )",
+    ],
+    59: [
+        "$_gen5 = :terminal",
+        "$_gen5 = :_empty",
+    ],
+    60: [
+        "$binding_power_marker = :asterisk",
+        "$binding_power_marker = :dash",
+    ],
+    61: [
+        "$_gen4 = :identifier $_gen4",
+        "$_gen4 = :_empty",
+    ],
+    62: [
+        "$morpheme = :terminal",
+        "$morpheme = :nonterminal",
+        "$morpheme = $macro",
+    ],
+    63: [
+        "$led = :expression_divider $_gen9 -> $1",
+    ],
+    64: [
+        "$expression_rule_production = :mixfix_rule_hint $nud $_gen10 $_gen13 $_gen10 -> MixfixProduction( nud=$1, nud_ast=$2, led=$3, ast=$4 )",
+        "$expression_rule_production = :prefix_rule_hint $_gen9 $_gen10 -> PrefixProduction( morphemes=$1, ast=$2 )",
+        "$expression_rule_production = :infix_rule_hint $_gen9 $_gen10 -> InfixProduction( morphemes=$1, ast=$2 )",
+    ],
+    65: [
+        "$grammar = :grammar :lbrace $_gen0 :rbrace -> Grammar( body=$2 )",
+    ],
+    66: [
+        "$lexer_regex = :regex $_gen3 :arrow $lexer_target -> Regex( regex=$0, options=$1, onmatch=$3 )",
+    ],
+    67: [
+        "$_gen2 = :code",
+        "$_gen2 = :_empty",
+    ],
+    68: [
+        "$ast_parameter = :identifier :equals :nonterminal_reference -> AstParameter( name=$0, index=$2 )",
+    ],
+    69: [
+        "$ll1_rule_rhs = $_gen7",
+        "$ll1_rule_rhs = :null -> NullProduction(  )",
+        "$ll1_rule_rhs = $parser",
+    ],
+    70: [
+        "$body_element = $body_element_sub",
+    ],
+    71: [
+        "$_gen7 = $rule $_gen8",
+        "$_gen7 = :_empty",
+    ],
+    72: [
         "$_gen17 = :comma $macro_parameter $_gen17",
         "$_gen17 = :_empty",
     ],
-    80: [
-        "$_gen0 = $body_element $_gen0",
-        "$_gen0 = :_empty",
+    73: [
+        "$_gen6 = $ll1_rule $_gen6",
+        "$_gen6 = :_empty",
     ],
-    81: [
+    74: [
+        "$_gen16 = $macro_parameter $_gen17",
+        "$_gen16 = :_empty",
+    ],
+    75: [
+        "$parser_ll1 = :parser_ll1 :lbrace $_gen6 :rbrace -> Parser( rules=$2 )",
+    ],
+    76: [
+        "$expression_rule = $_gen12 :expr_rule_hint :nonterminal :equals $expression_rule_production -> ExpressionRule( precedence=$0, nonterminal=$2, production=$4 )",
+    ],
+    77: [
+        "$_gen1 = $lexer_atom $_gen1",
+        "$_gen1 = :_empty",
+    ],
+    78: [
         "$parser_expression = :parser_expression :lbrace $_gen11 :rbrace -> ExpressionParser( rules=$2 )",
     ],
+    79: [
+        "$body_element_sub = $lexer",
+        "$body_element_sub = $parser",
+    ],
+    80: [
+        "$lexer_atom = $lexer_regex",
+        "$lexer_atom = $lexer_mode",
+    ],
+    81: [
+        "$ll1_rule = :ll1_rule_hint :nonterminal :equals $ll1_rule_rhs -> Rule( nonterminal=$1, production=$3 )",
+    ],
     82: [
-        "$_gen2 = :code",
-        "$_gen2 = :_empty",
+        "$_gen3 = $regex_options",
+        "$_gen3 = :_empty",
     ],
 }
 rules = {
@@ -839,133 +839,27 @@ def parse(tokens, error_formatter=None, start=None):
 def expect(ctx, terminal_id):
     current = ctx.tokens.current()
     if not current:
-        raise SyntaxError(ctx.error_formatter.no_more_tokens(ctx.nonterminal, parser_terminals[terminal_id], ctx.tokens.last()))
+        raise SyntaxError(ctx.error_formatter.no_more_tokens(ctx.nonterminal, terminals[terminal_id], ctx.tokens.last()))
     if current.id != terminal_id:
-        raise SyntaxError(ctx.error_formatter.unexpected_symbol(ctx.nonterminal, current, [parser_terminals[terminal_id]], ctx.rule))
+        raise SyntaxError(ctx.error_formatter.unexpected_symbol(ctx.nonterminal, current, [terminals[terminal_id]], ctx.rule))
     next = ctx.tokens.advance()
     if next and not is_terminal(next.id):
         raise SyntaxError(ctx.error_formatter.invalid_terminal(ctx.nonterminal, next))
     return current
-def parse__gen15(ctx):
-    current = ctx.tokens.current()
-    rule = table[0][current.id] if current else -1
-    tree = ParseTree(NonTerminal(36, '_gen15'))
-    ctx.nonterminal = "_gen15"
-    tree.list = 'slist'
-    if current != None and current.id in nonterminal_follow[36] and current.id not in nonterminal_first[36]:
-        return tree
-    if current == None:
-        return tree
-    if rule == 68: # $_gen15 = :comma $ast_parameter $_gen15
-        ctx.rule = rules[68]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 13) # :comma
-        tree.add(t)
-        tree.listSeparator = t
-        subtree = parse_ast_parameter(ctx)
-        tree.add(subtree)
-        subtree = parse__gen15(ctx)
-        tree.add(subtree)
-        return tree
-    return tree
-def parse_parser_ll1(ctx):
-    current = ctx.tokens.current()
-    rule = table[1][current.id] if current else -1
-    tree = ParseTree(NonTerminal(37, 'parser_ll1'))
-    ctx.nonterminal = "parser_ll1"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 29: # $parser_ll1 = :parser_ll1 :lbrace $_gen6 :rbrace -> Parser( rules=$2 )
-        ctx.rule = rules[29]
-        ast_parameters = OrderedDict([
-            ('rules', 2),
-        ])
-        tree.astTransform = AstTransformNodeCreator('Parser', ast_parameters)
-        t = expect(ctx, 5) # :parser_ll1
-        tree.add(t)
-        t = expect(ctx, 23) # :lbrace
-        tree.add(t)
-        subtree = parse__gen6(ctx)
-        tree.add(subtree)
-        t = expect(ctx, 28) # :rbrace
-        tree.add(t)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[37]],
-      rules[29]
-    ))
-def parse__gen14(ctx):
-    current = ctx.tokens.current()
-    rule = table[2][current.id] if current else -1
-    tree = ParseTree(NonTerminal(38, '_gen14'))
-    ctx.nonterminal = "_gen14"
-    tree.list = 'slist'
-    if current != None and current.id in nonterminal_follow[38] and current.id not in nonterminal_first[38]:
-        return tree
-    if current == None:
-        return tree
-    if rule == 67: # $_gen14 = $ast_parameter $_gen15
-        ctx.rule = rules[67]
-        tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_ast_parameter(ctx)
-        tree.add(subtree)
-        subtree = parse__gen15(ctx)
-        tree.add(subtree)
-        return tree
-    return tree
-def parse__gen11(ctx):
-    current = ctx.tokens.current()
-    rule = table[3][current.id] if current else -1
-    tree = ParseTree(NonTerminal(39, '_gen11'))
-    ctx.nonterminal = "_gen11"
-    tree.list = 'nlist'
-    if current != None and current.id in nonterminal_follow[39] and current.id not in nonterminal_first[39]:
-        return tree
-    if current == None:
-        return tree
-    if rule == 43: # $_gen11 = $expression_rule $_gen11
-        ctx.rule = rules[43]
-        tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_expression_rule(ctx)
-        tree.add(subtree)
-        subtree = parse__gen11(ctx)
-        tree.add(subtree)
-        return tree
-    return tree
-def parse__gen3(ctx):
-    current = ctx.tokens.current()
-    rule = table[4][current.id] if current else -1
-    tree = ParseTree(NonTerminal(40, '_gen3'))
-    ctx.nonterminal = "_gen3"
-    tree.list = False
-    if current != None and current.id in nonterminal_follow[40] and current.id not in nonterminal_first[40]:
-        return tree
-    if current == None:
-        return tree
-    if rule == 13: # $_gen3 = $regex_options
-        ctx.rule = rules[13]
-        tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_regex_options(ctx)
-        tree.add(subtree)
-        return tree
-    return tree
 def parse__gen8(ctx):
     current = ctx.tokens.current()
-    rule = table[5][current.id] if current else -1
-    tree = ParseTree(NonTerminal(41, '_gen8'))
+    rule = table[0][current.id] if current else -1
+    tree = ParseTree(NonTerminal(36, '_gen8'))
     ctx.nonterminal = "_gen8"
     tree.list = 'slist'
-    if current != None and current.id in nonterminal_follow[41] and current.id not in nonterminal_first[41]:
+    if current != None and current.id in nonterminal_follow[36] and current.id not in nonterminal_first[36]:
         return tree
     if current == None:
         return tree
     if rule == 32: # $_gen8 = :pipe $rule $_gen8
         ctx.rule = rules[32]
         tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 27) # :pipe
+        t = expect(ctx, 31) # :pipe
         tree.add(t)
         tree.listSeparator = t
         subtree = parse_rule(ctx)
@@ -974,64 +868,90 @@ def parse__gen8(ctx):
         tree.add(subtree)
         return tree
     return tree
-def parse_ast_parameter(ctx):
+def parse_nud(ctx):
     current = ctx.tokens.current()
-    rule = table[6][current.id] if current else -1
-    tree = ParseTree(NonTerminal(42, 'ast_parameter'))
-    ctx.nonterminal = "ast_parameter"
+    rule = table[1][current.id] if current else -1
+    tree = ParseTree(NonTerminal(37, 'nud'))
+    ctx.nonterminal = "nud"
     tree.list = False
     if current == None:
         raise SyntaxError('Error: unexpected end of file')
-    if rule == 73: # $ast_parameter = :identifier :equals :nonterminal_reference -> AstParameter( name=$0, index=$2 )
-        ctx.rule = rules[73]
-        ast_parameters = OrderedDict([
-            ('name', 0),
-            ('index', 2),
-        ])
-        tree.astTransform = AstTransformNodeCreator('AstParameter', ast_parameters)
-        t = expect(ctx, 29) # :identifier
-        tree.add(t)
-        t = expect(ctx, 12) # :equals
-        tree.add(t)
-        t = expect(ctx, 11) # :nonterminal_reference
-        tree.add(t)
+    if rule == 54: # $nud = $_gen9
+        ctx.rule = rules[54]
+        tree.astTransform = AstTransformSubstitution(0)
+        subtree = parse__gen9(ctx)
+        tree.add(subtree)
         return tree
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[42]],
-      rules[73]
+      [terminals[x] for x in nonterminal_first[37]],
+      rules[54]
     ))
-def parse_lexer_atom(ctx):
+def parse_precedence(ctx):
     current = ctx.tokens.current()
-    rule = table[7][current.id] if current else -1
-    tree = ParseTree(NonTerminal(43, 'lexer_atom'))
-    ctx.nonterminal = "lexer_atom"
+    rule = table[2][current.id] if current else -1
+    tree = ParseTree(NonTerminal(38, 'precedence'))
+    ctx.nonterminal = "precedence"
     tree.list = False
     if current == None:
         raise SyntaxError('Error: unexpected end of file')
-    if rule == 11: # $lexer_atom = $lexer_regex
-        ctx.rule = rules[11]
-        tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_lexer_regex(ctx)
+    if rule == 57: # $precedence = $binding_power_marker :colon $associativity -> Precedence( marker=$0, associativity=$2 )
+        ctx.rule = rules[57]
+        ast_parameters = OrderedDict([
+            ('marker', 0),
+            ('associativity', 2),
+        ])
+        tree.astTransform = AstTransformNodeCreator('Precedence', ast_parameters)
+        subtree = parse_binding_power_marker(ctx)
         tree.add(subtree)
-        return tree
-    elif rule == 12: # $lexer_atom = $lexer_mode
-        ctx.rule = rules[12]
-        tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_lexer_mode(ctx)
+        t = expect(ctx, 17) # :colon
+        tree.add(t)
+        subtree = parse_associativity(ctx)
         tree.add(subtree)
         return tree
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[43]],
-      rules[12]
+      [terminals[x] for x in nonterminal_first[38]],
+      rules[57]
+    ))
+def parse_associativity(ctx):
+    current = ctx.tokens.current()
+    rule = table[3][current.id] if current else -1
+    tree = ParseTree(NonTerminal(39, 'associativity'))
+    ctx.nonterminal = "associativity"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 60: # $associativity = :left
+        ctx.rule = rules[60]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 30) # :left
+        tree.add(t)
+        return tree
+    elif rule == 61: # $associativity = :right
+        ctx.rule = rules[61]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 13) # :right
+        tree.add(t)
+        return tree
+    elif rule == 62: # $associativity = :unary
+        ctx.rule = rules[62]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 25) # :unary
+        tree.add(t)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[39]],
+      rules[62]
     ))
 def parse_lexer_target(ctx):
     current = ctx.tokens.current()
-    rule = table[8][current.id] if current else -1
-    tree = ParseTree(NonTerminal(44, 'lexer_target'))
+    rule = table[4][current.id] if current else -1
+    tree = ParseTree(NonTerminal(40, 'lexer_target'))
     ctx.nonterminal = "lexer_target"
     tree.list = False
     if current == None:
@@ -1049,13 +969,13 @@ def parse_lexer_target(ctx):
             ('terminal', 2),
         ])
         tree.astTransform = AstTransformNodeCreator('LexerFunctionCall', ast_parameters)
-        t = expect(ctx, 29) # :identifier
+        t = expect(ctx, 14) # :identifier
         tree.add(t)
-        t = expect(ctx, 24) # :lparen
+        t = expect(ctx, 11) # :lparen
         tree.add(t)
         subtree = parse__gen5(ctx)
         tree.add(subtree)
-        t = expect(ctx, 9) # :rparen
+        t = expect(ctx, 2) # :rparen
         tree.add(t)
         return tree
     elif rule == 23: # $lexer_target = :null -> Null(  )
@@ -1063,270 +983,182 @@ def parse_lexer_target(ctx):
         ast_parameters = OrderedDict([
         ])
         tree.astTransform = AstTransformNodeCreator('Null', ast_parameters)
-        t = expect(ctx, 4) # :null
+        t = expect(ctx, 21) # :null
         tree.add(t)
         return tree
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[44]],
+      [terminals[x] for x in nonterminal_first[40]],
       rules[23]
     ))
-def parse_ast_transform_sub(ctx):
+def parse__gen13(ctx):
     current = ctx.tokens.current()
-    rule = table[9][current.id] if current else -1
-    tree = ParseTree(NonTerminal(45, 'ast_transform_sub'))
-    ctx.nonterminal = "ast_transform_sub"
+    rule = table[5][current.id] if current else -1
+    tree = ParseTree(NonTerminal(41, '_gen13'))
+    ctx.nonterminal = "_gen13"
+    tree.list = False
+    if current != None and current.id in nonterminal_follow[41] and current.id not in nonterminal_first[41]:
+        return tree
+    if current == None:
+        return tree
+    if rule == 49: # $_gen13 = $led
+        ctx.rule = rules[49]
+        tree.astTransform = AstTransformSubstitution(0)
+        subtree = parse_led(ctx)
+        tree.add(subtree)
+        return tree
+    return tree
+def parse_macro(ctx):
+    current = ctx.tokens.current()
+    rule = table[6][current.id] if current else -1
+    tree = ParseTree(NonTerminal(42, 'macro'))
+    ctx.nonterminal = "macro"
     tree.list = False
     if current == None:
         raise SyntaxError('Error: unexpected end of file')
-    if rule == 71: # $ast_transform_sub = :identifier :lparen $_gen14 :rparen -> AstTransformation( name=$0, parameters=$2 )
-        ctx.rule = rules[71]
+    if rule == 78: # $macro = :identifier :lparen $_gen16 :rparen -> Macro( name=$0, parameters=$2 )
+        ctx.rule = rules[78]
         ast_parameters = OrderedDict([
             ('name', 0),
             ('parameters', 2),
         ])
-        tree.astTransform = AstTransformNodeCreator('AstTransformation', ast_parameters)
-        t = expect(ctx, 29) # :identifier
+        tree.astTransform = AstTransformNodeCreator('Macro', ast_parameters)
+        t = expect(ctx, 14) # :identifier
         tree.add(t)
-        t = expect(ctx, 24) # :lparen
+        t = expect(ctx, 11) # :lparen
         tree.add(t)
-        subtree = parse__gen14(ctx)
+        subtree = parse__gen16(ctx)
         tree.add(subtree)
-        t = expect(ctx, 9) # :rparen
-        tree.add(t)
-        return tree
-    elif rule == 72: # $ast_transform_sub = :nonterminal_reference
-        ctx.rule = rules[72]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 11) # :nonterminal_reference
+        t = expect(ctx, 2) # :rparen
         tree.add(t)
         return tree
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[45]],
-      rules[72]
+      [terminals[x] for x in nonterminal_first[42]],
+      rules[78]
     ))
-def parse__gen16(ctx):
+def parse__gen10(ctx):
+    current = ctx.tokens.current()
+    rule = table[7][current.id] if current else -1
+    tree = ParseTree(NonTerminal(43, '_gen10'))
+    ctx.nonterminal = "_gen10"
+    tree.list = False
+    if current != None and current.id in nonterminal_follow[43] and current.id not in nonterminal_first[43]:
+        return tree
+    if current == None:
+        return tree
+    if rule == 38: # $_gen10 = $ast_transform
+        ctx.rule = rules[38]
+        tree.astTransform = AstTransformSubstitution(0)
+        subtree = parse_ast_transform(ctx)
+        tree.add(subtree)
+        return tree
+    return tree
+def parse__gen0(ctx):
+    current = ctx.tokens.current()
+    rule = table[8][current.id] if current else -1
+    tree = ParseTree(NonTerminal(44, '_gen0'))
+    ctx.nonterminal = "_gen0"
+    tree.list = 'nlist'
+    if current != None and current.id in nonterminal_follow[44] and current.id not in nonterminal_first[44]:
+        return tree
+    if current == None:
+        return tree
+    if rule == 0: # $_gen0 = $body_element $_gen0
+        ctx.rule = rules[0]
+        tree.astTransform = AstTransformSubstitution(0)
+        subtree = parse_body_element(ctx)
+        tree.add(subtree)
+        subtree = parse__gen0(ctx)
+        tree.add(subtree)
+        return tree
+    return tree
+def parse__gen12(ctx):
+    current = ctx.tokens.current()
+    rule = table[9][current.id] if current else -1
+    tree = ParseTree(NonTerminal(45, '_gen12'))
+    ctx.nonterminal = "_gen12"
+    tree.list = False
+    if current != None and current.id in nonterminal_follow[45] and current.id not in nonterminal_first[45]:
+        return tree
+    if current == None:
+        return tree
+    if rule == 46: # $_gen12 = $binding_power
+        ctx.rule = rules[46]
+        tree.astTransform = AstTransformSubstitution(0)
+        subtree = parse_binding_power(ctx)
+        tree.add(subtree)
+        return tree
+    return tree
+def parse__gen15(ctx):
     current = ctx.tokens.current()
     rule = table[10][current.id] if current else -1
-    tree = ParseTree(NonTerminal(46, '_gen16'))
-    ctx.nonterminal = "_gen16"
+    tree = ParseTree(NonTerminal(46, '_gen15'))
+    ctx.nonterminal = "_gen15"
     tree.list = 'slist'
     if current != None and current.id in nonterminal_follow[46] and current.id not in nonterminal_first[46]:
         return tree
     if current == None:
         return tree
-    if rule == 74: # $_gen16 = $macro_parameter $_gen17
-        ctx.rule = rules[74]
+    if rule == 68: # $_gen15 = :comma $ast_parameter $_gen15
+        ctx.rule = rules[68]
         tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_macro_parameter(ctx)
+        t = expect(ctx, 32) # :comma
+        tree.add(t)
+        tree.listSeparator = t
+        subtree = parse_ast_parameter(ctx)
         tree.add(subtree)
-        subtree = parse__gen17(ctx)
+        subtree = parse__gen15(ctx)
         tree.add(subtree)
         return tree
     return tree
-def parse_rule(ctx):
+def parse__gen11(ctx):
     current = ctx.tokens.current()
     rule = table[11][current.id] if current else -1
-    tree = ParseTree(NonTerminal(47, 'rule'))
-    ctx.nonterminal = "rule"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 40: # $rule = $_gen9 $_gen10 -> Production( morphemes=$0, ast=$1 )
-        ctx.rule = rules[40]
-        ast_parameters = OrderedDict([
-            ('morphemes', 0),
-            ('ast', 1),
-        ])
-        tree.astTransform = AstTransformNodeCreator('Production', ast_parameters)
-        subtree = parse__gen9(ctx)
-        tree.add(subtree)
-        subtree = parse__gen10(ctx)
-        tree.add(subtree)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[47]],
-      rules[40]
-    ))
-def parse_lexer(ctx):
-    current = ctx.tokens.current()
-    rule = table[12][current.id] if current else -1
-    tree = ParseTree(NonTerminal(48, 'lexer'))
-    ctx.nonterminal = "lexer"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 10: # $lexer = :lexer :langle :identifier :rangle :lbrace $_gen1 $_gen2 :rbrace -> Lexer( language=$2, atoms=$5, code=$6 )
-        ctx.rule = rules[10]
-        ast_parameters = OrderedDict([
-            ('language', 2),
-            ('atoms', 5),
-            ('code', 6),
-        ])
-        tree.astTransform = AstTransformNodeCreator('Lexer', ast_parameters)
-        t = expect(ctx, 0) # :lexer
-        tree.add(t)
-        t = expect(ctx, 20) # :langle
-        tree.add(t)
-        t = expect(ctx, 29) # :identifier
-        tree.add(t)
-        t = expect(ctx, 19) # :rangle
-        tree.add(t)
-        t = expect(ctx, 23) # :lbrace
-        tree.add(t)
-        subtree = parse__gen1(ctx)
-        tree.add(subtree)
-        subtree = parse__gen2(ctx)
-        tree.add(subtree)
-        t = expect(ctx, 28) # :rbrace
-        tree.add(t)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[48]],
-      rules[10]
-    ))
-def parse_binding_power(ctx):
-    current = ctx.tokens.current()
-    rule = table[13][current.id] if current else -1
-    tree = ParseTree(NonTerminal(49, 'binding_power'))
-    ctx.nonterminal = "binding_power"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 56: # $binding_power = :lparen $precedence :rparen -> $1
-        ctx.rule = rules[56]
-        tree.astTransform = AstTransformSubstitution(1)
-        t = expect(ctx, 24) # :lparen
-        tree.add(t)
-        subtree = parse_precedence(ctx)
-        tree.add(subtree)
-        t = expect(ctx, 9) # :rparen
-        tree.add(t)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[49]],
-      rules[56]
-    ))
-def parse_expression_rule_production(ctx):
-    current = ctx.tokens.current()
-    rule = table[14][current.id] if current else -1
-    tree = ParseTree(NonTerminal(50, 'expression_rule_production'))
-    ctx.nonterminal = "expression_rule_production"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 51: # $expression_rule_production = :mixfix_rule_hint $nud $_gen10 $_gen13 $_gen10 -> MixfixProduction( nud=$1, nud_ast=$2, led=$3, ast=$4 )
-        ctx.rule = rules[51]
-        ast_parameters = OrderedDict([
-            ('nud', 1),
-            ('nud_ast', 2),
-            ('led', 3),
-            ('ast', 4),
-        ])
-        tree.astTransform = AstTransformNodeCreator('MixfixProduction', ast_parameters)
-        t = expect(ctx, 2) # :mixfix_rule_hint
-        tree.add(t)
-        subtree = parse_nud(ctx)
-        tree.add(subtree)
-        subtree = parse__gen10(ctx)
-        tree.add(subtree)
-        subtree = parse__gen13(ctx)
-        tree.add(subtree)
-        subtree = parse__gen10(ctx)
-        tree.add(subtree)
-        return tree
-    elif rule == 52: # $expression_rule_production = :prefix_rule_hint $_gen9 $_gen10 -> PrefixProduction( morphemes=$1, ast=$2 )
-        ctx.rule = rules[52]
-        ast_parameters = OrderedDict([
-            ('morphemes', 1),
-            ('ast', 2),
-        ])
-        tree.astTransform = AstTransformNodeCreator('PrefixProduction', ast_parameters)
-        t = expect(ctx, 10) # :prefix_rule_hint
-        tree.add(t)
-        subtree = parse__gen9(ctx)
-        tree.add(subtree)
-        subtree = parse__gen10(ctx)
-        tree.add(subtree)
-        return tree
-    elif rule == 53: # $expression_rule_production = :infix_rule_hint $_gen9 $_gen10 -> InfixProduction( morphemes=$1, ast=$2 )
-        ctx.rule = rules[53]
-        ast_parameters = OrderedDict([
-            ('morphemes', 1),
-            ('ast', 2),
-        ])
-        tree.astTransform = AstTransformNodeCreator('InfixProduction', ast_parameters)
-        t = expect(ctx, 15) # :infix_rule_hint
-        tree.add(t)
-        subtree = parse__gen9(ctx)
-        tree.add(subtree)
-        subtree = parse__gen10(ctx)
-        tree.add(subtree)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[50]],
-      rules[53]
-    ))
-def parse_body_element_sub(ctx):
-    current = ctx.tokens.current()
-    rule = table[15][current.id] if current else -1
-    tree = ParseTree(NonTerminal(51, 'body_element_sub'))
-    ctx.nonterminal = "body_element_sub"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 4: # $body_element_sub = $lexer
-        ctx.rule = rules[4]
-        tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_lexer(ctx)
-        tree.add(subtree)
-        return tree
-    elif rule == 5: # $body_element_sub = $parser
-        ctx.rule = rules[5]
-        tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_parser(ctx)
-        tree.add(subtree)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[51]],
-      rules[5]
-    ))
-def parse__gen4(ctx):
-    current = ctx.tokens.current()
-    rule = table[16][current.id] if current else -1
-    tree = ParseTree(NonTerminal(52, '_gen4'))
-    ctx.nonterminal = "_gen4"
+    tree = ParseTree(NonTerminal(47, '_gen11'))
+    ctx.nonterminal = "_gen11"
     tree.list = 'nlist'
-    if current != None and current.id in nonterminal_follow[52] and current.id not in nonterminal_first[52]:
+    if current != None and current.id in nonterminal_follow[47] and current.id not in nonterminal_first[47]:
         return tree
     if current == None:
         return tree
-    if rule == 16: # $_gen4 = :identifier $_gen4
-        ctx.rule = rules[16]
+    if rule == 43: # $_gen11 = $expression_rule $_gen11
+        ctx.rule = rules[43]
         tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 29) # :identifier
-        tree.add(t)
-        subtree = parse__gen4(ctx)
+        subtree = parse_expression_rule(ctx)
+        tree.add(subtree)
+        subtree = parse__gen11(ctx)
         tree.add(subtree)
         return tree
     return tree
+def parse_ast_transform(ctx):
+    current = ctx.tokens.current()
+    rule = table[12][current.id] if current else -1
+    tree = ParseTree(NonTerminal(48, 'ast_transform'))
+    ctx.nonterminal = "ast_transform"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 66: # $ast_transform = :arrow $ast_transform_sub -> $1
+        ctx.rule = rules[66]
+        tree.astTransform = AstTransformSubstitution(1)
+        t = expect(ctx, 8) # :arrow
+        tree.add(t)
+        subtree = parse_ast_transform_sub(ctx)
+        tree.add(subtree)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[48]],
+      rules[66]
+    ))
 def parse_parser(ctx):
     current = ctx.tokens.current()
-    rule = table[17][current.id] if current else -1
-    tree = ParseTree(NonTerminal(53, 'parser'))
+    rule = table[13][current.id] if current else -1
+    tree = ParseTree(NonTerminal(49, 'parser'))
     ctx.nonterminal = "parser"
     tree.list = False
     if current == None:
@@ -1346,228 +1178,184 @@ def parse_parser(ctx):
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[53]],
+      [terminals[x] for x in nonterminal_first[49]],
       rules[26]
     ))
-def parse_ast_transform(ctx):
+def parse__gen14(ctx):
     current = ctx.tokens.current()
-    rule = table[18][current.id] if current else -1
-    tree = ParseTree(NonTerminal(54, 'ast_transform'))
-    ctx.nonterminal = "ast_transform"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 66: # $ast_transform = :arrow $ast_transform_sub -> $1
-        ctx.rule = rules[66]
-        tree.astTransform = AstTransformSubstitution(1)
-        t = expect(ctx, 21) # :arrow
-        tree.add(t)
-        subtree = parse_ast_transform_sub(ctx)
-        tree.add(subtree)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[54]],
-      rules[66]
-    ))
-def parse__gen12(ctx):
-    current = ctx.tokens.current()
-    rule = table[19][current.id] if current else -1
-    tree = ParseTree(NonTerminal(55, '_gen12'))
-    ctx.nonterminal = "_gen12"
-    tree.list = False
-    if current != None and current.id in nonterminal_follow[55] and current.id not in nonterminal_first[55]:
+    rule = table[14][current.id] if current else -1
+    tree = ParseTree(NonTerminal(50, '_gen14'))
+    ctx.nonterminal = "_gen14"
+    tree.list = 'slist'
+    if current != None and current.id in nonterminal_follow[50] and current.id not in nonterminal_first[50]:
         return tree
     if current == None:
         return tree
-    if rule == 46: # $_gen12 = $binding_power
-        ctx.rule = rules[46]
+    if rule == 67: # $_gen14 = $ast_parameter $_gen15
+        ctx.rule = rules[67]
         tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_binding_power(ctx)
+        subtree = parse_ast_parameter(ctx)
+        tree.add(subtree)
+        subtree = parse__gen15(ctx)
         tree.add(subtree)
         return tree
     return tree
-def parse__gen5(ctx):
+def parse_rule(ctx):
     current = ctx.tokens.current()
-    rule = table[20][current.id] if current else -1
-    tree = ParseTree(NonTerminal(56, '_gen5'))
-    ctx.nonterminal = "_gen5"
-    tree.list = False
-    if current != None and current.id in nonterminal_follow[56] and current.id not in nonterminal_first[56]:
-        return tree
-    if current == None:
-        return tree
-    if rule == 20: # $_gen5 = :terminal
-        ctx.rule = rules[20]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 16) # :terminal
-        tree.add(t)
-        return tree
-    return tree
-def parse_led(ctx):
-    current = ctx.tokens.current()
-    rule = table[21][current.id] if current else -1
-    tree = ParseTree(NonTerminal(57, 'led'))
-    ctx.nonterminal = "led"
+    rule = table[15][current.id] if current else -1
+    tree = ParseTree(NonTerminal(51, 'rule'))
+    ctx.nonterminal = "rule"
     tree.list = False
     if current == None:
         raise SyntaxError('Error: unexpected end of file')
-    if rule == 55: # $led = :expression_divider $_gen9 -> $1
-        ctx.rule = rules[55]
-        tree.astTransform = AstTransformSubstitution(1)
-        t = expect(ctx, 35) # :expression_divider
-        tree.add(t)
+    if rule == 40: # $rule = $_gen9 $_gen10 -> Production( morphemes=$0, ast=$1 )
+        ctx.rule = rules[40]
+        ast_parameters = OrderedDict([
+            ('morphemes', 0),
+            ('ast', 1),
+        ])
+        tree.astTransform = AstTransformNodeCreator('Production', ast_parameters)
         subtree = parse__gen9(ctx)
         tree.add(subtree)
+        subtree = parse__gen10(ctx)
+        tree.add(subtree)
         return tree
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[57]],
-      rules[55]
+      [terminals[x] for x in nonterminal_first[51]],
+      rules[40]
     ))
-def parse_precedence(ctx):
+def parse_lexer(ctx):
     current = ctx.tokens.current()
-    rule = table[22][current.id] if current else -1
-    tree = ParseTree(NonTerminal(58, 'precedence'))
-    ctx.nonterminal = "precedence"
+    rule = table[16][current.id] if current else -1
+    tree = ParseTree(NonTerminal(52, 'lexer'))
+    ctx.nonterminal = "lexer"
     tree.list = False
     if current == None:
         raise SyntaxError('Error: unexpected end of file')
-    if rule == 57: # $precedence = $binding_power_marker :colon $associativity -> Precedence( marker=$0, associativity=$2 )
-        ctx.rule = rules[57]
+    if rule == 10: # $lexer = :lexer :langle :identifier :rangle :lbrace $_gen1 $_gen2 :rbrace -> Lexer( language=$2, atoms=$5, code=$6 )
+        ctx.rule = rules[10]
         ast_parameters = OrderedDict([
-            ('marker', 0),
-            ('associativity', 2),
+            ('language', 2),
+            ('atoms', 5),
+            ('code', 6),
         ])
-        tree.astTransform = AstTransformNodeCreator('Precedence', ast_parameters)
-        subtree = parse_binding_power_marker(ctx)
-        tree.add(subtree)
-        t = expect(ctx, 25) # :colon
+        tree.astTransform = AstTransformNodeCreator('Lexer', ast_parameters)
+        t = expect(ctx, 23) # :lexer
         tree.add(t)
-        subtree = parse_associativity(ctx)
-        tree.add(subtree)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[58]],
-      rules[57]
-    ))
-def parse_binding_power_marker(ctx):
-    current = ctx.tokens.current()
-    rule = table[23][current.id] if current else -1
-    tree = ParseTree(NonTerminal(59, 'binding_power_marker'))
-    ctx.nonterminal = "binding_power_marker"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 58: # $binding_power_marker = :asterisk
-        ctx.rule = rules[58]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 1) # :asterisk
+        t = expect(ctx, 20) # :langle
         tree.add(t)
-        return tree
-    elif rule == 59: # $binding_power_marker = :dash
-        ctx.rule = rules[59]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 17) # :dash
+        t = expect(ctx, 14) # :identifier
         tree.add(t)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[59]],
-      rules[59]
-    ))
-def parse__gen1(ctx):
-    current = ctx.tokens.current()
-    rule = table[24][current.id] if current else -1
-    tree = ParseTree(NonTerminal(60, '_gen1'))
-    ctx.nonterminal = "_gen1"
-    tree.list = 'nlist'
-    if current != None and current.id in nonterminal_follow[60] and current.id not in nonterminal_first[60]:
-        return tree
-    if current == None:
-        return tree
-    if rule == 6: # $_gen1 = $lexer_atom $_gen1
-        ctx.rule = rules[6]
-        tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_lexer_atom(ctx)
-        tree.add(subtree)
+        t = expect(ctx, 22) # :rangle
+        tree.add(t)
+        t = expect(ctx, 10) # :lbrace
+        tree.add(t)
         subtree = parse__gen1(ctx)
         tree.add(subtree)
-        return tree
-    return tree
-def parse_lexer_regex(ctx):
-    current = ctx.tokens.current()
-    rule = table[25][current.id] if current else -1
-    tree = ParseTree(NonTerminal(61, 'lexer_regex'))
-    ctx.nonterminal = "lexer_regex"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 15: # $lexer_regex = :regex $_gen3 :arrow $lexer_target -> Regex( regex=$0, options=$1, onmatch=$3 )
-        ctx.rule = rules[15]
-        ast_parameters = OrderedDict([
-            ('regex', 0),
-            ('options', 1),
-            ('onmatch', 3),
-        ])
-        tree.astTransform = AstTransformNodeCreator('Regex', ast_parameters)
-        t = expect(ctx, 14) # :regex
-        tree.add(t)
-        subtree = parse__gen3(ctx)
+        subtree = parse__gen2(ctx)
         tree.add(subtree)
-        t = expect(ctx, 21) # :arrow
+        t = expect(ctx, 1) # :rbrace
         tree.add(t)
-        subtree = parse_lexer_target(ctx)
-        tree.add(subtree)
         return tree
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[61]],
-      rules[15]
+      [terminals[x] for x in nonterminal_first[52]],
+      rules[10]
     ))
-def parse_ll1_rule(ctx):
+def parse_ast_transform_sub(ctx):
     current = ctx.tokens.current()
-    rule = table[26][current.id] if current else -1
-    tree = ParseTree(NonTerminal(62, 'll1_rule'))
-    ctx.nonterminal = "ll1_rule"
+    rule = table[17][current.id] if current else -1
+    tree = ParseTree(NonTerminal(53, 'ast_transform_sub'))
+    ctx.nonterminal = "ast_transform_sub"
     tree.list = False
     if current == None:
         raise SyntaxError('Error: unexpected end of file')
-    if rule == 30: # $ll1_rule = :ll1_rule_hint :nonterminal :equals $ll1_rule_rhs -> Rule( nonterminal=$1, production=$3 )
-        ctx.rule = rules[30]
+    if rule == 71: # $ast_transform_sub = :identifier :lparen $_gen14 :rparen -> AstTransformation( name=$0, parameters=$2 )
+        ctx.rule = rules[71]
         ast_parameters = OrderedDict([
-            ('nonterminal', 1),
-            ('production', 3),
+            ('name', 0),
+            ('parameters', 2),
         ])
-        tree.astTransform = AstTransformNodeCreator('Rule', ast_parameters)
-        t = expect(ctx, 3) # :ll1_rule_hint
+        tree.astTransform = AstTransformNodeCreator('AstTransformation', ast_parameters)
+        t = expect(ctx, 14) # :identifier
         tree.add(t)
-        t = expect(ctx, 34) # :nonterminal
+        t = expect(ctx, 11) # :lparen
         tree.add(t)
-        t = expect(ctx, 12) # :equals
-        tree.add(t)
-        subtree = parse_ll1_rule_rhs(ctx)
+        subtree = parse__gen14(ctx)
         tree.add(subtree)
+        t = expect(ctx, 2) # :rparen
+        tree.add(t)
+        return tree
+    elif rule == 72: # $ast_transform_sub = :nonterminal_reference
+        ctx.rule = rules[72]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 5) # :nonterminal_reference
+        tree.add(t)
         return tree
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[62]],
-      rules[30]
+      [terminals[x] for x in nonterminal_first[53]],
+      rules[72]
+    ))
+def parse_binding_power(ctx):
+    current = ctx.tokens.current()
+    rule = table[18][current.id] if current else -1
+    tree = ParseTree(NonTerminal(54, 'binding_power'))
+    ctx.nonterminal = "binding_power"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 56: # $binding_power = :lparen $precedence :rparen -> $1
+        ctx.rule = rules[56]
+        tree.astTransform = AstTransformSubstitution(1)
+        t = expect(ctx, 11) # :lparen
+        tree.add(t)
+        subtree = parse_precedence(ctx)
+        tree.add(subtree)
+        t = expect(ctx, 2) # :rparen
+        tree.add(t)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[54]],
+      rules[56]
+    ))
+def parse_regex_options(ctx):
+    current = ctx.tokens.current()
+    rule = table[19][current.id] if current else -1
+    tree = ParseTree(NonTerminal(55, 'regex_options'))
+    ctx.nonterminal = "regex_options"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 18: # $regex_options = :lbrace $_gen4 :rbrace -> $1
+        ctx.rule = rules[18]
+        tree.astTransform = AstTransformSubstitution(1)
+        t = expect(ctx, 10) # :lbrace
+        tree.add(t)
+        subtree = parse__gen4(ctx)
+        tree.add(subtree)
+        t = expect(ctx, 1) # :rbrace
+        tree.add(t)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[55]],
+      rules[18]
     ))
 def parse__gen9(ctx):
     current = ctx.tokens.current()
-    rule = table[27][current.id] if current else -1
-    tree = ParseTree(NonTerminal(63, '_gen9'))
+    rule = table[20][current.id] if current else -1
+    tree = ParseTree(NonTerminal(56, '_gen9'))
     ctx.nonterminal = "_gen9"
     tree.list = 'nlist'
-    if current != None and current.id in nonterminal_follow[63] and current.id not in nonterminal_first[63]:
+    if current != None and current.id in nonterminal_follow[56] and current.id not in nonterminal_first[56]:
         return tree
     if current == None:
         return tree
@@ -1580,54 +1368,367 @@ def parse__gen9(ctx):
         tree.add(subtree)
         return tree
     return tree
-def parse_regex_options(ctx):
+def parse_macro_parameter(ctx):
     current = ctx.tokens.current()
-    rule = table[28][current.id] if current else -1
-    tree = ParseTree(NonTerminal(64, 'regex_options'))
-    ctx.nonterminal = "regex_options"
+    rule = table[21][current.id] if current else -1
+    tree = ParseTree(NonTerminal(57, 'macro_parameter'))
+    ctx.nonterminal = "macro_parameter"
     tree.list = False
     if current == None:
         raise SyntaxError('Error: unexpected end of file')
-    if rule == 18: # $regex_options = :lbrace $_gen4 :rbrace -> $1
-        ctx.rule = rules[18]
-        tree.astTransform = AstTransformSubstitution(1)
-        t = expect(ctx, 23) # :lbrace
+    if rule == 79: # $macro_parameter = :nonterminal
+        ctx.rule = rules[79]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 3) # :nonterminal
         tree.add(t)
-        subtree = parse__gen4(ctx)
-        tree.add(subtree)
-        t = expect(ctx, 28) # :rbrace
+        return tree
+    elif rule == 80: # $macro_parameter = :terminal
+        ctx.rule = rules[80]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 16) # :terminal
+        tree.add(t)
+        return tree
+    elif rule == 81: # $macro_parameter = :string
+        ctx.rule = rules[81]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 12) # :string
+        tree.add(t)
+        return tree
+    elif rule == 82: # $macro_parameter = :integer
+        ctx.rule = rules[82]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 9) # :integer
         tree.add(t)
         return tree
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[64]],
-      rules[18]
+      [terminals[x] for x in nonterminal_first[57]],
+      rules[82]
     ))
-def parse_nud(ctx):
+def parse_lexer_mode(ctx):
     current = ctx.tokens.current()
-    rule = table[29][current.id] if current else -1
-    tree = ParseTree(NonTerminal(65, 'nud'))
-    ctx.nonterminal = "nud"
+    rule = table[22][current.id] if current else -1
+    tree = ParseTree(NonTerminal(58, 'lexer_mode'))
+    ctx.nonterminal = "lexer_mode"
     tree.list = False
     if current == None:
         raise SyntaxError('Error: unexpected end of file')
-    if rule == 54: # $nud = $_gen9
-        ctx.rule = rules[54]
+    if rule == 24: # $lexer_mode = :mode :langle :identifier :rangle :lbrace $_gen1 :rbrace -> Mode( name=$2, atoms=$5 )
+        ctx.rule = rules[24]
+        ast_parameters = OrderedDict([
+            ('name', 2),
+            ('atoms', 5),
+        ])
+        tree.astTransform = AstTransformNodeCreator('Mode', ast_parameters)
+        t = expect(ctx, 26) # :mode
+        tree.add(t)
+        t = expect(ctx, 20) # :langle
+        tree.add(t)
+        t = expect(ctx, 14) # :identifier
+        tree.add(t)
+        t = expect(ctx, 22) # :rangle
+        tree.add(t)
+        t = expect(ctx, 10) # :lbrace
+        tree.add(t)
+        subtree = parse__gen1(ctx)
+        tree.add(subtree)
+        t = expect(ctx, 1) # :rbrace
+        tree.add(t)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[58]],
+      rules[24]
+    ))
+def parse__gen5(ctx):
+    current = ctx.tokens.current()
+    rule = table[23][current.id] if current else -1
+    tree = ParseTree(NonTerminal(59, '_gen5'))
+    ctx.nonterminal = "_gen5"
+    tree.list = False
+    if current != None and current.id in nonterminal_follow[59] and current.id not in nonterminal_first[59]:
+        return tree
+    if current == None:
+        return tree
+    if rule == 20: # $_gen5 = :terminal
+        ctx.rule = rules[20]
         tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 16) # :terminal
+        tree.add(t)
+        return tree
+    return tree
+def parse_binding_power_marker(ctx):
+    current = ctx.tokens.current()
+    rule = table[24][current.id] if current else -1
+    tree = ParseTree(NonTerminal(60, 'binding_power_marker'))
+    ctx.nonterminal = "binding_power_marker"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 58: # $binding_power_marker = :asterisk
+        ctx.rule = rules[58]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 29) # :asterisk
+        tree.add(t)
+        return tree
+    elif rule == 59: # $binding_power_marker = :dash
+        ctx.rule = rules[59]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 6) # :dash
+        tree.add(t)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[60]],
+      rules[59]
+    ))
+def parse__gen4(ctx):
+    current = ctx.tokens.current()
+    rule = table[25][current.id] if current else -1
+    tree = ParseTree(NonTerminal(61, '_gen4'))
+    ctx.nonterminal = "_gen4"
+    tree.list = 'nlist'
+    if current != None and current.id in nonterminal_follow[61] and current.id not in nonterminal_first[61]:
+        return tree
+    if current == None:
+        return tree
+    if rule == 16: # $_gen4 = :identifier $_gen4
+        ctx.rule = rules[16]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 14) # :identifier
+        tree.add(t)
+        subtree = parse__gen4(ctx)
+        tree.add(subtree)
+        return tree
+    return tree
+def parse_morpheme(ctx):
+    current = ctx.tokens.current()
+    rule = table[26][current.id] if current else -1
+    tree = ParseTree(NonTerminal(62, 'morpheme'))
+    ctx.nonterminal = "morpheme"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 63: # $morpheme = :terminal
+        ctx.rule = rules[63]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 16) # :terminal
+        tree.add(t)
+        return tree
+    elif rule == 64: # $morpheme = :nonterminal
+        ctx.rule = rules[64]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 3) # :nonterminal
+        tree.add(t)
+        return tree
+    elif rule == 65: # $morpheme = $macro
+        ctx.rule = rules[65]
+        tree.astTransform = AstTransformSubstitution(0)
+        subtree = parse_macro(ctx)
+        tree.add(subtree)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[62]],
+      rules[65]
+    ))
+def parse_led(ctx):
+    current = ctx.tokens.current()
+    rule = table[27][current.id] if current else -1
+    tree = ParseTree(NonTerminal(63, 'led'))
+    ctx.nonterminal = "led"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 55: # $led = :expression_divider $_gen9 -> $1
+        ctx.rule = rules[55]
+        tree.astTransform = AstTransformSubstitution(1)
+        t = expect(ctx, 15) # :expression_divider
+        tree.add(t)
         subtree = parse__gen9(ctx)
         tree.add(subtree)
         return tree
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[65]],
-      rules[54]
+      [terminals[x] for x in nonterminal_first[63]],
+      rules[55]
+    ))
+def parse_expression_rule_production(ctx):
+    current = ctx.tokens.current()
+    rule = table[28][current.id] if current else -1
+    tree = ParseTree(NonTerminal(64, 'expression_rule_production'))
+    ctx.nonterminal = "expression_rule_production"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 51: # $expression_rule_production = :mixfix_rule_hint $nud $_gen10 $_gen13 $_gen10 -> MixfixProduction( nud=$1, nud_ast=$2, led=$3, ast=$4 )
+        ctx.rule = rules[51]
+        ast_parameters = OrderedDict([
+            ('nud', 1),
+            ('nud_ast', 2),
+            ('led', 3),
+            ('ast', 4),
+        ])
+        tree.astTransform = AstTransformNodeCreator('MixfixProduction', ast_parameters)
+        t = expect(ctx, 24) # :mixfix_rule_hint
+        tree.add(t)
+        subtree = parse_nud(ctx)
+        tree.add(subtree)
+        subtree = parse__gen10(ctx)
+        tree.add(subtree)
+        subtree = parse__gen13(ctx)
+        tree.add(subtree)
+        subtree = parse__gen10(ctx)
+        tree.add(subtree)
+        return tree
+    elif rule == 52: # $expression_rule_production = :prefix_rule_hint $_gen9 $_gen10 -> PrefixProduction( morphemes=$1, ast=$2 )
+        ctx.rule = rules[52]
+        ast_parameters = OrderedDict([
+            ('morphemes', 1),
+            ('ast', 2),
+        ])
+        tree.astTransform = AstTransformNodeCreator('PrefixProduction', ast_parameters)
+        t = expect(ctx, 27) # :prefix_rule_hint
+        tree.add(t)
+        subtree = parse__gen9(ctx)
+        tree.add(subtree)
+        subtree = parse__gen10(ctx)
+        tree.add(subtree)
+        return tree
+    elif rule == 53: # $expression_rule_production = :infix_rule_hint $_gen9 $_gen10 -> InfixProduction( morphemes=$1, ast=$2 )
+        ctx.rule = rules[53]
+        ast_parameters = OrderedDict([
+            ('morphemes', 1),
+            ('ast', 2),
+        ])
+        tree.astTransform = AstTransformNodeCreator('InfixProduction', ast_parameters)
+        t = expect(ctx, 4) # :infix_rule_hint
+        tree.add(t)
+        subtree = parse__gen9(ctx)
+        tree.add(subtree)
+        subtree = parse__gen10(ctx)
+        tree.add(subtree)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[64]],
+      rules[53]
+    ))
+def parse_grammar(ctx):
+    current = ctx.tokens.current()
+    rule = table[29][current.id] if current else -1
+    tree = ParseTree(NonTerminal(65, 'grammar'))
+    ctx.nonterminal = "grammar"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 2: # $grammar = :grammar :lbrace $_gen0 :rbrace -> Grammar( body=$2 )
+        ctx.rule = rules[2]
+        ast_parameters = OrderedDict([
+            ('body', 2),
+        ])
+        tree.astTransform = AstTransformNodeCreator('Grammar', ast_parameters)
+        t = expect(ctx, 18) # :grammar
+        tree.add(t)
+        t = expect(ctx, 10) # :lbrace
+        tree.add(t)
+        subtree = parse__gen0(ctx)
+        tree.add(subtree)
+        t = expect(ctx, 1) # :rbrace
+        tree.add(t)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[65]],
+      rules[2]
+    ))
+def parse_lexer_regex(ctx):
+    current = ctx.tokens.current()
+    rule = table[30][current.id] if current else -1
+    tree = ParseTree(NonTerminal(66, 'lexer_regex'))
+    ctx.nonterminal = "lexer_regex"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 15: # $lexer_regex = :regex $_gen3 :arrow $lexer_target -> Regex( regex=$0, options=$1, onmatch=$3 )
+        ctx.rule = rules[15]
+        ast_parameters = OrderedDict([
+            ('regex', 0),
+            ('options', 1),
+            ('onmatch', 3),
+        ])
+        tree.astTransform = AstTransformNodeCreator('Regex', ast_parameters)
+        t = expect(ctx, 0) # :regex
+        tree.add(t)
+        subtree = parse__gen3(ctx)
+        tree.add(subtree)
+        t = expect(ctx, 8) # :arrow
+        tree.add(t)
+        subtree = parse_lexer_target(ctx)
+        tree.add(subtree)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[66]],
+      rules[15]
+    ))
+def parse__gen2(ctx):
+    current = ctx.tokens.current()
+    rule = table[31][current.id] if current else -1
+    tree = ParseTree(NonTerminal(67, '_gen2'))
+    ctx.nonterminal = "_gen2"
+    tree.list = False
+    if current != None and current.id in nonterminal_follow[67] and current.id not in nonterminal_first[67]:
+        return tree
+    if current == None:
+        return tree
+    if rule == 8: # $_gen2 = :code
+        ctx.rule = rules[8]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 28) # :code
+        tree.add(t)
+        return tree
+    return tree
+def parse_ast_parameter(ctx):
+    current = ctx.tokens.current()
+    rule = table[32][current.id] if current else -1
+    tree = ParseTree(NonTerminal(68, 'ast_parameter'))
+    ctx.nonterminal = "ast_parameter"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 73: # $ast_parameter = :identifier :equals :nonterminal_reference -> AstParameter( name=$0, index=$2 )
+        ctx.rule = rules[73]
+        ast_parameters = OrderedDict([
+            ('name', 0),
+            ('index', 2),
+        ])
+        tree.astTransform = AstTransformNodeCreator('AstParameter', ast_parameters)
+        t = expect(ctx, 14) # :identifier
+        tree.add(t)
+        t = expect(ctx, 7) # :equals
+        tree.add(t)
+        t = expect(ctx, 5) # :nonterminal_reference
+        tree.add(t)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[68]],
+      rules[73]
     ))
 def parse_ll1_rule_rhs(ctx):
     current = ctx.tokens.current()
-    rule = table[30][current.id] if current else -1
-    tree = ParseTree(NonTerminal(66, 'll1_rule_rhs'))
+    rule = table[33][current.id] if current else -1
+    tree = ParseTree(NonTerminal(69, 'll1_rule_rhs'))
     ctx.nonterminal = "ll1_rule_rhs"
     tree.list = False
     if current == None:
@@ -1643,7 +1744,7 @@ def parse_ll1_rule_rhs(ctx):
         ast_parameters = OrderedDict([
         ])
         tree.astTransform = AstTransformNodeCreator('NullProduction', ast_parameters)
-        t = expect(ctx, 4) # :null
+        t = expect(ctx, 21) # :null
         tree.add(t)
         return tree
     elif rule == 42: # $ll1_rule_rhs = $parser
@@ -1655,167 +1756,36 @@ def parse_ll1_rule_rhs(ctx):
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[66]],
+      [terminals[x] for x in nonterminal_first[69]],
       rules[42]
     ))
-def parse__gen13(ctx):
-    current = ctx.tokens.current()
-    rule = table[31][current.id] if current else -1
-    tree = ParseTree(NonTerminal(67, '_gen13'))
-    ctx.nonterminal = "_gen13"
-    tree.list = False
-    if current != None and current.id in nonterminal_follow[67] and current.id not in nonterminal_first[67]:
-        return tree
-    if current == None:
-        return tree
-    if rule == 49: # $_gen13 = $led
-        ctx.rule = rules[49]
-        tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_led(ctx)
-        tree.add(subtree)
-        return tree
-    return tree
-def parse_morpheme(ctx):
-    current = ctx.tokens.current()
-    rule = table[32][current.id] if current else -1
-    tree = ParseTree(NonTerminal(68, 'morpheme'))
-    ctx.nonterminal = "morpheme"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 63: # $morpheme = :terminal
-        ctx.rule = rules[63]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 16) # :terminal
-        tree.add(t)
-        return tree
-    elif rule == 64: # $morpheme = :nonterminal
-        ctx.rule = rules[64]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 34) # :nonterminal
-        tree.add(t)
-        return tree
-    elif rule == 65: # $morpheme = $macro
-        ctx.rule = rules[65]
-        tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_macro(ctx)
-        tree.add(subtree)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[68]],
-      rules[65]
-    ))
-def parse_macro(ctx):
-    current = ctx.tokens.current()
-    rule = table[33][current.id] if current else -1
-    tree = ParseTree(NonTerminal(69, 'macro'))
-    ctx.nonterminal = "macro"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 78: # $macro = :identifier :lparen $_gen16 :rparen -> Macro( name=$0, parameters=$2 )
-        ctx.rule = rules[78]
-        ast_parameters = OrderedDict([
-            ('name', 0),
-            ('parameters', 2),
-        ])
-        tree.astTransform = AstTransformNodeCreator('Macro', ast_parameters)
-        t = expect(ctx, 29) # :identifier
-        tree.add(t)
-        t = expect(ctx, 24) # :lparen
-        tree.add(t)
-        subtree = parse__gen16(ctx)
-        tree.add(subtree)
-        t = expect(ctx, 9) # :rparen
-        tree.add(t)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[69]],
-      rules[78]
-    ))
-def parse__gen10(ctx):
+def parse_body_element(ctx):
     current = ctx.tokens.current()
     rule = table[34][current.id] if current else -1
-    tree = ParseTree(NonTerminal(70, '_gen10'))
-    ctx.nonterminal = "_gen10"
-    tree.list = False
-    if current != None and current.id in nonterminal_follow[70] and current.id not in nonterminal_first[70]:
-        return tree
-    if current == None:
-        return tree
-    if rule == 38: # $_gen10 = $ast_transform
-        ctx.rule = rules[38]
-        tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_ast_transform(ctx)
-        tree.add(subtree)
-        return tree
-    return tree
-def parse__gen6(ctx):
-    current = ctx.tokens.current()
-    rule = table[35][current.id] if current else -1
-    tree = ParseTree(NonTerminal(71, '_gen6'))
-    ctx.nonterminal = "_gen6"
-    tree.list = 'nlist'
-    if current != None and current.id in nonterminal_follow[71] and current.id not in nonterminal_first[71]:
-        return tree
-    if current == None:
-        return tree
-    if rule == 27: # $_gen6 = $ll1_rule $_gen6
-        ctx.rule = rules[27]
-        tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_ll1_rule(ctx)
-        tree.add(subtree)
-        subtree = parse__gen6(ctx)
-        tree.add(subtree)
-        return tree
-    return tree
-def parse_lexer_mode(ctx):
-    current = ctx.tokens.current()
-    rule = table[36][current.id] if current else -1
-    tree = ParseTree(NonTerminal(72, 'lexer_mode'))
-    ctx.nonterminal = "lexer_mode"
+    tree = ParseTree(NonTerminal(70, 'body_element'))
+    ctx.nonterminal = "body_element"
     tree.list = False
     if current == None:
         raise SyntaxError('Error: unexpected end of file')
-    if rule == 24: # $lexer_mode = :mode :langle :identifier :rangle :lbrace $_gen1 :rbrace -> Mode( name=$2, atoms=$5 )
-        ctx.rule = rules[24]
-        ast_parameters = OrderedDict([
-            ('name', 2),
-            ('atoms', 5),
-        ])
-        tree.astTransform = AstTransformNodeCreator('Mode', ast_parameters)
-        t = expect(ctx, 18) # :mode
-        tree.add(t)
-        t = expect(ctx, 20) # :langle
-        tree.add(t)
-        t = expect(ctx, 29) # :identifier
-        tree.add(t)
-        t = expect(ctx, 19) # :rangle
-        tree.add(t)
-        t = expect(ctx, 23) # :lbrace
-        tree.add(t)
-        subtree = parse__gen1(ctx)
+    if rule == 3: # $body_element = $body_element_sub
+        ctx.rule = rules[3]
+        tree.astTransform = AstTransformSubstitution(0)
+        subtree = parse_body_element_sub(ctx)
         tree.add(subtree)
-        t = expect(ctx, 28) # :rbrace
-        tree.add(t)
         return tree
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[72]],
-      rules[24]
+      [terminals[x] for x in nonterminal_first[70]],
+      rules[3]
     ))
 def parse__gen7(ctx):
     current = ctx.tokens.current()
-    rule = table[37][current.id] if current else -1
-    tree = ParseTree(NonTerminal(73, '_gen7'))
+    rule = table[35][current.id] if current else -1
+    tree = ParseTree(NonTerminal(71, '_gen7'))
     ctx.nonterminal = "_gen7"
     tree.list = 'slist'
-    if current != None and current.id in nonterminal_follow[73] and current.id not in nonterminal_first[73]:
+    if current != None and current.id in nonterminal_follow[71] and current.id not in nonterminal_first[71]:
         return tree
     if current == None:
         return tree
@@ -1828,39 +1798,99 @@ def parse__gen7(ctx):
         tree.add(subtree)
         return tree
     return tree
-def parse_grammar(ctx):
+def parse__gen17(ctx):
+    current = ctx.tokens.current()
+    rule = table[36][current.id] if current else -1
+    tree = ParseTree(NonTerminal(72, '_gen17'))
+    ctx.nonterminal = "_gen17"
+    tree.list = 'slist'
+    if current != None and current.id in nonterminal_follow[72] and current.id not in nonterminal_first[72]:
+        return tree
+    if current == None:
+        return tree
+    if rule == 75: # $_gen17 = :comma $macro_parameter $_gen17
+        ctx.rule = rules[75]
+        tree.astTransform = AstTransformSubstitution(0)
+        t = expect(ctx, 32) # :comma
+        tree.add(t)
+        tree.listSeparator = t
+        subtree = parse_macro_parameter(ctx)
+        tree.add(subtree)
+        subtree = parse__gen17(ctx)
+        tree.add(subtree)
+        return tree
+    return tree
+def parse__gen6(ctx):
+    current = ctx.tokens.current()
+    rule = table[37][current.id] if current else -1
+    tree = ParseTree(NonTerminal(73, '_gen6'))
+    ctx.nonterminal = "_gen6"
+    tree.list = 'nlist'
+    if current != None and current.id in nonterminal_follow[73] and current.id not in nonterminal_first[73]:
+        return tree
+    if current == None:
+        return tree
+    if rule == 27: # $_gen6 = $ll1_rule $_gen6
+        ctx.rule = rules[27]
+        tree.astTransform = AstTransformSubstitution(0)
+        subtree = parse_ll1_rule(ctx)
+        tree.add(subtree)
+        subtree = parse__gen6(ctx)
+        tree.add(subtree)
+        return tree
+    return tree
+def parse__gen16(ctx):
     current = ctx.tokens.current()
     rule = table[38][current.id] if current else -1
-    tree = ParseTree(NonTerminal(74, 'grammar'))
-    ctx.nonterminal = "grammar"
+    tree = ParseTree(NonTerminal(74, '_gen16'))
+    ctx.nonterminal = "_gen16"
+    tree.list = 'slist'
+    if current != None and current.id in nonterminal_follow[74] and current.id not in nonterminal_first[74]:
+        return tree
+    if current == None:
+        return tree
+    if rule == 74: # $_gen16 = $macro_parameter $_gen17
+        ctx.rule = rules[74]
+        tree.astTransform = AstTransformSubstitution(0)
+        subtree = parse_macro_parameter(ctx)
+        tree.add(subtree)
+        subtree = parse__gen17(ctx)
+        tree.add(subtree)
+        return tree
+    return tree
+def parse_parser_ll1(ctx):
+    current = ctx.tokens.current()
+    rule = table[39][current.id] if current else -1
+    tree = ParseTree(NonTerminal(75, 'parser_ll1'))
+    ctx.nonterminal = "parser_ll1"
     tree.list = False
     if current == None:
         raise SyntaxError('Error: unexpected end of file')
-    if rule == 2: # $grammar = :grammar :lbrace $_gen0 :rbrace -> Grammar( body=$2 )
-        ctx.rule = rules[2]
+    if rule == 29: # $parser_ll1 = :parser_ll1 :lbrace $_gen6 :rbrace -> Parser( rules=$2 )
+        ctx.rule = rules[29]
         ast_parameters = OrderedDict([
-            ('body', 2),
+            ('rules', 2),
         ])
-        tree.astTransform = AstTransformNodeCreator('Grammar', ast_parameters)
-        t = expect(ctx, 8) # :grammar
+        tree.astTransform = AstTransformNodeCreator('Parser', ast_parameters)
+        t = expect(ctx, 34) # :parser_ll1
         tree.add(t)
-        t = expect(ctx, 23) # :lbrace
+        t = expect(ctx, 10) # :lbrace
         tree.add(t)
-        subtree = parse__gen0(ctx)
+        subtree = parse__gen6(ctx)
         tree.add(subtree)
-        t = expect(ctx, 28) # :rbrace
+        t = expect(ctx, 1) # :rbrace
         tree.add(t)
         return tree
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[74]],
-      rules[2]
+      [terminals[x] for x in nonterminal_first[75]],
+      rules[29]
     ))
 def parse_expression_rule(ctx):
     current = ctx.tokens.current()
-    rule = table[39][current.id] if current else -1
-    tree = ParseTree(NonTerminal(75, 'expression_rule'))
+    rule = table[40][current.id] if current else -1
+    tree = ParseTree(NonTerminal(76, 'expression_rule'))
     ctx.nonterminal = "expression_rule"
     tree.list = False
     if current == None:
@@ -1875,11 +1905,11 @@ def parse_expression_rule(ctx):
         tree.astTransform = AstTransformNodeCreator('ExpressionRule', ast_parameters)
         subtree = parse__gen12(ctx)
         tree.add(subtree)
-        t = expect(ctx, 22) # :expr_rule_hint
+        t = expect(ctx, 33) # :expr_rule_hint
         tree.add(t)
-        t = expect(ctx, 34) # :nonterminal
+        t = expect(ctx, 3) # :nonterminal
         tree.add(t)
-        t = expect(ctx, 12) # :equals
+        t = expect(ctx, 7) # :equals
         tree.add(t)
         subtree = parse_expression_rule_production(ctx)
         tree.add(subtree)
@@ -1887,144 +1917,32 @@ def parse_expression_rule(ctx):
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[75]],
+      [terminals[x] for x in nonterminal_first[76]],
       rules[48]
     ))
-def parse_associativity(ctx):
-    current = ctx.tokens.current()
-    rule = table[40][current.id] if current else -1
-    tree = ParseTree(NonTerminal(76, 'associativity'))
-    ctx.nonterminal = "associativity"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 60: # $associativity = :left
-        ctx.rule = rules[60]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 26) # :left
-        tree.add(t)
-        return tree
-    elif rule == 61: # $associativity = :right
-        ctx.rule = rules[61]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 32) # :right
-        tree.add(t)
-        return tree
-    elif rule == 62: # $associativity = :unary
-        ctx.rule = rules[62]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 7) # :unary
-        tree.add(t)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[76]],
-      rules[62]
-    ))
-def parse_body_element(ctx):
+def parse__gen1(ctx):
     current = ctx.tokens.current()
     rule = table[41][current.id] if current else -1
-    tree = ParseTree(NonTerminal(77, 'body_element'))
-    ctx.nonterminal = "body_element"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 3: # $body_element = $body_element_sub
-        ctx.rule = rules[3]
-        tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_body_element_sub(ctx)
-        tree.add(subtree)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[77]],
-      rules[3]
-    ))
-def parse_macro_parameter(ctx):
-    current = ctx.tokens.current()
-    rule = table[42][current.id] if current else -1
-    tree = ParseTree(NonTerminal(78, 'macro_parameter'))
-    ctx.nonterminal = "macro_parameter"
-    tree.list = False
-    if current == None:
-        raise SyntaxError('Error: unexpected end of file')
-    if rule == 79: # $macro_parameter = :nonterminal
-        ctx.rule = rules[79]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 34) # :nonterminal
-        tree.add(t)
-        return tree
-    elif rule == 80: # $macro_parameter = :terminal
-        ctx.rule = rules[80]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 16) # :terminal
-        tree.add(t)
-        return tree
-    elif rule == 81: # $macro_parameter = :string
-        ctx.rule = rules[81]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 30) # :string
-        tree.add(t)
-        return tree
-    elif rule == 82: # $macro_parameter = :integer
-        ctx.rule = rules[82]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 31) # :integer
-        tree.add(t)
-        return tree
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
-      ctx.nonterminal,
-      ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[78]],
-      rules[82]
-    ))
-def parse__gen17(ctx):
-    current = ctx.tokens.current()
-    rule = table[43][current.id] if current else -1
-    tree = ParseTree(NonTerminal(79, '_gen17'))
-    ctx.nonterminal = "_gen17"
-    tree.list = 'slist'
-    if current != None and current.id in nonterminal_follow[79] and current.id not in nonterminal_first[79]:
-        return tree
-    if current == None:
-        return tree
-    if rule == 75: # $_gen17 = :comma $macro_parameter $_gen17
-        ctx.rule = rules[75]
-        tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 13) # :comma
-        tree.add(t)
-        tree.listSeparator = t
-        subtree = parse_macro_parameter(ctx)
-        tree.add(subtree)
-        subtree = parse__gen17(ctx)
-        tree.add(subtree)
-        return tree
-    return tree
-def parse__gen0(ctx):
-    current = ctx.tokens.current()
-    rule = table[44][current.id] if current else -1
-    tree = ParseTree(NonTerminal(80, '_gen0'))
-    ctx.nonterminal = "_gen0"
+    tree = ParseTree(NonTerminal(77, '_gen1'))
+    ctx.nonterminal = "_gen1"
     tree.list = 'nlist'
-    if current != None and current.id in nonterminal_follow[80] and current.id not in nonterminal_first[80]:
+    if current != None and current.id in nonterminal_follow[77] and current.id not in nonterminal_first[77]:
         return tree
     if current == None:
         return tree
-    if rule == 0: # $_gen0 = $body_element $_gen0
-        ctx.rule = rules[0]
+    if rule == 6: # $_gen1 = $lexer_atom $_gen1
+        ctx.rule = rules[6]
         tree.astTransform = AstTransformSubstitution(0)
-        subtree = parse_body_element(ctx)
+        subtree = parse_lexer_atom(ctx)
         tree.add(subtree)
-        subtree = parse__gen0(ctx)
+        subtree = parse__gen1(ctx)
         tree.add(subtree)
         return tree
     return tree
 def parse_parser_expression(ctx):
     current = ctx.tokens.current()
-    rule = table[45][current.id] if current else -1
-    tree = ParseTree(NonTerminal(81, 'parser_expression'))
+    rule = table[42][current.id] if current else -1
+    tree = ParseTree(NonTerminal(78, 'parser_expression'))
     ctx.nonterminal = "parser_expression"
     tree.list = False
     if current == None:
@@ -2035,226 +1953,232 @@ def parse_parser_expression(ctx):
             ('rules', 2),
         ])
         tree.astTransform = AstTransformNodeCreator('ExpressionParser', ast_parameters)
-        t = expect(ctx, 6) # :parser_expression
+        t = expect(ctx, 35) # :parser_expression
         tree.add(t)
-        t = expect(ctx, 23) # :lbrace
+        t = expect(ctx, 10) # :lbrace
         tree.add(t)
         subtree = parse__gen11(ctx)
         tree.add(subtree)
-        t = expect(ctx, 28) # :rbrace
+        t = expect(ctx, 1) # :rbrace
         tree.add(t)
         return tree
     raise SyntaxError(ctx.error_formatter.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [parser_terminals[x] for x in nonterminal_first[81]],
+      [terminals[x] for x in nonterminal_first[78]],
       rules[45]
     ))
-def parse__gen2(ctx):
+def parse_body_element_sub(ctx):
+    current = ctx.tokens.current()
+    rule = table[43][current.id] if current else -1
+    tree = ParseTree(NonTerminal(79, 'body_element_sub'))
+    ctx.nonterminal = "body_element_sub"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 4: # $body_element_sub = $lexer
+        ctx.rule = rules[4]
+        tree.astTransform = AstTransformSubstitution(0)
+        subtree = parse_lexer(ctx)
+        tree.add(subtree)
+        return tree
+    elif rule == 5: # $body_element_sub = $parser
+        ctx.rule = rules[5]
+        tree.astTransform = AstTransformSubstitution(0)
+        subtree = parse_parser(ctx)
+        tree.add(subtree)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[79]],
+      rules[5]
+    ))
+def parse_lexer_atom(ctx):
+    current = ctx.tokens.current()
+    rule = table[44][current.id] if current else -1
+    tree = ParseTree(NonTerminal(80, 'lexer_atom'))
+    ctx.nonterminal = "lexer_atom"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 11: # $lexer_atom = $lexer_regex
+        ctx.rule = rules[11]
+        tree.astTransform = AstTransformSubstitution(0)
+        subtree = parse_lexer_regex(ctx)
+        tree.add(subtree)
+        return tree
+    elif rule == 12: # $lexer_atom = $lexer_mode
+        ctx.rule = rules[12]
+        tree.astTransform = AstTransformSubstitution(0)
+        subtree = parse_lexer_mode(ctx)
+        tree.add(subtree)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[80]],
+      rules[12]
+    ))
+def parse_ll1_rule(ctx):
+    current = ctx.tokens.current()
+    rule = table[45][current.id] if current else -1
+    tree = ParseTree(NonTerminal(81, 'll1_rule'))
+    ctx.nonterminal = "ll1_rule"
+    tree.list = False
+    if current == None:
+        raise SyntaxError('Error: unexpected end of file')
+    if rule == 30: # $ll1_rule = :ll1_rule_hint :nonterminal :equals $ll1_rule_rhs -> Rule( nonterminal=$1, production=$3 )
+        ctx.rule = rules[30]
+        ast_parameters = OrderedDict([
+            ('nonterminal', 1),
+            ('production', 3),
+        ])
+        tree.astTransform = AstTransformNodeCreator('Rule', ast_parameters)
+        t = expect(ctx, 19) # :ll1_rule_hint
+        tree.add(t)
+        t = expect(ctx, 3) # :nonterminal
+        tree.add(t)
+        t = expect(ctx, 7) # :equals
+        tree.add(t)
+        subtree = parse_ll1_rule_rhs(ctx)
+        tree.add(subtree)
+        return tree
+    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+      ctx.nonterminal,
+      ctx.tokens.current(),
+      [terminals[x] for x in nonterminal_first[81]],
+      rules[30]
+    ))
+def parse__gen3(ctx):
     current = ctx.tokens.current()
     rule = table[46][current.id] if current else -1
-    tree = ParseTree(NonTerminal(82, '_gen2'))
-    ctx.nonterminal = "_gen2"
+    tree = ParseTree(NonTerminal(82, '_gen3'))
+    ctx.nonterminal = "_gen3"
     tree.list = False
     if current != None and current.id in nonterminal_follow[82] and current.id not in nonterminal_first[82]:
         return tree
     if current == None:
         return tree
-    if rule == 8: # $_gen2 = :code
-        ctx.rule = rules[8]
+    if rule == 13: # $_gen3 = $regex_options
+        ctx.rule = rules[13]
         tree.astTransform = AstTransformSubstitution(0)
-        t = expect(ctx, 33) # :code
-        tree.add(t)
+        subtree = parse_regex_options(ctx)
+        tree.add(subtree)
         return tree
     return tree
 # Lexer Code #
-lexer_terminals = {
-    8: 'grammar',
-    5: 'parser_ll1',
-    6: 'parser_expression',
-    12: 'equals',
-    24: 'lparen',
-    17: 'dash',
-    29: 'identifier',
-    2: 'mixfix_rule_hint',
-    3: 'll1_rule_hint',
-    28: 'rbrace',
-    31: 'integer',
-    35: 'expression_divider',
-    15: 'infix_rule_hint',
-    27: 'pipe',
-    18: 'mode',
-    22: 'expr_rule_hint',
-    33: 'code',
-    11: 'nonterminal_reference',
-    19: 'rangle',
-    1: 'asterisk',
-    10: 'prefix_rule_hint',
-    13: 'comma',
-    34: 'nonterminal',
-    14: 'regex',
-    -1: '_empty',
-    9: 'rparen',
-    4: 'null',
-    20: 'langle',
-    32: 'right',
-    30: 'string',
-    23: 'lbrace',
-    7: 'unary',
-    21: 'arrow',
-    25: 'colon',
-    16: 'terminal',
-    26: 'left',
-    0: 'lexer',
-    'grammar': 8,
-    'parser_ll1': 5,
-    'parser_expression': 6,
-    'equals': 12,
-    'lparen': 24,
-    'dash': 17,
-    'identifier': 29,
-    'mixfix_rule_hint': 2,
-    'll1_rule_hint': 3,
-    'rbrace': 28,
-    'integer': 31,
-    'expression_divider': 35,
-    'infix_rule_hint': 15,
-    'pipe': 27,
-    'mode': 18,
-    'expr_rule_hint': 22,
-    'code': 33,
-    'nonterminal_reference': 11,
-    'rangle': 19,
-    'asterisk': 1,
-    'prefix_rule_hint': 10,
-    'comma': 13,
-    'nonterminal': 34,
-    'regex': 14,
-    '_empty': -1,
-    'rparen': 9,
-    'null': 4,
-    'langle': 20,
-    'right': 32,
-    'string': 30,
-    'lbrace': 23,
-    'unary': 7,
-    'arrow': 21,
-    'colon': 25,
-    'terminal': 16,
-    'left': 26,
-    'lexer': 0,
-}
 # START USER CODE
 def init():
     return {'lexer_brace': 0, 'grammar_brace': 0, 'parser_brace': 0}
 def normalize_morpheme(morpheme):
     if morpheme == '$$': return '$'
     return morpheme.lstrip(':').lstrip('$')
-def binding_power(context, mode, match, terminal, resource, line, col):
+def binding_power(context, mode, match, groups, terminal, resource, line, col):
     (precedence, associativity) = match[1:-1].split(':')
     marker = 'asterisk' if precedence == '*' else 'dash'
     tokens = [
-        Terminal(lexer_terminals['lparen'], 'lparen', '(', resource, line, col),
-        Terminal(lexer_terminals[marker], marker, precedence, resource, line, col),
-        Terminal(lexer_terminals['colon'], 'colon', ':', resource, line, col),
-        Terminal(lexer_terminals[associativity], associativity, associativity, resource, line, col),
-        Terminal(lexer_terminals['rparen'], 'rparen', ')', resource, line, col)
+        Terminal(terminals['lparen'], 'lparen', '(', resource, line, col),
+        Terminal(terminals[marker], marker, precedence, resource, line, col),
+        Terminal(terminals['colon'], 'colon', ':', resource, line, col),
+        Terminal(terminals[associativity], associativity, associativity, resource, line, col),
+        Terminal(terminals['rparen'], 'rparen', ')', resource, line, col)
     ]
     return (tokens, mode, context)
-def morpheme(context, mode, match, terminal, resource, line, col):
-    return default_action(context, mode, normalize_morpheme(match), terminal, resource, line, col)
-def grammar_start(context, mode, match, terminal, resource, line, col):
-    return default_action(context, 'grammar', match, terminal, resource, line, col)
-def lexer_start(context, mode, match, terminal, resource, line, col):
+def morpheme(context, mode, match, groups, terminal, resource, line, col):
+    return default_action(context, mode, normalize_morpheme(match), groups, terminal, resource, line, col)
+def grammar_start(context, mode, match, groups, terminal, resource, line, col):
+    return default_action(context, 'grammar', match, groups, terminal, resource, line, col)
+def lexer_start(context, mode, match, groups, terminal, resource, line, col):
     identifier = match.replace('lexer', '').replace('<', '').replace('>', '').strip()
     tokens = [
-        Terminal(lexer_terminals['lexer'], 'lexer', 'lexer', resource, line, col),
-        Terminal(lexer_terminals['langle'], 'langle', '<', resource, line, col),
-        Terminal(lexer_terminals['identifier'], 'identifier', identifier, resource, line, col),
-        Terminal(lexer_terminals['rangle'], 'rangle', '>', resource, line, col),
+        Terminal(terminals['lexer'], 'lexer', 'lexer', resource, line, col),
+        Terminal(terminals['langle'], 'langle', '<', resource, line, col),
+        Terminal(terminals['identifier'], 'identifier', identifier, resource, line, col),
+        Terminal(terminals['rangle'], 'rangle', '>', resource, line, col),
     ]
     return (tokens, 'lexer', context)
-def parser_ll1_start(context, mode, match, terminal, resource, line, col):
-    return default_action(context, 'parser_ll1', match, terminal, resource, line, col)
-def parser_expr_start(context, mode, match, terminal, resource, line, col):
-    return default_action(context, 'parser_expr', match, terminal, resource, line, col)
-def parse_mode(context, mode, match, terminal, resource, line, col):
+def parser_ll1_start(context, mode, match, groups, terminal, resource, line, col):
+    return default_action(context, 'parser_ll1', match, groups, terminal, resource, line, col)
+def parser_expr_start(context, mode, match, groups, terminal, resource, line, col):
+    return default_action(context, 'parser_expr', match, groups, terminal, resource, line, col)
+def parse_mode(context, mode, match, groups, terminal, resource, line, col):
     identifier = match.replace('mode', '').replace('<', '').replace('>', '').strip()
     tokens = [
-        Terminal(lexer_terminals['mode'], 'mode', 'mode', resource, line, col),
-        Terminal(lexer_terminals['langle'], 'langle', '<', resource, line, col),
-        Terminal(lexer_terminals['identifier'], 'identifier', identifier, resource, line, col),
-        Terminal(lexer_terminals['rangle'], 'rangle', '>', resource, line, col),
+        Terminal(terminals['mode'], 'mode', 'mode', resource, line, col),
+        Terminal(terminals['langle'], 'langle', '<', resource, line, col),
+        Terminal(terminals['identifier'], 'identifier', identifier, resource, line, col),
+        Terminal(terminals['rangle'], 'rangle', '>', resource, line, col),
     ]
     return (tokens, mode, context)
-def lexer_code(context, mode, match, terminal, resource, line, col):
+def lexer_code(context, mode, match, groups, terminal, resource, line, col):
     code = match[6:-7].strip()
-    tokens = [Terminal(lexer_terminals[terminal], terminal, code, resource, line, col)]
+    tokens = [Terminal(terminals[terminal], terminal, code, resource, line, col)]
     return (tokens, mode, context)
-def lexer_lbrace(context, mode, match, terminal, resource, line, col):
+def lexer_lbrace(context, mode, match, groups, terminal, resource, line, col):
     context['lexer_brace'] += 1
-    return default_action(context, mode, match, terminal, resource, line, col)
-def lexer_rbrace(context, mode, match, terminal, resource, line, col):
+    return default_action(context, mode, match, groups, terminal, resource, line, col)
+def lexer_rbrace(context, mode, match, groups, terminal, resource, line, col):
     context['lexer_brace'] -= 1
     mode = 'grammar' if context['lexer_brace'] == 0 else mode
-    return default_action(context, mode, match, terminal, resource, line, col)
-def parser_lbrace(context, mode, match, terminal, resource, line, col):
+    return default_action(context, mode, match, groups, terminal, resource, line, col)
+def parser_lbrace(context, mode, match, groups, terminal, resource, line, col):
     context['parser_brace'] += 1
-    return default_action(context, mode, match, terminal, resource, line, col)
-def parser_rbrace(context, mode, match, terminal, resource, line, col):
+    return default_action(context, mode, match, groups, terminal, resource, line, col)
+def parser_rbrace(context, mode, match, groups, terminal, resource, line, col):
     context['parser_brace'] -= 1
     mode = 'grammar' if context['parser_brace'] == 0 else mode
-    return default_action(context, mode, match, terminal, resource, line, col)
-def parser_rule_start(context, mode, match, terminal, resource, line, col):
+    return default_action(context, mode, match, groups, terminal, resource, line, col)
+def parser_rule_start(context, mode, match, groups, terminal, resource, line, col):
     tokens = [
-        Terminal(lexer_terminals['ll1_rule_hint'], 'll1_rule_hint', '', resource, line, col),
-        Terminal(lexer_terminals[terminal], terminal, normalize_morpheme(match), resource, line, col)
+        Terminal(terminals['ll1_rule_hint'], 'll1_rule_hint', '', resource, line, col),
+        Terminal(terminals[terminal], terminal, normalize_morpheme(match), resource, line, col)
     ]
     return (tokens, mode, context)
-def infix_rule_start(context, mode, match, terminal, resource, line, col):
+def infix_rule_start(context, mode, match, groups, terminal, resource, line, col):
     nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
     operator = normalize_morpheme(re.search(':[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
     tokens = [
-        Terminal(lexer_terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
-        Terminal(lexer_terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-        Terminal(lexer_terminals['equals'], 'equals', '=', resource, line, col),
-        Terminal(lexer_terminals['infix_rule_hint'], 'infix_rule_hint', '', resource, line, col),
-        Terminal(lexer_terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-        Terminal(lexer_terminals['terminal'], 'terminal', operator, resource, line, col),
-        Terminal(lexer_terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
+        Terminal(terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
+        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
+        Terminal(terminals['equals'], 'equals', '=', resource, line, col),
+        Terminal(terminals['infix_rule_hint'], 'infix_rule_hint', '', resource, line, col),
+        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
+        Terminal(terminals['terminal'], 'terminal', operator, resource, line, col),
+        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
     ]
     return (tokens, mode, context)
-def prefix_rule_start(context, mode, match, terminal, resource, line, col):
+def prefix_rule_start(context, mode, match, groups, terminal, resource, line, col):
     nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
     operator = normalize_morpheme(re.search(':[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
     tokens = [
-        Terminal(lexer_terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
-        Terminal(lexer_terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-        Terminal(lexer_terminals['equals'], 'equals', '=', resource, line, col),
-        Terminal(lexer_terminals['prefix_rule_hint'], 'prefix_rule_hint', '', resource, line, col),
-        Terminal(lexer_terminals['terminal'], 'terminal', operator, resource, line, col),
-        Terminal(lexer_terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
+        Terminal(terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
+        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
+        Terminal(terminals['equals'], 'equals', '=', resource, line, col),
+        Terminal(terminals['prefix_rule_hint'], 'prefix_rule_hint', '', resource, line, col),
+        Terminal(terminals['terminal'], 'terminal', operator, resource, line, col),
+        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
     ]
     return (tokens, mode, context)
-def expr_rule_start(context, mode, match, terminal, resource, line, col):
+def expr_rule_start(context, mode, match, groups, terminal, resource, line, col):
     nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
     tokens = [
-        Terminal(lexer_terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
-        Terminal(lexer_terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-        Terminal(lexer_terminals['equals'], 'equals', '=', resource, line, col),
-        Terminal(lexer_terminals['mixfix_rule_hint'], 'mixfix_rule_hint', '',resource, line, col),
+        Terminal(terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
+        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
+        Terminal(terminals['equals'], 'equals', '=', resource, line, col),
+        Terminal(terminals['mixfix_rule_hint'], 'mixfix_rule_hint', '',resource, line, col),
     ]
     return (tokens, mode, context)
-def grammar_lbrace(context, mode, match, terminal, resource, line, col):
+def grammar_lbrace(context, mode, match, groups, terminal, resource, line, col):
     context['grammar_brace'] += 1
-    return default_action(context, mode, match, terminal, resource, line, col)
-def grammar_rbrace(context, mode, match, terminal, resource, line, col):
+    return default_action(context, mode, match, groups, terminal, resource, line, col)
+def grammar_rbrace(context, mode, match, groups, terminal, resource, line, col):
     context['grammar_brace'] -= 1
     mode = 'default' if context['parser_brace'] == 0 else mode
-    return default_action(context, mode, match, terminal, resource, line, col)
+    return default_action(context, mode, match, groups, terminal, resource, line, col)
 # END USER CODE
-def default_action(context, mode, match, terminal, resource, line, col):
-    tokens = [Terminal(lexer_terminals[terminal], terminal, match, resource, line, col)] if terminal else []
+def default_action(context, mode, match, groups, terminal, resource, line, col):
+    tokens = [Terminal(terminals[terminal], terminal, match, resource, line, col)] if terminal else []
     return (tokens, mode, context)
 def destroy(context):
     pass
@@ -2348,7 +2272,7 @@ class HermesLexer:
             match = regex.match(string)
             if match:
                 function = function if function else default_action
-                (tokens, mode, context) = function(context, mode, match.group(0), terminal, resource, line, col)
+                (tokens, mode, context) = function(context, mode, match.group(0), match.groups(), terminal, resource, line, col)
                 return (tokens, match.group(0), mode)
         return ([], '', mode)
     def lex(self, string, resource, debug=False):

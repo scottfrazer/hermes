@@ -1,0 +1,25 @@
+grammar {
+  lexer<python> {
+    r'a' -> :a
+    r'b' -> :b
+    r'\s+' -> null
+  }
+  lexer<c> {
+    "a" -> :a
+    "b" -> :b
+    "\\s+" -> null
+  }
+  lexer<java> {
+    "a" -> :a
+    "b" -> :b
+    "\\s+" -> null
+  }
+  lexer<javascript> {
+    "a" -> :a
+    "b" -> :b
+    "\\s+" -> null
+  }
+  parser<ll1> {
+    $start = :a $start :b | :_empty
+  }
+}

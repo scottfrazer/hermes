@@ -607,7 +607,7 @@ def parse_{{name}}(ctx):
 # END USER CODE
 
 {% if re.search(r'def\s+default_action', lexer.code) is None %}
-def default_action(context, mode, match, terminal, resource, line, col):
+def default_action(context, mode, match, groups, terminal, resource, line, col):
     tokens = [Terminal(terminals[terminal], terminal, match, resource, line, col)] if terminal else []
     return (tokens, mode, context)
 {% endif %}
@@ -655,7 +655,7 @@ class HermesLexer:
             match = regex.match(string)
             if match:
                 function = function if function else default_action
-                (tokens, mode, context) = function(context, mode, match.group(0), terminal, resource, line, col)
+                (tokens, mode, context) = function(context, mode, match.group(0), match.groups(), terminal, resource, line, col)
                 return (tokens, match.group(0), mode)
         return ([], '', mode)
 
