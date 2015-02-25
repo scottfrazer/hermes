@@ -24,12 +24,8 @@ class NonTerminal(Morpheme):
     def setMacro(self, macro):
         self.macro = macro
 
-    def str(self, theme=None):
-        return self.__str__(theme)
-
-    def __str__(self, theme=None):
-        nt_str = '$e' if self.string == '_expr' else '$' + self.string
-        return theme.nonterminal(nt_str) if theme else nt_str
+    def __str__(self):
+        return '$e' if self.string == '_expr' else '$' + self.string
 
     def first(self):
         return
@@ -43,12 +39,8 @@ class Terminal(Morpheme):
     def id(self):
         return self.id
 
-    def str(self, theme=None):
-        return self.__str__(theme)
-
-    def __str__(self, theme=None):
-        t_str = ':' + self.string
-        return theme.terminal(t_str) if theme else t_str
+    def __str__(self):
+        return ':' + self.string
 
     def first(self):
         return {self}
@@ -62,22 +54,16 @@ class EmptyString(AbstractTerminal):
     def __init__(self, id):
         super().__init__('_empty', id)
 
-    def str(self, theme=None):
-        return self.__str__(theme)
-
-    def __str__(self, theme=None):
-        return theme.empty_string(':_empty') if theme else ':_empty'
+    def __str__(self):
+        return ':_empty'
 
 
 class EndOfStream(AbstractTerminal):
     def __init__(self, id):
         super().__init__('_eos', id)
 
-    def str(self, theme=None):
-        return self.__str__(theme)
-
-    def __str__(self, theme=None):
-        return theme.end_of_stream(':_eos') if theme else ':_eos'
+    def __str__(self):
+        return ':_eos'
 
 
 class Production:
@@ -96,11 +82,8 @@ class Production:
                 return False
         return True
 
-    def str(self, theme=None):
-        return self.__str__(theme)
-
-    def __str__(self, theme=None):
-        return ' '.join([(p.str(theme) if theme else str(p)) for p in self.morphemes])
+    def __str__(self):
+        return ' '.join([str(p) for p in self.morphemes])
 
 
 class Rule:
@@ -130,18 +113,12 @@ class Rule:
             return self.production.morphemes
         return self.__dict__[name]
 
-    def str(self, theme=None):
-        return self.__str__(theme)
-
-    def __str__(self, theme=None):
+    def __str__(self):
         ast = ''
         if self.ast and not (isinstance(self.ast, AstTranslation) and self.ast.idx == 0):
-            ast = ' -> {0}'.format(self.ast.str(theme) if theme else self.ast)
+            ast = ' -> {0}'.format(self.ast)
 
-        nonterminal = self.nonterminal.str(theme) if theme else str(self.nonterminal)
-        production = self.production.str(theme) if theme else str(self.production)
-        rule = "{0} = {1}{2}".format(nonterminal, production, ast)
-        return theme.rule(rule) if theme else rule
+        return "{0} = {1}{2}".format(str(self.nonterminal), str(self.production), ast)
 
     def __eq__(self, other):
         return str(other) == str(self)
@@ -159,24 +136,16 @@ class AstSpecification:
         self.name = name
         self.parameters = parameters
 
-    def str(self, theme=None):
-        return self.__str__(theme)
-
-    def __str__(self, theme=None):
-        string = self.name + '( ' + ', '.join(['%s=$%s' % (k, str(v)) for k, v in self.parameters.items()]) + ' )'
-        return theme.ast_specification(string) if theme else string
+    def __str__(self):
+        return self.name + '( ' + ', '.join(['%s=$%s' % (k, str(v)) for k, v in self.parameters.items()]) + ' )'
 
 
 class AstTranslation:
     def __init__(self, idx):
         self.idx = idx
 
-    def str(self, theme=None):
-        return self.__str__(theme)
-
-    def __str__(self, theme=None):
-        string = '$' + str(self.idx)
-        return theme.ast_translation(string) if theme else string
+    def __str__(self):
+        return '$' + str(self.idx)
 
 
 class ExprRule:
@@ -227,59 +196,66 @@ class ExprRule:
                      self.operator))
         return rules
 
-    def str(self, theme=None):
-        return self.__str__(theme)
-
-    def __str__(self, theme=None):
+    def __str__(self):
         def ast_to_str(ast):
             if isinstance(ast, AstTranslation) and ast.idx == 0:
                 return ''
-            return ' -> ' + ast.str(theme) if ast else ''
+            return ' -> ' + str(ast) if ast else ''
 
         if isinstance(self.operator, InfixOperator):
-            string = '{nt} = {nt} {op} {nt}{ast}'.format(nt=self.nonterminal, op=self.operator.operator,
-                                                         ast=ast_to_str(self.ast))
+            return '{nt} = {nt} {op} {nt}{ast}'.format(
+                nt=self.nonterminal,
+                op=self.operator.operator,
+                ast=ast_to_str(self.ast)
+            )
         elif isinstance(self.operator, PrefixOperator):
-            string = '{nt} = {op} {nt}{ast}'.format(nt=self.nonterminal, op=self.operator.operator,
-                                                    ast=ast_to_str(self.ast))
+            return '{nt} = {op} {nt}{ast}'.format(
+                nt=self.nonterminal,
+                op=self.operator.operator,
+                ast=ast_to_str(self.ast)
+            )
         elif isinstance(self.operator, MixfixOperator):
-            led = ' <=> {}'.format(self.ledProduction.str(theme)) if len(self.ledProduction.morphemes) else ''
-            string = '{nt} = {nud}{nud_ast}{led}{ast}'.format(
-                nt=self.nonterminal, nud=self.nud_production.str(theme), nud_ast=ast_to_str(self.nudAst), led=led,
+            led = ' <=> {}'.format(str(self.ledProduction)) if len(self.ledProduction.morphemes) else ''
+            return '{nt} = {nud}{nud_ast}{led}{ast}'.format(
+                nt=self.nonterminal,
+                nud=self.nud_production,
+                nud_ast=ast_to_str(self.nudAst),
+                led=led,
                 ast=ast_to_str(self.ast)
             )
         else:
-            string = '{nt} = {nud}{nud_ast}'.format(nt=self.nonterminal, nud=self.nud_production.str(theme),
-                                                    nud_ast=ast_to_str(self.nudAst))
-
-        return theme.expression_rule(string) if theme else string
+            return '{nt} = {nud}{nud_ast}'.format(
+                nt=self.nonterminal,
+                nud=self.nud_production,
+                nud_ast=ast_to_str(self.nudAst)
+            )
 
 
 class Operator:
     def __init__(self, operator, binding_power, associativity):
         self.__dict__.update(locals())
 
-    def str(self, theme=None):
-        return '<Operator {}, binding_power={}, associativity={}>'.format(self.operator, self.binding_power,
-                                                                          self.associativity)
-
     def __str__(self):
-        return self.str()
+        return '<Operator {}, binding_power={}, associativity={}>'.format(
+            self.operator,
+            self.binding_power,
+            self.associativity
+        )
 
 
 class InfixOperator(Operator):
-    def str(self, theme=None):
-        return "<Infix {}>".format(super(InfixOperator, self).str(theme))
+    def str(self):
+        return "<Infix {}>".format(super(InfixOperator, self))
 
 
 class PrefixOperator(Operator):
-    def str(self, theme=None):
-        return "<Prefix {}>".format(super(PrefixOperator, self).str(theme))
+    def str(self):
+        return "<Prefix {}>".format(super(PrefixOperator, self))
 
 
 class MixfixOperator(Operator):
-    def str(self, theme=None):
-        return "<Mixfix {}>".format(super(MixfixOperator, self).str(theme))
+    def str(self):
+        return "<Mixfix {}>".format(super(MixfixOperator, self))
 
 
 class Regex:
@@ -300,7 +276,7 @@ class Lexer(OrderedDict):
                 for partial_name, partial in self.regex_partials.items():
                     regex.regex = regex.regex.replace('{{%{0}%}}'.format(partial_name), partial)
 
-    def str(self, theme=None):
+    def __str__(self):
         return ', '.join(self.keys())
 
 

@@ -2,10 +2,14 @@ import sys
 import os
 import argparse
 import pkg_resources
+from xtermcolor import colorize
+
+from pygments import highlight
+from pygments.lexers import get_lexer_by_name
+from pygments.formatters import TerminalFormatter
 
 import hermes.factory
 import hermes.code
-from hermes.theme import TerminalDefaultTheme, TerminalColorTheme
 
 def cli():
     version = sys.version_info
@@ -110,8 +114,7 @@ def cli():
 
     elif cli.action == 'analyze':
         grammar = get_grammars(cli)
-        theme = TerminalColorTheme() if cli.color else TerminalDefaultTheme()
-        analyze(grammar, theme=theme)
+        analyze(grammar, color=cli.color)
 
     elif cli.action == 'generate':
         grammar = get_grammars(cli)
@@ -139,46 +142,61 @@ def cli():
         element = tree if cli.tree else tree.toAst()
         print(element.dumps(indent=2, color=colorizer, b64_source=cli.base64))
 
-def analyze(grammar, format='human', theme=None, file=sys.stdout):
-    if theme == None:
-        theme = TerminalDefaultTheme()
+def analyze(grammar, format='human', color=False, file=sys.stdout):
+    lexer = get_lexer_by_name("hgr")
+    formatter = TerminalFormatter()
 
-    file.write(theme.title('Terminals'))
-    file.write(', '.join([x.str(theme) for x in sorted(grammar.terminals, key=lambda x: x.string)]) + "\n\n")
-    file.write(theme.title('Non-Terminals'))
+    def boxed(s):
+        line = '+{0}+'.format('-' * (len(s) + 2))
+        return '{0}\n| {1} |\n{0}\n\n'.format(line, s)
+    def title(s): return colorize(boxed(s), ansi=4) if color else boxed(s)
+    def warning(s): return colorize(boxed(s), ansi=11) if color else boxed(s)
+    def conflicts(s): return colorize(boxed(s), ansi=2) if color else boxed(s)
+    def conflicts_found(s): return colorize(s, ansi=1) if color else s
+    def no_conflicts(s): return colorize(s, ansi=2) if color else s
+    def pygments_highlight(s): return highlight(s, lexer, formatter).strip() if color else s
+
+    file.write(title('Terminals'))
+    file.write(', '.join([pygments_highlight(str(x)) for x in sorted(grammar.terminals, key=lambda x: x.string)]) + "\n\n")
+    file.write(title('Non-Terminals'))
     file.write(
-        ', '.join([x.str(theme) for x in sorted(grammar.nonterminals, key=lambda x: x.string)]) + "\n\n")
-    file.write(theme.title('Expanded LL(1) Rules'))
+        ', '.join([pygments_highlight(str(x)) for x in sorted(grammar.nonterminals, key=lambda x: x.string)])
+    )
+    file.write("\n\n")
+
+    file.write(title('Expanded LL(1) Rules'))
     file.write("\n".join(
-        [rule.str(theme) for rule in sorted(grammar.getExpandedLL1Rules(), key=lambda x: x.str())]) + "\n\n")
+        [pygments_highlight(str(rule)) for rule in sorted(grammar.getExpandedLL1Rules(), key=lambda x: str(x))]
+    ))
+    file.write("\n\n")
 
     for expression_nonterminal in grammar.expression_nonterminals:
         rules = grammar.get_expanded_rules(expression_nonterminal)
-        file.write(theme.title('Expanded Expression Grammar ({})'.format(expression_nonterminal)))
-        file.write("\n".join([rule.str(theme) for rule in sorted(rules, key=lambda x: x.str())]) + "\n\n")
+        file.write(title('Expanded Expression Grammar ({})'.format(expression_nonterminal)))
+        file.write("\n".join([pygments_highlight(str(rule)) for rule in sorted(rules, key=lambda x: str(x))]) + "\n\n")
 
-    file.write(theme.title('First sets'))
+    file.write(title('First sets'))
     for nonterminal in sorted(grammar.nonterminals, key=lambda x: x.string):
-        terminals = [theme.terminal(str(x)) for x in sorted(grammar.first(nonterminal), key=lambda x: x.str())]
-        file.write("%s: {%s}\n" % (theme.nonterminal(str(nonterminal)), ', '.join(terminals)))
+        terminals = [pygments_highlight(str(x)) for x in sorted(grammar.first(nonterminal), key=lambda x: x.string)]
+        file.write("%s: {%s}\n" % (pygments_highlight(str(nonterminal)), ', '.join(terminals)))
     file.write('\n')
 
-    file.write(theme.title('Follow sets'))
+    file.write(title('Follow sets'))
     for nonterminal in sorted(grammar.nonterminals, key=lambda x: x.string):
-        terminals = [theme.terminal(str(x)) for x in
-                     sorted(grammar.follow(nonterminal), key=lambda x: x.str())]
-        file.write("%s: {%s}\n" % (theme.nonterminal(str(nonterminal)), ', '.join(terminals)))
+        terminals = [pygments_highlight(str(x)) for x in
+                     sorted(grammar.follow(nonterminal), key=lambda x: x.string)]
+        file.write("%s: {%s}\n" % (pygments_highlight(str(nonterminal)), ', '.join(terminals)))
     file.write('\n')
 
-    if ( len(grammar.warnings) ):
-        file.write(theme.warning('Warnings'))
+    if len(grammar.warnings):
+        file.write(warning('Warnings'))
         for warning in grammar.warnings:
             file.write(str(warning) + '\n\n')
 
-    if ( len(grammar.conflicts) ):
-        file.write(theme.conflict('Conflicts'))
+    if len(grammar.conflicts):
+        file.write(conflicts('Conflicts'))
         for conflict in grammar.conflicts:
             file.write(str(conflict) + '\n\n')
-        file.write(theme.conflicts_found('%d conflicts found\n' % len(grammar.conflicts)))
+        file.write(conflicts_found('%d conflicts found\n' % len(grammar.conflicts)))
     else:
-        file.write(theme.no_conflicts("\nGrammar contains no conflicts!\n"))
+        file.write(no_conflicts("\nGrammar contains no conflicts!\n"))
