@@ -713,7 +713,12 @@ def cli():
     if sys.argv[1] in ['parsetree', 'ast']:
         tokens = TokenStream()
         with open(os.path.expanduser(sys.argv[2])) as fp:
-            json_tokens = json.loads(fp.read())
+            try:
+                json_tokens = json.loads(fp.read())
+            except ValueError:
+                sys.stderr.write("Invalid JSON input\n");
+                sys.exit(-1)
+
             for json_token in json_tokens:
                 tokens.append(Terminal(
                     terminals[json_token['terminal']],

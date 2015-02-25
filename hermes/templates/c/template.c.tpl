@@ -2069,7 +2069,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
   }
     {% endfor %}
 
-    {% if not grammar.must_consume_tokens(nonterminal) %}
+    {% if grammar.must_consume_tokens(nonterminal) %}
   fmt = "Error: Unexpected symbol (%s) when parsing %s";
   message = calloc( strlen(fmt) + strlen({{prefix}}morpheme_to_str(tokens->tokens[tokens->current_index]->terminal->id)) + strlen("parse_{{nonterminal.string.lower()}}") + 1, sizeof(char) );
   sprintf(message, fmt, {{prefix}}morpheme_to_str(tokens->tokens[tokens->current_index]->terminal->id), "parse_{{nonterminal.string.lower()}}");
@@ -2280,7 +2280,7 @@ get_tokens(char * grammar, char * json_input, TOKEN_LIST_T * token_list) {
   json = json_parse(json_input);
 
   if ( json == NULL ) {
-    fprintf(stderr, "get_tokens(): Invalid JSON input\n");
+    fprintf(stderr, "Invalid JSON input\n");
     exit(-1);
   }
 
@@ -2471,31 +2471,30 @@ main(int argc, char * argv[])
   parse_tree = {{prefix}}parse(ctx, -1);
   abstract_syntax_tree = {{grammar.name}}_ast(parse_tree);
 
+  if ( ctx->syntax_errors ) {
+    rval = 1;
+    printf("%s\n", ctx->syntax_errors->message);
+    goto exit;
+    /*for ( error = ctx->syntax_errors; error; error = error->next )
+    {
+      printf("%s\n", error->message);
+    }*/
+  }
+
   if ( argc >= 3 && !strcmp(argv[1], "ast") ) {
     str = {{prefix}}ast_to_string(abstract_syntax_tree, ctx);
   } else {
     str = {{prefix}}parsetree_to_string(parse_tree, ctx);
   }
 
+  rval = 0;
+  printf("%s", str);
+
+  {{grammar.name}}_parser_exit(ctx);
   {{prefix}}free_parse_tree(parse_tree);
   {{prefix}}free_ast(abstract_syntax_tree);
 
-  if ( ctx->syntax_errors ) {
-    rval = 1;
-    printf("%s\n", ctx->syntax_errors->message);
-    /*for ( error = ctx->syntax_errors; error; error = error->next )
-    {
-      printf("%s\n", error->message);
-    }*/
-  }
-  else
-  {
-    rval = 0;
-    printf("%s", str);
-  }
-
-  {{grammar.name}}_parser_exit(ctx);
-
+exit:
   free(b64);
   return rval;
 }

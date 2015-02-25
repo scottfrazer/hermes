@@ -1262,7 +1262,13 @@ public class {{prefix}}Parser {
             try {
                 TokenStream tokens = new TokenStream();
                 String contents = readFile(args[1]);
-                JSONArray arr = new JSONArray(contents);
+                JSONArray arr = null;
+                try {
+                    arr = new JSONArray(contents);
+                } catch(Exception e) {
+                    System.out.println("Invalid JSON input");
+                    System.exit(-1);
+                }
 
                 for ( int i = 0; i < arr.length(); i++ ) {
                     JSONObject token = arr.getJSONObject(i);

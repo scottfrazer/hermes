@@ -1015,7 +1015,15 @@ var main = function() {
           }
           process.exit(0);
         }
-        var file_tokens = JSON.parse(data);
+
+        var file_tokens;
+
+        try {
+            file_tokens = JSON.parse(data);
+        } catch(err) {
+            console.log("Invalid JSON input");
+            process.exit(-1);
+        }
         var tokens = [];
         for (i in file_tokens) {
             token = new Terminal(
