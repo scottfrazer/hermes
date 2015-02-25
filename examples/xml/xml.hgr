@@ -1,0 +1,61 @@
+grammar {
+  lexer<python> {
+    partials {
+      r'[a-zA-Z:_\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\U00010000-\U000EFFFF]' -> _NameStartChar
+      r'[a-zA-Z0-9-\.:_\u00b7\u0300-\u036f\u203f-\u2040\u00c0-\u00d6\u00d8-\u00f6\u00f8-\u02ff\u0370-\u037d\u037f-\u1fff\u200c-\u200d\u2070-\u218f\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD\U00010000-\U000EFFFF]' -> _NameChar
+      r'%{%_NameStartChar%}({%_NameChar%})*;' -> _PEReference
+      r'&{%_NameStartChar%}({%_NameChar%})*;' -> _EntityRef
+      r'&#[0-9]+;' -> _DecCharRef
+      r'&#x[0-9a-fA-F]+;' -> _HexCharRef
+    }
+    r'\s+' -> null
+    r'<([a-z]+)' -> start_tag(:start_tag)
+    r'</([a-z]+)>' -> end_tag(:end_tag)
+    r'[a-z]+' -> :string
+    r'{%_NameStartChar%}({%_NameChar%})*' -> :Name
+    r'"' -> start_dquote_string(:dquote)
+    r'\'' -> start_squote_string(:squote)
+    mode<tag_attrs> {
+      r'\s+' -> null
+      r'[a-z]+' -> :attribute
+      r'=' -> :equals
+      r'"[^"]+"' -> :string
+      r'>' -> terminate_start_tag(:end_attrs)
+    }
+    mode<dquote_string> {
+      r'"' -> end_string(:dquote)
+      r'[^%&"]+' -> :string
+      r'{%_PEReference%}' -> :pe_reference
+      r'{%_EntityRef%}' -> :entity_ref
+      r'{%_DecCharRef%}' -> :dec_char_ref
+      r'{%_HexCharRef%}' -> :hex_char_ref
+    }
+    <code>
+def init():
+    return {'stack': []}
+
+def start_tag(ctx, mode, match, groups, terminal, resource, line, col):
+    print('start_tag(): {} {}'.format(ctx['stack'], groups[0]))
+    ctx['stack'].append(groups[0])
+    return default_action(ctx, 'tag_attrs', groups[0], groups, terminal, resource, line, col)
+
+def terminate_start_tag(ctx, mode, match, groups, terminal, resource, line, col):
+    print('terminate_start_tag(): {} {}'.format(ctx['stack'], match))
+    return default_action(ctx, 'default', '', groups, terminal, resource, line, col)
+
+def end_tag(ctx, mode, match, groups, terminal, resource, line, col):
+    tag = ctx['stack'].pop()
+    if groups[0] != tag:
+        raise SyntaxError("Unmatched tag: " + tag)
+    print('end_tag(): {} {}'.format(ctx['stack'], groups[0]))
+    return default_action(ctx, mode, groups[0], groups, terminal, resource, line, col)
+
+def destroy(ctx):
+    if len(ctx['stack']) > 0:
+        raise SyntaxError("Unclosed tags: {}".format(ctx['stack']))
+    </code>
+  }
+  parser<ll1> {
+    $document = $prolog $element $misc
+  }
+}
