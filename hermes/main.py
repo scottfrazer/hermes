@@ -138,9 +138,16 @@ def cli():
     elif cli.action == 'parse':
         with open(cli.grammar) as fp:
             tree = hermes.factory.get_parse_tree(fp.read())
-        colorizer = hermes.hermes_parser.no_color if cli.no_color else hermes.hermes_parser.term_color
-        element = tree if cli.tree else tree.toAst()
-        print(element.dumps(indent=2, color=colorizer, b64_source=cli.base64))
+        if cli.tree:
+            lexer = get_lexer_by_name("htree")
+            formatter = TerminalFormatter()
+            string = tree.dumps(indent=2, b64_source=cli.base64)
+            print(string if cli.no_color else highlight(string, lexer, formatter).strip())
+        else:
+            lexer = get_lexer_by_name("hast")
+            formatter = TerminalFormatter()
+            string = tree.toAst().dumps(indent=2, b64_source=cli.base64)
+            print(string if cli.no_color else highlight(string, lexer, formatter).strip())
 
 def analyze(grammar, format='human', color=False, file=sys.stdout):
     lexer = get_lexer_by_name("hgr")
