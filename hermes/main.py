@@ -151,11 +151,11 @@ def cli():
 
     elif cli.action == 'lex':
         with open(cli.grammar) as fp:
-            parser = hermes.compile(fp)
+            user_parser = hermes.compile(fp)
 
         with open(cli.input) as fp:
-            for token in parser.lex(fp.read(), '<string>'):
-                print(token)
+            for token in user_parser.lex(fp.read(), '<string>', debug=cli.debug):
+                print(token.dumps(b64_source=cli.base64))
 
     elif cli.action == 'parse':
         lexer = get_lexer_by_name("htree") if cli.tree else get_lexer_by_name("hast")

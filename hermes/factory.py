@@ -108,17 +108,24 @@ class GrammarFactory:
         return lexer
 
     def parse_regex(self, regex_ast, terminals, nonterminals):
-        (terminal, options, function) = (None, [], None)
-        onmatch = regex_ast.getAttr('onmatch')
-        if isinstance(onmatch, HermesTerminal):
-            terminal = self.get_morpheme_from_lexer_token(onmatch, terminals, nonterminals)
-        elif onmatch.name == 'LexerFunctionCall':
-            if onmatch.getAttr('terminal') is not None:
-                terminal = self.get_morpheme_from_lexer_token(onmatch.getAttr('terminal'), terminals, nonterminals)
-            function = onmatch.getAttr('name').source_string
-        elif onmatch.name == 'Null':
-            terminal = None
+        regex_outputs = []
+        for regex_output in regex_ast.getAttr('onmatch'):
+            if regex_output.name == 'Terminal':
+                (terminal, group) = self.parse_terminal(regex_output, terminals, nonterminals)
+                regex_outputs.append(RegexOutput(
+                    terminal, group, None
+                ))
+            elif regex_output.name == 'LexerFunctionCall':
+                (terminal, group) = self.parse_terminal(regex_output.getAttr('terminal'), terminals, nonterminals)
+                regex_outputs.append(RegexOutput(
+                    terminal, group, regex_output.getAttr('name').source_string
+                ))
+                function = regex_output.getAttr('name').source_string
+            elif regex_output.name == 'Null':
+                if len(regex_outputs) != 0:
+                    raise Exception('parse_reges(): "null" must be the only target of a regex')
 
+        options = []
         if regex_ast.getAttr('options') is not None:
             for option in regex_ast.getAttr('options'):
                 options.append(option.source_string)
@@ -126,9 +133,18 @@ class GrammarFactory:
         return Regex(
             regex_ast.getAttr('regex').source_string,
             options,
-            terminal,
-            function
+            regex_outputs
         )
+
+    def parse_terminal(self, terminal_ast, terminals, nonterminals):
+        terminal = self.get_morpheme_from_lexer_token(terminal_ast.getAttr('name'), terminals, nonterminals)
+        group_terminal = terminal_ast.getAttr('group')
+        group = 0
+        if group_terminal and group_terminal.str == 'no_group':
+            group = None
+        if group_terminal and group_terminal.str == 'integer':
+            group = int(group_terminal.source_string)
+        return (terminal, group)
 
     def parse_lexer_mode(self, mode_ast, terminals, nonterminals):
         regex_list = []

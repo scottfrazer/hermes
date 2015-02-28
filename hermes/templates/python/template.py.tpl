@@ -625,11 +625,16 @@ def destroy(context):
 class HermesLexer:
     regex = {
       {% for mode, regex_list in lexer.items() %}
-        '{{mode}}': [
+        '{{mode}}': OrderedDict([
           {% for regex in regex_list %}
-          (re.compile({{regex.regex}}{{", "+' | '.join(['re.'+x for x in regex.options]) if regex.options else ''}}), {{"'" + regex.terminal.string.lower() + "'" if regex.terminal else 'None'}}, {{regex.function}}),
+          (re.compile({{regex.regex}}{{", "+' | '.join(['re.'+x for x in regex.options]) if regex.options else ''}}), [
+              # (terminal, group, function)
+            {% for output in regex.outputs %}
+              ({{"'" + output.terminal.string.lower() + "'" if output.terminal else 'None'}}, {{output.group}}, {{output.function}}),
+            {% endfor %}
+          ]),
           {% endfor %}
-        ],
+        ]),
       {% endfor %}
     }
 
@@ -651,17 +656,23 @@ class HermesLexer:
         raise SyntaxError(message)
 
     def _next(self, string, mode, context, resource, line, col, debug=False):
-        for (regex, terminal, function) in self.regex[mode]:
-            if debug: print('trying: `{1}` ({2}, {3}) against {0}'.format(regex, string[:20].replace('\n', '\\n'), line, col))
+        for regex, outputs in self.regex[mode].items():
+            if debug:
+                print('trying: `{1}` ({2}, {3}) against {0}'.format(regex, string[:20].replace('\n', '\\n'), line, col))
             match = regex.match(string)
             if match:
-                function = function if function else default_action
-                (tokens, mode, context) = function(context, mode, match.group(0), match.groups(), terminal, resource, line, col)
-                if debug:
-                    print('    match: mode={} string={}'.format(mode, match.group(0), tokens))
-                    for token in tokens:
-                        print('           token: {}'.format(token))
-                return (tokens, match.group(0), mode)
+                return_tokens = []
+                return_mode = mode
+                for (terminal, group, function) in outputs:
+                    function = function if function else default_action
+                    source_string = match.group(group) if group is not None else ''
+                    (tokens, return_mode, context) = function(context, mode, source_string, match.groups(), terminal, resource, line, col)
+                    return_tokens.extend(tokens)
+                    if debug:
+                        print('    match: mode={} string={}'.format(mode, match.group(0), tokens))
+                        for token in tokens:
+                            print('           token: {}'.format(token))
+                return (return_tokens, match.group(0), return_mode)
         return ([], '', mode)
 
     def lex(self, string, resource, debug=False):

@@ -259,9 +259,12 @@ class MixfixOperator(Operator):
 
 
 class Regex:
-    def __init__(self, regex, options, terminal, function=None):
+    def __init__(self, regex, options, outputs):
         self.__dict__.update(locals())
 
+class RegexOutput:
+    def __init__(self, terminal, group, function):
+        self.__dict__.update(locals())
 
 class Lexer(OrderedDict):
     code = ''
@@ -319,11 +322,12 @@ class CompositeGrammar:
                             if morpheme.macro:
                                 self.macros.add(morpheme.macro)
 
-        for language, lexer in lexers.items():
+        for langauge, lexer in lexers.items():
             for mode, regexps in lexer.items():
                 for regex in regexps:
-                    if regex.terminal is not None:
-                        self.terminals.add(regex.terminal)
+                    for output in regex.outputs:
+                        if output.terminal is not None:
+                            self.terminals.add(output.terminal)
 
         self.first_sets = None
         self.follow_sets = None
