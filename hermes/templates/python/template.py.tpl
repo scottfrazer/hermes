@@ -650,12 +650,17 @@ class HermesLexer:
         )
         raise SyntaxError(message)
 
-    def _next(self, string, mode, context, resource, line, col):
+    def _next(self, string, mode, context, resource, line, col, debug=False):
         for (regex, terminal, function) in self.regex[mode]:
+            if debug: print('trying: `{1}` ({2}, {3}) against {0}'.format(regex, string[:20].replace('\n', '\\n'), line, col))
             match = regex.match(string)
             if match:
                 function = function if function else default_action
                 (tokens, mode, context) = function(context, mode, match.group(0), match.groups(), terminal, resource, line, col)
+                if debug:
+                    print('    match: mode={} string={}'.format(mode, match.group(0), tokens))
+                    for token in tokens:
+                        print('           token: {}'.format(token))
                 return (tokens, match.group(0), mode)
         return ([], '', mode)
 
@@ -665,7 +670,7 @@ class HermesLexer:
         string_copy = string
         parsed_tokens = []
         while len(string):
-            (tokens, match, mode) = self._next(string, mode, context, resource, line, col)
+            (tokens, match, mode) = self._next(string, mode, context, resource, line, col, debug)
             if len(match) == 0:
                 self._unrecognized_token(string_copy, line, col)
 
@@ -679,6 +684,7 @@ class HermesLexer:
             (line, col) = self._update_line_col(match, line, col)
 
             if debug:
+                from xtermcolor import colorize
                 for token in tokens:
                     print('token --> [{}] [{}, {}] [{}] [{}] [{}]'.format(
                         colorize(token.str, ansi=9),
