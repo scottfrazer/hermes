@@ -11,13 +11,13 @@ def test_all():
             with hermes.test.functions.python_code_context(test_dir) as python_ctx:
                 yield python_parse_tree, python_ctx
                 yield python_ast, python_ctx
-            with hermes.test.functions.python_code_context(test_dir) as c_ctx:
+            with hermes.test.functions.c_code_context(test_dir) as c_ctx:
                 yield c_parse_tree, c_ctx
                 yield c_ast, c_ctx
-            with hermes.test.functions.python_code_context(test_dir) as java_ctx:
+            with hermes.test.functions.java_code_context(test_dir) as java_ctx:
                 yield java_parse_tree, java_ctx
                 yield java_ast, java_ctx
-            with hermes.test.functions.python_code_context(test_dir) as javascript_ctx:
+            with hermes.test.functions.javascript_code_context(test_dir) as javascript_ctx:
                 yield javascript_parse_tree, javascript_ctx
                 yield javascript_ast, javascript_ctx
 

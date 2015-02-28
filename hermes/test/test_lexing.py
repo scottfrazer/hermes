@@ -10,11 +10,11 @@ def test_all():
         if os.path.isdir(test_dir) and re.match(r'^\d+$', directory):
             with hermes.test.functions.python_code_context(test_dir) as python_ctx:
                 yield python_tokens, python_ctx
-            with hermes.test.functions.python_code_context(test_dir) as c_ctx:
+            with hermes.test.functions.c_code_context(test_dir) as c_ctx:
                 yield c_tokens, c_ctx
-            with hermes.test.functions.python_code_context(test_dir) as java_ctx:
+            with hermes.test.functions.java_code_context(test_dir) as java_ctx:
                 yield java_tokens, java_ctx
-            with hermes.test.functions.python_code_context(test_dir) as javascript_ctx:
+            with hermes.test.functions.javascript_code_context(test_dir) as javascript_ctx:
                 yield javascript_tokens, javascript_ctx
 
 def python_tokens(python_ctx):
