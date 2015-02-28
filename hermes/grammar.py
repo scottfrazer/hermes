@@ -268,9 +268,12 @@ class Lexer(OrderedDict):
 
     def __init__(self):
         super().__init__()
-        self.regex_partials = {}
+        self.regex_partials = OrderedDict()
 
     def replace_partials(self):
+        for partial_name, partial in self.regex_partials.items():
+            for partial_name1, partial1 in self.regex_partials.items():
+                self.regex_partials[partial_name] = self.regex_partials[partial_name].replace('{{%{0}%}}'.format(partial_name1), partial1)
         for mode, regex_list in self.items():
             for regex in regex_list:
                 for partial_name, partial in self.regex_partials.items():
