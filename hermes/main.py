@@ -8,6 +8,7 @@ from pygments import highlight
 from pygments.lexers import get_lexer_by_name
 from pygments.formatters import TerminalFormatter
 
+import hermes
 import hermes.factory
 import hermes.code
 
@@ -21,8 +22,9 @@ def cli():
     command_help = {
         "analyze": "Analyze a grammer, find conflicts, and print out first/follow sets",
         "generate": "Generate the code for a parser",
-        "parse": "Parse a Hermes grammar file",
-        "bootstrap": "Generate the parser for Hermes to parse its own grammar file format"
+        "bootstrap": "Generate the parser for Hermes to parse its own grammar file format",
+        "parse": "Parse source code through a grammar",
+        "lex": "Tokenize source code through a grammar"
     }
 
     parser = argparse.ArgumentParser(description='Hermes Parser Generator', epilog='(c) 2011-2015 Scott Frazer')
@@ -30,10 +32,10 @@ def cli():
         '--version', action='version', version=str(pkg_resources.get_distribution('hermes-parser'))
     )
     parser.add_argument(
-        '-D', '--debug', required=False, action='store_true', help='Open the floodgates'
+        '--debug', required=False, action='store_true', help='Open the floodgates'
     )
     parser.add_argument(
-        '-c', '--color', required=False, action='store_true', help='Colorized output!'
+        '--no-color', default=False, required=False, action='store_true', help='Don\'t colorize output'
     )
 
     subparsers = parser.add_subparsers(help='Parser Generator Actions', dest='action')
@@ -81,13 +83,25 @@ def cli():
         'grammar', metavar='GRAMMAR', help='Grammar file'
     )
     commands['parse'].add_argument(
+        'input', metavar='INPUT', help='Source input'
+    )
+    commands['parse'].add_argument(
         '--base64', action='store_true', help='Base64 encode source'
     )
     commands['parse'].add_argument(
-        '--tree', action='store_true', help='Output Parse Tree instead of AST'
+        '--tree', default=False, action='store_true', help='Print parse tree instead of AST'
     )
-    commands['parse'].add_argument(
-        '--no-color', action='store_true', help='Don\'t colorize output'
+    commands['lex'] = subparsers.add_parser(
+        'lex', description=command_help['lex'], help=command_help['lex']
+    )
+    commands['lex'].add_argument(
+        'grammar', metavar='GRAMMAR', help='Grammar file'
+    )
+    commands['lex'].add_argument(
+        'input', metavar='INPUT', help='Source input'
+    )
+    commands['lex'].add_argument(
+        '--base64', action='store_true', help='Base64 encode source'
     )
 
     cli = parser.parse_args()
@@ -114,7 +128,7 @@ def cli():
 
     elif cli.action == 'analyze':
         grammar = get_grammars(cli)
-        analyze(grammar, color=cli.color)
+        analyze(grammar, color=not cli.no_color)
 
     elif cli.action == 'generate':
         grammar = get_grammars(cli)
@@ -135,19 +149,26 @@ def cli():
             nodejs=cli.nodejs
         )
 
-    elif cli.action == 'parse':
+    elif cli.action == 'lex':
         with open(cli.grammar) as fp:
-            tree = hermes.factory.get_parse_tree(fp.read())
-        if cli.tree:
-            lexer = get_lexer_by_name("htree")
-            formatter = TerminalFormatter()
-            string = tree.dumps(indent=2, b64_source=cli.base64)
-            print(string if cli.no_color else highlight(string, lexer, formatter).strip())
-        else:
-            lexer = get_lexer_by_name("hast")
-            formatter = TerminalFormatter()
-            string = tree.toAst().dumps(indent=2, b64_source=cli.base64)
-            print(string if cli.no_color else highlight(string, lexer, formatter).strip())
+            parser = hermes.compile(fp)
+
+        with open(cli.input) as fp:
+            for token in parser.lex(fp.read(), '<string>'):
+                print(token)
+
+    elif cli.action == 'parse':
+        lexer = get_lexer_by_name("htree") if cli.tree else get_lexer_by_name("hast")
+        formatter = TerminalFormatter()
+
+        with open(cli.grammar) as fp:
+            parser = hermes.compile(fp)
+
+        with open(cli.input) as fp:
+            tree = parser.parse(fp.read())
+
+        string = tree.dumps(indent=2) if cli.tree else tree.toAst().dumps(indent=2)
+        print(string if cli.no_color else highlight(string, lexer, formatter).strip())
 
 def analyze(grammar, format='human', color=False, file=sys.stdout):
     lexer = get_lexer_by_name("hgr")
