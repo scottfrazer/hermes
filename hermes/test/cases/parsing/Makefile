@@ -1,35 +1,26 @@
 SHELL = /bin/bash
-all: c_parser python_parser java_parser js_parser
-java_parser: java_files java_compile
-java_compile:
+all: c python java js
+java:
+	-mkdir java
+	hermes generate --language=java --add-main --directory=java grammar.zgr
 	javac -cp java java/*.java
 	-java -cp java GrammarParser parsetree tokens &>java/parsetree
 	-java -cp java GrammarParser ast tokens &>java/ast
-python_parser: python_files
-js_parser: js_files
+python:
+	-mkdir python
+	hermes generate --language=python --add-main --python-package=parsers --directory=python grammar.zgr
+	-python python/grammar_parser.py parsetree tokens &> python/parsetree
+	-python python/grammar_parser.py ast tokens &> python/ast
+js:
+	-mkdir js
+	hermes generate --language=javascript --add-main --nodejs --directory=js grammar.zgr
 	-node js/grammar_parser.js parsetree tokens &>js/parsetree
 	-node js/grammar_parser.js ast tokens &>js/ast
-c_parser: c_files
+c:
+	-mkdir c
+	hermes generate --language=c --add-main --directory=c grammar.zgr
 	gcc -o c/parser c/*.c -g -std=c99
 	-c/parser parsetree tokens &>c/parsetree
 	-c/parser ast tokens &>c/ast
-java_files: java_dir
-	hermes generate --language=java --add-main --directory=java grammar.zgr
-python_files: python_dir
-	hermes generate --language=python --add-main --python-package=parsers --directory=python grammar.zgr
-	-python python/grammar_main.py parsetree tokens &> python/parsetree
-	-python python/grammar_main.py ast tokens &> python/ast
-c_files: c_dir
-	hermes generate --language=c --add-main --directory=c grammar.zgr
-js_files: js_dir
-	hermes generate --language=javascript --add-main --nodejs --directory=js grammar.zgr
-c_dir:
-	-mkdir c
-python_dir:
-	-mkdir python
-java_dir:
-	-mkdir java
-js_dir:
-	-mkdir js
 clean:
 	-rm -rf java c python js

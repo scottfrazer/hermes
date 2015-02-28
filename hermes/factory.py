@@ -76,6 +76,8 @@ class GrammarFactory:
                 macro = self.tlist(ast, terminals, nonterminals)
             elif ast.getAttr('name').source_string == 'mlist':
                 macro = self.mlist(ast, terminals, nonterminals)
+            elif ast.getAttr('name').source_string == 'mslist':
+                macro = self.mslist(ast, terminals, nonterminals)
             elif ast.getAttr('name').source_string == 'optional':
                 macro = self.optional(ast, terminals, nonterminals)
             else:
@@ -325,6 +327,31 @@ class GrammarFactory:
         rules = [
             MacroGeneratedRule(nt0, Production(prod)),
             MacroGeneratedRule(nt1, Production([morpheme, nt1])),
+            MacroGeneratedRule(nt1, Production([empty]))
+        ]
+        if minimum == 0:
+            rules.append(MacroGeneratedRule(nt0, Production([empty])))
+
+        macro = MinimumListMacro(morpheme, minimum, nt0, rules)
+
+        for rule in rules:
+            rule.nonterminal.macro = macro
+
+        return macro
+
+    def mslist(self, ast, terminals, nonterminals):
+        morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
+        separator = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[1], terminals, nonterminals)
+        minimum = int(ast.getAttr('parameters')[2].source_string)
+        nt0 = self.generate_nonterminal(nonterminals)
+        nt1 = self.generate_nonterminal(nonterminals)
+        empty = terminals['_empty']
+
+        prod = [m if i % 2 == 0 else separator for i, m in enumerate([morpheme] * (minimum * 2 - 1))]
+        prod.append(nt1)
+        rules = [
+            MacroGeneratedRule(nt0, Production(prod)),
+            MacroGeneratedRule(nt1, Production([separator, morpheme, nt1])),
             MacroGeneratedRule(nt1, Production([empty]))
         ]
         if minimum == 0:
