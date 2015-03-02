@@ -4,13 +4,10 @@
 Features
 --------
 
-1) Lexer specify group of Regex: r'<(b)>' -> :foo[1] # foo has text 'b'
-2) Lexer output multiple tokens: r'(a)(b)(?=xyz)' -> :foo[] :bar[1] :baz
-    outputs: :foo (''), :bar ('a'), :baz ('ab')
-3) Macros can take full rules
+1) Macros can take full rules
     list($b | $c $d) # turns into list($_gen0); $_gen0 = $b | $c $d
     optional($a :b)
-4) Parenthesized statements expand to sub-rule:
+2) Parenthesized statements expand to sub-rule:
     $x = ($a | :b | $c :d -> Foo(s=$0, t=$1)) :e optional(:terminator) -> MyAst(x=$0, y=$1)
     $c = :c0 :c1 -> Bar(u=$0, v=$1)
     -- becomes --
@@ -18,11 +15,11 @@ Features
     $_gen0 = $a | :b | $c :d
     -- parsing :c0 :c1 :d :e :terminator --
     should return MyAst(x=Bar(u=:c0, v=:c1), y=:e)
-5) Native lexer stack support:
+3) Native lexer stack support:
     r'(<!ATTR)(?=\s*%)' -> :hint :attr[0] @mode
     r'(lexer)(<)([a-z]+)(>)' -> :lexer[1] :langle[2] :language[3] :rangle[4] @lexer
     r'}' -> :lbrace #pop
-6) Token buffers
+4) Token buffers
 
     lexer {
         mode:root {

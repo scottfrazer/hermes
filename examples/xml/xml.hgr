@@ -8,13 +8,71 @@ grammar {
       r'&#[0-9]+;' -> _DecCharRef
       r'&#x[0-9a-fA-F]+;' -> _HexCharRef
     }
+
     r'\s+' -> null
     r'<([a-z]+)' -> start_tag(:start_tag)
     r'</([a-z]+)>' -> end_tag(:end_tag)
     r'[a-z]+' -> :string
-    r'{%_NameStartChar%}({%_NameChar%})*' -> :Name
+    r'{%_NameStartChar%}({%_NameChar%})*' -> :name
     r'"' -> start_dquote_string(:dquote)
     r'\'' -> start_squote_string(:squote)
+
+    r'<\?xml' -> :xml_decl_start
+    r'\?>' -> :xml_decl_end
+    r'version' -> :version
+    r'=' -> :eq
+    r'(?:"(1.1)"|\'(1.1)\')' -> version_number(:version_number)
+    r'<!DOCTYPE' -> :doctype_start
+    r'>' -> :doctype_end
+    r'\[' -> :lsquare
+    r'\]' -> :rsquare
+    r'<!ELEMENT' -> element(:element_start)
+    r'<!ATTLIST' -> attlist(:att_list_start)
+    r'<!ENTITY' -> entity(:entity_start)
+
+    mode<element> {
+      r'\s+' -> null
+      r'{%_NameStartChar%}({%_NameChar%})*' -> :name
+      r'EMPTY' -> :empty
+      r'ANY' -> :any
+      r'#PCDATA' -> :pcdata
+      r'\(' -> :lparen
+      r'\)' -> :rparen
+      r'\|' -> :pipe
+      r'\?' -> :qmark
+      r'\*' -> :asterisk
+      r'\+' -> :plus
+      r',' -> :comma
+      r'>' -> pop(:element_end)
+    }
+
+    mode<attlist> {
+      r'NOTATION' -> notation(:notation)
+      r'\(' -> :lparen
+      r'\)' -> :rparen
+      r'\|' -> :pipe
+      r'{%_NameStartChar%}({%_NameChar%})*' -> :name
+      r'({%_NameChar%})+' -> :nmtoken
+      r'>' -> pop(:att_list_end)
+    }
+
+    mode<notation> {
+      r'\s+' -> null
+      r'{%_NameStartChar%}({%_NameChar%})*' -> :name
+      r'SYSTEM' -> :system
+      r'PUBLIC' -> :public
+      r'"([a-zA-Z0-9\n\r\ -\'\(\)\+,\./:=\?;!\*#@\$_%]*)"' -> string(:pubid_literal)
+      r'\'([a-zA-Z0-9\n\r\ -\(\)\+,\./:=\?;!\*#@\$_%]*)\'' -> string(:pubid_literal)
+      r'"([^"]*)"' -> string(:system_literal)
+      r'([^\']*)' -> string(:system_literal)
+    }
+
+    mode<entity> {
+      r'>' -> pop(:entity_end)
+      r'%' -> :percent
+      r'{%_NameStartChar%}({%_NameChar%})*' -> :name
+    }
+
     mode<tag_attrs> {
       r'\s+' -> null
       r'[a-z]+' -> :attribute
@@ -22,6 +80,7 @@ grammar {
       r'"[^"]+"' -> :string
       r'>' -> terminate_start_tag(:end_attrs)
     }
+
     mode<dquote_string> {
       r'"' -> end_string(:dquote)
       r'[^%&"]+' -> :string
@@ -56,6 +115,44 @@ def destroy(ctx):
     </code>
   }
   parser<ll1> {
-    $document = $prolog $element $misc
+    $document = $prolog $element list($misc)
+        $prolog = optional($xml_decl) list($misc) optional($doctype)
+            $xml_decl = :xml_decl_start $version_info optional($encoding_decl) optional($sd_decl) :xml_decl_end
+                $version_info = :version :eq :version_number
+            $doctype = $doctype_decl list($misc)
+            $doctype_decl = :doctype_start :name optional($external_id) optional($doctype_decl_sub) :doctype_end
+            $doctype_decl_sub = :lsquare $int_subset :rsquare
+            $int_subset = list($int_subset_sub)
+            $int_subset_sub = $markup_decl | :pe_reference
+            $markup_decl = $element_decl | $att_list_decl | $entity_decl | $notation_decl | $pi | $comment
+            $element_decl = :element_start :name $content_spec :element_end
+                $content_spec = :empty | :any | $mixed | $children
+                $mixed = :mixed_hint :lparen :pcdata optional($mixed_sub) :rparen
+                    $mixed_sub = :pipe list(:name, :pipe)
+                $children = $children_sub optional($children_qualifier)
+                $children_sub = :choice_hint :lparen mslist($cp, :pipe, 2) :rparen
+                $children_sub = :seq_hint :lparen list($cp, :comma) :rparen
+                $children_qualifier = :qmark | :plus | :asterisk
+                $cp = $cp_sub optional($children_qualifier)
+                $cp_sub = :name | $choice | $seq
+            $att_list_decl = :att_list_start :name list($att_def) :att_list_end
+                $att_def = :name $att_type $default_decl
+                $att_type = :cdata | :id | :idref | :idrefs | :entity | :entities | :nmtoken | $nmtokens | $enumerated_type
+                $enumerated_type = $notation_type | $enumeration
+                    $notation_type = :notation :lparen mslist(:name, :pipe, 1) :rparen
+                    $enumeration = :lparen mslist(:nmtoken, :pipe, 1) :rparen
+            $entity_decl = $ge_decl | $pe_decl
+            $ge_decl = :ge_hint :entity_start :name $entity_def :entity_end
+                $entity_def = $entity_value
+            $pe_decl = :pe_hint :entity_start :percent :name $pe_def :entity_end
+                $pe_def = $entity_value |
+        $misc = $comment | $pi
+    $comment = :comment_start :comment_text :comment_end
+    $pi = :pi_start :pi_target :pi_end
+    $entity_value = :dquote list($entity_value_part) :dquote
+    $entity_value = :squote list($entity_value_part) :squote
+    $entity_value_part = :string | :pe_reference | :entity_ref | :dec_char_ref | :hex_char_ref
+    $external_id = :system $system_literal | :public :pubid_literal $system_literal
+        $system_literal = :system_literal | :pubid_literal
   }
 }
