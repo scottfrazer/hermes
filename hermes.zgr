@@ -26,10 +26,10 @@ grammar {
       r'"(\\\"|[^\"])*"' -> :regex
       r'->' -> :arrow
       r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> :terminal[1]
-      r'mode<[a-zA-Z0-9_]+>' -> parse_mode(:mode)
+      r'(mode)(<)([a-zA-Z0-9_]+)(>)' -> :mode[1] :langle[2] :identifier[3] :rangle[4]
       r'partials(?=[\{\s])' -> parse_partials(:partials)
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
-      r'<code>(.*?)</code>' {DOTALL} -> lexer_code(:code)
+      r'<code>(.*?)</code>' {DOTALL} -> :code[1]
     }
 
     mode<partials> {
@@ -54,7 +54,7 @@ grammar {
       r'->' -> :arrow
       r'parser\s*<\s*expression\s*>' -> parser_expr_start(:parser_expression)
       r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> :terminal[1]
-      r'\$([a-zA-Z][a-zA-Z0-9_]*)(?=\s*\=)' -> parser_rule_start(:nonterminal[1])
+      r'\$([a-zA-Z][a-zA-Z0-9_]*)(?=\s*\=)' -> :ll1_rule_hint[] :nonterminal[1]
       r'\$([a-zA-Z][a-zA-Z0-9_]*)' -> :nonterminal[1]
       r'\$([0-9]+|\$)' -> :nonterminal_reference[1]
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
@@ -119,23 +119,10 @@ def parser_ll1_start(context, mode, match, groups, terminal, resource, line, col
     return default_action(context, 'parser_ll1', match, groups, terminal, resource, line, col)
 def parser_expr_start(context, mode, match, groups, terminal, resource, line, col):
     return default_action(context, 'parser_expr', match, groups, terminal, resource, line, col)
-def parse_mode(context, mode, match, groups, terminal, resource, line, col):
-    identifier = match.replace('mode', '').replace('<', '').replace('>', '').strip()
-    tokens = [
-        Terminal(terminals['mode'], 'mode', 'mode', resource, line, col),
-        Terminal(terminals['langle'], 'langle', '<', resource, line, col),
-        Terminal(terminals['identifier'], 'identifier', identifier, resource, line, col),
-        Terminal(terminals['rangle'], 'rangle', '>', resource, line, col),
-    ]
-    return (tokens, mode, context)
 def parse_partials(context, mode, match, groups, terminal, resource, line, col):
     return default_action(context, 'partials', match, groups, terminal, resource, line, col)
 def partials_rbrace(context, mode, match, groups, terminal, resource, line, col):
     return default_action(context, 'lexer', match, groups, terminal, resource, line, col)
-def lexer_code(context, mode, match, groups, terminal, resource, line, col):
-    code = match[6:-7].strip()
-    tokens = [Terminal(terminals[terminal], terminal, code, resource, line, col)]
-    return (tokens, mode, context)
 def lexer_lbrace(context, mode, match, groups, terminal, resource, line, col):
     context['lexer_brace'] += 1
     return default_action(context, mode, match, groups, terminal, resource, line, col)
@@ -150,12 +137,6 @@ def parser_rbrace(context, mode, match, groups, terminal, resource, line, col):
     context['parser_brace'] -= 1
     mode = 'grammar' if context['parser_brace'] == 0 else mode
     return default_action(context, mode, match, groups, terminal, resource, line, col)
-def parser_rule_start(context, mode, match, groups, terminal, resource, line, col):
-    tokens = [
-        Terminal(terminals['ll1_rule_hint'], 'll1_rule_hint', '', resource, line, col),
-        Terminal(terminals[terminal], terminal, normalize_morpheme(match), resource, line, col)
-    ]
-    return (tokens, mode, context)
 def grammar_lbrace(context, mode, match, groups, terminal, resource, line, col):
     context['grammar_brace'] += 1
     return default_action(context, mode, match, groups, terminal, resource, line, col)

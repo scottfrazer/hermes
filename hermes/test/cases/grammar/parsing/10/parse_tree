@@ -11,7 +11,7 @@
             (_gen9:
               (ll1_rule:
                 <ll1_rule_hint (line 3 col 5) ``>,
-                <nonterminal (line 3 col 5) `start`>,
+                <nonterminal (line 3 col 6) `start`>,
                 <equals (line 3 col 12) `=`>,
                 (ll1_rule_rhs:
                   (_gen10:
@@ -41,7 +41,7 @@
               (_gen9:
                 (ll1_rule:
                   <ll1_rule_hint (line 4 col 5) ``>,
-                  <nonterminal (line 4 col 5) `statement`>,
+                  <nonterminal (line 4 col 6) `statement`>,
                   <equals (line 4 col 16) `=`>,
                   (ll1_rule_rhs:
                     (_gen10:
@@ -61,7 +61,7 @@
                 (_gen9:
                   (ll1_rule:
                     <ll1_rule_hint (line 5 col 5) ``>,
-                    <nonterminal (line 5 col 5) `statement`>,
+                    <nonterminal (line 5 col 6) `statement`>,
                     <equals (line 5 col 16) `=`>,
                     (ll1_rule_rhs:
                       (_gen10:
@@ -81,7 +81,7 @@
                   (_gen9:
                     (ll1_rule:
                       <ll1_rule_hint (line 6 col 5) ``>,
-                      <nonterminal (line 6 col 5) `statement`>,
+                      <nonterminal (line 6 col 6) `statement`>,
                       <equals (line 6 col 16) `=`>,
                       (ll1_rule_rhs:
                         (_gen10:
@@ -101,7 +101,7 @@
                     (_gen9:
                       (ll1_rule:
                         <ll1_rule_hint (line 7 col 5) ``>,
-                        <nonterminal (line 7 col 5) `statement`>,
+                        <nonterminal (line 7 col 6) `statement`>,
                         <equals (line 7 col 16) `=`>,
                         (ll1_rule_rhs:
                           (_gen10:
@@ -121,7 +121,7 @@
                       (_gen9:
                         (ll1_rule:
                           <ll1_rule_hint (line 8 col 5) ``>,
-                          <nonterminal (line 8 col 5) `funcdef`>,
+                          <nonterminal (line 8 col 6) `funcdef`>,
                           <equals (line 8 col 14) `=`>,
                           (ll1_rule_rhs:
                             (_gen10:
@@ -202,7 +202,7 @@
                         (_gen9:
                           (ll1_rule:
                             <ll1_rule_hint (line 9 col 5) ``>,
-                            <nonterminal (line 9 col 5) `param`>,
+                            <nonterminal (line 9 col 6) `param`>,
                             <equals (line 9 col 12) `=`>,
                             (ll1_rule_rhs:
                               (_gen10:
@@ -222,7 +222,7 @@
                           (_gen9:
                             (ll1_rule:
                               <ll1_rule_hint (line 10 col 5) ``>,
-                              <nonterminal (line 10 col 5) `param`>,
+                              <nonterminal (line 10 col 6) `param`>,
                               <equals (line 10 col 12) `=`>,
                               (ll1_rule_rhs:
                                 (_gen10:
@@ -242,7 +242,7 @@
                             (_gen9:
                               (ll1_rule:
                                 <ll1_rule_hint (line 11 col 5) ``>,
-                                <nonterminal (line 11 col 5) `classdef`>,
+                                <nonterminal (line 11 col 6) `classdef`>,
                                 <equals (line 11 col 15) `=`>,
                                 (ll1_rule_rhs:
                                   (_gen10:
@@ -292,7 +292,7 @@
                               (_gen9:
                                 (ll1_rule:
                                   <ll1_rule_hint (line 12 col 5) ``>,
-                                  <nonterminal (line 12 col 5) `class_statement`>,
+                                  <nonterminal (line 12 col 6) `class_statement`>,
                                   <equals (line 12 col 22) `=`>,
                                   (ll1_rule_rhs:
                                     (_gen10:
@@ -317,7 +317,7 @@
                                 (_gen9:
                                   (ll1_rule:
                                     <ll1_rule_hint (line 13 col 5) ``>,
-                                    <nonterminal (line 13 col 5) `class_statement`>,
+                                    <nonterminal (line 13 col 6) `class_statement`>,
                                     <equals (line 13 col 22) `=`>,
                                     (ll1_rule_rhs:
                                       (_gen10:
@@ -342,7 +342,7 @@
                                   (_gen9:
                                     (ll1_rule:
                                       <ll1_rule_hint (line 14 col 5) ``>,
-                                      <nonterminal (line 14 col 5) `class_atom`>,
+                                      <nonterminal (line 14 col 6) `class_atom`>,
                                       <equals (line 14 col 17) `=`>,
                                       (ll1_rule_rhs:
                                         (_gen10:
@@ -362,7 +362,7 @@
                                     (_gen9:
                                       (ll1_rule:
                                         <ll1_rule_hint (line 15 col 5) ``>,
-                                        <nonterminal (line 15 col 5) `class_atom`>,
+                                        <nonterminal (line 15 col 6) `class_atom`>,
                                         <equals (line 15 col 17) `=`>,
                                         (ll1_rule_rhs:
                                           (_gen10:
@@ -382,7 +382,7 @@
                                       (_gen9:
                                         (ll1_rule:
                                           <ll1_rule_hint (line 16 col 5) ``>,
-                                          <nonterminal (line 16 col 5) `class_atom`>,
+                                          <nonterminal (line 16 col 6) `class_atom`>,
                                           <equals (line 16 col 17) `=`>,
                                           (ll1_rule_rhs:
                                             (_gen10:

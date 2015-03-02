@@ -3,7 +3,7 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 3 col 5) `start`>,
+          nonterminal=<nonterminal (line 3 col 6) `start`>,
           production=[
             (Production:
               morphemes=[
@@ -28,7 +28,7 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 4 col 5) `start`>,
+          nonterminal=<nonterminal (line 4 col 6) `start`>,
           production=[
             (Production:
               morphemes=[
@@ -39,7 +39,7 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 5 col 5) `statement`>,
+          nonterminal=<nonterminal (line 5 col 6) `statement`>,
           production=[
             (Production:
               morphemes=[
@@ -50,7 +50,7 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 6 col 5) `statement`>,
+          nonterminal=<nonterminal (line 6 col 6) `statement`>,
           production=[
             (Production:
               morphemes=[
@@ -61,7 +61,7 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 7 col 5) `for`>,
+          nonterminal=<nonterminal (line 7 col 6) `for`>,
           production=[
             (Production:
               morphemes=[
@@ -102,7 +102,7 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 8 col 5) `forsub`>,
+          nonterminal=<nonterminal (line 8 col 6) `forsub`>,
           production=[
             (Production:
               morphemes=[
@@ -113,7 +113,7 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 9 col 5) `forsub`>,
+          nonterminal=<nonterminal (line 9 col 6) `forsub`>,
           production=[
             (Production:
               morphemes=[
@@ -124,7 +124,7 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 10 col 5) `forbody`>,
+          nonterminal=<nonterminal (line 10 col 6) `forbody`>,
           production=[
             (Production:
               morphemes=[
@@ -137,7 +137,7 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 11 col 5) `forbody`>,
+          nonterminal=<nonterminal (line 11 col 6) `forbody`>,
           production=[
             (Production:
               morphemes=[
@@ -148,7 +148,7 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 12 col 5) `e`>,
+          nonterminal=<nonterminal (line 12 col 6) `e`>,
           production=(ExpressionParser:
             rules=[
               (ExpressionRule:

@@ -3,7 +3,7 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 3 col 5) `start`>,
+          nonterminal=<nonterminal (line 3 col 6) `start`>,
           production=[
             (Production:
               morphemes=[
@@ -20,7 +20,7 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 4 col 5) `sub`>,
+          nonterminal=<nonterminal (line 4 col 6) `sub`>,
           production=[
             (Production:
               morphemes=[
@@ -37,7 +37,7 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 5 col 5) `item`>,
+          nonterminal=<nonterminal (line 5 col 6) `item`>,
           production=[
             (Production:
               morphemes=[
@@ -54,7 +54,7 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 6 col 5) `type_name`>,
+          nonterminal=<nonterminal (line 6 col 6) `type_name`>,
           production=[
             (Production:
               morphemes=[
@@ -71,7 +71,7 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 7 col 5) `e`>,
+          nonterminal=<nonterminal (line 7 col 6) `e`>,
           production=(ExpressionParser:
             rules=[
               (ExpressionRule:

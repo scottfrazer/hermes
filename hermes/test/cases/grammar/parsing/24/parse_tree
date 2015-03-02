@@ -11,7 +11,7 @@
             (_gen9:
               (ll1_rule:
                 <ll1_rule_hint (line 3 col 5) ``>,
-                <nonterminal (line 3 col 5) `start`>,
+                <nonterminal (line 3 col 6) `start`>,
                 <equals (line 3 col 12) `=`>,
                 (ll1_rule_rhs:
                   (_gen10:
@@ -47,7 +47,7 @@
               (_gen9:
                 (ll1_rule:
                   <ll1_rule_hint (line 4 col 5) ``>,
-                  <nonterminal (line 4 col 5) `sub`>,
+                  <nonterminal (line 4 col 6) `sub`>,
                   <equals (line 4 col 10) `=`>,
                   (ll1_rule_rhs:
                     (_gen10:
@@ -79,7 +79,7 @@
                 (_gen9:
                   (ll1_rule:
                     <ll1_rule_hint (line 5 col 5) ``>,
-                    <nonterminal (line 5 col 5) `item`>,
+                    <nonterminal (line 5 col 6) `item`>,
                     <equals (line 5 col 11) `=`>,
                     (ll1_rule_rhs:
                       (_gen10:
@@ -111,7 +111,7 @@
                   (_gen9:
                     (ll1_rule:
                       <ll1_rule_hint (line 6 col 5) ``>,
-                      <nonterminal (line 6 col 5) `type_name`>,
+                      <nonterminal (line 6 col 6) `type_name`>,
                       <equals (line 6 col 16) `=`>,
                       (ll1_rule_rhs:
                         (_gen10:
@@ -143,7 +143,7 @@
                     (_gen9:
                       (ll1_rule:
                         <ll1_rule_hint (line 7 col 5) ``>,
-                        <nonterminal (line 7 col 5) `e`>,
+                        <nonterminal (line 7 col 6) `e`>,
                         <equals (line 7 col 8) `=`>,
                         (ll1_rule_rhs:
                           (parser:
