@@ -7,8 +7,8 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 3 col 16) `block`>,
-                <terminal (line 3 col 23) `dot`>
+                <nonterminal (line 3 col 17) `block`>,
+                <terminal (line 3 col 24) `dot`>
               ],
               ast=None
             )
@@ -19,10 +19,10 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 4 col 14) `block_const`>,
-                <nonterminal (line 4 col 27) `block_var`>,
-                <nonterminal (line 4 col 38) `block_proc`>,
-                <nonterminal (line 4 col 50) `statement`>
+                <nonterminal (line 4 col 15) `block_const`>,
+                <nonterminal (line 4 col 28) `block_var`>,
+                <nonterminal (line 4 col 39) `block_proc`>,
+                <nonterminal (line 4 col 51) `statement`>
               ],
               ast=None
             )
@@ -33,11 +33,11 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 5 col 20) `const`>,
-                <nonterminal (line 5 col 27) `ident`>,
-                <terminal (line 5 col 34) `equal`>,
-                <nonterminal (line 5 col 41) `number`>,
-                <nonterminal (line 5 col 49) `block_const1`>
+                <terminal (line 5 col 21) `const`>,
+                <nonterminal (line 5 col 28) `ident`>,
+                <terminal (line 5 col 35) `equal`>,
+                <nonterminal (line 5 col 42) `number`>,
+                <nonterminal (line 5 col 50) `block_const1`>
               ],
               ast=None
             )
@@ -48,7 +48,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 6 col 20) `_empty`>
+                <terminal (line 6 col 21) `_empty`>
               ],
               ast=None
             )
@@ -59,10 +59,10 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 7 col 21) `comma`>,
-                <nonterminal (line 7 col 28) `ident`>,
-                <terminal (line 7 col 35) `equal`>,
-                <nonterminal (line 7 col 42) `number`>
+                <terminal (line 7 col 22) `comma`>,
+                <nonterminal (line 7 col 29) `ident`>,
+                <terminal (line 7 col 36) `equal`>,
+                <nonterminal (line 7 col 43) `number`>
               ],
               ast=None
             )
@@ -73,7 +73,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 8 col 21) `_empty`>
+                <terminal (line 8 col 22) `_empty`>
               ],
               ast=None
             )
@@ -84,10 +84,10 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 9 col 18) `var`>,
-                <nonterminal (line 9 col 23) `ident`>,
-                <nonterminal (line 9 col 30) `block_var1`>,
-                <terminal (line 9 col 42) `semi`>
+                <terminal (line 9 col 19) `var`>,
+                <nonterminal (line 9 col 24) `ident`>,
+                <nonterminal (line 9 col 31) `block_var1`>,
+                <terminal (line 9 col 43) `semi`>
               ],
               ast=None
             )
@@ -98,7 +98,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 10 col 18) `_empty`>
+                <terminal (line 10 col 19) `_empty`>
               ],
               ast=None
             )
@@ -109,8 +109,8 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 11 col 19) `comma`>,
-                <nonterminal (line 11 col 26) `ident`>
+                <terminal (line 11 col 20) `comma`>,
+                <nonterminal (line 11 col 27) `ident`>
               ],
               ast=None
             )
@@ -121,7 +121,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 12 col 19) `_empty`>
+                <terminal (line 12 col 20) `_empty`>
               ],
               ast=None
             )
@@ -132,12 +132,12 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 13 col 19) `procedure`>,
-                <nonterminal (line 13 col 30) `ident`>,
-                <terminal (line 13 col 37) `semi`>,
-                <nonterminal (line 13 col 43) `block`>,
-                <terminal (line 13 col 50) `semi`>,
-                <nonterminal (line 13 col 56) `block_proc`>
+                <terminal (line 13 col 20) `procedure`>,
+                <nonterminal (line 13 col 31) `ident`>,
+                <terminal (line 13 col 38) `semi`>,
+                <nonterminal (line 13 col 44) `block`>,
+                <terminal (line 13 col 51) `semi`>,
+                <nonterminal (line 13 col 57) `block_proc`>
               ],
               ast=None
             )
@@ -148,7 +148,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 14 col 19) `_empty`>
+                <terminal (line 14 col 20) `_empty`>
               ],
               ast=None
             )
@@ -159,9 +159,9 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 15 col 18) `ident`>,
-                <terminal (line 15 col 25) `assign`>,
-                <nonterminal (line 15 col 33) `expression`>
+                <nonterminal (line 15 col 19) `ident`>,
+                <terminal (line 15 col 26) `assign`>,
+                <nonterminal (line 15 col 34) `expression`>
               ],
               ast=None
             )
@@ -172,8 +172,8 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 16 col 18) `call`>,
-                <nonterminal (line 16 col 24) `ident`>
+                <terminal (line 16 col 19) `call`>,
+                <nonterminal (line 16 col 25) `ident`>
               ],
               ast=None
             )
@@ -184,10 +184,10 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 17 col 18) `begin`>,
-                <nonterminal (line 17 col 25) `statement`>,
-                <nonterminal (line 17 col 36) `statement_sub1`>,
-                <terminal (line 17 col 52) `end`>
+                <terminal (line 17 col 19) `begin`>,
+                <nonterminal (line 17 col 26) `statement`>,
+                <nonterminal (line 17 col 37) `statement_sub1`>,
+                <terminal (line 17 col 53) `end`>
               ],
               ast=None
             )
@@ -198,10 +198,10 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 18 col 18) `if`>,
-                <nonterminal (line 18 col 22) `condition`>,
-                <terminal (line 18 col 33) `then`>,
-                <nonterminal (line 18 col 39) `statement`>
+                <terminal (line 18 col 19) `if`>,
+                <nonterminal (line 18 col 23) `condition`>,
+                <terminal (line 18 col 34) `then`>,
+                <nonterminal (line 18 col 40) `statement`>
               ],
               ast=None
             )
@@ -212,10 +212,10 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 19 col 18) `while`>,
-                <nonterminal (line 19 col 25) `condition`>,
-                <terminal (line 19 col 36) `do`>,
-                <nonterminal (line 19 col 40) `statement`>
+                <terminal (line 19 col 19) `while`>,
+                <nonterminal (line 19 col 26) `condition`>,
+                <terminal (line 19 col 37) `do`>,
+                <nonterminal (line 19 col 41) `statement`>
               ],
               ast=None
             )
@@ -226,8 +226,8 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 20 col 23) `semi`>,
-                <nonterminal (line 20 col 29) `statement`>
+                <terminal (line 20 col 24) `semi`>,
+                <nonterminal (line 20 col 30) `statement`>
               ],
               ast=None
             )
@@ -238,7 +238,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 21 col 23) `_empty`>
+                <terminal (line 21 col 24) `_empty`>
               ],
               ast=None
             )
@@ -249,8 +249,8 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 22 col 18) `odd`>,
-                <nonterminal (line 22 col 23) `expression`>
+                <terminal (line 22 col 19) `odd`>,
+                <nonterminal (line 22 col 24) `expression`>
               ],
               ast=None
             )
@@ -261,9 +261,9 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 23 col 18) `expression`>,
-                <nonterminal (line 23 col 30) `op`>,
-                <nonterminal (line 23 col 34) `expression`>
+                <nonterminal (line 23 col 19) `expression`>,
+                <nonterminal (line 23 col 31) `op`>,
+                <nonterminal (line 23 col 35) `expression`>
               ],
               ast=None
             )
@@ -274,7 +274,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 24 col 11) `equal`>
+                <terminal (line 24 col 12) `equal`>
               ],
               ast=None
             )
@@ -285,7 +285,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 25 col 11) `pound`>
+                <terminal (line 25 col 12) `pound`>
               ],
               ast=None
             )
@@ -296,7 +296,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 26 col 11) `lt`>
+                <terminal (line 26 col 12) `lt`>
               ],
               ast=None
             )
@@ -307,7 +307,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 27 col 11) `lteq`>
+                <terminal (line 27 col 12) `lteq`>
               ],
               ast=None
             )
@@ -318,7 +318,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 28 col 11) `gt`>
+                <terminal (line 28 col 12) `gt`>
               ],
               ast=None
             )
@@ -329,7 +329,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 29 col 11) `gteq`>
+                <terminal (line 29 col 12) `gteq`>
               ],
               ast=None
             )
@@ -340,9 +340,9 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 30 col 19) `unary_add_op`>,
-                <nonterminal (line 30 col 33) `term`>,
-                <nonterminal (line 30 col 39) `expression_sub1`>
+                <nonterminal (line 30 col 20) `unary_add_op`>,
+                <nonterminal (line 30 col 34) `term`>,
+                <nonterminal (line 30 col 40) `expression_sub1`>
               ],
               ast=None
             )
@@ -353,7 +353,7 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 31 col 21) `add_op`>
+                <nonterminal (line 31 col 22) `add_op`>
               ],
               ast=None
             )
@@ -364,7 +364,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 32 col 21) `_empty`>
+                <terminal (line 32 col 22) `_empty`>
               ],
               ast=None
             )
@@ -375,8 +375,8 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 33 col 24) `add_op`>,
-                <nonterminal (line 33 col 32) `expression_sub1`>
+                <nonterminal (line 33 col 25) `add_op`>,
+                <nonterminal (line 33 col 33) `expression_sub1`>
               ],
               ast=None
             )
@@ -387,7 +387,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 34 col 24) `_empty`>
+                <terminal (line 34 col 25) `_empty`>
               ],
               ast=None
             )
@@ -398,7 +398,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 35 col 15) `plus`>
+                <terminal (line 35 col 16) `plus`>
               ],
               ast=None
             )
@@ -409,7 +409,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 36 col 15) `minus`>
+                <terminal (line 36 col 16) `minus`>
               ],
               ast=None
             )
@@ -420,7 +420,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 37 col 15) `times`>
+                <terminal (line 37 col 16) `times`>
               ],
               ast=None
             )
@@ -431,7 +431,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 38 col 15) `divide`>
+                <terminal (line 38 col 16) `divide`>
               ],
               ast=None
             )
@@ -442,8 +442,8 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 39 col 13) `factor`>,
-                <nonterminal (line 39 col 21) `term_sub1`>
+                <nonterminal (line 39 col 14) `factor`>,
+                <nonterminal (line 39 col 22) `term_sub1`>
               ],
               ast=None
             )
@@ -454,8 +454,8 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 40 col 18) `mul_op`>,
-                <nonterminal (line 40 col 26) `term_sub1`>
+                <nonterminal (line 40 col 19) `mul_op`>,
+                <nonterminal (line 40 col 27) `term_sub1`>
               ],
               ast=None
             )
@@ -466,7 +466,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 41 col 18) `_empty`>
+                <terminal (line 41 col 19) `_empty`>
               ],
               ast=None
             )
@@ -477,7 +477,7 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 42 col 15) `ident`>
+                <nonterminal (line 42 col 16) `ident`>
               ],
               ast=None
             )
@@ -488,7 +488,7 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 43 col 15) `number`>
+                <nonterminal (line 43 col 16) `number`>
               ],
               ast=None
             )
@@ -499,9 +499,9 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 44 col 15) `lparen`>,
-                <nonterminal (line 44 col 23) `expression`>,
-                <terminal (line 44 col 35) `rparen`>
+                <terminal (line 44 col 16) `lparen`>,
+                <nonterminal (line 44 col 24) `expression`>,
+                <terminal (line 44 col 36) `rparen`>
               ],
               ast=None
             )
@@ -512,7 +512,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 45 col 14) `ident`>
+                <terminal (line 45 col 15) `ident`>
               ],
               ast=None
             )
@@ -523,7 +523,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 46 col 15) `number`>
+                <terminal (line 46 col 16) `number`>
               ],
               ast=None
             )

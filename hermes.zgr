@@ -25,7 +25,7 @@ grammar {
       r'r\'(\\\'|[^\'])*\'' -> :regex
       r'"(\\\"|[^\"])*"' -> :regex
       r'->' -> :arrow
-      r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> morpheme(:terminal)
+      r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> :terminal[1]
       r'mode<[a-zA-Z0-9_]+>' -> parse_mode(:mode)
       r'partials(?=[\{\s])' -> parse_partials(:partials)
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
@@ -53,10 +53,10 @@ grammar {
       r',' -> :comma
       r'->' -> :arrow
       r'parser\s*<\s*expression\s*>' -> parser_expr_start(:parser_expression)
-      r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> morpheme(:terminal)
-      r'\$[a-zA-Z][a-zA-Z0-9_]*(?=\s*\=)' -> parser_rule_start(:nonterminal)
-      r'\$[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:nonterminal)
-      r'\$([0-9]+|\$)' -> morpheme(:nonterminal_reference)
+      r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> :terminal[1]
+      r'\$([a-zA-Z][a-zA-Z0-9_]*)(?=\s*\=)' -> parser_rule_start(:nonterminal[1])
+      r'\$([a-zA-Z][a-zA-Z0-9_]*)' -> :nonterminal[1]
+      r'\$([0-9]+|\$)' -> :nonterminal_reference[1]
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
       r'"[^"]+"' -> :string
       r'[0-9]+' -> :integer
@@ -74,12 +74,12 @@ grammar {
       r'\(' -> :lparen
       r'\)' -> :rparen
       r',' -> :comma
-      r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> morpheme(:terminal)
-      r'(\$[a-zA-Z][a-zA-Z0-9_]*)[ \t]*=[ \t]*\1[ \t]+:[a-zA-Z][a-zA-Z0-9_]*[ \t]+\1(?![ \t]+(:|\$))' -> infix_rule_start(:nonterminal)
-      r'(\$[a-zA-Z][a-zA-Z0-9_]*)[ \t]*=[ \t]*:[a-zA-Z][a-zA-Z0-9_]*[ \t]+\1(?![ \t](:|\$))' -> prefix_rule_start(:nonterminal)
-      r'\$[a-zA-Z][a-zA-Z0-9_]*\s*=' -> expr_rule_start(:nonterminal)
-      r'\$[a-zA-Z][a-zA-Z0-9_]*' -> morpheme(:nonterminal)
-      r'\$([0-9]+|\$)' -> morpheme(:nonterminal_reference)
+      r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> :terminal[1]
+      r'(\$([a-zA-Z][a-zA-Z0-9_]*))[ \t]*(=)[ \t]*\1[ \t]+:([a-zA-Z][a-zA-Z0-9_]*)[ \t]+\1(?![ \t]+(:|\$))' -> :expr_rule_hint[] :nonterminal[2] :equals[3] :infix_rule_hint[] :nonterminal[2] :terminal[4] :nonterminal[2]
+      r'(\$([a-zA-Z][a-zA-Z0-9_]*))[ \t]*(=)[ \t]*:([a-zA-Z][a-zA-Z0-9_]*)[ \t]+\1(?![ \t](:|\$))' -> :expr_rule_hint[] :nonterminal[2] :equals[3] :prefix_rule_hint[] :terminal[4] :nonterminal[2]
+      r'\$([a-zA-Z][a-zA-Z0-9_]*)\s*(=)' -> :expr_rule_hint[] :nonterminal[1] :equals[2] :mixfix_rule_hint[]
+      r'\$([a-zA-Z][a-zA-Z0-9_]*)' -> :nonterminal[1]
+      r'\$([0-9]+|\$)' -> :nonterminal_reference[1]
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
       r'"[^"]+"' -> :string
       r'[0-9]+' -> :integer
@@ -154,40 +154,6 @@ def parser_rule_start(context, mode, match, groups, terminal, resource, line, co
     tokens = [
         Terminal(terminals['ll1_rule_hint'], 'll1_rule_hint', '', resource, line, col),
         Terminal(terminals[terminal], terminal, normalize_morpheme(match), resource, line, col)
-    ]
-    return (tokens, mode, context)
-def infix_rule_start(context, mode, match, groups, terminal, resource, line, col):
-    nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
-    operator = normalize_morpheme(re.search(':[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
-    tokens = [
-        Terminal(terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
-        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-        Terminal(terminals['equals'], 'equals', '=', resource, line, col),
-        Terminal(terminals['infix_rule_hint'], 'infix_rule_hint', '', resource, line, col),
-        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-        Terminal(terminals['terminal'], 'terminal', operator, resource, line, col),
-        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-    ]
-    return (tokens, mode, context)
-def prefix_rule_start(context, mode, match, groups, terminal, resource, line, col):
-    nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
-    operator = normalize_morpheme(re.search(':[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
-    tokens = [
-        Terminal(terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
-        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-        Terminal(terminals['equals'], 'equals', '=', resource, line, col),
-        Terminal(terminals['prefix_rule_hint'], 'prefix_rule_hint', '', resource, line, col),
-        Terminal(terminals['terminal'], 'terminal', operator, resource, line, col),
-        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-    ]
-    return (tokens, mode, context)
-def expr_rule_start(context, mode, match, groups, terminal, resource, line, col):
-    nonterminal = normalize_morpheme(re.search('\$[a-zA-Z][a-zA-Z0-9_]*', match).group(0))
-    tokens = [
-        Terminal(terminals['expr_rule_hint'], 'expr_rule_hint', '', resource, line, col),
-        Terminal(terminals['nonterminal'], 'nonterminal', nonterminal, resource, line, col),
-        Terminal(terminals['equals'], 'equals', '=', resource, line, col),
-        Terminal(terminals['mixfix_rule_hint'], 'mixfix_rule_hint', '',resource, line, col),
     ]
     return (tokens, mode, context)
 def grammar_lbrace(context, mode, match, groups, terminal, resource, line, col):

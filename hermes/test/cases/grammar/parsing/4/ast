@@ -7,9 +7,9 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 3 col 10) `a`>,
-                <terminal (line 3 col 13) `c`>,
-                <terminal (line 3 col 16) `b`>
+                <nonterminal (line 3 col 11) `a`>,
+                <terminal (line 3 col 14) `c`>,
+                <terminal (line 3 col 17) `b`>
               ],
               ast=None
             )
@@ -20,7 +20,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 4 col 10) `c`>
+                <terminal (line 4 col 11) `c`>
               ],
               ast=None
             )
@@ -31,7 +31,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 5 col 10) `_empty`>
+                <terminal (line 5 col 11) `_empty`>
               ],
               ast=None
             )

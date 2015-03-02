@@ -10,7 +10,7 @@
                 (Macro:
                   name=<identifier (line 3 col 10) `list`>,
                   parameters=[
-                    <nonterminal (line 3 col 15) `t`>
+                    <nonterminal (line 3 col 16) `t`>
                   ]
                 )
               ],
@@ -23,7 +23,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 4 col 10) `_empty`>
+                <terminal (line 4 col 11) `_empty`>
               ],
               ast=None
             )
@@ -34,7 +34,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 5 col 10) `x`>
+                <terminal (line 5 col 11) `x`>
               ],
               ast=None
             )
@@ -45,7 +45,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 6 col 10) `y`>
+                <terminal (line 6 col 11) `y`>
               ],
               ast=None
             )

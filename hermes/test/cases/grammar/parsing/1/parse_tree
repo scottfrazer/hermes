@@ -23,12 +23,12 @@
                             <lparen (line 3 col 18) `(`>,
                             (_gen19:
                               (macro_parameter:
-                                <nonterminal (line 3 col 19) `statements`>
+                                <nonterminal (line 3 col 20) `statements`>
                               ),
                               (_gen20:
                                 <comma (line 3 col 30) `,`>,
                                 (macro_parameter:
-                                  <terminal (line 3 col 32) `comma`>
+                                  <terminal (line 3 col 33) `comma`>
                                 ),
                                 (_gen20: )
                               )
@@ -48,7 +48,7 @@
                               (ast_parameter:
                                 <identifier (line 3 col 52) `statements`>,
                                 <equals (line 3 col 62) `=`>,
-                                <nonterminal_reference (line 3 col 63) `0`>
+                                <nonterminal_reference (line 3 col 64) `0`>
                               ),
                               (_gen18: )
                             ),
@@ -71,7 +71,7 @@
                       (rule:
                         (_gen12:
                           (morpheme:
-                            <terminal (line 4 col 14) `_empty`>
+                            <terminal (line 4 col 15) `_empty`>
                           ),
                           (_gen12: )
                         ),
@@ -91,7 +91,7 @@
                         (rule:
                           (_gen12:
                             (morpheme:
-                              <nonterminal (line 5 col 19) `e`>
+                              <nonterminal (line 5 col 20) `e`>
                             ),
                             (_gen12: )
                           ),
@@ -111,7 +111,7 @@
                           (rule:
                             (_gen12:
                               (morpheme:
-                                <nonterminal (line 6 col 19) `assignstatement`>
+                                <nonterminal (line 6 col 20) `assignstatement`>
                               ),
                               (_gen12: )
                             ),
@@ -131,15 +131,15 @@
                             (rule:
                               (_gen12:
                                 (morpheme:
-                                  <terminal (line 7 col 24) `identifier`>
+                                  <terminal (line 7 col 25) `identifier`>
                                 ),
                                 (_gen12:
                                   (morpheme:
-                                    <terminal (line 7 col 36) `eq`>
+                                    <terminal (line 7 col 37) `eq`>
                                   ),
                                   (_gen12:
                                     (morpheme:
-                                      <nonterminal (line 7 col 40) `e`>
+                                      <nonterminal (line 7 col 41) `e`>
                                     ),
                                     (_gen12: )
                                   )
@@ -155,14 +155,14 @@
                                       (ast_parameter:
                                         <identifier (line 7 col 54) `var`>,
                                         <equals (line 7 col 57) `=`>,
-                                        <nonterminal_reference (line 7 col 58) `0`>
+                                        <nonterminal_reference (line 7 col 59) `0`>
                                       ),
                                       (_gen18:
                                         <comma (line 7 col 60) `,`>,
                                         (ast_parameter:
                                           <identifier (line 7 col 62) `val`>,
                                           <equals (line 7 col 65) `=`>,
-                                          <nonterminal_reference (line 7 col 66) `2`>
+                                          <nonterminal_reference (line 7 col 67) `2`>
                                         ),
                                         (_gen18: )
                                       )
@@ -204,21 +204,21 @@
                                       )
                                     ),
                                     <expr_rule_hint (line 9 col 16) ``>,
-                                    <nonterminal (line 9 col 16) `e`>,
-                                    <equals (line 9 col 16) `=`>,
+                                    <nonterminal (line 9 col 17) `e`>,
+                                    <equals (line 9 col 19) `=`>,
                                     (expression_rule_production:
                                       <infix_rule_hint (line 9 col 16) ``>,
                                       (_gen12:
                                         (morpheme:
-                                          <nonterminal (line 9 col 16) `e`>
+                                          <nonterminal (line 9 col 17) `e`>
                                         ),
                                         (_gen12:
                                           (morpheme:
-                                            <terminal (line 9 col 16) `add`>
+                                            <terminal (line 9 col 25) `add`>
                                           ),
                                           (_gen12:
                                             (morpheme:
-                                              <nonterminal (line 9 col 16) `e`>
+                                              <nonterminal (line 9 col 17) `e`>
                                             ),
                                             (_gen12: )
                                           )
@@ -234,14 +234,14 @@
                                               (ast_parameter:
                                                 <identifier (line 9 col 40) `lhs`>,
                                                 <equals (line 9 col 43) `=`>,
-                                                <nonterminal_reference (line 9 col 44) `0`>
+                                                <nonterminal_reference (line 9 col 45) `0`>
                                               ),
                                               (_gen18:
                                                 <comma (line 9 col 46) `,`>,
                                                 (ast_parameter:
                                                   <identifier (line 9 col 48) `rhs`>,
                                                   <equals (line 9 col 51) `=`>,
-                                                  <nonterminal_reference (line 9 col 52) `2`>
+                                                  <nonterminal_reference (line 9 col 53) `2`>
                                                 ),
                                                 (_gen18: )
                                               )
@@ -270,21 +270,21 @@
                                         )
                                       ),
                                       <expr_rule_hint (line 10 col 16) ``>,
-                                      <nonterminal (line 10 col 16) `e`>,
-                                      <equals (line 10 col 16) `=`>,
+                                      <nonterminal (line 10 col 17) `e`>,
+                                      <equals (line 10 col 19) `=`>,
                                       (expression_rule_production:
                                         <infix_rule_hint (line 10 col 16) ``>,
                                         (_gen12:
                                           (morpheme:
-                                            <nonterminal (line 10 col 16) `e`>
+                                            <nonterminal (line 10 col 17) `e`>
                                           ),
                                           (_gen12:
                                             (morpheme:
-                                              <terminal (line 10 col 16) `sub`>
+                                              <terminal (line 10 col 25) `sub`>
                                             ),
                                             (_gen12:
                                               (morpheme:
-                                                <nonterminal (line 10 col 16) `e`>
+                                                <nonterminal (line 10 col 17) `e`>
                                               ),
                                               (_gen12: )
                                             )
@@ -300,14 +300,14 @@
                                                 (ast_parameter:
                                                   <identifier (line 10 col 45) `lhs`>,
                                                   <equals (line 10 col 48) `=`>,
-                                                  <nonterminal_reference (line 10 col 49) `0`>
+                                                  <nonterminal_reference (line 10 col 50) `0`>
                                                 ),
                                                 (_gen18:
                                                   <comma (line 10 col 51) `,`>,
                                                   (ast_parameter:
                                                     <identifier (line 10 col 53) `rhs`>,
                                                     <equals (line 10 col 56) `=`>,
-                                                    <nonterminal_reference (line 10 col 57) `2`>
+                                                    <nonterminal_reference (line 10 col 58) `2`>
                                                   ),
                                                   (_gen18: )
                                                 )
@@ -336,21 +336,21 @@
                                           )
                                         ),
                                         <expr_rule_hint (line 11 col 16) ``>,
-                                        <nonterminal (line 11 col 16) `e`>,
-                                        <equals (line 11 col 16) `=`>,
+                                        <nonterminal (line 11 col 17) `e`>,
+                                        <equals (line 11 col 19) `=`>,
                                         (expression_rule_production:
                                           <infix_rule_hint (line 11 col 16) ``>,
                                           (_gen12:
                                             (morpheme:
-                                              <nonterminal (line 11 col 16) `e`>
+                                              <nonterminal (line 11 col 17) `e`>
                                             ),
                                             (_gen12:
                                               (morpheme:
-                                                <terminal (line 11 col 16) `mul`>
+                                                <terminal (line 11 col 25) `mul`>
                                               ),
                                               (_gen12:
                                                 (morpheme:
-                                                  <nonterminal (line 11 col 16) `e`>
+                                                  <nonterminal (line 11 col 17) `e`>
                                                 ),
                                                 (_gen12: )
                                               )
@@ -366,14 +366,14 @@
                                                   (ast_parameter:
                                                     <identifier (line 11 col 45) `lhs`>,
                                                     <equals (line 11 col 48) `=`>,
-                                                    <nonterminal_reference (line 11 col 49) `0`>
+                                                    <nonterminal_reference (line 11 col 50) `0`>
                                                   ),
                                                   (_gen18:
                                                     <comma (line 11 col 51) `,`>,
                                                     (ast_parameter:
                                                       <identifier (line 11 col 53) `rhs`>,
                                                       <equals (line 11 col 56) `=`>,
-                                                      <nonterminal_reference (line 11 col 57) `2`>
+                                                      <nonterminal_reference (line 11 col 58) `2`>
                                                     ),
                                                     (_gen18: )
                                                   )
@@ -402,21 +402,21 @@
                                             )
                                           ),
                                           <expr_rule_hint (line 12 col 16) ``>,
-                                          <nonterminal (line 12 col 16) `e`>,
-                                          <equals (line 12 col 16) `=`>,
+                                          <nonterminal (line 12 col 17) `e`>,
+                                          <equals (line 12 col 19) `=`>,
                                           (expression_rule_production:
                                             <infix_rule_hint (line 12 col 16) ``>,
                                             (_gen12:
                                               (morpheme:
-                                                <nonterminal (line 12 col 16) `e`>
+                                                <nonterminal (line 12 col 17) `e`>
                                               ),
                                               (_gen12:
                                                 (morpheme:
-                                                  <terminal (line 12 col 16) `div`>
+                                                  <terminal (line 12 col 25) `div`>
                                                 ),
                                                 (_gen12:
                                                   (morpheme:
-                                                    <nonterminal (line 12 col 16) `e`>
+                                                    <nonterminal (line 12 col 17) `e`>
                                                   ),
                                                   (_gen12: )
                                                 )
@@ -432,14 +432,14 @@
                                                     (ast_parameter:
                                                       <identifier (line 12 col 43) `lhs`>,
                                                       <equals (line 12 col 46) `=`>,
-                                                      <nonterminal_reference (line 12 col 47) `0`>
+                                                      <nonterminal_reference (line 12 col 48) `0`>
                                                     ),
                                                     (_gen18:
                                                       <comma (line 12 col 49) `,`>,
                                                       (ast_parameter:
                                                         <identifier (line 12 col 51) `rhs`>,
                                                         <equals (line 12 col 54) `=`>,
-                                                        <nonterminal_reference (line 12 col 55) `2`>
+                                                        <nonterminal_reference (line 12 col 56) `2`>
                                                       ),
                                                       (_gen18: )
                                                     )
@@ -468,17 +468,17 @@
                                               )
                                             ),
                                             <expr_rule_hint (line 13 col 17) ``>,
-                                            <nonterminal (line 13 col 17) `e`>,
-                                            <equals (line 13 col 17) `=`>,
+                                            <nonterminal (line 13 col 18) `e`>,
+                                            <equals (line 13 col 20) `=`>,
                                             (expression_rule_production:
                                               <prefix_rule_hint (line 13 col 17) ``>,
                                               (_gen12:
                                                 (morpheme:
-                                                  <terminal (line 13 col 17) `sub`>
+                                                  <terminal (line 13 col 23) `sub`>
                                                 ),
                                                 (_gen12:
                                                   (morpheme:
-                                                    <nonterminal (line 13 col 17) `e`>
+                                                    <nonterminal (line 13 col 18) `e`>
                                                   ),
                                                   (_gen12: )
                                                 )
@@ -493,7 +493,7 @@
                                                       (ast_parameter:
                                                         <identifier (line 13 col 41) `arg`>,
                                                         <equals (line 13 col 44) `=`>,
-                                                        <nonterminal_reference (line 13 col 45) `1`>
+                                                        <nonterminal_reference (line 13 col 46) `1`>
                                                       ),
                                                       (_gen18: )
                                                     ),
@@ -507,14 +507,14 @@
                                             (expression_rule:
                                               (_gen15: ),
                                               <expr_rule_hint (line 14 col 7) ``>,
-                                              <nonterminal (line 14 col 7) `e`>,
-                                              <equals (line 14 col 7) `=`>,
+                                              <nonterminal (line 14 col 8) `e`>,
+                                              <equals (line 14 col 10) `=`>,
                                               (expression_rule_production:
                                                 <mixfix_rule_hint (line 14 col 7) ``>,
                                                 (nud:
                                                   (_gen12:
                                                     (morpheme:
-                                                      <terminal (line 14 col 12) `a`>
+                                                      <terminal (line 14 col 13) `a`>
                                                     ),
                                                     (_gen12: )
                                                   )
@@ -528,14 +528,14 @@
                                               (expression_rule:
                                                 (_gen15: ),
                                                 <expr_rule_hint (line 15 col 7) ``>,
-                                                <nonterminal (line 15 col 7) `e`>,
-                                                <equals (line 15 col 7) `=`>,
+                                                <nonterminal (line 15 col 8) `e`>,
+                                                <equals (line 15 col 10) `=`>,
                                                 (expression_rule_production:
                                                   <mixfix_rule_hint (line 15 col 7) ``>,
                                                   (nud:
                                                     (_gen12:
                                                       (morpheme:
-                                                        <terminal (line 15 col 12) `b`>
+                                                        <terminal (line 15 col 13) `b`>
                                                       ),
                                                       (_gen12: )
                                                     )

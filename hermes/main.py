@@ -150,8 +150,11 @@ def cli():
         )
 
     elif cli.action == 'lex':
-        with open(cli.grammar) as fp:
-            user_parser = hermes.compile(fp)
+        if cli.grammar == '-':
+            user_parser = hermes.hermes_parser
+        else:
+            with open(cli.grammar) as fp:
+                user_parser = hermes.compile(fp)
 
         with open(cli.input) as fp:
             for token in user_parser.lex(fp.read(), '<string>', debug=cli.debug):
@@ -161,8 +164,11 @@ def cli():
         lexer = get_lexer_by_name("htree") if cli.tree else get_lexer_by_name("hast")
         formatter = TerminalFormatter()
 
-        with open(cli.grammar) as fp:
-            parser = hermes.compile(fp)
+        if cli.grammar == '-':
+            parser = hermes.hermes_parser
+        else:
+            with open(cli.grammar) as fp:
+                parser = hermes.compile(fp)
 
         with open(cli.input) as fp:
             tree = parser.parse(fp.read())

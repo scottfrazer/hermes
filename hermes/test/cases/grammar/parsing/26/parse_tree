@@ -23,12 +23,12 @@
                             <lparen (line 3 col 20) `(`>,
                             (_gen19:
                               (macro_parameter:
-                                <terminal (line 3 col 21) `item`>
+                                <terminal (line 3 col 22) `item`>
                               ),
                               (_gen20:
                                 <comma (line 3 col 26) `,`>,
                                 (macro_parameter:
-                                  <terminal (line 3 col 28) `comma`>
+                                  <terminal (line 3 col 29) `comma`>
                                 ),
                                 (_gen20:
                                   <comma (line 3 col 34) `,`>,
@@ -44,7 +44,7 @@
                         ),
                         (_gen12:
                           (morpheme:
-                            <terminal (line 3 col 39) `next`>
+                            <terminal (line 3 col 40) `next`>
                           ),
                           (_gen12: )
                         )
@@ -59,14 +59,14 @@
                               (ast_parameter:
                                 <identifier (line 3 col 54) `x`>,
                                 <equals (line 3 col 55) `=`>,
-                                <nonterminal_reference (line 3 col 56) `0`>
+                                <nonterminal_reference (line 3 col 57) `0`>
                               ),
                               (_gen18:
                                 <comma (line 3 col 58) `,`>,
                                 (ast_parameter:
                                   <identifier (line 3 col 60) `y`>,
                                   <equals (line 3 col 61) `=`>,
-                                  <nonterminal_reference (line 3 col 62) `1`>
+                                  <nonterminal_reference (line 3 col 63) `1`>
                                 ),
                                 (_gen18: )
                               )

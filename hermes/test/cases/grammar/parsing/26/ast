@@ -10,23 +10,23 @@
                 (Macro:
                   name=<identifier (line 3 col 14) `otlist`>,
                   parameters=[
-                    <terminal (line 3 col 21) `item`>,
-                    <terminal (line 3 col 28) `comma`>,
+                    <terminal (line 3 col 22) `item`>,
+                    <terminal (line 3 col 29) `comma`>,
                     <integer (line 3 col 36) `1`>
                   ]
                 ),
-                <terminal (line 3 col 39) `next`>
+                <terminal (line 3 col 40) `next`>
               ],
               ast=(AstTransformation:
                 name=<identifier (line 3 col 48) `Thing`>,
                 parameters=[
                   (AstParameter:
                     name=<identifier (line 3 col 54) `x`>,
-                    index=<nonterminal_reference (line 3 col 56) `0`>
+                    index=<nonterminal_reference (line 3 col 57) `0`>
                   ),
                   (AstParameter:
                     name=<identifier (line 3 col 60) `y`>,
-                    index=<nonterminal_reference (line 3 col 62) `1`>
+                    index=<nonterminal_reference (line 3 col 63) `1`>
                   )
                 ]
               )

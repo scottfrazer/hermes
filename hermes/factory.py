@@ -116,14 +116,15 @@ class GrammarFactory:
                     terminal, group, None
                 ))
             elif regex_output.name == 'LexerFunctionCall':
-                (terminal, group) = self.parse_terminal(regex_output.getAttr('terminal'), terminals, nonterminals)
+                terminal_ast = regex_output.getAttr('terminal')
+                (terminal, group) = self.parse_terminal(terminal_ast, terminals, nonterminals) if terminal_ast else (None, None)
                 regex_outputs.append(RegexOutput(
                     terminal, group, regex_output.getAttr('name').source_string
                 ))
                 function = regex_output.getAttr('name').source_string
             elif regex_output.name == 'Null':
                 if len(regex_outputs) != 0:
-                    raise Exception('parse_reges(): "null" must be the only target of a regex')
+                    raise Exception('parse_regex(): "null" must be the only target of a regex')
 
         options = []
         if regex_ast.getAttr('options') is not None:

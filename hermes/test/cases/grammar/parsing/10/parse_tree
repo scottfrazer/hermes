@@ -23,7 +23,7 @@
                             <lparen (line 3 col 18) `(`>,
                             (_gen19:
                               (macro_parameter:
-                                <nonterminal (line 3 col 19) `statement`>
+                                <nonterminal (line 3 col 20) `statement`>
                               ),
                               (_gen20: )
                             ),
@@ -48,7 +48,7 @@
                       (rule:
                         (_gen12:
                           (morpheme:
-                            <nonterminal (line 4 col 18) `funcdef`>
+                            <nonterminal (line 4 col 19) `funcdef`>
                           ),
                           (_gen12: )
                         ),
@@ -68,7 +68,7 @@
                         (rule:
                           (_gen12:
                             (morpheme:
-                              <nonterminal (line 5 col 18) `classdef`>
+                              <nonterminal (line 5 col 19) `classdef`>
                             ),
                             (_gen12: )
                           ),
@@ -88,7 +88,7 @@
                           (rule:
                             (_gen12:
                               (morpheme:
-                                <terminal (line 6 col 18) `a`>
+                                <terminal (line 6 col 19) `a`>
                               ),
                               (_gen12: )
                             ),
@@ -108,7 +108,7 @@
                             (rule:
                               (_gen12:
                                 (morpheme:
-                                  <terminal (line 7 col 18) `b`>
+                                  <terminal (line 7 col 19) `b`>
                                 ),
                                 (_gen12: )
                               ),
@@ -128,15 +128,15 @@
                               (rule:
                                 (_gen12:
                                   (morpheme:
-                                    <terminal (line 8 col 16) `function`>
+                                    <terminal (line 8 col 17) `function`>
                                   ),
                                   (_gen12:
                                     (morpheme:
-                                      <terminal (line 8 col 26) `identifier`>
+                                      <terminal (line 8 col 27) `identifier`>
                                     ),
                                     (_gen12:
                                       (morpheme:
-                                        <terminal (line 8 col 38) `lparen`>
+                                        <terminal (line 8 col 39) `lparen`>
                                       ),
                                       (_gen12:
                                         (morpheme:
@@ -145,12 +145,12 @@
                                             <lparen (line 8 col 50) `(`>,
                                             (_gen19:
                                               (macro_parameter:
-                                                <nonterminal (line 8 col 51) `param`>
+                                                <nonterminal (line 8 col 52) `param`>
                                               ),
                                               (_gen20:
                                                 <comma (line 8 col 57) `,`>,
                                                 (macro_parameter:
-                                                  <terminal (line 8 col 59) `comma`>
+                                                  <terminal (line 8 col 60) `comma`>
                                                 ),
                                                 (_gen20: )
                                               )
@@ -160,11 +160,11 @@
                                         ),
                                         (_gen12:
                                           (morpheme:
-                                            <terminal (line 8 col 67) `rparen`>
+                                            <terminal (line 8 col 68) `rparen`>
                                           ),
                                           (_gen12:
                                             (morpheme:
-                                              <terminal (line 8 col 75) `lbrace`>
+                                              <terminal (line 8 col 76) `lbrace`>
                                             ),
                                             (_gen12:
                                               (morpheme:
@@ -173,7 +173,7 @@
                                                   <lparen (line 8 col 87) `(`>,
                                                   (_gen19:
                                                     (macro_parameter:
-                                                      <nonterminal (line 8 col 88) `statement`>
+                                                      <nonterminal (line 8 col 89) `statement`>
                                                     ),
                                                     (_gen20: )
                                                   ),
@@ -182,7 +182,7 @@
                                               ),
                                               (_gen12:
                                                 (morpheme:
-                                                  <terminal (line 8 col 100) `rbrace`>
+                                                  <terminal (line 8 col 101) `rbrace`>
                                                 ),
                                                 (_gen12: )
                                               )
@@ -209,7 +209,7 @@
                                 (rule:
                                   (_gen12:
                                     (morpheme:
-                                      <terminal (line 9 col 14) `param1`>
+                                      <terminal (line 9 col 15) `param1`>
                                     ),
                                     (_gen12: )
                                   ),
@@ -229,7 +229,7 @@
                                   (rule:
                                     (_gen12:
                                       (morpheme:
-                                        <terminal (line 10 col 14) `param2`>
+                                        <terminal (line 10 col 15) `param2`>
                                       ),
                                       (_gen12: )
                                     ),
@@ -249,15 +249,15 @@
                                     (rule:
                                       (_gen12:
                                         (morpheme:
-                                          <terminal (line 11 col 17) `class`>
+                                          <terminal (line 11 col 18) `class`>
                                         ),
                                         (_gen12:
                                           (morpheme:
-                                            <terminal (line 11 col 24) `identifier`>
+                                            <terminal (line 11 col 25) `identifier`>
                                           ),
                                           (_gen12:
                                             (morpheme:
-                                              <terminal (line 11 col 36) `lbrace`>
+                                              <terminal (line 11 col 37) `lbrace`>
                                             ),
                                             (_gen12:
                                               (morpheme:
@@ -266,7 +266,7 @@
                                                   <lparen (line 11 col 48) `(`>,
                                                   (_gen19:
                                                     (macro_parameter:
-                                                      <nonterminal (line 11 col 49) `class_statement`>
+                                                      <nonterminal (line 11 col 50) `class_statement`>
                                                     ),
                                                     (_gen20: )
                                                   ),
@@ -275,7 +275,7 @@
                                               ),
                                               (_gen12:
                                                 (morpheme:
-                                                  <terminal (line 11 col 67) `rbrace`>
+                                                  <terminal (line 11 col 68) `rbrace`>
                                                 ),
                                                 (_gen12: )
                                               )
@@ -299,11 +299,11 @@
                                       (rule:
                                         (_gen12:
                                           (morpheme:
-                                            <terminal (line 12 col 24) `private`>
+                                            <terminal (line 12 col 25) `private`>
                                           ),
                                           (_gen12:
                                             (morpheme:
-                                              <nonterminal (line 12 col 33) `class_atom`>
+                                              <nonterminal (line 12 col 34) `class_atom`>
                                             ),
                                             (_gen12: )
                                           )
@@ -324,11 +324,11 @@
                                         (rule:
                                           (_gen12:
                                             (morpheme:
-                                              <terminal (line 13 col 24) `public`>
+                                              <terminal (line 13 col 25) `public`>
                                             ),
                                             (_gen12:
                                               (morpheme:
-                                                <nonterminal (line 13 col 32) `class_atom`>
+                                                <nonterminal (line 13 col 33) `class_atom`>
                                               ),
                                               (_gen12: )
                                             )
@@ -349,7 +349,7 @@
                                           (rule:
                                             (_gen12:
                                               (morpheme:
-                                                <nonterminal (line 14 col 19) `funcdef`>
+                                                <nonterminal (line 14 col 20) `funcdef`>
                                               ),
                                               (_gen12: )
                                             ),
@@ -369,7 +369,7 @@
                                             (rule:
                                               (_gen12:
                                                 (morpheme:
-                                                  <terminal (line 15 col 19) `x`>
+                                                  <terminal (line 15 col 20) `x`>
                                                 ),
                                                 (_gen12: )
                                               ),
@@ -389,7 +389,7 @@
                                               (rule:
                                                 (_gen12:
                                                   (morpheme:
-                                                    <terminal (line 16 col 19) `y`>
+                                                    <terminal (line 16 col 20) `y`>
                                                   ),
                                                   (_gen12: )
                                                 ),

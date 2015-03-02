@@ -666,6 +666,8 @@ class HermesLexer:
                 for (terminal, group, function) in outputs:
                     function = function if function else default_action
                     source_string = match.group(group) if group is not None else ''
+                    if terminal is None and group is None and function != default_action:
+                        source_string = match.group(0)
                     (group_line, group_col) = self._advance_line_col(string, match.start(group) if group else 0, line, col)
                     (tokens, return_mode, context) = function(
                         context,

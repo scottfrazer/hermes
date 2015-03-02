@@ -10,7 +10,7 @@
                 (Macro:
                   name=<identifier (line 3 col 14) `list`>,
                   parameters=[
-                    <nonterminal (line 3 col 19) `statement`>
+                    <nonterminal (line 3 col 20) `statement`>
                   ]
                 )
               ],
@@ -23,7 +23,7 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 4 col 18) `funcdef`>
+                <nonterminal (line 4 col 19) `funcdef`>
               ],
               ast=None
             )
@@ -34,7 +34,7 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 5 col 18) `classdef`>
+                <nonterminal (line 5 col 19) `classdef`>
               ],
               ast=None
             )
@@ -45,7 +45,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 6 col 18) `a`>
+                <terminal (line 6 col 19) `a`>
               ],
               ast=None
             )
@@ -56,7 +56,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 7 col 18) `b`>
+                <terminal (line 7 col 19) `b`>
               ],
               ast=None
             )
@@ -67,25 +67,25 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 8 col 16) `function`>,
-                <terminal (line 8 col 26) `identifier`>,
-                <terminal (line 8 col 38) `lparen`>,
+                <terminal (line 8 col 17) `function`>,
+                <terminal (line 8 col 27) `identifier`>,
+                <terminal (line 8 col 39) `lparen`>,
                 (Macro:
                   name=<identifier (line 8 col 46) `list`>,
                   parameters=[
-                    <nonterminal (line 8 col 51) `param`>,
-                    <terminal (line 8 col 59) `comma`>
+                    <nonterminal (line 8 col 52) `param`>,
+                    <terminal (line 8 col 60) `comma`>
                   ]
                 ),
-                <terminal (line 8 col 67) `rparen`>,
-                <terminal (line 8 col 75) `lbrace`>,
+                <terminal (line 8 col 68) `rparen`>,
+                <terminal (line 8 col 76) `lbrace`>,
                 (Macro:
                   name=<identifier (line 8 col 83) `list`>,
                   parameters=[
-                    <nonterminal (line 8 col 88) `statement`>
+                    <nonterminal (line 8 col 89) `statement`>
                   ]
                 ),
-                <terminal (line 8 col 100) `rbrace`>
+                <terminal (line 8 col 101) `rbrace`>
               ],
               ast=None
             )
@@ -96,7 +96,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 9 col 14) `param1`>
+                <terminal (line 9 col 15) `param1`>
               ],
               ast=None
             )
@@ -107,7 +107,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 10 col 14) `param2`>
+                <terminal (line 10 col 15) `param2`>
               ],
               ast=None
             )
@@ -118,16 +118,16 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 11 col 17) `class`>,
-                <terminal (line 11 col 24) `identifier`>,
-                <terminal (line 11 col 36) `lbrace`>,
+                <terminal (line 11 col 18) `class`>,
+                <terminal (line 11 col 25) `identifier`>,
+                <terminal (line 11 col 37) `lbrace`>,
                 (Macro:
                   name=<identifier (line 11 col 44) `list`>,
                   parameters=[
-                    <nonterminal (line 11 col 49) `class_statement`>
+                    <nonterminal (line 11 col 50) `class_statement`>
                   ]
                 ),
-                <terminal (line 11 col 67) `rbrace`>
+                <terminal (line 11 col 68) `rbrace`>
               ],
               ast=None
             )
@@ -138,8 +138,8 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 12 col 24) `private`>,
-                <nonterminal (line 12 col 33) `class_atom`>
+                <terminal (line 12 col 25) `private`>,
+                <nonterminal (line 12 col 34) `class_atom`>
               ],
               ast=None
             )
@@ -150,8 +150,8 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 13 col 24) `public`>,
-                <nonterminal (line 13 col 32) `class_atom`>
+                <terminal (line 13 col 25) `public`>,
+                <nonterminal (line 13 col 33) `class_atom`>
               ],
               ast=None
             )
@@ -162,7 +162,7 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 14 col 19) `funcdef`>
+                <nonterminal (line 14 col 20) `funcdef`>
               ],
               ast=None
             )
@@ -173,7 +173,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 15 col 19) `x`>
+                <terminal (line 15 col 20) `x`>
               ],
               ast=None
             )
@@ -184,7 +184,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 16 col 19) `y`>
+                <terminal (line 16 col 20) `y`>
               ],
               ast=None
             )

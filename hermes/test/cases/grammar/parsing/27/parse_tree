@@ -23,12 +23,12 @@
                             <lparen (line 3 col 19) `(`>,
                             (_gen19:
                               (macro_parameter:
-                                <nonterminal (line 3 col 20) `item`>
+                                <nonterminal (line 3 col 21) `item`>
                               ),
                               (_gen20:
                                 <comma (line 3 col 25) `,`>,
                                 (macro_parameter:
-                                  <terminal (line 3 col 27) `newline`>
+                                  <terminal (line 3 col 28) `newline`>
                                 ),
                                 (_gen20: )
                               )
@@ -59,7 +59,7 @@
                               <lparen (line 4 col 17) `(`>,
                               (_gen19:
                                 (macro_parameter:
-                                  <terminal (line 4 col 18) `a`>
+                                  <terminal (line 4 col 19) `a`>
                                 ),
                                 (_gen20: )
                               ),
@@ -80,7 +80,7 @@
                                 <lparen (line 4 col 28) `(`>,
                                 (_gen19:
                                   (macro_parameter:
-                                    <terminal (line 4 col 29) `b`>
+                                    <terminal (line 4 col 30) `b`>
                                   ),
                                   (_gen20: )
                                 ),

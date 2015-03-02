@@ -10,8 +10,8 @@
                 (Macro:
                   name=<identifier (line 3 col 14) `list`>,
                   parameters=[
-                    <nonterminal (line 3 col 19) `statements`>,
-                    <terminal (line 3 col 32) `comma`>
+                    <nonterminal (line 3 col 20) `statements`>,
+                    <terminal (line 3 col 33) `comma`>
                   ]
                 )
               ],
@@ -20,7 +20,7 @@
                 parameters=[
                   (AstParameter:
                     name=<identifier (line 3 col 52) `statements`>,
-                    index=<nonterminal_reference (line 3 col 63) `0`>
+                    index=<nonterminal_reference (line 3 col 64) `0`>
                   )
                 ]
               )
@@ -32,7 +32,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 4 col 14) `_empty`>
+                <terminal (line 4 col 15) `_empty`>
               ],
               ast=None
             )
@@ -43,7 +43,7 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 5 col 19) `e`>
+                <nonterminal (line 5 col 20) `e`>
               ],
               ast=None
             )
@@ -54,7 +54,7 @@
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 6 col 19) `assignstatement`>
+                <nonterminal (line 6 col 20) `assignstatement`>
               ],
               ast=None
             )
@@ -65,20 +65,20 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 7 col 24) `identifier`>,
-                <terminal (line 7 col 36) `eq`>,
-                <nonterminal (line 7 col 40) `e`>
+                <terminal (line 7 col 25) `identifier`>,
+                <terminal (line 7 col 37) `eq`>,
+                <nonterminal (line 7 col 41) `e`>
               ],
               ast=(AstTransformation:
                 name=<identifier (line 7 col 46) `Assign`>,
                 parameters=[
                   (AstParameter:
                     name=<identifier (line 7 col 54) `var`>,
-                    index=<nonterminal_reference (line 7 col 58) `0`>
+                    index=<nonterminal_reference (line 7 col 59) `0`>
                   ),
                   (AstParameter:
                     name=<identifier (line 7 col 62) `val`>,
-                    index=<nonterminal_reference (line 7 col 66) `2`>
+                    index=<nonterminal_reference (line 7 col 67) `2`>
                   )
                 ]
               )
@@ -94,23 +94,23 @@
                   marker=<asterisk (line 9 col 7) `*`>,
                   associativity=<left (line 9 col 7) `left`>
                 ),
-                nonterminal=<nonterminal (line 9 col 16) `e`>,
+                nonterminal=<nonterminal (line 9 col 17) `e`>,
                 production=(InfixProduction:
                   morphemes=[
-                    <nonterminal (line 9 col 16) `e`>,
-                    <terminal (line 9 col 16) `add`>,
-                    <nonterminal (line 9 col 16) `e`>
+                    <nonterminal (line 9 col 17) `e`>,
+                    <terminal (line 9 col 25) `add`>,
+                    <nonterminal (line 9 col 17) `e`>
                   ],
                   ast=(AstTransformation:
                     name=<identifier (line 9 col 35) `Add`>,
                     parameters=[
                       (AstParameter:
                         name=<identifier (line 9 col 40) `lhs`>,
-                        index=<nonterminal_reference (line 9 col 44) `0`>
+                        index=<nonterminal_reference (line 9 col 45) `0`>
                       ),
                       (AstParameter:
                         name=<identifier (line 9 col 48) `rhs`>,
-                        index=<nonterminal_reference (line 9 col 52) `2`>
+                        index=<nonterminal_reference (line 9 col 53) `2`>
                       )
                     ]
                   )
@@ -121,23 +121,23 @@
                   marker=<dash (line 10 col 7) `-`>,
                   associativity=<left (line 10 col 7) `left`>
                 ),
-                nonterminal=<nonterminal (line 10 col 16) `e`>,
+                nonterminal=<nonterminal (line 10 col 17) `e`>,
                 production=(InfixProduction:
                   morphemes=[
-                    <nonterminal (line 10 col 16) `e`>,
-                    <terminal (line 10 col 16) `sub`>,
-                    <nonterminal (line 10 col 16) `e`>
+                    <nonterminal (line 10 col 17) `e`>,
+                    <terminal (line 10 col 25) `sub`>,
+                    <nonterminal (line 10 col 17) `e`>
                   ],
                   ast=(AstTransformation:
                     name=<identifier (line 10 col 35) `Subtract`>,
                     parameters=[
                       (AstParameter:
                         name=<identifier (line 10 col 45) `lhs`>,
-                        index=<nonterminal_reference (line 10 col 49) `0`>
+                        index=<nonterminal_reference (line 10 col 50) `0`>
                       ),
                       (AstParameter:
                         name=<identifier (line 10 col 53) `rhs`>,
-                        index=<nonterminal_reference (line 10 col 57) `2`>
+                        index=<nonterminal_reference (line 10 col 58) `2`>
                       )
                     ]
                   )
@@ -148,23 +148,23 @@
                   marker=<asterisk (line 11 col 7) `*`>,
                   associativity=<left (line 11 col 7) `left`>
                 ),
-                nonterminal=<nonterminal (line 11 col 16) `e`>,
+                nonterminal=<nonterminal (line 11 col 17) `e`>,
                 production=(InfixProduction:
                   morphemes=[
-                    <nonterminal (line 11 col 16) `e`>,
-                    <terminal (line 11 col 16) `mul`>,
-                    <nonterminal (line 11 col 16) `e`>
+                    <nonterminal (line 11 col 17) `e`>,
+                    <terminal (line 11 col 25) `mul`>,
+                    <nonterminal (line 11 col 17) `e`>
                   ],
                   ast=(AstTransformation:
                     name=<identifier (line 11 col 35) `Multiply`>,
                     parameters=[
                       (AstParameter:
                         name=<identifier (line 11 col 45) `lhs`>,
-                        index=<nonterminal_reference (line 11 col 49) `0`>
+                        index=<nonterminal_reference (line 11 col 50) `0`>
                       ),
                       (AstParameter:
                         name=<identifier (line 11 col 53) `rhs`>,
-                        index=<nonterminal_reference (line 11 col 57) `2`>
+                        index=<nonterminal_reference (line 11 col 58) `2`>
                       )
                     ]
                   )
@@ -175,23 +175,23 @@
                   marker=<dash (line 12 col 7) `-`>,
                   associativity=<left (line 12 col 7) `left`>
                 ),
-                nonterminal=<nonterminal (line 12 col 16) `e`>,
+                nonterminal=<nonterminal (line 12 col 17) `e`>,
                 production=(InfixProduction:
                   morphemes=[
-                    <nonterminal (line 12 col 16) `e`>,
-                    <terminal (line 12 col 16) `div`>,
-                    <nonterminal (line 12 col 16) `e`>
+                    <nonterminal (line 12 col 17) `e`>,
+                    <terminal (line 12 col 25) `div`>,
+                    <nonterminal (line 12 col 17) `e`>
                   ],
                   ast=(AstTransformation:
                     name=<identifier (line 12 col 35) `Divide`>,
                     parameters=[
                       (AstParameter:
                         name=<identifier (line 12 col 43) `lhs`>,
-                        index=<nonterminal_reference (line 12 col 47) `0`>
+                        index=<nonterminal_reference (line 12 col 48) `0`>
                       ),
                       (AstParameter:
                         name=<identifier (line 12 col 51) `rhs`>,
-                        index=<nonterminal_reference (line 12 col 55) `2`>
+                        index=<nonterminal_reference (line 12 col 56) `2`>
                       )
                     ]
                   )
@@ -202,18 +202,18 @@
                   marker=<asterisk (line 13 col 7) `*`>,
                   associativity=<unary (line 13 col 7) `unary`>
                 ),
-                nonterminal=<nonterminal (line 13 col 17) `e`>,
+                nonterminal=<nonterminal (line 13 col 18) `e`>,
                 production=(PrefixProduction:
                   morphemes=[
-                    <terminal (line 13 col 17) `sub`>,
-                    <nonterminal (line 13 col 17) `e`>
+                    <terminal (line 13 col 23) `sub`>,
+                    <nonterminal (line 13 col 18) `e`>
                   ],
                   ast=(AstTransformation:
                     name=<identifier (line 13 col 33) `Uminus`>,
                     parameters=[
                       (AstParameter:
                         name=<identifier (line 13 col 41) `arg`>,
-                        index=<nonterminal_reference (line 13 col 45) `1`>
+                        index=<nonterminal_reference (line 13 col 46) `1`>
                       )
                     ]
                   )
@@ -221,10 +221,10 @@
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<nonterminal (line 14 col 7) `e`>,
+                nonterminal=<nonterminal (line 14 col 8) `e`>,
                 production=(MixfixProduction:
                   nud=[
-                    <terminal (line 14 col 12) `a`>
+                    <terminal (line 14 col 13) `a`>
                   ],
                   nud_ast=None,
                   led=None,
@@ -233,10 +233,10 @@
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<nonterminal (line 15 col 7) `e`>,
+                nonterminal=<nonterminal (line 15 col 8) `e`>,
                 production=(MixfixProduction:
                   nud=[
-                    <terminal (line 15 col 12) `b`>
+                    <terminal (line 15 col 13) `b`>
                   ],
                   nud_ast=None,
                   led=None,

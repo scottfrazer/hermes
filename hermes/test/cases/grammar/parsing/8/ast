@@ -7,14 +7,14 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 3 col 14) `lparen`>,
+                <terminal (line 3 col 15) `lparen`>,
                 (Macro:
                   name=<identifier (line 3 col 22) `list`>,
                   parameters=[
-                    <nonterminal (line 3 col 27) `item`>
+                    <nonterminal (line 3 col 28) `item`>
                   ]
                 ),
-                <terminal (line 3 col 34) `rparen`>
+                <terminal (line 3 col 35) `rparen`>
               ],
               ast=None
             )
@@ -25,7 +25,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 4 col 13) `a`>
+                <terminal (line 4 col 14) `a`>
               ],
               ast=None
             )
@@ -36,7 +36,7 @@
           production=[
             (Production:
               morphemes=[
-                <terminal (line 5 col 13) `b`>
+                <terminal (line 5 col 14) `b`>
               ],
               ast=None
             )
