@@ -80,39 +80,6 @@ public class {{prefix}}Parser {
         return sb.toString();
     }
 
-    public static String base64_encode(byte[] bytes) {
-        int b64_len = ((bytes.length + ( (bytes.length % 3 != 0) ? (3 - (bytes.length % 3)) : 0) ) / 3) * 4;
-        int cycle = 0, b64_index = 0;
-        byte[] alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".getBytes();
-        byte[] b64 = new byte[b64_len];
-        byte[] buffer = new byte[3];
-        Arrays.fill(buffer, (byte) -1);
-
-        for (byte b : bytes) {
-            int index = cycle % 3;
-            buffer[index] = b;
-            boolean last = (cycle == (bytes.length - 1));
-            if ( index == 2 || last ) {
-                if ( last ) {
-                    if ( buffer[1] == -1 ) buffer[1] = 0;
-                    if ( buffer[2] == -1 ) buffer[2] = 0;
-                }
-
-                b64[b64_index++] = alphabet[buffer[0] >> 2];
-                b64[b64_index++] = alphabet[((buffer[0] & 0x3) << 4) | ((buffer[1] >> 4) & 0xf)];
-                b64[b64_index++] = alphabet[((buffer[1] & 0xf) << 2) | ((buffer[2] >> 6) & 0x3)];
-                b64[b64_index++] = alphabet[buffer[2] & 0x3f];
-
-                if ( buffer[1] == 0 ) b64[b64_index - 2] = (byte) '=';
-                if ( buffer[2] == 0 ) b64[b64_index - 1] = (byte) '=';
-
-                Arrays.fill(buffer, (byte) -1);
-            }
-            cycle++;
-        }
-        return new String(b64);
-    }
-
     public static String readStdin() throws IOException {
         InputStreamReader stream = new InputStreamReader(System.in, "utf-8");
         char buffer[] = new char[System.in.available()];
@@ -393,9 +360,21 @@ public class {{prefix}}Parser {
         }
 
         public String toString() {
+            byte[] source_string_bytes;
+            try {
+                source_string_bytes = this.getSourceString().getBytes("UTF-8");
+            } catch (java.io.UnsupportedEncodingException e) {
+                source_string_bytes = this.getSourceString().getBytes();
+            }
             StringBuilder sb = new StringBuilder();
             Formatter formatter = new Formatter(sb, Locale.US);
-            formatter.format("{\"terminal\": \"%s\", \"resource\": \"%s\", \"line\": %d, \"col\": %d, \"source_string\": \"%s\"}", this.getTerminalStr(), this.getResource(), this.getLine(), this.getColumn(), base64_encode(this.getSourceString().getBytes()));
+            formatter.format("{\"terminal\": \"%s\", \"resource\": \"%s\", \"line\": %d, \"col\": %d, \"source_string\": \"%s\"}",
+                this.getTerminalStr(),
+                this.getResource(),
+                this.getLine(),
+                this.getColumn(),
+                Base64.getEncoder().encodeToString(source_string_bytes)
+            );
             return formatter.toString();
         }
 
@@ -1067,19 +1046,33 @@ public class {{prefix}}Parser {
     /* Section: Lexer */
     private Map<String, List<HermesRegex>> regex = null;
 
-    private class HermesRegex {
-        public Pattern pattern;
+    private class RegexOutput {
         public {{prefix}}TerminalIdentifier terminal;
+        public int group;
         public String function;
 
-        HermesRegex(Pattern pattern, {{prefix}}TerminalIdentifier terminal, String function) {
-            this.pattern = pattern;
+        RegexOutput({{prefix}}TerminalIdentifier terminal, int group, String function) {
             this.terminal = terminal;
+            this.group = group;
             this.function = function;
         }
 
         public String toString() {
-            return String.format("<HermesRegex pattern=%s, terminal=%s, func=%s>", this.pattern, this.terminal, this.function);
+            return String.format("<RegexOutput terminal=%s, group=%d, func=%s>", this.terminal, this.group, this.function);
+        }
+    }
+
+    private class HermesRegex {
+        public Pattern pattern;
+        public List<RegexOutput> outputs;
+
+        HermesRegex(Pattern pattern, List<RegexOutput> outputs) {
+            this.pattern = pattern;
+            this.outputs = outputs;
+        }
+
+        public String toString() {
+            return String.format("<HermesRegex pattern=%s, outputs=%s>", this.pattern, this.outputs);
         }
     }
 
@@ -1107,6 +1100,17 @@ public class {{prefix}}Parser {
         }
     }
 
+    private class LineColumn {
+        public int line, col;
+        public LineColumn(int line, int col) {
+            this.line = line;
+            this.col = col;
+        }
+        public String toString() {
+            return String.format("<LineColumn: line=%d column=%d>", this.line, this.col);
+        }
+    }
+
     private class LexerContext {
         public String string;
         public int line;
@@ -1124,15 +1128,23 @@ public class {{prefix}}Parser {
         }
 
         public void advance(String match) {
-            for (int i = 0; i < match.length(); i++) {
+            LineColumn lc = advance_line_col(match, match.length());
+            this.line = lc.line;
+            this.col = lc.col;
+            this.string = this.string.substring(match.length());
+        }
+
+        public LineColumn advance_line_col(String match, int length) {
+            LineColumn lc = new LineColumn(this.line, this.col);
+            for (int i = 0; i < length && i < match.length(); i++) {
                 if (match.charAt(i) == '\n') {
-                    this.line += 1;
-                    this.col = 1;
+                    lc.line += 1;
+                    lc.col = 1;
                 } else {
-                    this.col += 1;
+                    lc.col += 1;
                 }
             }
-            this.string = this.string.substring(match.length());
+            return lc;
         }
     }
 
@@ -1167,7 +1179,18 @@ public class {{prefix}}Parser {
 {% for mode, regex_list in lexer.items() %}
         this.regex.put("{{mode}}", Arrays.asList(new HermesRegex[] {
   {% for regex in regex_list %}
-            new HermesRegex(Pattern.compile({{regex.regex}}), {{prefix+'TerminalIdentifier.TERMINAL_' + regex.terminal.string.upper() if regex.terminal else 'null'}}, {{'"'+regex.function+'"' if regex.function is not None else 'null'}}),
+            new HermesRegex(
+                Pattern.compile({{regex.regex}}),
+                Arrays.asList(new RegexOutput[] {
+    {% for output in regex.outputs %}
+                    new RegexOutput(
+                        {{prefix+'TerminalIdentifier.TERMINAL_' + output.terminal.string.upper() if output.terminal else 'null'}},
+                        {{output.group if output.group is not None else -1}},
+                        {{'"'+output.function+'"' if output.function is not None else 'null'}}
+                    ),
+    {% endfor %}
+                })
+            ),
   {% endfor %}
         }));
 {% endfor %}
@@ -1187,43 +1210,57 @@ public class {{prefix}}Parser {
         throw new SyntaxError(message);
     }
 
-    private LexerMatch next(LexerContext lctx, String resource) {
+    private int next(LexerContext lctx, String resource) {
         for (int i = 0; i < this.regex.get(lctx.mode).size(); i++) {
             HermesRegex regex = this.regex.get(lctx.mode).get(i);
             Matcher matcher = regex.pattern.matcher(lctx.string);
             if (matcher.lookingAt()) {
-                if (false && regex.terminal == null) {
-                    lctx.advance(matcher.group(0));
-                    i = -1;
-                    continue;
-                }
-                String function = regex.function != null ? regex.function : "default_action";
-                try {
-                    Method method = getClass().getMethod(function, Object.class, String.class, String.class, {{prefix}}TerminalIdentifier.class, String.class, int.class, int.class);
-                    LexerMatch lexer_match = (LexerMatch) method.invoke(
-                        this,
-                        lctx.context,
-                        lctx.mode,
-                        matcher.group(0),
-                        regex.terminal,
-                        resource,
-                        lctx.line,
-                        lctx.col
-                    );
+                for (RegexOutput output : regex.outputs) {
+                    String function = output.function != null ? output.function : "default_action";
+                    try {
+                        Method method = getClass().getMethod(
+                            function,
+                            Object.class,
+                            String.class,
+                            String.class,
+                            {{prefix}}TerminalIdentifier.class,
+                            String.class,
+                            int.class,
+                            int.class
+                        );
 
-                    lexer_match.match = matcher.group(0);
-                    lctx.terminals.addAll(lexer_match.terminals);
-                    lctx.mode = lexer_match.mode;
-                    lctx.context = lexer_match.context;
-                    lctx.advance(matcher.group(0));
-                    return lexer_match;
-                } catch (Exception e) {
-                    e.printStackTrace(System.err);
-                    continue;
+                        int group_line = lctx.line;
+                        int group_col = lctx.col;
+                        if (output.group > 0) {
+                            LineColumn lc = lctx.advance_line_col(matcher.group(0), matcher.start(output.group));
+                            group_line = lc.line;
+                            group_col = lc.col;
+                        }
+
+                        LexerMatch lexer_match = (LexerMatch) method.invoke(
+                            this,
+                            lctx.context,
+                            lctx.mode,
+                            output.group >= 0 ? matcher.group(output.group) : "",
+                            output.terminal,
+                            resource,
+                            group_line,
+                            group_col
+                        );
+
+                        lctx.terminals.addAll(lexer_match.terminals);
+                        lctx.mode = lexer_match.mode;
+                        lctx.context = lexer_match.context;
+                    } catch (Exception e) {
+                        e.printStackTrace(System.err);
+                        continue;
+                    }
                 }
+                lctx.advance(matcher.group(0));
+                return matcher.group(0).length();
             }
         }
-        return null;
+        return 0;
     }
 
     public List<Terminal> lex(String string, String resource) throws SyntaxError {
@@ -1234,9 +1271,9 @@ public class {{prefix}}Parser {
             lexer_init();
         }
         while (lctx.string.length() > 0) {
-            LexerMatch match = this.next(lctx, resource);
+            int match_length = this.next(lctx, resource);
 
-            if (match == null || match.match.length() == 0) {
+            if (match_length == 0) {
                 this.unrecognized_token(string_copy, lctx.line, lctx.col);
             }
         }

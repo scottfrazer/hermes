@@ -203,6 +203,7 @@ typedef struct lexer_match_t {
 typedef LEXER_MATCH_T *(*lexer_match_function)(
     void * context,
     char * mode,
+    char * source_string,
     char ** match_groups,
     TERMINAL_T * terminal,
     char * resource,
@@ -210,13 +211,19 @@ typedef LEXER_MATCH_T *(*lexer_match_function)(
     int col
 );
 
+typedef struct lexer_regex_output_t {
+    TERMINAL_T * terminal;
+    int group;
+    lexer_match_function match_func;
+} LEXER_REGEX_OUTPUT_T;
+
 typedef struct lexer_regex_t {
     pcre * regex;
     const char * pcre_errptr;
     int pcre_erroffset;
     char * pattern;
-    TERMINAL_T * terminal;
-    lexer_match_function match_func;
+    LEXER_REGEX_OUTPUT_T * outputs;
+    int outputs_count;
 } LEXER_REGEX_T;
 
 typedef struct lexer_regex_t *** LEXER_T;

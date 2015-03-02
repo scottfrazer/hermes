@@ -2535,9 +2535,11 @@ char * {{prefix}}lexer_mode_string({{prefix.upper()}}LEXER_MODE_E mode) {
 static LEXER_REGEX_T *** lexer = NULL;
 
 {% if re.search(r'LEXER_MATCH_T\s*\*\s*default_action', lexer.code) is None %}
-static LEXER_MATCH_T * default_action(
+static LEXER_MATCH_T *
+default_action(
     void * context,
     char * mode,
+    char * source_string,
     char ** match_groups,
     TERMINAL_T * terminal,
     char * resource,
@@ -2545,13 +2547,12 @@ static LEXER_MATCH_T * default_action(
     int col)
 {
     LEXER_MATCH_T * match = calloc(1, sizeof(LEXER_MATCH_T));
-    match->match_length = strlen(match_groups[0]);
     if (terminal != NULL) {
         match->tokens = calloc(2, sizeof(TOKEN_T*));
         match->tokens[0] = calloc(1, sizeof(TOKEN_T));
         match->tokens[0]->lineno = line;
         match->tokens[0]->colno = col;
-        match->tokens[0]->source_string = strdup(match_groups[0]);
+        match->tokens[0]->source_string = strdup(source_string);
         match->tokens[0]->resource = strdup(resource);
         match->tokens[0]->terminal = calloc(1, sizeof(TERMINAL_T));
         memcpy(match->tokens[0]->terminal, terminal, sizeof(TERMINAL_T));
@@ -2584,6 +2585,7 @@ void
 {{prefix}}lexer_init()
 {
     LEXER_REGEX_T * r;
+    LEXER_REGEX_OUTPUT_T * o;
     if (lexer != NULL) {
         return;
     }
@@ -2594,14 +2596,24 @@ void
     r = calloc(1, sizeof(LEXER_REGEX_T));
     r->regex = pcre_compile({{regex.regex}}, 0, &r->pcre_errptr, &r->pcre_erroffset, NULL);
     r->pattern = {{regex.regex}};
-    {% if regex.terminal %}
-    r->terminal = calloc(1, sizeof(TERMINAL_T));
-    r->terminal->string = "{{regex.terminal.string.lower()}}";
-    r->terminal->id = {{regex.terminal.id}};
+    {% if len(regex.outputs) %}
+    r->outputs = calloc({{len(regex.outputs)}}, sizeof(LEXER_REGEX_OUTPUT_T));
     {% else %}
-    r->terminal = NULL;
+    r->outputs = NULL;
     {% endif %}
-    r->match_func = {{regex.function if regex.function else 'default_action'}};
+    r->outputs_count = {{len(regex.outputs)}};
+    {% for j, output in enumerate(regex.outputs) %}
+    o = &r->outputs[{{j}}];
+    o->group = {{output.group if output.group is not None else -1}};
+      {% if output.terminal %}
+    o->terminal = calloc(1, sizeof(TERMINAL_T));
+    o->terminal->string = "{{output.terminal.string.lower()}}";
+    o->terminal->id = {{output.terminal.id}};
+      {% else %}
+    o->terminal = NULL;
+      {% endif %}
+    o->match_func = {{output.function if output.function else 'default_action'}};
+    {% endfor %}
     lexer[{{prefix.upper()}}LEXER_{{mode.upper()}}_MODE_E][{{i}}] = r;
   {% endfor %}
 {% endfor %}
@@ -2642,11 +2654,14 @@ void
 
 void
 {{prefix}}lexer_destroy() {
-    int i, j;
+    int i, j, k;
     for (i = 0; lexer[i]; i++) {
         for (j = 0; lexer[i][j]; j++) {
             pcre_free(lexer[i][j]->regex);
-            free(lexer[i][j]->terminal);
+            for (k = 0; k < lexer[i][j]->outputs_count; k++) {
+                free(lexer[i][j]->outputs[k].terminal);
+            }
+            free(lexer[i][j]->outputs);
             free(lexer[i][j]);
         }
     }
@@ -2695,55 +2710,112 @@ unrecognized_token(char * string, int line, int col, char * message) {
 }
 
 static void
-advance_string(char ** string, int length, int * line, int * col) {
+advance_line_col(char * string, int length, int * line, int * col) {
     int i;
     for (i = 0; i < length; i++) {
-        if ((*string)[i] == '\n') {
+        if (string[i] == '\n') {
             *line += 1;
             *col = 1;
         } else {
-            *col += 1;
+            if ((string[i] & 0xc0) != 0x80) {
+                *col += 1;
+            }
         }
     }
+}
 
+static void
+advance_string(char ** string, int length, int * line, int * col) {
+    advance_line_col(*string, length, line, col);
     *string += length;
 }
 
 static LEXER_MATCH_T *
 next(char ** string, {{prefix.upper()}}LEXER_MODE_E mode, void * context, char * resource, int * line, int * col) {
-    int rc, i, j;
-    int ovector_count = 30, match_length;
+    int rc, i, j, k, token_count;
+    int group_line, group_col;
+    int ovector_count = 30, group_strlen, match_length;
     int ovector[ovector_count];
     char ** match_groups;
-    LEXER_MATCH_T * match;
+    LEXER_MATCH_T ** matches = NULL;
+    LEXER_MATCH_T * aggregate_match = NULL;
+    int match_index = 0;
+
+    {% py regexps = [regex for sublist in list(lexer.values()) for regex in sublist] %}
+    int max_matches = {{max([len(regex.outputs) for regex in regexps]) + 1}};
+
+
     for (i = 0; lexer[mode][i]; i++) {
         rc = pcre_exec(lexer[mode][i]->regex, NULL, *string, strlen(*string), 0, PCRE_ANCHORED, ovector, ovector_count);
         if (rc >= 0) {
-            if (lexer[mode][i]->terminal == NULL && lexer[mode][i]->match_func == NULL) {
-                advance_string(string, ovector[1] - ovector[0], line, col);
-                i = -1;
-                continue;
-            }
+            match_length = ovector[1] - ovector[0];
 
-            lexer_match_function match_func = lexer[mode][i]->match_func != NULL ? lexer[mode][i]->match_func : default_action;
+            if (lexer[mode][i]->outputs_count == 0 || lexer[mode][i]->outputs == NULL) {
+                advance_string(string, match_length, line, col);
+                aggregate_match = calloc(1, sizeof(LEXER_MATCH_T));
+                aggregate_match->match_length = match_length;
+                aggregate_match->mode = mode;
+                aggregate_match->context = context;
+                return aggregate_match;
+            }
 
             match_groups = calloc(rc+1, sizeof(char *));
             for (j = 0; j < rc; j++) {
                 char *substring_start = *string + ovector[2*j];
-                match_length = ovector[2*j+1] - ovector[2*j];
-                match_groups[j] = calloc(match_length+1, sizeof(char));
-                strncpy(match_groups[j], substring_start, match_length);
+                group_strlen = ovector[2*j+1] - ovector[2*j];
+                match_groups[j] = calloc(group_strlen + 1, sizeof(char));
+                strncpy(match_groups[j], substring_start, group_strlen);
             }
 
-            match = match_func(context, {{prefix}}lexer_mode_string(mode), match_groups, lexer[mode][i]->terminal, resource, *line, *col);
+            matches = calloc(max_matches, sizeof(LEXER_MATCH_T *));
+            match_index = 0;
+            for (j = 0; j < lexer[mode][i]->outputs_count; j++) {
+                lexer_match_function user_match_func = lexer[mode][i]->outputs[j].match_func;
+                lexer_match_function match_func = user_match_func != NULL ? user_match_func : default_action;
+                group_line = *line;
+                group_col = *col;
+                if (lexer[mode][i]->outputs[j].group > 0) {
+                    advance_line_col(*string, ovector[2*lexer[mode][i]->outputs[j].group] - ovector[0], &group_line, &group_col);
+                }
+                matches[match_index++] = match_func(
+                    context,
+                    {{prefix}}lexer_mode_string(mode),
+                    lexer[mode][i]->outputs[j].group >= 0 ? match_groups[lexer[mode][i]->outputs[j].group] : "",
+                    match_groups,
+                    lexer[mode][i]->outputs[j].terminal,
+                    resource,
+                    group_line, group_col
+                );
+            }
 
             for (j = 0; match_groups[j]; j++) {
                 free(match_groups[j]);
             }
             free(match_groups);
+            advance_string(string, match_length, line, col);
 
-            advance_string(string, ovector[1] - ovector[0], line, col);
-            return match;
+            if (match_index == 1) {
+                aggregate_match = matches[0];
+                free(matches);
+            } else {
+                for (token_count = 0, j = 0; j < match_index; j++) {
+                    for (k = 0; matches[j]->tokens[k] != NULL; k++, token_count++);
+                }
+                aggregate_match = calloc(1, sizeof(LEXER_MATCH_T));
+                aggregate_match->tokens = calloc(token_count + 1, sizeof(TOKEN_T *));
+                for (token_count = 0, j = 0; j < match_index; j++) {
+                    aggregate_match->mode = matches[j]->mode;
+                    aggregate_match->context = matches[j]->context;
+                    for (k = 0; matches[j]->tokens[k] != NULL; k++) {
+                        aggregate_match->tokens[token_count++] = matches[j]->tokens[k];
+                    }
+                    free(matches[j]->tokens);
+                    free(matches[j]);
+                }
+            }
+
+            aggregate_match->match_length = match_length;
+            return aggregate_match;
         }
     }
     return NULL;

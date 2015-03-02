@@ -18,6 +18,10 @@ grammar {
       r'null' -> :null
       r'\(' -> :lparen
       r'\)' -> :rparen
+      r'\[\]' -> :no_group
+      r'\[' -> :lsquare
+      r'\]' -> :rsquare
+      r'[0-9]+' -> :integer
       r'r\'(\\\'|[^\'])*\'' -> :regex
       r'"(\\\"|[^\"])*"' -> :regex
       r'->' -> :arrow
@@ -204,10 +208,12 @@ def grammar_rbrace(context, mode, match, groups, terminal, resource, line, col):
     $lexer_atom = $lexer_regex | $lexer_mode | $lexer_partials
     $lexer_partials = :partials :lbrace list($regex_partial) :rbrace -> RegexPartials(list=$2)
     $regex_partial = :regex :arrow :regex_partial -> RegexPartial(regex=$0, name=$2)
-    $lexer_regex = :regex optional($regex_options) :arrow $lexer_target -> Regex(regex=$0, options=$1, onmatch=$3)
+    $lexer_regex = :regex optional($regex_options) :arrow list($lexer_target) -> Regex(regex=$0, options=$1, onmatch=$3)
     $regex_options = :lbrace list(:identifier) :rbrace -> $1
-    $lexer_target = :terminal
-    $lexer_target = :identifier :lparen optional(:terminal) :rparen -> LexerFunctionCall(name=$0, terminal=$2)
+    $lexer_target = $terminal | :identifier :lparen optional($terminal) :rparen -> LexerFunctionCall(name=$0, terminal=$2)
+    $terminal = :terminal optional($match_group) -> Terminal(name=$0, group=$1)
+    $match_group = :lsquare :integer :rsquare -> $1
+    $match_group = :no_group
     $lexer_target = :null -> Null()
     $lexer_mode = :mode :langle :identifier :rangle :lbrace list($lexer_atom) :rbrace -> Mode(name=$2, atoms=$5)
     $parser = $parser_ll1 | $parser_expression

@@ -638,13 +638,13 @@ class HermesLexer:
       {% endfor %}
     }
 
-    def _update_line_col(self, match, line, col):
-        match_lines = match.split('\n')
-        line += len(match_lines) - 1
-        if len(match_lines) == 1:
-            col += len(match_lines[0])
-        else:
-            col = len(match_lines[-1]) + 1
+    def _advance_line_col(self, string, length, line, col):
+        for i in range(length):
+            if string[i] == '\n':
+                line += 1
+                col = 1
+            else:
+                col += 1
         return (line, col)
 
     def _unrecognized_token(self, string, line, col):
@@ -666,7 +666,16 @@ class HermesLexer:
                 for (terminal, group, function) in outputs:
                     function = function if function else default_action
                     source_string = match.group(group) if group is not None else ''
-                    (tokens, return_mode, context) = function(context, mode, source_string, match.groups(), terminal, resource, line, col)
+                    (group_line, group_col) = self._advance_line_col(string, match.start(group) if group else 0, line, col)
+                    (tokens, return_mode, context) = function(
+                        context,
+                        mode,
+                        source_string,
+                        match.groups(),
+                        terminal,
+                        resource,
+                        group_line, group_col
+                    )
                     return_tokens.extend(tokens)
                     if debug:
                         print('    match: mode={} string={}'.format(mode, match.group(0), tokens))
@@ -692,7 +701,7 @@ class HermesLexer:
 
             parsed_tokens.extend(tokens)
 
-            (line, col) = self._update_line_col(match, line, col)
+            (line, col) = self._advance_line_col(match, len(match), line, col)
 
             if debug:
                 from xtermcolor import colorize

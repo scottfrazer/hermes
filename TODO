@@ -1,22 +1,42 @@
 2.0 TODO
 ========
 
-Package Structure
------------------
+Features
+--------
 
-PEP-8: "Modules should have short, all-lowercase names. Underscores can be used in the module name if it improves readability. Python packages should also have short, all-lowercase names, although the use of underscores is discouraged."
+1) Lexer specify group of Regex: r'<(b)>' -> :foo[1] # foo has text 'b'
+2) Lexer output multiple tokens: r'(a)(b)(?=xyz)' -> :foo[] :bar[1] :baz
+    outputs: :foo (''), :bar ('a'), :baz ('ab')
+3) Macros can take full rules
+    list($b | $c $d) # turns into list($_gen0); $_gen0 = $b | $c $d
+    optional($a :b)
+4) Parenthesized statements expand to sub-rule:
+    $x = ($a | :b | $c :d -> Foo(s=$0, t=$1)) :e optional(:terminator) -> MyAst(x=$0, y=$1)
+    $c = :c0 :c1 -> Bar(u=$0, v=$1)
+    -- becomes --
+    $x = $_gen0 optional(:terminator)
+    $_gen0 = $a | :b | $c :d
+    -- parsing :c0 :c1 :d :e :terminator --
+    should return MyAst(x=Bar(u=:c0, v=:c1), y=:e)
+5) Native lexer stack support:
+    r'(<!ATTR)(?=\s*%)' -> :hint :attr[0] @mode
+    r'(lexer)(<)([a-z]+)(>)' -> :lexer[1] :langle[2] :language[3] :rangle[4] @lexer
+    r'}' -> :lbrace #pop
+6) Token buffers
 
-PEP-8: "Class names should normally use the CapWords convention."
-
-PEP-8: "Function names should be lowercase, with words separated by underscores as necessary to improve readability."
-
-hermes - compile() to get back a parser, get_grammar() to get a CompositeGrammar
-hermes.hermes_parser - bootstraped parser
-hermes.factory - (currently hermes.parser) create() return CompositeGrammar
-hermes.grammar
-    CompositeGrammar, Rule, Production, Conflicts, Lexer, etc.  Internal data structures.
-hermes.main - cli() and analyze() methods
-hermes.code - Generates source code to parse grammar.  generate(), generate_internal()
+    lexer {
+        mode:root {
+            r'{' -> @collection #buffer :lbrace
+        }
+        mode:collection {
+            r'}' -> :rbrace #pop
+            r'mixed(?=\s*})' -> :mix_hint #flush
+            r'numbers(?=\s*})' -> :numbers_hint #flush
+            r'words(?=\s*})' -> :words_hint #flush
+            r'[0-9]+' -> :number
+            r'[a-z]+' -> :word
+        }
+    }
 
 Minor things
 ------------
@@ -28,6 +48,8 @@ Minor things
 5) Test capital letters, numbers, underscores in terminal/nonterminal
 6) All syntax errors need a test
 7) Test two expression parsers in one grammar
+8) test mslist() macro
+9) runtime detection of a non-existent mode and proper error (instead of NPE)
 
 Syntax Error Formatting for C
 -----------------------------

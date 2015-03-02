@@ -30,13 +30,13 @@ def numbers_end(context, mode, match, groups, terminal, resource, line, col):
     }
 
     <code>
-static LEXER_MATCH_T * numbers_start(void * context, char * mode, char ** match_groups, TERMINAL_T * terminal, char * resource, int line, int col)
+static LEXER_MATCH_T * numbers_start(void * context, char * mode, char * source_string, char ** match_groups, TERMINAL_T * terminal, char * resource, int line, int col)
 {
-    return default_action(context, "numbers", match_groups, terminal, resource, line, col);
+    return default_action(context, "numbers", source_string, match_groups, terminal, resource, line, col);
 }
-static LEXER_MATCH_T * numbers_end(void * context, char * mode, char ** match_groups, TERMINAL_T * terminal, char * resource, int line, int col)
+static LEXER_MATCH_T * numbers_end(void * context, char * mode, char * source_string, char ** match_groups, TERMINAL_T * terminal, char * resource, int line, int col)
 {
-    return default_action(context, "default", match_groups, terminal, resource, line, col);
+    return default_action(context, "default", source_string, match_groups, terminal, resource, line, col);
 }
     </code>
   }

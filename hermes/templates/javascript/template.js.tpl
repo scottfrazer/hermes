@@ -357,6 +357,218 @@ function ParserContext(tokens, error_formatter) {
     this.rule_string = null;
 }
 
+function MultiRegExp(par) {
+    var regex;
+    if (par.source !== undefined){
+        regex = par;
+    } else {
+        var exp = par;
+        var opts = "";
+        if (par.substring(0, 1) == "/") {
+            var l = par.lastIndexOf("/");
+            opts = par.substring(l + 1, par.length);
+            exp = par.substring(1, l);
+        }
+        regex = new RegExp(exp, opts);
+    }
+    var expandSource = function (braces, indexer) {
+        ret = '';
+        for (var i = 0; i < braces.length; i++) {
+            if (braces[i].type == 'raw') {
+                ret += '(' + braces[i].text + ')';
+                indexer.next();
+            } else if (braces[i].type == 'brace' && braces[i].containsCapture) {
+                ret += braces[i].pre + expandSource(braces[i].children, indexer) + braces[i].post;
+            } else if (braces[i].type == 'brace' && !braces[i].isCapture) {
+                ret += '(' + braces[i].text.substring(braces[i].pre.length, braces[i].text.length - braces[i].post.length) + ')';
+                indexer.next();
+            } else if (braces[i].type == 'brace') {
+                ret += braces[i].text;
+                indexer.next(true);
+            } else {
+                ret += braces[i].text;
+            }
+        }
+        return ret;
+    }
+
+    var captureScan = function(braces, parent) {
+        var containsCapture = false;
+        for (var i = 0; i < braces.length; i++) {
+            captureScan(braces[i].children, braces[i]);
+            braces[i].isCapture = braces[i].text.indexOf('(?:') != 0;
+            if (braces[i].isCapture) {
+                containsCapture = true;
+            }
+            if (braces[i].isCapture && braces[i].containsCapture) {
+                throw "nested captures not permitted, use (?:...) where capture is not intended";
+            }
+        }
+        if (parent) {
+            parent.containsCapture = containsCapture;
+        }
+    }
+
+    var fillGaps = function(braces, text) {
+        var pre = /^\((\?.)?/.exec(text);
+        pre = pre == null ? '' : pre[0];
+        var post = /\)$/.exec(text);
+        post = post == null ? '' : post[0];
+        var i = 0;
+        if (braces.length > 0) {
+            fillGaps(braces[0].children, braces[0].text);
+        }
+        if (braces.length > 0 && braces[0].pos > pre.length) {
+            braces.splice(0, 0, {type: 'raw', pos: pre.length, length: braces[0].pos, text: text.substring(pre.length, braces[0].pos)});
+            i++;
+        }
+        for(i++ ;i < braces.length; i++) {
+            fillGaps(braces[i].children, braces[i].text);
+            if (braces[i].pos > braces[i-1].pos + braces[i-1].length) {
+                braces.splice(i, 0, {type:'raw', pos: braces[i-1].pos + braces[i-1].length,
+                                     length: braces[i].pos - (braces[i-1].pos + braces[i-1].length),
+                                     text: text.substring(braces[i-1].pos + braces[i-1].length,
+                                                          braces[i].pos)});
+                i++;
+            }
+        }
+        if (braces.length == 0)
+        {
+            braces.push({type:'raw', pos: pre.length, length: text.length - post.length - pre.length, text: text.substring(pre.length, text.length - post.length)});
+        } else if (braces[braces.length - 1].pos + braces[braces.length - 1].length < text.length - post.length) { 
+            var pos = braces[braces.length - 1].pos + braces[braces.length - 1].length;
+            var txt = text.substring(pos, text.length - post.length);
+            braces.push({type:'raw', pos: pos, length: txt.length, text: txt});
+        }
+    }
+
+    var GetBraces = function(text) {
+        var ret = [];
+        var shift = 0;
+        do {
+            var brace = GetBrace(text);
+            if (brace == null) {
+                break;
+            } else {
+                text = text.substring(brace.pos + brace.length);
+                var del = brace.pos + brace.length;
+                brace.pos += shift;
+                shift += del;
+                ret.push(brace);
+            }
+        } while (brace != null);
+        return ret;
+    }
+
+    var GetBrace = function(text) {
+        var ret = {pos: -1, length: 0, text: '', children: [], type: 'brace'};
+        var openExp = /^(?:\\.|[^\)\\\(])*\(\?./;
+        var pre = 3;
+        var post = 1;
+        var m = openExp.exec(text);
+        if (m == null) {
+            m = /^(?:\\.|[^\)\\\(])*\(/.exec(text);
+            pre = 1;
+        }
+        if (m != null) {
+            ret.pos = m[0].length - pre;
+            ret.children = GetBraces(text.substring(m[0].length));
+            for (var i = 0; i < ret.children.length; i++) {
+                ret.children[i].pos += pre;
+            }
+            var closeExp = /^(?:\\.|[^\\\(\)])*\)/;
+            var closeExpAlt = /^(?:\\.|[^\\\(\)])*\)\?/;
+            var from = ret.children.length <= 0 ? ret.pos + pre : 
+                ret.children[ret.children.length-1].pos + 
+                    ret.children[ret.children.length-1].length + 
+                    m[0].length - pre;
+            var m2 = closeExp.exec(text.substring(from));
+            var m3 = closeExpAlt.exec(text.substring(from));
+            if (m3 !== null && m3.length - 1 <= m2.length) {
+                m2 = m3;
+                post = 2;
+            }
+            if (m2 == null) {
+                return null;
+            } else {
+                ret.length = m2[0].length + from - ret.pos;
+                ret.text = text.substring(ret.pos, ret.pos + ret.length);
+            }
+        }
+        if (ret.text == '()' || /^\(\?.\)$/.test(ret.text)) {
+            throw 'empty braces not permitted';
+        }
+        if (ret.pos != -1) {
+            ret.pre = ret.text.substring(0, pre);
+            ret.post = ret.text.substring(ret.text.length - post, ret.text.length);
+        }
+        return ret.pos == -1 ? null : ret;
+    }
+
+    var fixOrs = function (braces_W_raw) {
+        var orFind = /^(\\.|[^\\|])*\|/;
+        for (var i = 0; i < braces_W_raw.length; i++) {
+            if (braces_W_raw[i].type == 'raw') {
+                var fullText = braces_W_raw[i].text;
+                var m = orFind.exec(fullText);
+                if (m != null) {
+                    var or = { type: 'or', pos: m[0].length - 1 + braces_W_raw[i].pos, length: 1, text: '|' };
+                    var raw = { type: 'raw', pos: m[0].length + braces_W_raw[i].pos,
+                        length: fullText.length - m[0].length,
+                        text: fullText.substring(m[0].length, fullText.length)
+                    };
+                    braces_W_raw[i].text = fullText.substring(0, m[0].length - 1);
+                    braces_W_raw[i].length = braces_W_raw[i].text.length;
+                    braces_W_raw.splice(i + 1, 0, or, raw);
+                    i += 1;
+                }
+            } else if (braces_W_raw[i].type == 'brace') {
+                fixOrs(braces_W_raw[i].children, braces_W_raw[i].text);
+            }
+        }
+    }
+
+    var source = regex.source;
+    var braces = GetBraces(source);
+    captureScan(braces);
+    fillGaps(braces, source);
+    fixOrs(braces);
+    var indexer = {i: 1, next:
+                       function (realPoint) {
+                           if (realPoint) {
+                               this.points.push(this.i);
+                           }
+                           return this.i++;
+                       }, points: []};
+    source = expandSource(braces, indexer);
+    this.dataPoints = indexer.points;
+    var options = (regex.ignoreCase ? "i" : "") + (regex.global ? "g" : "") + (regex.multiline ? "m" : "");
+    this.regex = new RegExp(source, options);
+    this.exec = function (text) {
+        var m = this.regex.exec(text);
+        if (m == null) {
+            return {};
+        }
+        var ret = {};
+        var ch = 0;
+        for (var i = 1; i < m.length; i++) {
+            if (m[i] !== null && m[i] !== undefined) {
+                var pos = this.dataPoints.indexOf(i);
+                if (pos != -1) {
+                    ret[pos] = {index: ch, text: m[i]};
+                }
+                ch += m[i].length;
+            }
+        }
+        for (var i = 0; i < this.dataPoints.length; i++) {
+            if (ret[i] === undefined) {
+                ret[i] = null;
+            }
+        }
+        return ret;
+    }
+}
+
 var Base64 = {
     // private property
     _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
@@ -865,20 +1077,39 @@ var regex = {
   {% for mode, regex_list in lexer.items() %}
     '{{mode}}': [
       {% for regex in regex_list %}
-      [new RegExp({{regex.regex}}{{", "+' | '.join(['re.'+x for x in regex.options]) if regex.options else ''}}), {{"'" + regex.terminal.string.lower() + "'" if regex.terminal else 'null'}}, {{regex.function if regex.function else 'null'}}],
+      {
+          regex: new RegExp({{regex.regex}}{{", "+' | '.join(['re.'+x for x in regex.options]) if regex.options else ''}}),
+          outputs: [
+          {% for output in regex.outputs %}
+              {
+                  terminal: {{"'" + output.terminal.string.lower() + "'" if output.terminal else 'null'}},
+                  group: {{output.group if output.group is not None else 'null'}},
+                  function: {{output.function if output.function else 'null'}}
+              },
+          {% endfor %}
+          ]
+      },
       {% endfor %}
     ],
   {% endfor %}
 }
 
-function _update_line_col(string, lexer_context) {
-    var match_lines = string.split("\n")
-    lexer_context.line += match_lines.length - 1
-    if (match_lines.length == 1) {
-        lexer_context.col += match_lines[0].length
-    } else {
-        lexer_context.col = match_lines[match_lines.length-1].length + 1
+function advance_line_col(string, length, line, col) {
+    for (var i = 0; i < length; i++) {
+        if (string[i] == '\n') {
+            line += 1;
+            col = 1;
+        } else {
+            col += 1;
+        }
     }
+    return {line: line, col: col}
+}
+
+function _update_line_col(string, lexer_context) {
+    lc = advance_line_col(string, string.length, lexer_context.line, lexer_context.col)
+    lexer_context.line = lc.line
+    lexer_context.col = lc.col
 }
 
 function _unrecognized_token(string, line, col) {
@@ -891,22 +1122,40 @@ function _unrecognized_token(string, line, col) {
 }
 
 function _next(string, mode, context, resource, line, col) {
+    tokens = []
     for (i = 0; i < regex[mode].length; i++) {
-        regexp = regex[mode][i][0];
-        terminal = regex[mode][i][1];
-        func = regex[mode][i][2];
-
-        match = regexp.exec(string);
+        match = regex[mode][i].regex.exec(string);
 
         if (match != null && match.index == 0) {
-            if (func == null) {
-                func = default_action;
-            }
+            for (j = 0; j < regex[mode][i].outputs.length; j++) {
+                var terminal = regex[mode][i].outputs[j].terminal;
+                var group = regex[mode][i].outputs[j].group;
+                var func = regex[mode][i].outputs[j].function;
 
-            lexer_match = func(context, mode, match[0], terminal, resource, line, col)
-            tokens = lexer_match.tokens
-            mode = lexer_match.mode
-            context = lexer_match.context
+                if (func == null) {
+                    func = default_action;
+                }
+
+                var source_string = group != null ? match[group] : ""
+
+                // Ugh!  JavaScript why you no have regex group indexes?!
+                var group_line = line
+                var group_col = col
+                try {
+                    var mult_regex = new MultiRegExp(regex[mode][i].regex.source);
+                    var mult_groups = mult_regex.exec(string)
+                    if (group != null && group > 0) {
+                        var lc = advance_line_col(match[0], mult_groups[group-1].index, line, col)
+                        group_line = lc.line
+                        group_col = lc.col
+                    }
+                } catch(err) {}
+
+                lexer_match = func(context, mode, source_string, terminal, resource, group_line, group_col)
+                tokens.push.apply(tokens, lexer_match.tokens)
+                mode = lexer_match.mode
+                context = lexer_match.context
+            }
 
             return {tokens: tokens, string: match[0], mode: mode}
         }
