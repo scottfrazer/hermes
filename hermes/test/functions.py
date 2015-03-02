@@ -118,7 +118,9 @@ class javascript_code_context:
         self.tokens_file = os.path.join(self.test_dir, 'tokens')
         self.source_file = os.path.join(self.test_dir, 'source')
         self.grammar = _get_grammar(self.test_dir)
-        self.command = 'node grammar_parser.js {action} {input} 2>&1'
+        with open('/dev/null', 'w') as null:
+            node_exe = 'nodejs' if subprocess.call(["which", "nodejs"], stdout=null) == 0 else 'node'
+        self.command = node_exe + ' grammar_parser.js {action} {input} 2>&1'
     def __enter__(self):
         self.tmp_dir = tempfile.mkdtemp('hermes-')
         hermes.code.generate(self.grammar, 'javascript', directory=self.tmp_dir, add_main=True)
