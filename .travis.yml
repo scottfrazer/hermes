@@ -11,4 +11,5 @@ before_install:
 install:
   - python setup.py install
 script:
+  - jdk_switcher use oraclejdk8
   - nosetests
