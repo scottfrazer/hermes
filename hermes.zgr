@@ -1,10 +1,17 @@
 grammar {
   lexer<python> {
+    partials {
+      r'\#.*' -> _comment
+      r'\s+' -> _ws
+    }
+
     r'\grammar' -> grammar_start(:grammar)
-    r'\s+' -> null
+    r'{%_ws%}' -> null
+    r'{%_comment%}' -> null
 
     mode<grammar> {
-      r'\s+' -> null
+      r'{%_ws%}' -> null
+      r'{%_comment%}' -> null
       r'{' -> grammar_lbrace(:lbrace)
       r'}' -> grammar_rbrace(:rbrace)
       r'lexer\s*<\s*[a-zA-Z]+\s*>' -> lexer_start(:lexer)
@@ -12,7 +19,8 @@ grammar {
     }
 
     mode<lexer> {
-      r'\s+' -> null
+      r'{%_ws%}' -> null
+      r'{%_comment%}' -> null
       r'{' -> lexer_lbrace(:lbrace)
       r'}' -> lexer_rbrace(:rbrace)
       r'null' -> :null
@@ -33,7 +41,8 @@ grammar {
     }
 
     mode<partials> {
-      r'\s+' -> null
+      r'{%_ws%}' -> null
+      r'{%_comment%}' -> null
       r'r\'(\\\'|[^\'])*\'' -> :regex
       r'"(\\\"|[^\"])*"' -> :regex
       r'->' -> :arrow
@@ -43,7 +52,8 @@ grammar {
     }
 
     mode<parser_ll1> {
-      r'\s+' -> null
+      r'{%_ws%}' -> null
+      r'{%_comment%}' -> null
       r'{' -> parser_lbrace(:lbrace)
       r'}' -> parser_rbrace(:rbrace)
       r'\|' -> :pipe
@@ -63,7 +73,8 @@ grammar {
     }
 
     mode<parser_expr> {
-      r'\s+' -> null
+      r'{%_ws%}' -> null
+      r'{%_comment%}' -> null
       r'\([\*-]:(left|right|unary)\)' -> binding_power()
       r'->' -> :arrow
       r'<=>' -> :expression_divider
@@ -75,9 +86,12 @@ grammar {
       r'\)' -> :rparen
       r',' -> :comma
       r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> :terminal[1]
-      r'(\$([a-zA-Z][a-zA-Z0-9_]*))[ \t]*(=)[ \t]*\1[ \t]+:([a-zA-Z][a-zA-Z0-9_]*)[ \t]+\1(?![ \t]+(:|\$))' -> :expr_rule_hint[] :nonterminal[2] :equals[3] :infix_rule_hint[] :nonterminal[2] :terminal[4] :nonterminal[2]
-      r'(\$([a-zA-Z][a-zA-Z0-9_]*))[ \t]*(=)[ \t]*:([a-zA-Z][a-zA-Z0-9_]*)[ \t]+\1(?![ \t](:|\$))' -> :expr_rule_hint[] :nonterminal[2] :equals[3] :prefix_rule_hint[] :terminal[4] :nonterminal[2]
-      r'\$([a-zA-Z][a-zA-Z0-9_]*)\s*(=)' -> :expr_rule_hint[] :nonterminal[1] :equals[2] :mixfix_rule_hint[]
+      r'(\$([a-zA-Z][a-zA-Z0-9_]*))[ \t]*(=)[ \t]*\1[ \t]+:([a-zA-Z][a-zA-Z0-9_]*)[ \t]+\1(?![ \t]+(:|\$))'
+          -> :expr_rule_hint[] :nonterminal[2] :equals[3] :infix_rule_hint[] :nonterminal[2] :terminal[4] :nonterminal[2]
+      r'(\$([a-zA-Z][a-zA-Z0-9_]*))[ \t]*(=)[ \t]*:([a-zA-Z][a-zA-Z0-9_]*)[ \t]+\1(?![ \t](:|\$))'
+          -> :expr_rule_hint[] :nonterminal[2] :equals[3] :prefix_rule_hint[] :terminal[4] :nonterminal[2]
+      r'\$([a-zA-Z][a-zA-Z0-9_]*)\s*(=)'
+          -> :expr_rule_hint[] :nonterminal[1] :equals[2] :mixfix_rule_hint[]
       r'\$([a-zA-Z][a-zA-Z0-9_]*)' -> :nonterminal[1]
       r'\$([0-9]+|\$)' -> :nonterminal_reference[1]
       r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
