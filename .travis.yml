@@ -5,6 +5,7 @@ jdk:
   - oraclejdk8
 before_install:
   - sudo apt-get install -y libpcre3
+  - java -version
 install:
   - python setup.py install
 script:
