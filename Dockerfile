@@ -10,7 +10,7 @@ ENV TERM=xterm-256color
 # Add source repository
 ADD . /hermes
 
-# Install Java 8
+# Install Java 8 / Node / GCC / make
 RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) multiverse" && \
     add-apt-repository -y ppa:webupd8team/java && \
     apt-get update && \
@@ -22,7 +22,6 @@ RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu $(lsb_release -sc) 
     apt-get install -y git && \
     echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections && \
     echo debconf shared/accepted-oracle-license-v1-1 seen true | sudo debconf-set-selections && \
-    apt-get update && \
     apt-get install -y oracle-java8-installer
 
 # Fix Ubuntu's broken Python 3 installation
