@@ -21,7 +21,8 @@ setup(
   install_requires=[
       "moody-templates",
       "xtermcolor",
-      "nose"
+      "nose",
+      "pygments"
   ],
   scripts={
       'scripts/hermes',
