@@ -1051,12 +1051,12 @@ function parse_{{name}}(ctx) {
 // END USER CODE
 
 {% if re.search(r'function\s+default_action', lexer.code) is None %}
-function default_action(context, mode, match, terminal, resource, line, col) {
+function default_action(context, match, terminal, resource, line, col) {
     var tokens = []
     if (terminal) {
         tokens = [new Terminal(terminals[terminal], terminal, match, resource, line, col)]
     }
-    return {tokens: tokens, mode: mode, context: context}
+    return {tokens: tokens, context: context}
 }
 
 {% endif %}
@@ -1082,9 +1082,15 @@ var regex = {
           outputs: [
           {% for output in regex.outputs %}
               {
+              {% if isinstance(output, RegexOutput) %}
                   terminal: {{"'" + output.terminal.string.lower() + "'" if output.terminal else 'null'}},
                   group: {{output.group if output.group is not None else 'null'}},
-                  function: {{output.function if output.function else 'null'}}
+                  function: {{output.function if output.function else 'null'}},
+              {% elif isinstance(output, LexerStackPush) %}
+                  stack_push: '{{output.mode}}',
+              {% elif isinstance(output, LexerAction) %}
+                  action: '{{output.action}}',
+              {% endif %}
               },
           {% endfor %}
           ]
@@ -1121,8 +1127,9 @@ function _unrecognized_token(string, line, col) {
     throw new SyntaxError(message)
 }
 
-function _next(string, mode, context, resource, line, col) {
-    tokens = []
+function _next(string, context, resource, lexer_context) {
+    var tokens = []
+    var mode = lexer_context.mode_stack[lexer_context.mode_stack.length - 1]
     for (i = 0; i < regex[mode].length; i++) {
         match = regex[mode][i].regex.exec(string);
 
@@ -1131,41 +1138,47 @@ function _next(string, mode, context, resource, line, col) {
                 var terminal = regex[mode][i].outputs[j].terminal;
                 var group = regex[mode][i].outputs[j].group;
                 var func = regex[mode][i].outputs[j].function;
+                var stack_push = regex[mode][i].outputs[j].stack_push;
+                var action = regex[mode][i].outputs[j].action;
 
-                if (func == null) {
-                    func = default_action;
-                }
-
-                var source_string = group != null ? match[group] : ""
-
-                // Ugh!  JavaScript why you no have regex group indexes?!
-                var group_line = line
-                var group_col = col
-                try {
-                    var mult_regex = new MultiRegExp(regex[mode][i].regex.source);
-                    var mult_groups = mult_regex.exec(string)
-                    if (group != null && group > 0) {
-                        var lc = advance_line_col(match[0], mult_groups[group-1].index, line, col)
-                        group_line = lc.line
-                        group_col = lc.col
+                if (stack_push !== undefined) {
+                    lexer_context.mode_stack.push(stack_push)
+                } else if (action !== undefined) {
+                    if (action == 'pop') {
+                        lexer_context.mode_stack.pop()
                     }
-                } catch(err) {}
+                } else {
+                    func = (func == null) ? default_action : func;
+                    var source_string = group != null ? match[group] : ""
 
-                lexer_match = func(context, mode, source_string, terminal, resource, group_line, group_col)
-                tokens.push.apply(tokens, lexer_match.tokens)
-                mode = lexer_match.mode
-                context = lexer_match.context
+                    // Ugh!  JavaScript why you no have regex group indexes?!
+                    var group_line = lexer_context.line
+                    var group_col = lexer_context.col
+                    try {
+                        var mult_regex = new MultiRegExp(regex[mode][i].regex.source);
+                        var mult_groups = mult_regex.exec(string)
+                        if (group != null && group > 0) {
+                            var lc = advance_line_col(match[0], mult_groups[group-1].index, lexer_context.line, lexer_context.col)
+                            group_line = lc.line
+                            group_col = lc.col
+                        }
+                    } catch(err) {}
+
+                    lexer_match = func(context, source_string, terminal, resource, group_line, group_col)
+                    tokens.push.apply(tokens, lexer_match.tokens)
+                    context = lexer_match.context
+                }
             }
 
-            return {tokens: tokens, string: match[0], mode: mode}
+            return {tokens: tokens, string: match[0]}
         }
     }
-    return {tokens: [], string: '', mode: mode}
+    return {tokens: [], string: ''}
 }
 
 function lex(string, resource) {
     lexer_context = {
-        mode: 'default',
+        mode_stack: ['default'],
         line: 1,
         col: 1
     }
@@ -1174,7 +1187,7 @@ function lex(string, resource) {
     string_copy = string
     parsed_tokens = []
     while (string.length) {
-        lexer_match = _next(string, lexer_context.mode, user_context, resource, lexer_context.line, lexer_context.col)
+        lexer_match = _next(string, user_context, resource, lexer_context)
 
         if (lexer_match.string.length == 0) {
             _unrecognized_token(string_copy, lexer_context.line, lexer_context.col)
@@ -1187,23 +1200,7 @@ function lex(string, resource) {
         }
 
         parsed_tokens.push.apply(parsed_tokens, lexer_match.tokens)
-
-        lexer_context.mode = lexer_match.mode
         _update_line_col(lexer_match.string, lexer_context)
-
-        if (false) {
-            for (j=0; j<tokens.length; j++) {
-                var token = tokens[j];
-                console.log('token --> [{0}] [{1}, {2}] [{3}] [{4}] [{5}]'.format(
-                    token.str,
-                    token.line,
-                    token.col,
-                    token.source_string,
-                    lexer_context.mode,
-                    user_context
-                ))
-            }
-        }
     }
     destroy(user_context)
     return new TokenStream(parsed_tokens)
@@ -1238,12 +1235,12 @@ var main = function() {
         if (err) throw err;
         if (output == 'tokens') {
 
-          try {
+          //try {
               var tokens = lex(data, 'source');
-          } catch(err) {
-              console.log(err.to_string());
-              process.exit(0);
-          }
+          //} catch(err) {
+          //    console.log(err.to_string());
+          //    process.exit(0);
+          //}
 
           if (tokens.list.length == 0) {
               console.log('[]');

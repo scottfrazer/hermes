@@ -4,21 +4,18 @@ grammar {
     r'(x)\s*(y)\s*(z)' -> :hint[] f(:x[1]) :all
     r'\s+' -> null
     <code>
-def f(context, mode, match, groups, terminal, resource, line, col):
-    return default_action(context, mode, match, groups, terminal, resource, line, col)
+def f(context, match, groups, terminal, resource, line, col):
+    return default_action(context, match, groups, terminal, resource, line, col)
     </code>
   }
   lexer<c> {
     "(a)(b)(c)" -> :a[1] :b[2] :c[3] :abc[0]
     "(x)\\s*(y)\\s*(z)" -> :hint[] f(:x[1]) :all
     "\\s+" -> null
-    mode<test> {
-      "\\s+" -> null
-    }
     <code>
-static LEXER_MATCH_T * f(void * context, char * mode, char * source_string, char ** match_groups, TERMINAL_T * terminal, char * resource, int line, int col)
+static LEXER_MATCH_T * f(void * context, char * source_string, char ** match_groups, TERMINAL_T * terminal, char * resource, int line, int col)
 {
-    return default_action(context, mode, source_string, match_groups, terminal, resource, line, col);
+    return default_action(context, source_string, match_groups, terminal, resource, line, col);
 }
     </code>
   }
@@ -26,12 +23,9 @@ static LEXER_MATCH_T * f(void * context, char * mode, char * source_string, char
     "(a)(b)(c)" -> :a[1] :b[2] :c[3] :abc[0]
     "(x)\\s*(y)\\s*(z)" -> :hint[] f(:x[1]) :all
     "\\s+" -> null
-    mode<test> {
-      "\\s+" -> null
-    }
     <code>
-public LexerMatch f(Object context, String mode, String match, GrammarTerminalIdentifier terminal, String resource, int line, int col) {
-    return default_action(context, mode, match, terminal, resource, line, col);
+public LexerMatch f(Object context, String match, GrammarTerminalIdentifier terminal, String resource, int line, int col) {
+    return default_action(context, match, terminal, resource, line, col);
 }
     </code>
   }
@@ -39,12 +33,9 @@ public LexerMatch f(Object context, String mode, String match, GrammarTerminalId
     "(a)(b)(c)" -> :a[1] :b[2] :c[3] :abc[0]
     "(x)\\s*(y)\\s*(z)" -> :hint[] f(:x[1]) :all
     "\\s+" -> null
-    mode<test> {
-      "\\s+" -> null
-    }
     <code>
-function f(context, mode, match, terminal, resource, line, col) {
-    return default_action(context, mode, match, terminal, resource, line, col);
+function f(context, match, terminal, resource, line, col) {
+    return default_action(context, match, terminal, resource, line, col);
 }
     </code>
   }

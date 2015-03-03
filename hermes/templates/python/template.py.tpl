@@ -607,9 +607,9 @@ def parse_{{name}}(ctx):
 # END USER CODE
 
 {% if re.search(r'def\s+default_action', lexer.code) is None %}
-def default_action(context, mode, match, groups, terminal, resource, line, col):
+def default_action(context, match, groups, terminal, resource, line, col):
     tokens = [Terminal(terminals[terminal], terminal, match, resource, line, col)] if terminal else []
-    return (tokens, mode, context)
+    return (tokens, context)
 {% endif %}
 
 {% if re.search(r'def\s+init', lexer.code) is None %}
@@ -622,6 +622,14 @@ def destroy(context):
     pass
 {% endif %}
 
+class LexerStackPush:
+    def __init__(self, mode):
+        self.mode = mode
+
+class LexerAction:
+    def __init__(self, action):
+        self.action = action
+
 class HermesLexer:
     regex = {
       {% for mode, regex_list in lexer.items() %}
@@ -630,7 +638,13 @@ class HermesLexer:
           (re.compile({{regex.regex}}{{", "+' | '.join(['re.'+x for x in regex.options]) if regex.options else ''}}), [
               # (terminal, group, function)
             {% for output in regex.outputs %}
+              {% if isinstance(output, RegexOutput) %}
               ({{"'" + output.terminal.string.lower() + "'" if output.terminal else 'None'}}, {{output.group}}, {{output.function}}),
+              {% elif isinstance(output, LexerStackPush) %}
+              LexerStackPush('{{output.mode}}'),
+              {% elif isinstance(output, LexerAction) %}
+              LexerAction('{{output.action}}'),
+              {% endif %}
             {% endfor %}
           ]),
           {% endfor %}
@@ -655,44 +669,49 @@ class HermesLexer:
         )
         raise SyntaxError(message)
 
-    def _next(self, string, mode, context, resource, line, col, debug=False):
-        for regex, outputs in self.regex[mode].items():
+    def _next(self, string, mode_stack, context, resource, line, col, debug=False):
+        for regex, outputs in self.regex[mode_stack[-1]].items():
             if debug:
                 print('trying: `{1}` ({2}, {3}) against {0}'.format(regex, string[:20].replace('\n', '\\n'), line, col))
             match = regex.match(string)
             if match:
                 return_tokens = []
-                return_mode = mode
-                for (terminal, group, function) in outputs:
-                    function = function if function else default_action
-                    source_string = match.group(group) if group is not None else ''
-                    if terminal is None and group is None and function != default_action:
-                        source_string = match.group(0)
-                    (group_line, group_col) = self._advance_line_col(string, match.start(group) if group else 0, line, col)
-                    (tokens, return_mode, context) = function(
-                        context,
-                        mode,
-                        source_string,
-                        match.groups(),
-                        terminal,
-                        resource,
-                        group_line, group_col
-                    )
-                    return_tokens.extend(tokens)
-                    if debug:
-                        print('    match: mode={} string={}'.format(mode, match.group(0), tokens))
-                        for token in tokens:
-                            print('           token: {}'.format(token))
-                return (return_tokens, match.group(0), return_mode)
-        return ([], '', mode)
+                for output in outputs:
+                    if isinstance(output, tuple):
+                        (terminal, group, function) = output
+                        function = function if function else default_action
+                        source_string = match.group(group) if group is not None else ''
+                        if terminal is None and group is None and function != default_action:
+                            source_string = match.group(0)
+                        (group_line, group_col) = self._advance_line_col(string, match.start(group) if group else 0, line, col)
+                        (tokens, context) = function(
+                            context,
+                            source_string,
+                            match.groups(),
+                            terminal,
+                            resource,
+                            group_line, group_col
+                        )
+                        return_tokens.extend(tokens)
+                        if debug:
+                            print('    match: mode={} string={}'.format(mode, match.group(0), tokens))
+                            for token in tokens:
+                                print('           token: {}'.format(token))
+                    if isinstance(output, LexerStackPush):
+                        mode_stack.append(output.mode)
+                    if isinstance(output, LexerAction):
+                        if output.action == 'pop':
+                            mode_stack.pop()
+                return (return_tokens, match.group(0))
+        return ([], '')
 
     def lex(self, string, resource, debug=False):
-        (mode, line, col) = ('default', 1, 1)
+        (mode_stack, line, col) = (['default'], 1, 1)
         context = init()
         string_copy = string
         parsed_tokens = []
         while len(string):
-            (tokens, match, mode) = self._next(string, mode, context, resource, line, col, debug)
+            (tokens, match) = self._next(string, mode_stack, context, resource, line, col, debug)
             if len(match) == 0:
                 self._unrecognized_token(string_copy, line, col)
 
@@ -713,7 +732,7 @@ class HermesLexer:
                         colorize(str(token.line), ansi=5),
                         colorize(str(token.col), ansi=5),
                         colorize(token.source_string, ansi=3),
-                        colorize(mode, ansi=4),
+                        colorize(str(mode_stack), ansi=4),
                         colorize(str(context), ansi=13)
                     ))
         destroy(context)

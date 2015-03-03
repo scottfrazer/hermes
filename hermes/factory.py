@@ -34,8 +34,11 @@ class GrammarFactory:
         if len(parser_ast) == 0:
             for language, lexer in lexers.items():
                 lexer.terminals = all_terminals.values()
-            return CompositeGrammar(name, [Rule(NonTerminal('start', 0), Production([all_terminals['_empty']]))],
-                                    lexers)
+            return CompositeGrammar(
+                name,
+                [Rule(NonTerminal('start', 0), Production([all_terminals['_empty']]))],
+                lexers
+            )
         elif len(parser_ast) > 1:
             raise Exception('Expecting only one parser')
         else:
@@ -110,7 +113,14 @@ class GrammarFactory:
     def parse_regex(self, regex_ast, terminals, nonterminals):
         regex_outputs = []
         for regex_output in regex_ast.getAttr('onmatch'):
-            if regex_output.name == 'Terminal':
+            if isinstance(regex_output, HermesTerminal):
+                if regex_output.str == 'stack_push':
+                    regex_outputs.append(LexerStackPush(regex_output.source_string))
+                if regex_output.str == 'action':
+                    if regex_output.source_string != 'pop':
+                        raise Exception('parse_regex(): action must be "pop"')
+                    regex_outputs.append(LexerAction(regex_output.source_string))
+            elif regex_output.name == 'Terminal':
                 (terminal, group) = self.parse_terminal(regex_output, terminals, nonterminals)
                 regex_outputs.append(RegexOutput(
                     terminal, group, None

@@ -266,6 +266,14 @@ class RegexOutput:
     def __init__(self, terminal, group, function):
         self.__dict__.update(locals())
 
+class LexerStackPush:
+    def __init__(self, mode):
+        self.__dict__.update(locals())
+
+class LexerAction:
+    def __init__(self, action):
+        self.__dict__.update(locals())
+
 class Lexer(OrderedDict):
     code = ''
 
@@ -326,7 +334,7 @@ class CompositeGrammar:
             for mode, regexps in lexer.items():
                 for regex in regexps:
                     for output in regex.outputs:
-                        if output.terminal is not None:
+                        if isinstance(output, RegexOutput) and output.terminal is not None:
                             self.terminals.add(output.terminal)
 
         self.first_sets = None
