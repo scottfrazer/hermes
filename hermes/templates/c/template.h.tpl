@@ -193,20 +193,21 @@ typedef struct ast_object_specification_init {
 
 } AST_CREATE_OBJECT_INIT;
 
-typedef struct lexer_match_t {
-    int mode;
-    int match_length;
-    TOKEN_T ** tokens;
-    void * context;
-} LEXER_MATCH_T;
+typedef struct lexer_context_t {
+    char * resource;
+    void * user_context;
+    int * stack;    /* Stack of mode enums */
+    int stack_size; /* Allocated size of 'stack' */
+    int stack_top;  /* index into 'stack' */
+    TOKEN_LIST_T * token_list;
+    int line;
+    int col;
+} LEXER_CONTEXT_T;
 
-typedef LEXER_MATCH_T *(*lexer_match_function)(
-    void * context,
-    char * mode,
-    char * source_string,
-    char ** match_groups,
+typedef void (*lexer_match_function)(
+    LEXER_CONTEXT_T * ctx,
     TERMINAL_T * terminal,
-    char * resource,
+    char * source_string,
     int line,
     int col
 );
@@ -215,6 +216,8 @@ typedef struct lexer_regex_output_t {
     TERMINAL_T * terminal;
     int group;
     lexer_match_function match_func;
+    char * stack_push;
+    char * action;
 } LEXER_REGEX_OUTPUT_T;
 
 typedef struct lexer_regex_t {

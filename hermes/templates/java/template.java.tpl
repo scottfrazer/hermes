@@ -1046,57 +1046,51 @@ public class {{prefix}}Parser {
     /* Section: Lexer */
     private Map<String, List<HermesRegex>> regex = null;
 
-    private class RegexOutput {
+    private interface LexerOutput {}
+
+    private class LexerRegexOutput implements LexerOutput {
         public {{prefix}}TerminalIdentifier terminal;
         public int group;
-        public String function;
+        public Method function;
 
-        RegexOutput({{prefix}}TerminalIdentifier terminal, int group, String function) {
+        LexerRegexOutput({{prefix}}TerminalIdentifier terminal, int group, Method function) {
             this.terminal = terminal;
             this.group = group;
             this.function = function;
         }
 
         public String toString() {
-            return String.format("<RegexOutput terminal=%s, group=%d, func=%s>", this.terminal, this.group, this.function);
+            return String.format("<LexerRegexOutput terminal=%s, group=%d, func=%s>", this.terminal, this.group, this.function);
+        }
+    }
+
+    private class LexerStackPush implements LexerOutput {
+        public String mode;
+
+        LexerStackPush(String mode) {
+            this.mode = mode;
+        }
+    }
+
+    private class LexerAction implements LexerOutput {
+        public String action;
+
+        LexerAction(String action) {
+            this.action = action;
         }
     }
 
     private class HermesRegex {
         public Pattern pattern;
-        public List<RegexOutput> outputs;
+        public List<LexerOutput> outputs;
 
-        HermesRegex(Pattern pattern, List<RegexOutput> outputs) {
+        HermesRegex(Pattern pattern, List<LexerOutput> outputs) {
             this.pattern = pattern;
             this.outputs = outputs;
         }
 
         public String toString() {
             return String.format("<HermesRegex pattern=%s, outputs=%s>", this.pattern, this.outputs);
-        }
-    }
-
-    private class LexerMatch {
-        public List<Terminal> terminals;
-        public String mode;
-        public String match;
-        public Object context;
-
-        public LexerMatch(List<Terminal> terminals, String mode, Object context) {
-            this.terminals = terminals;
-            this.mode = mode;
-            this.context = context;
-        }
-
-        public String toString() {
-          StringBuffer t = new StringBuffer();
-          for (Terminal x : this.terminals) {
-            t.append(x.getTerminalStr() + " ");
-          }
-          return String.format(
-            "<LexerMatch terminals=%s, mode=%s>",
-            t, this.mode
-          );
         }
     }
 
@@ -1113,17 +1107,20 @@ public class {{prefix}}Parser {
 
     private class LexerContext {
         public String string;
+        public String resource;
         public int line;
         public int col;
-        public String mode;
+        public Stack<String> stack;
         public Object context;
         public List<Terminal> terminals;
 
-        LexerContext(String string) {
+        LexerContext(String string, String resource) {
             this.string = string;
+            this.resource = resource;
             this.line = 1;
             this.col = 1;
-            this.mode = "default";
+            this.stack = new Stack<String>();
+            this.stack.push("default");
             this.terminals = new ArrayList<Terminal>();
         }
 
@@ -1148,13 +1145,13 @@ public class {{prefix}}Parser {
         }
     }
 
-    {% if re.search(r'public\s+LexerMatch\s+default_action', lexer.code) is None %}
-    public LexerMatch default_action(Object context, String mode, String match, {{prefix}}TerminalIdentifier terminal, String resource, int line, int col) {
-        List<Terminal> terminals = new ArrayList<Terminal>();
-        if (terminal != null) {
-            terminals.add(new Terminal(terminal.id(), terminal.string(), match, resource, line, col));
-        }
-        return new LexerMatch(terminals, mode, context);
+    private void emit(LexerContext lctx, TerminalIdentifier terminal, String source_string, int line, int col) {
+        lctx.terminals.add(new Terminal(terminal.id(), terminal.string(), source_string, lctx.resource, line, col));
+    }
+
+    {% if re.search(r'public\s+void\s+default_action', lexer.code) is None %}
+    public void default_action(LexerContext lctx, TerminalIdentifier terminal, String source_string, int line, int col) {
+        emit(lctx, terminal, source_string, line, col);
     }
     {% endif %}
 
@@ -1174,20 +1171,41 @@ public class {{prefix}}Parser {
     }
     {% endif %}
 
-    private void lexer_init() {
+    private Method getFunction(String name) throws SyntaxError {
+        try {
+            return getClass().getMethod(
+                name,
+                LexerContext.class,
+                TerminalIdentifier.class,
+                String.class,
+                int.class,
+                int.class
+            );
+        } catch (NoSuchMethodException e) {
+            throw new SyntaxError("No such method: " + name);
+        }
+    }
+
+    private void lexer_init() throws SyntaxError {
         this.regex = new HashMap<String, List<HermesRegex>>();
 {% for mode, regex_list in lexer.items() %}
         this.regex.put("{{mode}}", Arrays.asList(new HermesRegex[] {
   {% for regex in regex_list %}
             new HermesRegex(
                 Pattern.compile({{regex.regex}}),
-                Arrays.asList(new RegexOutput[] {
+                Arrays.asList(new LexerOutput[] {
     {% for output in regex.outputs %}
-                    new RegexOutput(
+       {% if isinstance(output, RegexOutput) %}
+                    new LexerRegexOutput(
                         {{prefix+'TerminalIdentifier.TERMINAL_' + output.terminal.string.upper() if output.terminal else 'null'}},
                         {{output.group if output.group is not None else -1}},
-                        {{'"'+output.function+'"' if output.function is not None else 'null'}}
+                        getFunction({{'"'+output.function+'"' if output.function is not None else '"default_action"'}})
                     ),
+       {% elif isinstance(output, LexerStackPush) %}
+                    new LexerStackPush("{{output.mode}}"),
+       {% elif isinstance(output, LexerAction) %}
+                    new LexerAction("{{output.action}}"),
+       {% endif %}
     {% endfor %}
                 })
             ),
@@ -1210,50 +1228,51 @@ public class {{prefix}}Parser {
         throw new SyntaxError(message);
     }
 
-    private int next(LexerContext lctx, String resource) {
-        for (int i = 0; i < this.regex.get(lctx.mode).size(); i++) {
-            HermesRegex regex = this.regex.get(lctx.mode).get(i);
+    private int next(LexerContext lctx, String resource) throws SyntaxError {
+        String mode = lctx.stack.peek();
+        for (int i = 0; i < this.regex.get(mode).size(); i++) {
+            HermesRegex regex = this.regex.get(mode).get(i);
             Matcher matcher = regex.pattern.matcher(lctx.string);
             if (matcher.lookingAt()) {
-                for (RegexOutput output : regex.outputs) {
-                    String function = output.function != null ? output.function : "default_action";
-                    try {
-                        Method method = getClass().getMethod(
-                            function,
-                            Object.class,
-                            String.class,
-                            String.class,
-                            {{prefix}}TerminalIdentifier.class,
-                            String.class,
-                            int.class,
-                            int.class
-                        );
-
+                for (LexerOutput output : regex.outputs) {
+                    if (output instanceof LexerStackPush) {
+                        lctx.stack.push(((LexerStackPush) output).mode);
+                    } else if (output instanceof LexerAction) {
+                        LexerAction action = (LexerAction) output;
+                        if (!action.action.equals("pop")) {
+                            throw new SyntaxError("Invalid action");
+                        }
+                        if (action.action.equals("pop")) {
+                            if (lctx.stack.empty()) {
+                                throw new SyntaxError("Stack empty, cannot pop");
+                            }
+                            lctx.stack.pop();
+                        }
+                    } else if (output instanceof LexerRegexOutput) {
+                        LexerRegexOutput regex_output = (LexerRegexOutput) output;
                         int group_line = lctx.line;
                         int group_col = lctx.col;
-                        if (output.group > 0) {
-                            LineColumn lc = lctx.advance_line_col(matcher.group(0), matcher.start(output.group));
+
+                        if (regex_output.group > 0) {
+                            LineColumn lc = lctx.advance_line_col(matcher.group(0), matcher.start(regex_output.group));
                             group_line = lc.line;
                             group_col = lc.col;
                         }
 
-                        LexerMatch lexer_match = (LexerMatch) method.invoke(
-                            this,
-                            lctx.context,
-                            lctx.mode,
-                            output.group >= 0 ? matcher.group(output.group) : "",
-                            output.terminal,
-                            resource,
-                            group_line,
-                            group_col
-                        );
-
-                        lctx.terminals.addAll(lexer_match.terminals);
-                        lctx.mode = lexer_match.mode;
-                        lctx.context = lexer_match.context;
-                    } catch (Exception e) {
-                        e.printStackTrace(System.err);
-                        continue;
+                        try {
+                            String source_string = (regex_output.group >= 0) ? matcher.group(regex_output.group) : "";
+                            regex_output.function.invoke(
+                                this,
+                                lctx,
+                                regex_output.terminal,
+                                source_string,
+                                group_line,
+                                group_col
+                            );
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            throw new SyntaxError("Invalid method: " + regex_output.function);
+                        }
                     }
                 }
                 lctx.advance(matcher.group(0));
@@ -1264,7 +1283,7 @@ public class {{prefix}}Parser {
     }
 
     public List<Terminal> lex(String string, String resource) throws SyntaxError {
-        LexerContext lctx = new LexerContext(string);
+        LexerContext lctx = new LexerContext(string, resource);
         Object context = this.init();
         String string_copy = new String(string);
         if (this.regex == null) {

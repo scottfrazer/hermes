@@ -606,10 +606,13 @@ def parse_{{name}}(ctx):
 {{lexer.code}}
 # END USER CODE
 
+def emit(ctx, terminal, source_string, line, col):
+    if terminal:
+        ctx.tokens.append(Terminal(terminals[terminal], terminal, source_string, ctx.resource, line, col))
+
 {% if re.search(r'def\s+default_action', lexer.code) is None %}
-def default_action(context, match, groups, terminal, resource, line, col):
-    tokens = [Terminal(terminals[terminal], terminal, match, resource, line, col)] if terminal else []
-    return (tokens, context)
+def default_action(ctx, terminal, source_string, line, col):
+    emit(ctx, terminal, source_string, line, col)
 {% endif %}
 
 {% if re.search(r'def\s+init', lexer.code) is None %}
@@ -629,6 +632,16 @@ class LexerStackPush:
 class LexerAction:
     def __init__(self, action):
         self.action = action
+
+class LexerContext:
+    def __init__(self, string, resource, user_context):
+        self.__dict__.update(locals())
+        self.stack = ['default']
+        self.line = 1
+        self.col = 1
+        self.tokens = []
+        self.user_context = user_context
+        self.re_match = None # https://docs.python.org/3/library/re.html#match-objects
 
 class HermesLexer:
     regex = {
@@ -661,6 +674,10 @@ class HermesLexer:
                 col += 1
         return (line, col)
 
+    def _advance_string(self, ctx, string):
+        (ctx.line, ctx.col) = self._advance_line_col(string, len(string), ctx.line, ctx.col)
+        ctx.string = ctx.string[len(string):]
+
     def _unrecognized_token(self, string, line, col):
         lines = string.split('\n')
         bad_line = lines[line-1]
@@ -669,60 +686,55 @@ class HermesLexer:
         )
         raise SyntaxError(message)
 
-    def _next(self, string, mode_stack, context, resource, line, col, debug=False):
-        for regex, outputs in self.regex[mode_stack[-1]].items():
+    def _next(self, ctx, debug=False):
+        for regex, outputs in self.regex[ctx.stack[-1]].items():
+
             if debug:
-                print('trying: `{1}` ({2}, {3}) against {0}'.format(regex, string[:20].replace('\n', '\\n'), line, col))
-            match = regex.match(string)
+                token_count = len(ctx.tokens)
+                print('trying: `{1}` ({2}, {3}) against {0}'.format(
+                    regex, ctx.string[:20].replace('\n', '\\n'), ctx.line, ctx.col)
+                )
+
+            match = regex.match(ctx.string)
             if match:
-                return_tokens = []
+                ctx.re_match = match
                 for output in outputs:
                     if isinstance(output, tuple):
                         (terminal, group, function) = output
                         function = function if function else default_action
                         source_string = match.group(group) if group is not None else ''
-                        if terminal is None and group is None and function != default_action:
-                            source_string = match.group(0)
-                        (group_line, group_col) = self._advance_line_col(string, match.start(group) if group else 0, line, col)
-                        (tokens, context) = function(
-                            context,
-                            source_string,
-                            match.groups(),
+                        (group_line, group_col) = self._advance_line_col(ctx.string, match.start(group) if group else 0, ctx.line, ctx.col)
+                        function(
+                            ctx,
                             terminal,
-                            resource,
-                            group_line, group_col
+                            source_string,
+                            group_line,
+                            group_col
                         )
-                        return_tokens.extend(tokens)
                         if debug:
-                            print('    match: mode={} string={}'.format(mode, match.group(0), tokens))
-                            for token in tokens:
-                                print('           token: {}'.format(token))
+                            print('    match: string={}'.format(match.group(0).replace('\n', '\\n')))
+                            for token in ctx.tokens[token_count:]:
+                                print('           emit token: {}'.format(token))
+                            token_count = len(ctx.tokens)
                     if isinstance(output, LexerStackPush):
-                        mode_stack.append(output.mode)
+                        ctx.stack.append(output.mode)
                     if isinstance(output, LexerAction):
                         if output.action == 'pop':
-                            mode_stack.pop()
-                return (return_tokens, match.group(0))
-        return ([], '')
+                            ctx.stack.pop()
+
+                self._advance_string(ctx, match.group(0))
+                return len(match.group(0)) > 0
+        return False
 
     def lex(self, string, resource, debug=False):
-        (mode_stack, line, col) = (['default'], 1, 1)
-        context = init()
         string_copy = string
-        parsed_tokens = []
-        while len(string):
-            (tokens, match) = self._next(string, mode_stack, context, resource, line, col, debug)
-            if len(match) == 0:
-                self._unrecognized_token(string_copy, line, col)
+        user_context = init()
+        ctx = LexerContext(string, resource, user_context)
 
-            string = string[len(match):]
-
-            if tokens is None:
-                self._unrecognized_token(string_copy, line, col)
-
-            parsed_tokens.extend(tokens)
-
-            (line, col) = self._advance_line_col(match, len(match), line, col)
+        while len(ctx.string):
+            matched = self._next(ctx)
+            if matched == False:
+                self._unrecognized_token(string_copy, ctx.line, ctx.col)
 
             if debug:
                 from xtermcolor import colorize
@@ -735,8 +747,9 @@ class HermesLexer:
                         colorize(str(mode_stack), ansi=4),
                         colorize(str(context), ansi=13)
                     ))
-        destroy(context)
-        return parsed_tokens
+
+        destroy(ctx.user_context)
+        return ctx.tokens
 
 def lex(source, resource, debug=False):
     return TokenStream(HermesLexer().lex(source, resource, debug))

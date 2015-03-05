@@ -4,8 +4,8 @@ grammar {
     r'(x)\s*(y)\s*(z)' -> :hint[] f(:x[1]) :all
     r'\s+' -> null
     <code>
-def f(context, match, groups, terminal, resource, line, col):
-    return default_action(context, match, groups, terminal, resource, line, col)
+def f(ctx, terminal, source_string, line, col):
+    default_action(ctx, terminal, source_string, line, col)
     </code>
   }
   lexer<c> {
@@ -13,9 +13,9 @@ def f(context, match, groups, terminal, resource, line, col):
     "(x)\\s*(y)\\s*(z)" -> :hint[] f(:x[1]) :all
     "\\s+" -> null
     <code>
-static LEXER_MATCH_T * f(void * context, char * source_string, char ** match_groups, TERMINAL_T * terminal, char * resource, int line, int col)
+static void f(LEXER_CONTEXT_T * ctx, TERMINAL_T * terminal, char * source_string, int line, int col)
 {
-    return default_action(context, source_string, match_groups, terminal, resource, line, col);
+    default_action(ctx, terminal, source_string, line, col);
 }
     </code>
   }
@@ -24,8 +24,8 @@ static LEXER_MATCH_T * f(void * context, char * source_string, char ** match_gro
     "(x)\\s*(y)\\s*(z)" -> :hint[] f(:x[1]) :all
     "\\s+" -> null
     <code>
-public LexerMatch f(Object context, String match, GrammarTerminalIdentifier terminal, String resource, int line, int col) {
-    return default_action(context, match, terminal, resource, line, col);
+public void f(LexerContext ctx, TerminalIdentifier terminal, String source_string, int line, int col) {
+    default_action(ctx, terminal, source_string, line, col);
 }
     </code>
   }
@@ -34,8 +34,8 @@ public LexerMatch f(Object context, String match, GrammarTerminalIdentifier term
     "(x)\\s*(y)\\s*(z)" -> :hint[] f(:x[1]) :all
     "\\s+" -> null
     <code>
-function f(context, match, terminal, resource, line, col) {
-    return default_action(context, match, terminal, resource, line, col);
+function f(ctx, terminal, source_string, line, col) {
+    default_action(ctx, terminal, source_string, line, col);
 }
     </code>
   }

@@ -13,7 +13,7 @@ grammar {
 
   lexer<c> {
     "[a-z]" -> :letter
-    "{" -> :lbrace %numbers
+    "{" -> :lbrace @numbers
     "\\s+" -> null
 
     mode<numbers> {

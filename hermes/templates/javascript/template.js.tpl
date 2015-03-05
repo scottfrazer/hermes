@@ -1050,13 +1050,13 @@ function parse_{{name}}(ctx) {
 {{lexer.code}}
 // END USER CODE
 
+function emit(ctx, terminal, source_string, line, col) {
+    ctx.tokens.push(new Terminal(terminals[terminal], terminal, source_string, ctx.resource, line, col))
+}
+
 {% if re.search(r'function\s+default_action', lexer.code) is None %}
-function default_action(context, match, terminal, resource, line, col) {
-    var tokens = []
-    if (terminal) {
-        tokens = [new Terminal(terminals[terminal], terminal, match, resource, line, col)]
-    }
-    return {tokens: tokens, context: context}
+function default_action(ctx, terminal, source_string, line, col) {
+    emit(ctx, terminal, source_string, line, col)
 }
 
 {% endif %}
@@ -1112,10 +1112,11 @@ function advance_line_col(string, length, line, col) {
     return {line: line, col: col}
 }
 
-function _update_line_col(string, lexer_context) {
-    lc = advance_line_col(string, string.length, lexer_context.line, lexer_context.col)
-    lexer_context.line = lc.line
-    lexer_context.col = lc.col
+function advance_string(ctx, string) {
+    lc = advance_line_col(string, string.length, ctx.line, ctx.col)
+    ctx.line = lc.line
+    ctx.col = lc.col
+    ctx.string = ctx.string.substring(string.length)
 }
 
 function _unrecognized_token(string, line, col) {
@@ -1127,14 +1128,14 @@ function _unrecognized_token(string, line, col) {
     throw new SyntaxError(message)
 }
 
-function _next(string, context, resource, lexer_context) {
+function _next(ctx) {
     var tokens = []
-    var mode = lexer_context.mode_stack[lexer_context.mode_stack.length - 1]
-    for (i = 0; i < regex[mode].length; i++) {
-        match = regex[mode][i].regex.exec(string);
+    var mode = ctx.mode_stack[ctx.mode_stack.length - 1]
+    for (var i = 0; i < regex[mode].length; i++) {
+        match = regex[mode][i].regex.exec(ctx.string);
 
         if (match != null && match.index == 0) {
-            for (j = 0; j < regex[mode][i].outputs.length; j++) {
+            for (var j = 0; j < regex[mode][i].outputs.length; j++) {
                 var terminal = regex[mode][i].outputs[j].terminal;
                 var group = regex[mode][i].outputs[j].group;
                 var func = regex[mode][i].outputs[j].function;
@@ -1142,68 +1143,62 @@ function _next(string, context, resource, lexer_context) {
                 var action = regex[mode][i].outputs[j].action;
 
                 if (stack_push !== undefined) {
-                    lexer_context.mode_stack.push(stack_push)
+                    ctx.mode_stack.push(stack_push)
                 } else if (action !== undefined) {
                     if (action == 'pop') {
-                        lexer_context.mode_stack.pop()
+                        ctx.mode_stack.pop()
                     }
                 } else {
                     func = (func == null) ? default_action : func;
                     var source_string = group != null ? match[group] : ""
 
                     // Ugh!  JavaScript why you no have regex group indexes?!
-                    var group_line = lexer_context.line
-                    var group_col = lexer_context.col
+                    var group_line = ctx.line
+                    var group_col = ctx.col
                     try {
                         var mult_regex = new MultiRegExp(regex[mode][i].regex.source);
-                        var mult_groups = mult_regex.exec(string)
+                        var mult_groups = mult_regex.exec(ctx.string)
                         if (group != null && group > 0) {
-                            var lc = advance_line_col(match[0], mult_groups[group-1].index, lexer_context.line, lexer_context.col)
+                            var lc = advance_line_col(match[0], mult_groups[group-1].index, ctx.line, ctx.col)
                             group_line = lc.line
                             group_col = lc.col
                         }
                     } catch(err) {}
+                    // ^ Literally the worst thing ever
 
-                    lexer_match = func(context, source_string, terminal, resource, group_line, group_col)
-                    tokens.push.apply(tokens, lexer_match.tokens)
-                    context = lexer_match.context
+                    func(ctx, terminal, source_string, group_line, group_col)
                 }
             }
 
-            return {tokens: tokens, string: match[0]}
+            advance_string(ctx, match[0])
+            return true
         }
     }
-    return {tokens: [], string: ''}
+    return false
 }
 
 function lex(string, resource) {
-    lexer_context = {
+    ctx = {
+        string: string,
+        resource: resource,
+        user_context: init(),
         mode_stack: ['default'],
+        tokens: [],
         line: 1,
         col: 1
     }
-    user_context = init()
 
     string_copy = string
     parsed_tokens = []
-    while (string.length) {
-        lexer_match = _next(string, user_context, resource, lexer_context)
+    while (ctx.string.length) {
+        matched = _next(ctx)
 
-        if (lexer_match.string.length == 0) {
-            _unrecognized_token(string_copy, lexer_context.line, lexer_context.col)
+        if (matched == false) {
+            _unrecognized_token(string_copy, ctx.line, ctx.col)
         }
-
-        string = string.substring(match[0].length)
-
-        if (lexer_match.tokens == null) {
-            _unrecognized_token(string_copy, lexer_context.line, lexer_context.col)
-        }
-
-        parsed_tokens.push.apply(parsed_tokens, lexer_match.tokens)
-        _update_line_col(lexer_match.string, lexer_context)
     }
-    destroy(user_context)
-    return new TokenStream(parsed_tokens)
+    destroy(ctx.user_context)
+    return new TokenStream(ctx.tokens)
 }
 
 {% endif %}
@@ -1235,12 +1230,12 @@ var main = function() {
         if (err) throw err;
         if (output == 'tokens') {
 
-          //try {
+          try {
               var tokens = lex(data, 'source');
-          //} catch(err) {
-          //    console.log(err.to_string());
-          //    process.exit(0);
-          //}
+          } catch(err) {
+              console.log(err.to_string());
+              process.exit(0);
+          }
 
           if (tokens.list.length == 0) {
               console.log('[]');
