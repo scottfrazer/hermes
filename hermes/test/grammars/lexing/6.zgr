@@ -1,0 +1,78 @@
+grammar {
+  lexer<python> {
+    r'\s+' -> null
+    r'{' -> :lbrace @letters
+    r'\(' -> :lparen @numbers
+    mode<letters> {
+      r'\s+' -> null
+      r'[a-z]' -> :letter
+      r'{' -> :lbrace @letters
+      r'\(' -> :lparen @numbers
+      r'}' -> :rbrace %pop
+    }
+    mode<numbers> {
+      r'\s+' -> null
+      r'[0-9]' -> :number
+      r'{' -> :lbrace @letters
+      r'\(' -> :lparen @numbers
+      r'\)' -> :rparen %pop
+    }
+  }
+  lexer<c> {
+    "\\s+" -> null
+    "\\{" -> :lbrace @letters
+    "\\(" -> :lparen @numbers
+    mode<letters> {
+      "\\s+" -> null
+      "[a-z]" -> :letter
+      "\\{" -> :lbrace @letters
+      "\\(" -> :lparen @numbers
+      "\\}" -> :rbrace %pop
+    }
+    mode<numbers> {
+      "\\s+" -> null
+      "[0-9]" -> :number
+      "\\{" -> :lbrace @letters
+      "\\(" -> :lparen @numbers
+      "\\)" -> :rparen %pop
+    }
+  }
+  lexer<java> {
+    "\\s+" -> null
+    "\\{" -> :lbrace @letters
+    "\\(" -> :lparen @numbers
+    mode<letters> {
+      "\\s+" -> null
+      "[a-z]" -> :letter
+      "\\{" -> :lbrace @letters
+      "\\(" -> :lparen @numbers
+      "\\}" -> :rbrace %pop
+    }
+    mode<numbers> {
+      "\\s+" -> null
+      "[0-9]" -> :number
+      "\\{" -> :lbrace @letters
+      "\\(" -> :lparen @numbers
+      "\\)" -> :rparen %pop
+    }
+  }
+  lexer<javascript> {
+    "\\s+" -> null
+    "\\{" -> :lbrace @letters
+    "\\(" -> :lparen @numbers
+    mode<letters> {
+      "\\s+" -> null
+      "[a-z]" -> :letter
+      "\\{" -> :lbrace @letters
+      "\\(" -> :lparen @numbers
+      "\\}" -> :rbrace %pop
+    }
+    mode<numbers> {
+      "\\s+" -> null
+      "[0-9]" -> :number
+      "\\{" -> :lbrace @letters
+      "\\(" -> :lparen @numbers
+      "\\)" -> :rparen %pop
+    }
+  }
+}
