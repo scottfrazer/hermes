@@ -565,7 +565,7 @@
                                                       (ll1_rule_rhs:
                                                         (parser:
                                                           (parser_expression:
-                                                            <parser_expression (line 22 col 10) `parser<expression>`>,
+                                                            <parser_expression (line 22 col 10) ``>,
                                                             <lbrace (line 22 col 29) `{`>,
                                                             (_gen14:
                                                               (expression_rule:
@@ -574,14 +574,14 @@
                                                                     <lparen (line 23 col 7) `(`>,
                                                                     (precedence:
                                                                       (binding_power_marker:
-                                                                        <asterisk (line 23 col 7) `*`>
+                                                                        <asterisk (line 23 col 8) `*`>
                                                                       ),
-                                                                      <colon (line 23 col 7) `:`>,
+                                                                      <colon (line 23 col 9) `:`>,
                                                                       (associativity:
-                                                                        <left (line 23 col 7) `left`>
+                                                                        <left (line 23 col 10) `left`>
                                                                       )
                                                                     ),
-                                                                    <rparen (line 23 col 7) `)`>
+                                                                    <rparen (line 23 col 14) `)`>
                                                                   )
                                                                 ),
                                                                 <expr_rule_hint (line 23 col 16) ``>,
@@ -640,14 +640,14 @@
                                                                       <lparen (line 24 col 7) `(`>,
                                                                       (precedence:
                                                                         (binding_power_marker:
-                                                                          <dash (line 24 col 7) `-`>
+                                                                          <dash (line 24 col 8) `-`>
                                                                         ),
-                                                                        <colon (line 24 col 7) `:`>,
+                                                                        <colon (line 24 col 9) `:`>,
                                                                         (associativity:
-                                                                          <left (line 24 col 7) `left`>
+                                                                          <left (line 24 col 10) `left`>
                                                                         )
                                                                       ),
-                                                                      <rparen (line 24 col 7) `)`>
+                                                                      <rparen (line 24 col 14) `)`>
                                                                     )
                                                                   ),
                                                                   <expr_rule_hint (line 24 col 16) ``>,
@@ -706,14 +706,14 @@
                                                                         <lparen (line 25 col 7) `(`>,
                                                                         (precedence:
                                                                           (binding_power_marker:
-                                                                            <asterisk (line 25 col 7) `*`>
+                                                                            <asterisk (line 25 col 8) `*`>
                                                                           ),
-                                                                          <colon (line 25 col 7) `:`>,
+                                                                          <colon (line 25 col 9) `:`>,
                                                                           (associativity:
-                                                                            <left (line 25 col 7) `left`>
+                                                                            <left (line 25 col 10) `left`>
                                                                           )
                                                                         ),
-                                                                        <rparen (line 25 col 7) `)`>
+                                                                        <rparen (line 25 col 14) `)`>
                                                                       )
                                                                     ),
                                                                     <expr_rule_hint (line 25 col 16) ``>,
@@ -772,14 +772,14 @@
                                                                           <lparen (line 26 col 7) `(`>,
                                                                           (precedence:
                                                                             (binding_power_marker:
-                                                                              <dash (line 26 col 7) `-`>
+                                                                              <dash (line 26 col 8) `-`>
                                                                             ),
-                                                                            <colon (line 26 col 7) `:`>,
+                                                                            <colon (line 26 col 9) `:`>,
                                                                             (associativity:
-                                                                              <left (line 26 col 7) `left`>
+                                                                              <left (line 26 col 10) `left`>
                                                                             )
                                                                           ),
-                                                                          <rparen (line 26 col 7) `)`>
+                                                                          <rparen (line 26 col 14) `)`>
                                                                         )
                                                                       ),
                                                                       <expr_rule_hint (line 26 col 16) ``>,
@@ -838,14 +838,14 @@
                                                                             <lparen (line 27 col 7) `(`>,
                                                                             (precedence:
                                                                               (binding_power_marker:
-                                                                                <asterisk (line 27 col 7) `*`>
+                                                                                <asterisk (line 27 col 8) `*`>
                                                                               ),
-                                                                              <colon (line 27 col 7) `:`>,
+                                                                              <colon (line 27 col 9) `:`>,
                                                                               (associativity:
-                                                                                <unary (line 27 col 7) `unary`>
+                                                                                <unary (line 27 col 10) `unary`>
                                                                               )
                                                                             ),
-                                                                            <rparen (line 27 col 7) `)`>
+                                                                            <rparen (line 27 col 15) `)`>
                                                                           )
                                                                         ),
                                                                         <expr_rule_hint (line 27 col 17) ``>,

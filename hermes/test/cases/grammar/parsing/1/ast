@@ -91,8 +91,8 @@
             rules=[
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<asterisk (line 9 col 7) `*`>,
-                  associativity=<left (line 9 col 7) `left`>
+                  marker=<asterisk (line 9 col 8) `*`>,
+                  associativity=<left (line 9 col 10) `left`>
                 ),
                 nonterminal=<nonterminal (line 9 col 17) `e`>,
                 production=(InfixProduction:
@@ -118,8 +118,8 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<dash (line 10 col 7) `-`>,
-                  associativity=<left (line 10 col 7) `left`>
+                  marker=<dash (line 10 col 8) `-`>,
+                  associativity=<left (line 10 col 10) `left`>
                 ),
                 nonterminal=<nonterminal (line 10 col 17) `e`>,
                 production=(InfixProduction:
@@ -145,8 +145,8 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<asterisk (line 11 col 7) `*`>,
-                  associativity=<left (line 11 col 7) `left`>
+                  marker=<asterisk (line 11 col 8) `*`>,
+                  associativity=<left (line 11 col 10) `left`>
                 ),
                 nonterminal=<nonterminal (line 11 col 17) `e`>,
                 production=(InfixProduction:
@@ -172,8 +172,8 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<dash (line 12 col 7) `-`>,
-                  associativity=<left (line 12 col 7) `left`>
+                  marker=<dash (line 12 col 8) `-`>,
+                  associativity=<left (line 12 col 10) `left`>
                 ),
                 nonterminal=<nonterminal (line 12 col 17) `e`>,
                 production=(InfixProduction:
@@ -199,8 +199,8 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<asterisk (line 13 col 7) `*`>,
-                  associativity=<unary (line 13 col 7) `unary`>
+                  marker=<asterisk (line 13 col 8) `*`>,
+                  associativity=<unary (line 13 col 10) `unary`>
                 ),
                 nonterminal=<nonterminal (line 13 col 18) `e`>,
                 production=(PrefixProduction:
