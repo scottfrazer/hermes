@@ -15,38 +15,21 @@ Features
     $_gen0 = $a | :b | $c :d
     -- parsing :c0 :c1 :d :e :terminator --
     should return MyAst(x=Bar(u=:c0, v=:c1), y=:e)
-3) Native lexer stack support:
-    r'(<!ATTR)(?=\s*%)' -> :hint :attr[0] @mode
-    r'(lexer)(<)([a-z]+)(>)' -> :lexer[1] :langle[2] :language[3] :rangle[4] @lexer
-    r'}' -> :lbrace #pop
-4) Token buffers
-
-    lexer {
-        mode:root {
-            r'{' -> @collection #buffer :lbrace
-        }
-        mode:collection {
-            r'}' -> :rbrace #pop
-            r'mixed(?=\s*})' -> :mix_hint #flush
-            r'numbers(?=\s*})' -> :numbers_hint #flush
-            r'words(?=\s*})' -> :words_hint #flush
-            r'[0-9]+' -> :number
-            r'[a-z]+' -> :word
-        }
-    }
 
 Minor things
 ------------
 
-1) Have error message if expression rule needs a binding power but is missing one. (Add test!)
-2) Have error message if lexer produces token that is not consumed by the grammar.
-3) Get rid of MacroGeneratedRule
-4) Make test with macro for first part of expression rule.  Should this be a syntax error?
-5) Test capital letters, numbers, underscores in terminal/nonterminal
-6) All syntax errors need a test
-7) Test two expression parsers in one grammar
-8) test mslist() macro
-9) runtime detection of a non-existent mode and proper error (instead of NPE)
+* Have error message if expression rule needs a binding power but is missing one. (Add test!)
+* Have error message if lexer produces token that is not consumed by the grammar.
+* Get rid of MacroGeneratedRule
+* Make test with macro for first part of expression rule.  Should this be a syntax error?
+* Test capital letters, numbers, underscores in terminal/nonterminal
+* All syntax errors need a test
+* Test two expression parsers in one grammar
+* runtime detection of a non-existent mode and proper error (instead of NPE)
+* Lexer produces token with match group that is out of bounds
+* Lexer stack underflow
+* Proper error if mode doesn't exist (@badmode)
 
 Syntax Error Formatting for C
 -----------------------------

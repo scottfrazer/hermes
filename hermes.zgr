@@ -3,6 +3,7 @@ grammar {
     partials {
       r'\#.*' -> _comment
       r'\s+' -> _ws
+      r'[a-zA-Z][a-zA-Z0-9_]*' -> _identifier
     }
 
     r'(grammar)\s*({)' -> :grammar[1] :lbrace[2] @grammar
@@ -13,7 +14,7 @@ grammar {
       r'{%_ws%}' -> null
       r'{%_comment%}' -> null
       r'}' -> :rbrace %pop
-      r'(lexer)\s*(<)\s*([a-zA-Z]+)\s*(>)\s*({)'
+      r'(lexer)\s*(<)\s*({%_identifier%})\s*(>)\s*({)'
           -> :lexer[1] :langle[2] :identifier[3] :rangle[4] :lbrace[5] @lexer
       r'(parser\s*<\s*ll1\s*>)\s*({)'
           -> :parser_ll1[1] :lbrace[2] @parser_ll1
@@ -33,15 +34,24 @@ grammar {
       r'r\'(\\\'|[^\'])*\'' -> :regex
       r'"(\\\"|[^\"])*"' -> :regex
       r'->' -> :arrow
-      r'@([a-zA-Z][a-zA-Z0-9_]+)' -> :stack_push[1]
-      r'%([a-zA-Z][a-zA-Z0-9_]+)' -> :action[1]
-      r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> :terminal[1]
-      r'(mode)\s*(<)\s*([a-zA-Z0-9_]+)\s*(>)\s*({)'
+      r'@({%_identifier%})' -> :stack_push[1]
+      r'%({%_identifier%})' -> :action[1]
+      r':({%_identifier%}|_empty)' -> :terminal[1]
+      r'(mode)\s*(<)\s*({%_identifier%})\s*(>)\s*({)'
           -> :mode[1] :langle[2] :identifier[3] :rangle[4] :lbrace[5] @lexer
       r'(partials)\s*({)'
           -> :partials[1] :lbrace[2] @partials
-      r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
+      r'{%_identifier%}' -> :identifier
+      r'{' -> :lbrace @regex_options
       r'<code>(.*?)</code>' {DOTALL} -> :code[1]
+    }
+
+    mode<regex_options> {
+      r'{%_ws%}' -> null
+      r'{%_comment%}' -> null
+      r'{%_identifier%}' -> :identifier
+      r',' -> :comma
+      r'}' -> :rbrace %pop
     }
 
     mode<partials> {
@@ -50,7 +60,7 @@ grammar {
       r'r\'(\\\'|[^\'])*\'' -> :regex
       r'"(\\\"|[^\"])*"' -> :regex
       r'->' -> :arrow
-      r'_([a-zA-Z][a-zA-Z0-9_]*)' -> :regex_partial
+      r'_({%_identifier%})' -> :regex_partial
       r'}' -> :rbrace %pop
     }
 
@@ -65,11 +75,11 @@ grammar {
       r',' -> :comma
       r'->' -> :arrow
       r'parser\s*<\s*expression\s*>\s*({)' -> :parser_expression[] :lbrace[1] @parser_expr
-      r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> :terminal[1]
-      r'\$([a-zA-Z][a-zA-Z0-9_]*)(?=\s*\=)' -> :ll1_rule_hint[] :nonterminal[1]
-      r'\$([a-zA-Z][a-zA-Z0-9_]*)' -> :nonterminal[1]
+      r':({%_identifier%}|_empty)' -> :terminal[1]
+      r'\$({%_identifier%})(?=\s*\=)' -> :ll1_rule_hint[] :nonterminal[1]
+      r'\$({%_identifier%})' -> :nonterminal[1]
       r'\$([0-9]+|\$)' -> :nonterminal_reference[1]
-      r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
+      r'{%_identifier%}' -> :identifier
       r'"[^"]+"' -> :string
       r'[0-9]+' -> :integer
     }
@@ -86,16 +96,16 @@ grammar {
       r'\(' -> :lparen
       r'\)' -> :rparen
       r',' -> :comma
-      r':([a-zA-Z][a-zA-Z0-9_]*|_empty)' -> :terminal[1]
-      r'(\$([a-zA-Z][a-zA-Z0-9_]*))[ \t]*(=)[ \t]*\1[ \t]+:([a-zA-Z][a-zA-Z0-9_]*)[ \t]+\1(?![ \t]+(:|\$))'
+      r':({%_identifier%}|_empty)' -> :terminal[1]
+      r'(\$({%_identifier%}))[ \t]*(=)[ \t]*\1[ \t]+:({%_identifier%})[ \t]+\1(?![ \t]+(:|\$))'
           -> :expr_rule_hint[] :nonterminal[2] :equals[3] :infix_rule_hint[] :nonterminal[2] :terminal[4] :nonterminal[2]
-      r'(\$([a-zA-Z][a-zA-Z0-9_]*))[ \t]*(=)[ \t]*:([a-zA-Z][a-zA-Z0-9_]*)[ \t]+\1(?![ \t](:|\$))'
+      r'(\$({%_identifier%}))[ \t]*(=)[ \t]*:({%_identifier%})[ \t]+\1(?![ \t](:|\$))'
           -> :expr_rule_hint[] :nonterminal[2] :equals[3] :prefix_rule_hint[] :terminal[4] :nonterminal[2]
-      r'\$([a-zA-Z][a-zA-Z0-9_]*)\s*(=)'
+      r'\$({%_identifier%})\s*(=)'
           -> :expr_rule_hint[] :nonterminal[1] :equals[2] :mixfix_rule_hint[]
-      r'\$([a-zA-Z][a-zA-Z0-9_]*)' -> :nonterminal[1]
+      r'\$({%_identifier%})' -> :nonterminal[1]
       r'\$([0-9]+|\$)' -> :nonterminal_reference[1]
-      r'[a-zA-Z][a-zA-Z0-9_]*' -> :identifier
+      r'{%_identifier%}' -> :identifier
       r'"[^"]+"' -> :string
       r'[0-9]+' -> :integer
     }
@@ -121,7 +131,7 @@ grammar {
     $lexer_partials = :partials :lbrace list($regex_partial) :rbrace -> RegexPartials(list=$2)
     $regex_partial = :regex :arrow :regex_partial -> RegexPartial(regex=$0, name=$2)
     $lexer_regex = :regex optional($regex_options) :arrow list($lexer_target) -> Regex(regex=$0, options=$1, onmatch=$3)
-    $regex_options = :lbrace list(:identifier) :rbrace -> $1
+    $regex_options = :lbrace list(:identifier, :comma) :rbrace -> $1
     $lexer_target = $terminal | :identifier :lparen optional($terminal) :rparen -> LexerFunctionCall(name=$0, terminal=$2)
     $lexer_target = $terminal | :stack_push | :action
     $terminal = :terminal optional($match_group) -> Terminal(name=$0, group=$1)
@@ -137,8 +147,10 @@ grammar {
     $ll1_rule_rhs = :null -> NullProduction()
     $ll1_rule_rhs = $parser
     $parser_expression = :parser_expression :lbrace list($expression_rule) :rbrace -> ExpressionParser(rules=$2)
-    $expression_rule = optional($binding_power) :expr_rule_hint :nonterminal :equals $expression_rule_production -> ExpressionRule(precedence=$0, nonterminal=$2, production=$4)
-    $expression_rule_production = :mixfix_rule_hint $nud optional($ast_transform) optional($led) optional($ast_transform) -> MixfixProduction(nud=$1, nud_ast=$2, led=$3, ast=$4)
+    $expression_rule = optional($binding_power) :expr_rule_hint :nonterminal :equals $expression_rule_production
+        -> ExpressionRule(precedence=$0, nonterminal=$2, production=$4)
+    $expression_rule_production = :mixfix_rule_hint $nud optional($ast_transform) optional($led) optional($ast_transform)
+        -> MixfixProduction(nud=$1, nud_ast=$2, led=$3, ast=$4)
     $expression_rule_production = :prefix_rule_hint list($morpheme) optional($ast_transform) -> PrefixProduction(morphemes=$1, ast=$2)
     $expression_rule_production = :infix_rule_hint list($morpheme) optional($ast_transform) -> InfixProduction(morphemes=$1, ast=$2)
     $nud = list($morpheme)

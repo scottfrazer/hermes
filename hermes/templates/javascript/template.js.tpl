@@ -1078,7 +1078,7 @@ var regex = {
     '{{mode}}': [
       {% for regex in regex_list %}
       {
-          regex: new RegExp({{regex.regex}}{{", "+' | '.join(['re.'+x for x in regex.options]) if regex.options else ''}}),
+          regex: new RegExp({{regex.regex}}{{', "' + ''.join(regex.options) + '"' if regex.options else ''}}),
           outputs: [
           {% for output in regex.outputs %}
               {
