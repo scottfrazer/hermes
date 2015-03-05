@@ -194,6 +194,7 @@ typedef struct ast_object_specification_init {
 } AST_CREATE_OBJECT_INIT;
 
 typedef struct lexer_context_t {
+    char * string;
     char * resource;
     void * user_context;
     int * stack;    /* Stack of mode enums */

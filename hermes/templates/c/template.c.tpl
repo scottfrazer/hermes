@@ -2733,13 +2733,13 @@ advance_line_col(char * string, int length, int * line, int * col) {
 }
 
 static void
-advance_string(char ** string, int length, int * line, int * col) {
-    advance_line_col(*string, length, line, col);
-    *string += length;
+advance_string(LEXER_CONTEXT_T * ctx, int length) {
+    advance_line_col(ctx->string, length, &ctx->line, &ctx->col);
+    ctx->string += length;
 }
 
 static int
-next(char ** string, LEXER_CONTEXT_T * ctx) {
+next(LEXER_CONTEXT_T * ctx) {
     int rc, i, j;
     int group_line, group_col;
     int ovector_count = 30, group_strlen, match_length;
@@ -2748,18 +2748,18 @@ next(char ** string, LEXER_CONTEXT_T * ctx) {
     {{prefix.upper()}}LEXER_MODE_E mode = ({{prefix.upper()}}LEXER_MODE_E) ctx->stack[ctx->stack_top];
 
     for (i = 0; lexer[mode][i]; i++) {
-        rc = pcre_exec(lexer[mode][i]->regex, NULL, *string, strlen(*string), 0, PCRE_ANCHORED, ovector, ovector_count);
+        rc = pcre_exec(lexer[mode][i]->regex, NULL, ctx->string, strlen(ctx->string), 0, PCRE_ANCHORED, ovector, ovector_count);
         if (rc >= 0) {
             match_length = ovector[1] - ovector[0];
 
             if (lexer[mode][i]->outputs_count == 0 || lexer[mode][i]->outputs == NULL) {
-                advance_string(string, match_length, &ctx->line, &ctx->col);
+                advance_string(ctx, match_length);
                 return TRUE;
             }
 
             match_groups = calloc(rc+1, sizeof(char *));
             for (j = 0; j < rc; j++) {
-                char *substring_start = *string + ovector[2*j];
+                char * substring_start = ctx->string + ovector[2*j];
                 group_strlen = ovector[2*j+1] - ovector[2*j];
                 match_groups[j] = calloc(group_strlen + 1, sizeof(char));
                 strncpy(match_groups[j], substring_start, group_strlen);
@@ -2783,7 +2783,7 @@ next(char ** string, LEXER_CONTEXT_T * ctx) {
                     group_line = ctx->line;
                     group_col = ctx->col;
                     if (lexer[mode][i]->outputs[j].group > 0) {
-                        advance_line_col(*string, ovector[2*lexer[mode][i]->outputs[j].group] - ovector[0], &group_line, &group_col);
+                        advance_line_col(ctx->string, ovector[2*lexer[mode][i]->outputs[j].group] - ovector[0], &group_line, &group_col);
                     }
                     match_func(
                         ctx,
@@ -2799,7 +2799,7 @@ next(char ** string, LEXER_CONTEXT_T * ctx) {
                 free(match_groups[j]);
             }
             free(match_groups);
-            advance_string(string, match_length, &ctx->line, &ctx->col);
+            advance_string(ctx, match_length);
             return TRUE;
         }
     }
@@ -2811,8 +2811,10 @@ TOKEN_LIST_T *
     char * string_current = string;
     TERMINAL_T end_of_stream;
     LEXER_CONTEXT_T * ctx = NULL;
+    TOKEN_LIST_T * token_list;
 
     ctx = calloc(1, sizeof(LEXER_CONTEXT_T));
+    ctx->string = string_current;
     ctx->resource = resource;
     ctx->token_list = calloc(1, sizeof(TOKEN_LIST_T));
     ctx->token_list->ntokens = 100;
@@ -2826,8 +2828,8 @@ TOKEN_LIST_T *
     ctx->col = 1;
     ctx->user_context = init();
 
-    while (strlen(string_current)) {
-        int matched = next(&string_current, ctx);
+    while (strlen(ctx->string)) {
+        int matched = next(ctx);
 
         if (matched == FALSE) {
             unrecognized_token(string, ctx->line, ctx->col, error);
@@ -2840,8 +2842,15 @@ TOKEN_LIST_T *
 
     end_of_stream.id = {{prefix.upper()}}TERMINAL_END_OF_STREAM;
     emit(ctx, &end_of_stream, "<end of stream>", ctx->line, ctx->col);
+
+    token_list = ctx->token_list;
+    token_list->ntokens = token_list->current_index - 1;
+    token_list->current_index = 0;
+
     destroy(ctx->user_context);
-    return ctx->token_list;
+    free(ctx->stack);
+    free(ctx);
+    return token_list;
 }
 
 void

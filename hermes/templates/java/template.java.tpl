@@ -1228,7 +1228,7 @@ public class {{prefix}}Parser {
         throw new SyntaxError(message);
     }
 
-    private int next(LexerContext lctx, String resource) throws SyntaxError {
+    private int next(LexerContext lctx) throws SyntaxError {
         String mode = lctx.stack.peek();
         for (int i = 0; i < this.regex.get(mode).size(); i++) {
             HermesRegex regex = this.regex.get(mode).get(i);
@@ -1290,7 +1290,7 @@ public class {{prefix}}Parser {
             lexer_init();
         }
         while (lctx.string.length() > 0) {
-            int match_length = this.next(lctx, resource);
+            int match_length = this.next(lctx);
 
             if (match_length == 0) {
                 this.unrecognized_token(string_copy, lctx.line, lctx.col);
