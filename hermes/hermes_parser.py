@@ -2415,6 +2415,22 @@ class HermesLexer:
               LexerStackPush('parser_ll1'),
           ]),
         ]),
+        'regex_options': OrderedDict([
+          (re.compile(r'\s+'), [
+              # (terminal, group, function)
+          ]),
+          (re.compile(r'[a-zA-Z0-9_]+'), [
+              ('identifier', 0, None)
+          ]),
+          (re.compile(r','), [
+              ('comma', 0, None)
+          ]),
+          (re.compile(r'}'), [
+              # (terminal, group, function)
+              ('rbrace', 0, None),
+              LexerAction('pop'),
+          ]),
+        ]),
         'lexer': OrderedDict([
           (re.compile(r'\s+'), [
               # (terminal, group, function)
@@ -2426,6 +2442,11 @@ class HermesLexer:
               # (terminal, group, function)
               ('rbrace', 0, None),
               LexerAction('pop'),
+          ]),
+          (re.compile(r'{'), [
+              # (terminal, group, function)
+              ('lbrace', 0, None),
+              LexerStackPush('regex_options'),
           ]),
           (re.compile(r'null'), [
               # (terminal, group, function)
