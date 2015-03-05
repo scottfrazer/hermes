@@ -2503,11 +2503,11 @@ class HermesLexer:
               # (terminal, group, function)
               ('arrow', 0, None),
           ]),
-          (re.compile(r'@([a-zA-Z][a-zA-Z0-9]+)'), [
+          (re.compile(r'@([a-zA-Z][a-zA-Z0-9_]+)'), [
               # (terminal, group, function)
               ('stack_push', 1, None),
           ]),
-          (re.compile(r'%([a-zA-Z][a-zA-Z0-9]+)'), [
+          (re.compile(r'%([a-zA-Z][a-zA-Z0-9_]+)'), [
               # (terminal, group, function)
               ('action', 1, None),
           ]),
