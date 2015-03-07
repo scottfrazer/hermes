@@ -8,7 +8,7 @@ java:
 	-java -cp java GrammarParser ast tokens &>java/ast
 python:
 	-mkdir python
-	hermes generate --language=python --add-main --python-package=parsers --directory=python grammar.zgr
+	hermes generate --language=python --add-main --directory=python grammar.zgr
 	-python python/grammar_parser.py parsetree tokens &> python/parsetree
 	-python python/grammar_parser.py ast tokens &> python/ast
 js:

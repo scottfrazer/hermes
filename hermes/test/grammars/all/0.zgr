@@ -1,0 +1,46 @@
+grammar {
+  lexer<python> {
+    r'\s+' -> null
+    r'{' -> :lbrace @test
+    mode<test> {
+      r'\s+' -> null
+      r'[a-z]' -> :lEttEr
+      r'[0-9]' -> :number
+      r'}' -> :rbrace %pop
+    }
+  }
+  lexer<javascript> {
+    "\\s+" -> null
+    "\{" -> :lbrace @test
+    mode<test> {
+      "\\s+" -> null
+      "[a-z]" -> :lEttEr
+      "[0-9]" -> :number
+      "\}" -> :rbrace %pop
+    }
+  }
+  lexer<c> {
+    "\\s+" -> null
+    "\{" -> :lbrace @test
+    mode<test> {
+      "\\s+" -> null
+      "[a-z]" -> :lEttEr
+      "[0-9]" -> :number
+      "\}" -> :rbrace %pop
+    }
+  }
+  lexer<java> {
+    "\\s+" -> null
+    "\\{" -> :lbrace @test
+    mode<test> {
+      "\\s+" -> null
+      "[a-z]" -> :lEttEr
+      "[0-9]" -> :number
+      "\\}" -> :rbrace %pop
+    }
+  }
+  parser<ll1> {
+    $start = :LBrace list($sUb) :rBrAcE -> STUFF(LiSt=$1)
+    $SUB = :NUMBER :LEttER -> NUMLEttER(n=$0, L=$1)
+  }
+}
