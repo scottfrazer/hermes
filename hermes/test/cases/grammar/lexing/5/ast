@@ -1,0 +1,288 @@
+(Grammar:
+  body=[
+    (Lexer:
+      language=<identifier (line 2 col 9) `python`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 3 col 5) `r'\s+'`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 4 col 5) `r'{'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 4 col 14) `lbrace`>,
+              group=None
+            ),
+            <stack_push (line 4 col 22) `test`>
+          ]
+        ),
+        (Mode:
+          name=<identifier (line 5 col 10) `test`>,
+          atoms=[
+            (Regex:
+              regex=<regex (line 6 col 7) `r'\s+'`>,
+              options=None,
+              onmatch=[
+                (Null:
+
+                )
+              ]
+            ),
+            (Regex:
+              regex=<regex (line 7 col 7) `r'[a-z]'`>,
+              options=None,
+              onmatch=[
+                (Terminal:
+                  name=<terminal (line 7 col 20) `letter`>,
+                  group=None
+                )
+              ]
+            ),
+            (Regex:
+              regex=<regex (line 8 col 7) `r'[0-9]'`>,
+              options=None,
+              onmatch=[
+                (Terminal:
+                  name=<terminal (line 8 col 20) `number`>,
+                  group=None
+                )
+              ]
+            ),
+            (Regex:
+              regex=<regex (line 9 col 7) `r'}'`>,
+              options=None,
+              onmatch=[
+                (Terminal:
+                  name=<terminal (line 9 col 16) `rbrace`>,
+                  group=None
+                ),
+                <action (line 9 col 24) `pop`>
+              ]
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 12 col 9) `javascript`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 13 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 14 col 5) `"\\{"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 14 col 15) `lbrace`>,
+              group=None
+            ),
+            <stack_push (line 14 col 23) `test`>
+          ]
+        ),
+        (Mode:
+          name=<identifier (line 15 col 10) `test`>,
+          atoms=[
+            (Regex:
+              regex=<regex (line 16 col 7) `"\\s+"`>,
+              options=None,
+              onmatch=[
+                (Null:
+
+                )
+              ]
+            ),
+            (Regex:
+              regex=<regex (line 17 col 7) `"[a-z]"`>,
+              options=None,
+              onmatch=[
+                (Terminal:
+                  name=<terminal (line 17 col 19) `letter`>,
+                  group=None
+                )
+              ]
+            ),
+            (Regex:
+              regex=<regex (line 18 col 7) `"[0-9]"`>,
+              options=None,
+              onmatch=[
+                (Terminal:
+                  name=<terminal (line 18 col 19) `number`>,
+                  group=None
+                )
+              ]
+            ),
+            (Regex:
+              regex=<regex (line 19 col 7) `"\}"`>,
+              options=None,
+              onmatch=[
+                (Terminal:
+                  name=<terminal (line 19 col 16) `rbrace`>,
+                  group=None
+                ),
+                <action (line 19 col 24) `pop`>
+              ]
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 22 col 9) `c`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 23 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 24 col 5) `"\\{"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 24 col 15) `lbrace`>,
+              group=None
+            ),
+            <stack_push (line 24 col 23) `test`>
+          ]
+        ),
+        (Mode:
+          name=<identifier (line 25 col 10) `test`>,
+          atoms=[
+            (Regex:
+              regex=<regex (line 26 col 7) `"\\s+"`>,
+              options=None,
+              onmatch=[
+                (Null:
+
+                )
+              ]
+            ),
+            (Regex:
+              regex=<regex (line 27 col 7) `"[a-z]"`>,
+              options=None,
+              onmatch=[
+                (Terminal:
+                  name=<terminal (line 27 col 19) `letter`>,
+                  group=None
+                )
+              ]
+            ),
+            (Regex:
+              regex=<regex (line 28 col 7) `"[0-9]"`>,
+              options=None,
+              onmatch=[
+                (Terminal:
+                  name=<terminal (line 28 col 19) `number`>,
+                  group=None
+                )
+              ]
+            ),
+            (Regex:
+              regex=<regex (line 29 col 7) `"\\}"`>,
+              options=None,
+              onmatch=[
+                (Terminal:
+                  name=<terminal (line 29 col 17) `rbrace`>,
+                  group=None
+                ),
+                <action (line 29 col 25) `pop`>
+              ]
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 32 col 9) `java`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 33 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 34 col 5) `"\\{"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 34 col 15) `lbrace`>,
+              group=None
+            ),
+            <stack_push (line 34 col 23) `test`>
+          ]
+        ),
+        (Mode:
+          name=<identifier (line 35 col 10) `test`>,
+          atoms=[
+            (Regex:
+              regex=<regex (line 36 col 7) `"\\s+"`>,
+              options=None,
+              onmatch=[
+                (Null:
+
+                )
+              ]
+            ),
+            (Regex:
+              regex=<regex (line 37 col 7) `"[a-z]"`>,
+              options=None,
+              onmatch=[
+                (Terminal:
+                  name=<terminal (line 37 col 19) `letter`>,
+                  group=None
+                )
+              ]
+            ),
+            (Regex:
+              regex=<regex (line 38 col 7) `"[0-9]"`>,
+              options=None,
+              onmatch=[
+                (Terminal:
+                  name=<terminal (line 38 col 19) `number`>,
+                  group=None
+                )
+              ]
+            ),
+            (Regex:
+              regex=<regex (line 39 col 7) `"\\}"`>,
+              options=None,
+              onmatch=[
+                (Terminal:
+                  name=<terminal (line 39 col 17) `rbrace`>,
+                  group=None
+                ),
+                <action (line 39 col 25) `pop`>
+              ]
+            )
+          ]
+        )
+      ],
+      code=None
+    )
+  ]
+)

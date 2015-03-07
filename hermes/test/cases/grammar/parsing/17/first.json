@@ -1,0 +1,16 @@
+{
+    "$start": [
+        ":sub",
+        ":identifier",
+        ":lparen",
+        ":number",
+        ":e"
+    ],
+    "$e": [
+        ":lparen",
+        ":sub",
+        ":identifier",
+        ":number",
+        ":e"
+    ]
+}

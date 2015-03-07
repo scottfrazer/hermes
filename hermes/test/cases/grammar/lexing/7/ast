@@ -1,0 +1,196 @@
+(Grammar:
+  body=[
+    (Lexer:
+      language=<identifier (line 2 col 9) `python`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 3 col 5) `r'\s+'`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 4 col 5) `r'a'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 4 col 14) `a`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 5 col 5) `r'b'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 5 col 14) `b`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 6 col 5) `r'.'`>,
+          options=[
+            <identifier (line 6 col 11) `DOTALL`>,
+            <identifier (line 6 col 19) `IGNORECASE`>
+          ],
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 6 col 35) `char`>,
+              group=None
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 8 col 9) `c`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 9 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 10 col 5) `"a"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 10 col 13) `a`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 11 col 5) `"b"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 11 col 13) `b`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 12 col 5) `"."`>,
+          options=[
+            <identifier (line 12 col 10) `PCRE_DOTALL`>,
+            <identifier (line 12 col 23) `PCRE_CASELESS`>
+          ],
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 12 col 42) `char`>,
+              group=None
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 14 col 9) `java`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 15 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 16 col 5) `"a"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 16 col 13) `a`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 17 col 5) `"b"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 17 col 13) `b`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 18 col 5) `"."`>,
+          options=[
+            <identifier (line 18 col 10) `DOTALL`>,
+            <identifier (line 18 col 18) `CASE_INSENSITIVE`>
+          ],
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 18 col 40) `char`>,
+              group=None
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 20 col 9) `javascript`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 21 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 22 col 5) `"a"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 22 col 13) `a`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 23 col 5) `"b"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 23 col 13) `b`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 24 col 5) `"."`>,
+          options=[
+            <identifier (line 24 col 10) `m`>,
+            <identifier (line 24 col 13) `i`>
+          ],
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 24 col 20) `char`>,
+              group=None
+            )
+          ]
+        )
+      ],
+      code=None
+    )
+  ]
+)

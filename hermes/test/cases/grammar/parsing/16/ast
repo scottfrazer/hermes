@@ -1,0 +1,164 @@
+(Grammar:
+  body=[
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<nonterminal (line 3 col 6) `object`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 3 col 16) `lbrace`>,
+                (Macro:
+                  name=<identifier (line 3 col 23) `list`>,
+                  parameters=[
+                    <nonterminal (line 3 col 29) `name_value_pair`>,
+                    <terminal (line 3 col 47) `comma`>
+                  ]
+                ),
+                <terminal (line 3 col 55) `rbrace`>
+              ],
+              ast=(AstTransformation:
+                name=<identifier (line 3 col 65) `Object`>,
+                parameters=[
+                  (AstParameter:
+                    name=<identifier (line 3 col 73) `attributes`>,
+                    index=<nonterminal_reference (line 3 col 85) `1`>
+                  )
+                ]
+              )
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 4 col 6) `array`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 4 col 15) `lsquare`>,
+                (Macro:
+                  name=<identifier (line 4 col 23) `list`>,
+                  parameters=[
+                    <nonterminal (line 4 col 29) `value`>,
+                    <terminal (line 4 col 37) `comma`>
+                  ]
+                ),
+                <terminal (line 4 col 45) `rsquare`>
+              ],
+              ast=(AstTransformation:
+                name=<identifier (line 4 col 56) `Array`>,
+                parameters=[
+                  (AstParameter:
+                    name=<identifier (line 4 col 63) `items`>,
+                    index=<nonterminal_reference (line 4 col 70) `1`>
+                  )
+                ]
+              )
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 5 col 6) `value`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 5 col 15) `object`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 6 col 6) `value`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 6 col 15) `array`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 7 col 6) `value`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 7 col 15) `string`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 8 col 6) `value`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 8 col 15) `number`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 9 col 6) `value`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 9 col 15) `true`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 10 col 6) `value`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 10 col 15) `false`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 11 col 6) `value`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 11 col 15) `null`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 12 col 6) `name_value_pair`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 12 col 25) `string`>,
+                <terminal (line 12 col 33) `colon`>,
+                <nonterminal (line 12 col 40) `value`>
+              ],
+              ast=(AstTransformation:
+                name=<identifier (line 12 col 49) `NameValuePair`>,
+                parameters=[
+                  (AstParameter:
+                    name=<identifier (line 12 col 64) `name`>,
+                    index=<nonterminal_reference (line 12 col 70) `0`>
+                  ),
+                  (AstParameter:
+                    name=<identifier (line 12 col 73) `value`>,
+                    index=<nonterminal_reference (line 12 col 80) `2`>
+                  )
+                ]
+              )
+            )
+          ]
+        )
+      ]
+    )
+  ]
+)

@@ -1,59 +1,59 @@
 {
-    "$start": [
-        ":_eos"
-    ], 
-    "$assignstatementsub": [
-        ":comma", 
-        ":_eos", 
-        ":rparen", 
-        ":semi"
-    ], 
-    "$e": [
-        ":sub", 
-        ":rparen", 
-        ":comma", 
-        ":_eos", 
-        ":div", 
-        ":add", 
-        ":mul", 
-        ":semi"
-    ], 
-    "$fordeclstatement": [
-        ":semi"
-    ], 
-    "$_gen1": [
-        ":_eos"
-    ], 
-    "$_gen0": [
-        ":_eos"
-    ], 
-    "$forbody": [
-        ":rbrace"
-    ], 
-    "$complexexpression": [
-        ":semi", 
-        ":rparen"
-    ], 
-    "$forcondstatement": [
-        ":semi"
-    ], 
     "$statement": [
-        ":comma", 
-        ":semi", 
-        ":_eos"
-    ], 
-    "$assignstatement": [
-        ":comma", 
-        ":_eos", 
-        ":rparen", 
+        ":comma",
+        ":_eos",
         ":semi"
-    ], 
+    ],
     "$foriterstatement": [
         ":rparen"
-    ], 
-    "$forstatement": [
-        ":comma", 
-        ":semi", 
+    ],
+    "$assignstatementsub": [
+        ":comma",
+        ":rparen",
+        ":_eos",
+        ":semi"
+    ],
+    "$_gen1": [
         ":_eos"
+    ],
+    "$e": [
+        ":sub",
+        ":comma",
+        ":add",
+        ":mul",
+        ":div",
+        ":rparen",
+        ":_eos",
+        ":semi"
+    ],
+    "$forcondstatement": [
+        ":semi"
+    ],
+    "$_gen0": [
+        ":_eos"
+    ],
+    "$forbody": [
+        ":rbrace"
+    ],
+    "$complexexpression": [
+        ":rparen",
+        ":semi"
+    ],
+    "$forstatement": [
+        ":comma",
+        ":_eos",
+        ":semi"
+    ],
+    "$start": [
+        ":_eos"
+    ],
+    "$assignstatement": [
+        ":rparen",
+        ":comma",
+        ":_eos",
+        ":semi"
+    ],
+    "$fordeclstatement": [
+        ":semi"
     ]
 }

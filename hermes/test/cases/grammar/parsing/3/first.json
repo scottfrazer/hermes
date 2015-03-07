@@ -1,59 +1,59 @@
 {
-    "$forbody": [
-        ":sub", 
-        ":n", 
-        ":e", 
-        ":for", 
-        ":identifier", 
-        ":_empty", 
-        ":s"
-    ], 
+    "$forsub": [
+        ":sub",
+        ":identifier",
+        ":s",
+        ":n",
+        ":_empty",
+        ":e"
+    ],
+    "$_gen1": [
+        ":_empty",
+        ":semi"
+    ],
+    "$start": [
+        ":identifier",
+        ":sub",
+        ":s",
+        ":n",
+        ":_empty",
+        ":for",
+        ":e"
+    ],
+    "$e": [
+        ":sub",
+        ":identifier",
+        ":n",
+        ":s",
+        ":e"
+    ],
+    "$statement": [
+        ":sub",
+        ":identifier",
+        ":s",
+        ":n",
+        ":for",
+        ":e"
+    ],
+    "$_gen0": [
+        ":identifier",
+        ":s",
+        ":n",
+        ":_empty",
+        ":sub",
+        ":for",
+        ":e"
+    ],
     "$for": [
         ":for"
-    ], 
-    "$start": [
-        ":sub", 
-        ":n", 
-        ":for", 
-        ":identifier", 
-        ":_empty", 
-        ":e", 
-        ":s"
-    ], 
-    "$statement": [
-        ":sub", 
-        ":n", 
-        ":for", 
-        ":identifier", 
-        ":e", 
-        ":s"
-    ], 
-    "$forsub": [
-        ":sub", 
-        ":n", 
-        ":identifier", 
-        ":_empty", 
-        ":e", 
-        ":s"
-    ], 
-    "$e": [
-        ":sub", 
-        ":e", 
-        ":n", 
-        ":identifier", 
-        ":s"
-    ], 
-    "$_gen1": [
-        ":semi", 
-        ":_empty"
-    ], 
-    "$_gen0": [
-        ":sub", 
-        ":n", 
-        ":e", 
-        ":for", 
-        ":identifier", 
-        ":_empty", 
-        ":s"
+    ],
+    "$forbody": [
+        ":identifier",
+        ":s",
+        ":n",
+        ":_empty",
+        ":sub",
+        ":for",
+        ":e"
     ]
 }

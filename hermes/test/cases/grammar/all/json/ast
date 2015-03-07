@@ -1,0 +1,634 @@
+(Grammar:
+  body=[
+    (Lexer:
+      language=<identifier (line 2 col 9) `python`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 3 col 5) `r'\s+'`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 4 col 5) `r'{'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 4 col 14) `lbrace`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 5 col 5) `r'}'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 5 col 14) `rbrace`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 6 col 5) `r'\['`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 6 col 15) `lsquare`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 7 col 5) `r'\]'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 7 col 15) `rsquare`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 8 col 5) `r':'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 8 col 14) `colon`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 9 col 5) `r','`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 9 col 14) `comma`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 10 col 5) `r'true'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 10 col 17) `true`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 11 col 5) `r'false'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 11 col 18) `false`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 12 col 5) `r'null'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 12 col 17) `null`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 13 col 5) `r'"((?:[^"\\]|\\["\\/bfnrt]|\\u[0-9A-Fa-f]{4})*)"'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 13 col 60) `string`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 14 col 5) `r'-?(0|[1-9][0-9]*)(\.[0-9]+)?([eE][\+-]?[0-9]+)?'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 14 col 60) `number`>,
+              group=None
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 16 col 9) `c`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 17 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 18 col 5) `"\\{"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 18 col 15) `lbrace`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 19 col 5) `"\\}"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 19 col 15) `rbrace`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 20 col 5) `"\\["`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 20 col 15) `lsquare`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 21 col 5) `"\\]"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 21 col 15) `rsquare`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 22 col 5) `":"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 22 col 13) `colon`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 23 col 5) `","`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 23 col 13) `comma`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 24 col 5) `"true"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 24 col 16) `true`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 25 col 5) `"false"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 25 col 17) `false`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 26 col 5) `"null"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 26 col 16) `null`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 27 col 5) `"\"(([^\"\\\\]|\\\\[\"\\/bfnrt]|\\\\u[0-9A-Fa-f]{4})*)\""`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 27 col 67) `string`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 28 col 5) `"-?(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][\\+-]?[0-9]+)?"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 28 col 61) `number`>,
+              group=None
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 30 col 9) `java`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 31 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 32 col 5) `"\\{"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 32 col 15) `lbrace`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 33 col 5) `"\\}"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 33 col 15) `rbrace`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 34 col 5) `"\\["`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 34 col 15) `lsquare`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 35 col 5) `"\\]"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 35 col 15) `rsquare`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 36 col 5) `":"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 36 col 13) `colon`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 37 col 5) `","`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 37 col 13) `comma`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 38 col 5) `"true"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 38 col 16) `true`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 39 col 5) `"false"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 39 col 17) `false`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 40 col 5) `"null"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 40 col 16) `null`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 41 col 5) `"\\\"(([^\"\\\\]|\\\\[\"\\/bfnrt]|\\\\u[0-9A-Fa-f]{4})*)\\\""`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 41 col 71) `string`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 42 col 5) `"-?(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][\\+-]?[0-9]+)?"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 42 col 61) `number`>,
+              group=None
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 44 col 9) `javascript`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 45 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 46 col 5) `"\\{"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 46 col 15) `lbrace`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 47 col 5) `"\\}"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 47 col 15) `rbrace`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 48 col 5) `"\\["`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 48 col 15) `lsquare`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 49 col 5) `"\\]"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 49 col 15) `rsquare`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 50 col 5) `":"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 50 col 13) `colon`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 51 col 5) `","`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 51 col 13) `comma`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 52 col 5) `"true"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 52 col 16) `true`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 53 col 5) `"false"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 53 col 17) `false`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 54 col 5) `"null"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 54 col 16) `null`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 55 col 5) `"\\\"(([^\"\\\\]|\\\\[\"\\/bfnrt]|\\\\u[0-9A-Fa-f]{4})*)\\\""`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 55 col 71) `string`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 56 col 5) `"-?(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][\\+-]?[0-9]+)?"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 56 col 61) `number`>,
+              group=None
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<nonterminal (line 59 col 6) `value`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 59 col 15) `string`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 59 col 25) `number`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <nonterminal (line 59 col 35) `object`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <nonterminal (line 59 col 45) `array`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 59 col 54) `true`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 59 col 62) `false`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 59 col 71) `null`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 60 col 6) `object`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 60 col 16) `lbrace`>,
+                (Macro:
+                  name=<identifier (line 60 col 23) `list`>,
+                  parameters=[
+                    <nonterminal (line 60 col 29) `key_value_pair`>,
+                    <terminal (line 60 col 46) `comma`>
+                  ]
+                ),
+                <terminal (line 60 col 54) `rbrace`>
+              ],
+              ast=(AstTransformation:
+                name=<identifier (line 60 col 64) `Object`>,
+                parameters=[
+                  (AstParameter:
+                    name=<identifier (line 60 col 71) `values`>,
+                    index=<nonterminal_reference (line 60 col 79) `1`>
+                  )
+                ]
+              )
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 61 col 6) `key_value_pair`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 61 col 24) `string`>,
+                <terminal (line 61 col 32) `colon`>,
+                <nonterminal (line 61 col 39) `value`>
+              ],
+              ast=(AstTransformation:
+                name=<identifier (line 61 col 48) `KeyValue`>,
+                parameters=[
+                  (AstParameter:
+                    name=<identifier (line 61 col 57) `key`>,
+                    index=<nonterminal_reference (line 61 col 62) `0`>
+                  ),
+                  (AstParameter:
+                    name=<identifier (line 61 col 65) `value`>,
+                    index=<nonterminal_reference (line 61 col 72) `2`>
+                  )
+                ]
+              )
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 62 col 6) `array`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 62 col 15) `lsquare`>,
+                (Macro:
+                  name=<identifier (line 62 col 23) `list`>,
+                  parameters=[
+                    <nonterminal (line 62 col 29) `value`>,
+                    <terminal (line 62 col 37) `comma`>
+                  ]
+                ),
+                <terminal (line 62 col 45) `rsquare`>
+              ],
+              ast=(AstTransformation:
+                name=<identifier (line 62 col 56) `Array`>,
+                parameters=[
+                  (AstParameter:
+                    name=<identifier (line 62 col 62) `values`>,
+                    index=<nonterminal_reference (line 62 col 70) `1`>
+                  )
+                ]
+              )
+            )
+          ]
+        )
+      ]
+    )
+  ]
+)

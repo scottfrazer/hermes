@@ -1,0 +1,184 @@
+(Grammar:
+  body=[
+    (Lexer:
+      language=<identifier (line 2 col 9) `python`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 3 col 5) `r'[a-z]+'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 3 col 19) `identifier`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 4 col 5) `r'[0-9]+'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 4 col 19) `number`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 5 col 5) `r'\n+'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 5 col 16) `newline`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 6 col 5) `r'\s+'`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 8 col 9) `c`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 9 col 5) `"[a-z]+"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 9 col 18) `identifier`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 10 col 5) `"[0-9]+"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 10 col 18) `number`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 11 col 5) `"\\n+"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 11 col 16) `newline`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 12 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 14 col 9) `java`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 15 col 5) `"[a-z]+"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 15 col 18) `identifier`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 16 col 5) `"[0-9]+"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 16 col 18) `number`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 17 col 5) `"\\n+"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 17 col 16) `newline`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 18 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 20 col 9) `javascript`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 21 col 5) `"[a-z]+"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 21 col 18) `identifier`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 22 col 5) `"[0-9]+"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 22 col 18) `number`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 23 col 5) `"\\n+"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 23 col 16) `newline`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 24 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        )
+      ],
+      code=None
+    )
+  ]
+)

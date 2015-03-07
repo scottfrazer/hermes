@@ -327,13 +327,15 @@ class GrammarFactory:
 
     def get_morpheme_from_lexer_token(self, token, terminals, nonterminals):
         if token.str == 'nonterminal':
-            if token.source_string not in nonterminals:
-                nonterminals[token.source_string] = NonTerminal(token.source_string, len(nonterminals))
-            return nonterminals[token.source_string]
+            nonterminal = token.source_string.lower()
+            if nonterminal not in nonterminals:
+                nonterminals[nonterminal] = NonTerminal(nonterminal, len(nonterminals))
+            return nonterminals[nonterminal]
         if token.str == 'terminal':
-            if token.source_string not in terminals:
-                terminals[token.source_string] = Terminal(token.source_string, len(terminals))
-            return terminals[token.source_string]
+            terminal = token.source_string.lower()
+            if terminal not in terminals:
+                terminals[terminal] = Terminal(terminal, len(terminals))
+            return terminals[terminal]
 
     def generate_nonterminal(self, nonterminals):
         name = '_gen' + str(self.next_id)

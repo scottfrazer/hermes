@@ -1,0 +1,148 @@
+(Grammar:
+  body=[
+    (Lexer:
+      language=<identifier (line 2 col 9) `python`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 3 col 5) `r'a'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 3 col 14) `a`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 4 col 5) `r'b'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 4 col 14) `b`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 5 col 5) `r'\n+'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 5 col 16) `newline`>,
+              group=None
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 7 col 9) `c`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 8 col 5) `"a"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 8 col 13) `a`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 9 col 5) `"b"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 9 col 13) `b`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 10 col 5) `"\\n+"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 10 col 16) `newline`>,
+              group=None
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 12 col 9) `java`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 13 col 5) `"a"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 13 col 13) `a`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 14 col 5) `"b"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 14 col 13) `b`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 15 col 5) `"\\n+"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 15 col 16) `newline`>,
+              group=None
+            )
+          ]
+        )
+      ],
+      code=None
+    ),
+    (Lexer:
+      language=<identifier (line 17 col 9) `javascript`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 18 col 5) `"a"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 18 col 13) `a`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 19 col 5) `"b"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 19 col 13) `b`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 20 col 5) `"\\n+"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 20 col 16) `newline`>,
+              group=None
+            )
+          ]
+        )
+      ],
+      code=None
+    )
+  ]
+)

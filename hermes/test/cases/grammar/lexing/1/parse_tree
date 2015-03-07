@@ -1,0 +1,346 @@
+(grammar:
+  <grammar (line 1 col 1) `grammar`>,
+  <lbrace (line 1 col 9) `{`>,
+  (_gen0:
+    (body_element:
+      (body_element_sub:
+        (lexer:
+          <lexer (line 2 col 3) `lexer`>,
+          <langle (line 2 col 8) `<`>,
+          <identifier (line 2 col 9) `python`>,
+          <rangle (line 2 col 15) `>`>,
+          <lbrace (line 2 col 17) `{`>,
+          (_gen1:
+            (lexer_atom:
+              (lexer_regex:
+                <regex (line 3 col 5) `r'[a-z]+'`>,
+                (_gen4: ),
+                <arrow (line 3 col 15) `->`>,
+                (_gen5:
+                  (lexer_target:
+                    (terminal:
+                      <terminal (line 3 col 19) `identifier`>,
+                      (_gen9: )
+                    )
+                  ),
+                  (_gen5: )
+                )
+              )
+            ),
+            (_gen1:
+              (lexer_atom:
+                (lexer_regex:
+                  <regex (line 4 col 5) `r'[0-9]+'`>,
+                  (_gen4: ),
+                  <arrow (line 4 col 15) `->`>,
+                  (_gen5:
+                    (lexer_target:
+                      (terminal:
+                        <terminal (line 4 col 19) `number`>,
+                        (_gen9: )
+                      )
+                    ),
+                    (_gen5: )
+                  )
+                )
+              ),
+              (_gen1:
+                (lexer_atom:
+                  (lexer_regex:
+                    <regex (line 5 col 5) `r'\n+'`>,
+                    (_gen4: ),
+                    <arrow (line 5 col 12) `->`>,
+                    (_gen5:
+                      (lexer_target:
+                        (terminal:
+                          <terminal (line 5 col 16) `newline`>,
+                          (_gen9: )
+                        )
+                      ),
+                      (_gen5: )
+                    )
+                  )
+                ),
+                (_gen1:
+                  (lexer_atom:
+                    (lexer_regex:
+                      <regex (line 6 col 5) `r'\s+'`>,
+                      (_gen4: ),
+                      <arrow (line 6 col 12) `->`>,
+                      (_gen5:
+                        (lexer_target:
+                          <null (line 6 col 15) `null`>
+                        ),
+                        (_gen5: )
+                      )
+                    )
+                  ),
+                  (_gen1: )
+                )
+              )
+            )
+          ),
+          (_gen2: ),
+          <rbrace (line 7 col 3) `}`>
+        )
+      )
+    ),
+    (_gen0:
+      (body_element:
+        (body_element_sub:
+          (lexer:
+            <lexer (line 8 col 3) `lexer`>,
+            <langle (line 8 col 8) `<`>,
+            <identifier (line 8 col 9) `c`>,
+            <rangle (line 8 col 10) `>`>,
+            <lbrace (line 8 col 12) `{`>,
+            (_gen1:
+              (lexer_atom:
+                (lexer_regex:
+                  <regex (line 9 col 5) `"[a-z]+"`>,
+                  (_gen4: ),
+                  <arrow (line 9 col 14) `->`>,
+                  (_gen5:
+                    (lexer_target:
+                      (terminal:
+                        <terminal (line 9 col 18) `identifier`>,
+                        (_gen9: )
+                      )
+                    ),
+                    (_gen5: )
+                  )
+                )
+              ),
+              (_gen1:
+                (lexer_atom:
+                  (lexer_regex:
+                    <regex (line 10 col 5) `"[0-9]+"`>,
+                    (_gen4: ),
+                    <arrow (line 10 col 14) `->`>,
+                    (_gen5:
+                      (lexer_target:
+                        (terminal:
+                          <terminal (line 10 col 18) `number`>,
+                          (_gen9: )
+                        )
+                      ),
+                      (_gen5: )
+                    )
+                  )
+                ),
+                (_gen1:
+                  (lexer_atom:
+                    (lexer_regex:
+                      <regex (line 11 col 5) `"\\n+"`>,
+                      (_gen4: ),
+                      <arrow (line 11 col 12) `->`>,
+                      (_gen5:
+                        (lexer_target:
+                          (terminal:
+                            <terminal (line 11 col 16) `newline`>,
+                            (_gen9: )
+                          )
+                        ),
+                        (_gen5: )
+                      )
+                    )
+                  ),
+                  (_gen1:
+                    (lexer_atom:
+                      (lexer_regex:
+                        <regex (line 12 col 5) `"\\s+"`>,
+                        (_gen4: ),
+                        <arrow (line 12 col 12) `->`>,
+                        (_gen5:
+                          (lexer_target:
+                            <null (line 12 col 15) `null`>
+                          ),
+                          (_gen5: )
+                        )
+                      )
+                    ),
+                    (_gen1: )
+                  )
+                )
+              )
+            ),
+            (_gen2: ),
+            <rbrace (line 13 col 3) `}`>
+          )
+        )
+      ),
+      (_gen0:
+        (body_element:
+          (body_element_sub:
+            (lexer:
+              <lexer (line 14 col 3) `lexer`>,
+              <langle (line 14 col 8) `<`>,
+              <identifier (line 14 col 9) `java`>,
+              <rangle (line 14 col 13) `>`>,
+              <lbrace (line 14 col 15) `{`>,
+              (_gen1:
+                (lexer_atom:
+                  (lexer_regex:
+                    <regex (line 15 col 5) `"[a-z]+"`>,
+                    (_gen4: ),
+                    <arrow (line 15 col 14) `->`>,
+                    (_gen5:
+                      (lexer_target:
+                        (terminal:
+                          <terminal (line 15 col 18) `identifier`>,
+                          (_gen9: )
+                        )
+                      ),
+                      (_gen5: )
+                    )
+                  )
+                ),
+                (_gen1:
+                  (lexer_atom:
+                    (lexer_regex:
+                      <regex (line 16 col 5) `"[0-9]+"`>,
+                      (_gen4: ),
+                      <arrow (line 16 col 14) `->`>,
+                      (_gen5:
+                        (lexer_target:
+                          (terminal:
+                            <terminal (line 16 col 18) `number`>,
+                            (_gen9: )
+                          )
+                        ),
+                        (_gen5: )
+                      )
+                    )
+                  ),
+                  (_gen1:
+                    (lexer_atom:
+                      (lexer_regex:
+                        <regex (line 17 col 5) `"\\n+"`>,
+                        (_gen4: ),
+                        <arrow (line 17 col 12) `->`>,
+                        (_gen5:
+                          (lexer_target:
+                            (terminal:
+                              <terminal (line 17 col 16) `newline`>,
+                              (_gen9: )
+                            )
+                          ),
+                          (_gen5: )
+                        )
+                      )
+                    ),
+                    (_gen1:
+                      (lexer_atom:
+                        (lexer_regex:
+                          <regex (line 18 col 5) `"\\s+"`>,
+                          (_gen4: ),
+                          <arrow (line 18 col 12) `->`>,
+                          (_gen5:
+                            (lexer_target:
+                              <null (line 18 col 15) `null`>
+                            ),
+                            (_gen5: )
+                          )
+                        )
+                      ),
+                      (_gen1: )
+                    )
+                  )
+                )
+              ),
+              (_gen2: ),
+              <rbrace (line 19 col 3) `}`>
+            )
+          )
+        ),
+        (_gen0:
+          (body_element:
+            (body_element_sub:
+              (lexer:
+                <lexer (line 20 col 3) `lexer`>,
+                <langle (line 20 col 8) `<`>,
+                <identifier (line 20 col 9) `javascript`>,
+                <rangle (line 20 col 19) `>`>,
+                <lbrace (line 20 col 21) `{`>,
+                (_gen1:
+                  (lexer_atom:
+                    (lexer_regex:
+                      <regex (line 21 col 5) `"[a-z]+"`>,
+                      (_gen4: ),
+                      <arrow (line 21 col 14) `->`>,
+                      (_gen5:
+                        (lexer_target:
+                          (terminal:
+                            <terminal (line 21 col 18) `identifier`>,
+                            (_gen9: )
+                          )
+                        ),
+                        (_gen5: )
+                      )
+                    )
+                  ),
+                  (_gen1:
+                    (lexer_atom:
+                      (lexer_regex:
+                        <regex (line 22 col 5) `"[0-9]+"`>,
+                        (_gen4: ),
+                        <arrow (line 22 col 14) `->`>,
+                        (_gen5:
+                          (lexer_target:
+                            (terminal:
+                              <terminal (line 22 col 18) `number`>,
+                              (_gen9: )
+                            )
+                          ),
+                          (_gen5: )
+                        )
+                      )
+                    ),
+                    (_gen1:
+                      (lexer_atom:
+                        (lexer_regex:
+                          <regex (line 23 col 5) `"\\n+"`>,
+                          (_gen4: ),
+                          <arrow (line 23 col 12) `->`>,
+                          (_gen5:
+                            (lexer_target:
+                              (terminal:
+                                <terminal (line 23 col 16) `newline`>,
+                                (_gen9: )
+                              )
+                            ),
+                            (_gen5: )
+                          )
+                        )
+                      ),
+                      (_gen1:
+                        (lexer_atom:
+                          (lexer_regex:
+                            <regex (line 24 col 5) `"\\s+"`>,
+                            (_gen4: ),
+                            <arrow (line 24 col 12) `->`>,
+                            (_gen5:
+                              (lexer_target:
+                                <null (line 24 col 15) `null`>
+                              ),
+                              (_gen5: )
+                            )
+                          )
+                        ),
+                        (_gen1: )
+                      )
+                    )
+                  )
+                ),
+                (_gen2: ),
+                <rbrace (line 25 col 3) `}`>
+              )
+            )
+          ),
+          (_gen0: )
+        )
+      )
+    )
+  ),
+  <rbrace (line 26 col 1) `}`>
+)

@@ -1,58 +1,58 @@
 {
     "$classdef": [
-        ":class", 
-        ":a", 
-        ":b", 
-        ":function", 
-        ":_eos", 
-        ":rbrace"
-    ], 
-    "$funcdef": [
-        ":_eos", 
-        ":rbrace", 
-        ":private", 
-        ":public", 
-        ":class", 
-        ":a", 
-        ":b", 
+        ":a",
+        ":_eos",
+        ":class",
+        ":rbrace",
+        ":b",
         ":function"
-    ], 
-    "$start": [
-        ":_eos"
-    ], 
-    "$class_statement": [
-        ":public", 
-        ":rbrace", 
-        ":private"
-    ], 
-    "$statement": [
-        ":_eos", 
-        ":rbrace", 
-        ":class", 
-        ":a", 
-        ":b", 
-        ":function"
-    ], 
+    ],
     "$param": [
-        ":comma", 
-        ":rparen"
-    ], 
-    "$_gen0": [
-        ":_eos", 
+        ":rparen",
+        ":comma"
+    ],
+    "$class_statement": [
+        ":rbrace",
+        ":public",
+        ":private"
+    ],
+    "$statement": [
+        ":a",
+        ":b",
+        ":_eos",
+        ":function",
+        ":class",
         ":rbrace"
-    ], 
-    "$_gen3": [
-        ":rbrace"
-    ], 
+    ],
     "$_gen2": [
         ":rparen"
-    ], 
+    ],
+    "$_gen3": [
+        ":rbrace"
+    ],
+    "$class_atom": [
+        ":rbrace",
+        ":public",
+        ":private"
+    ],
+    "$start": [
+        ":_eos"
+    ],
+    "$funcdef": [
+        ":a",
+        ":public",
+        ":_eos",
+        ":class",
+        ":rbrace",
+        ":b",
+        ":function",
+        ":private"
+    ],
+    "$_gen0": [
+        ":_eos",
+        ":rbrace"
+    ],
     "$_gen1": [
         ":rparen"
-    ], 
-    "$class_atom": [
-        ":public", 
-        ":rbrace", 
-        ":private"
     ]
 }

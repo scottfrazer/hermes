@@ -1,0 +1,614 @@
+(grammar:
+  <grammar (line 1 col 1) `grammar`>,
+  <lbrace (line 1 col 9) `{`>,
+  (_gen0:
+    (body_element:
+      (body_element_sub:
+        (lexer:
+          <lexer (line 2 col 3) `lexer`>,
+          <langle (line 2 col 8) `<`>,
+          <identifier (line 2 col 9) `python`>,
+          <rangle (line 2 col 15) `>`>,
+          <lbrace (line 2 col 17) `{`>,
+          (_gen1:
+            (lexer_atom:
+              (lexer_regex:
+                <regex (line 3 col 5) `r'(a)(b)(c)'`>,
+                (_gen4: ),
+                <arrow (line 3 col 18) `->`>,
+                (_gen5:
+                  (lexer_target:
+                    (terminal:
+                      <terminal (line 3 col 22) `a`>,
+                      (_gen9:
+                        (match_group:
+                          <lsquare (line 3 col 23) `[`>,
+                          <integer (line 3 col 24) `1`>,
+                          <rsquare (line 3 col 25) `]`>
+                        )
+                      )
+                    )
+                  ),
+                  (_gen5:
+                    (lexer_target:
+                      (terminal:
+                        <terminal (line 3 col 28) `b`>,
+                        (_gen9:
+                          (match_group:
+                            <lsquare (line 3 col 29) `[`>,
+                            <integer (line 3 col 30) `2`>,
+                            <rsquare (line 3 col 31) `]`>
+                          )
+                        )
+                      )
+                    ),
+                    (_gen5:
+                      (lexer_target:
+                        (terminal:
+                          <terminal (line 3 col 34) `c`>,
+                          (_gen9:
+                            (match_group:
+                              <lsquare (line 3 col 35) `[`>,
+                              <integer (line 3 col 36) `3`>,
+                              <rsquare (line 3 col 37) `]`>
+                            )
+                          )
+                        )
+                      ),
+                      (_gen5:
+                        (lexer_target:
+                          (terminal:
+                            <terminal (line 3 col 40) `abc`>,
+                            (_gen9:
+                              (match_group:
+                                <lsquare (line 3 col 43) `[`>,
+                                <integer (line 3 col 44) `0`>,
+                                <rsquare (line 3 col 45) `]`>
+                              )
+                            )
+                          )
+                        ),
+                        (_gen5: )
+                      )
+                    )
+                  )
+                )
+              )
+            ),
+            (_gen1:
+              (lexer_atom:
+                (lexer_regex:
+                  <regex (line 4 col 5) `r'(x)\s*(y)\s*(z)'`>,
+                  (_gen4: ),
+                  <arrow (line 4 col 24) `->`>,
+                  (_gen5:
+                    (lexer_target:
+                      (terminal:
+                        <terminal (line 4 col 28) `hint`>,
+                        (_gen9:
+                          (match_group:
+                            <no_group (line 4 col 32) `[]`>
+                          )
+                        )
+                      )
+                    ),
+                    (_gen5:
+                      (lexer_target:
+                        <identifier (line 4 col 35) `f`>,
+                        <lparen (line 4 col 36) `(`>,
+                        (_gen8:
+                          (terminal:
+                            <terminal (line 4 col 38) `x`>,
+                            (_gen9:
+                              (match_group:
+                                <lsquare (line 4 col 39) `[`>,
+                                <integer (line 4 col 40) `1`>,
+                                <rsquare (line 4 col 41) `]`>
+                              )
+                            )
+                          )
+                        ),
+                        <rparen (line 4 col 42) `)`>
+                      ),
+                      (_gen5:
+                        (lexer_target:
+                          (terminal:
+                            <terminal (line 4 col 45) `all`>,
+                            (_gen9: )
+                          )
+                        ),
+                        (_gen5: )
+                      )
+                    )
+                  )
+                )
+              ),
+              (_gen1:
+                (lexer_atom:
+                  (lexer_regex:
+                    <regex (line 5 col 5) `r'\s+'`>,
+                    (_gen4: ),
+                    <arrow (line 5 col 12) `->`>,
+                    (_gen5:
+                      (lexer_target:
+                        <null (line 5 col 15) `null`>
+                      ),
+                      (_gen5: )
+                    )
+                  )
+                ),
+                (_gen1: )
+              )
+            )
+          ),
+          (_gen2:
+            <code (line 6 col 11) `
+def f(ctx, terminal, source_string, line, col):
+    default_action(ctx, terminal, source_string, line, col)
+    `>
+          ),
+          <rbrace (line 10 col 3) `}`>
+        )
+      )
+    ),
+    (_gen0:
+      (body_element:
+        (body_element_sub:
+          (lexer:
+            <lexer (line 11 col 3) `lexer`>,
+            <langle (line 11 col 8) `<`>,
+            <identifier (line 11 col 9) `c`>,
+            <rangle (line 11 col 10) `>`>,
+            <lbrace (line 11 col 12) `{`>,
+            (_gen1:
+              (lexer_atom:
+                (lexer_regex:
+                  <regex (line 12 col 5) `"(a)(b)(c)"`>,
+                  (_gen4: ),
+                  <arrow (line 12 col 17) `->`>,
+                  (_gen5:
+                    (lexer_target:
+                      (terminal:
+                        <terminal (line 12 col 21) `a`>,
+                        (_gen9:
+                          (match_group:
+                            <lsquare (line 12 col 22) `[`>,
+                            <integer (line 12 col 23) `1`>,
+                            <rsquare (line 12 col 24) `]`>
+                          )
+                        )
+                      )
+                    ),
+                    (_gen5:
+                      (lexer_target:
+                        (terminal:
+                          <terminal (line 12 col 27) `b`>,
+                          (_gen9:
+                            (match_group:
+                              <lsquare (line 12 col 28) `[`>,
+                              <integer (line 12 col 29) `2`>,
+                              <rsquare (line 12 col 30) `]`>
+                            )
+                          )
+                        )
+                      ),
+                      (_gen5:
+                        (lexer_target:
+                          (terminal:
+                            <terminal (line 12 col 33) `c`>,
+                            (_gen9:
+                              (match_group:
+                                <lsquare (line 12 col 34) `[`>,
+                                <integer (line 12 col 35) `3`>,
+                                <rsquare (line 12 col 36) `]`>
+                              )
+                            )
+                          )
+                        ),
+                        (_gen5:
+                          (lexer_target:
+                            (terminal:
+                              <terminal (line 12 col 39) `abc`>,
+                              (_gen9:
+                                (match_group:
+                                  <lsquare (line 12 col 42) `[`>,
+                                  <integer (line 12 col 43) `0`>,
+                                  <rsquare (line 12 col 44) `]`>
+                                )
+                              )
+                            )
+                          ),
+                          (_gen5: )
+                        )
+                      )
+                    )
+                  )
+                )
+              ),
+              (_gen1:
+                (lexer_atom:
+                  (lexer_regex:
+                    <regex (line 13 col 5) `"(x)\\s*(y)\\s*(z)"`>,
+                    (_gen4: ),
+                    <arrow (line 13 col 25) `->`>,
+                    (_gen5:
+                      (lexer_target:
+                        (terminal:
+                          <terminal (line 13 col 29) `hint`>,
+                          (_gen9:
+                            (match_group:
+                              <no_group (line 13 col 33) `[]`>
+                            )
+                          )
+                        )
+                      ),
+                      (_gen5:
+                        (lexer_target:
+                          <identifier (line 13 col 36) `f`>,
+                          <lparen (line 13 col 37) `(`>,
+                          (_gen8:
+                            (terminal:
+                              <terminal (line 13 col 39) `x`>,
+                              (_gen9:
+                                (match_group:
+                                  <lsquare (line 13 col 40) `[`>,
+                                  <integer (line 13 col 41) `1`>,
+                                  <rsquare (line 13 col 42) `]`>
+                                )
+                              )
+                            )
+                          ),
+                          <rparen (line 13 col 43) `)`>
+                        ),
+                        (_gen5:
+                          (lexer_target:
+                            (terminal:
+                              <terminal (line 13 col 46) `all`>,
+                              (_gen9: )
+                            )
+                          ),
+                          (_gen5: )
+                        )
+                      )
+                    )
+                  )
+                ),
+                (_gen1:
+                  (lexer_atom:
+                    (lexer_regex:
+                      <regex (line 14 col 5) `"\\s+"`>,
+                      (_gen4: ),
+                      <arrow (line 14 col 12) `->`>,
+                      (_gen5:
+                        (lexer_target:
+                          <null (line 14 col 15) `null`>
+                        ),
+                        (_gen5: )
+                      )
+                    )
+                  ),
+                  (_gen1: )
+                )
+              )
+            ),
+            (_gen2:
+              <code (line 15 col 11) `
+static void f(LEXER_CONTEXT_T * ctx, TERMINAL_T * terminal, char * source_string, int line, int col)
+{
+    default_action(ctx, terminal, source_string, line, col);
+}
+    `>
+            ),
+            <rbrace (line 21 col 3) `}`>
+          )
+        )
+      ),
+      (_gen0:
+        (body_element:
+          (body_element_sub:
+            (lexer:
+              <lexer (line 22 col 3) `lexer`>,
+              <langle (line 22 col 8) `<`>,
+              <identifier (line 22 col 9) `java`>,
+              <rangle (line 22 col 13) `>`>,
+              <lbrace (line 22 col 15) `{`>,
+              (_gen1:
+                (lexer_atom:
+                  (lexer_regex:
+                    <regex (line 23 col 5) `"(a)(b)(c)"`>,
+                    (_gen4: ),
+                    <arrow (line 23 col 17) `->`>,
+                    (_gen5:
+                      (lexer_target:
+                        (terminal:
+                          <terminal (line 23 col 21) `a`>,
+                          (_gen9:
+                            (match_group:
+                              <lsquare (line 23 col 22) `[`>,
+                              <integer (line 23 col 23) `1`>,
+                              <rsquare (line 23 col 24) `]`>
+                            )
+                          )
+                        )
+                      ),
+                      (_gen5:
+                        (lexer_target:
+                          (terminal:
+                            <terminal (line 23 col 27) `b`>,
+                            (_gen9:
+                              (match_group:
+                                <lsquare (line 23 col 28) `[`>,
+                                <integer (line 23 col 29) `2`>,
+                                <rsquare (line 23 col 30) `]`>
+                              )
+                            )
+                          )
+                        ),
+                        (_gen5:
+                          (lexer_target:
+                            (terminal:
+                              <terminal (line 23 col 33) `c`>,
+                              (_gen9:
+                                (match_group:
+                                  <lsquare (line 23 col 34) `[`>,
+                                  <integer (line 23 col 35) `3`>,
+                                  <rsquare (line 23 col 36) `]`>
+                                )
+                              )
+                            )
+                          ),
+                          (_gen5:
+                            (lexer_target:
+                              (terminal:
+                                <terminal (line 23 col 39) `abc`>,
+                                (_gen9:
+                                  (match_group:
+                                    <lsquare (line 23 col 42) `[`>,
+                                    <integer (line 23 col 43) `0`>,
+                                    <rsquare (line 23 col 44) `]`>
+                                  )
+                                )
+                              )
+                            ),
+                            (_gen5: )
+                          )
+                        )
+                      )
+                    )
+                  )
+                ),
+                (_gen1:
+                  (lexer_atom:
+                    (lexer_regex:
+                      <regex (line 24 col 5) `"(x)\\s*(y)\\s*(z)"`>,
+                      (_gen4: ),
+                      <arrow (line 24 col 25) `->`>,
+                      (_gen5:
+                        (lexer_target:
+                          (terminal:
+                            <terminal (line 24 col 29) `hint`>,
+                            (_gen9:
+                              (match_group:
+                                <no_group (line 24 col 33) `[]`>
+                              )
+                            )
+                          )
+                        ),
+                        (_gen5:
+                          (lexer_target:
+                            <identifier (line 24 col 36) `f`>,
+                            <lparen (line 24 col 37) `(`>,
+                            (_gen8:
+                              (terminal:
+                                <terminal (line 24 col 39) `x`>,
+                                (_gen9:
+                                  (match_group:
+                                    <lsquare (line 24 col 40) `[`>,
+                                    <integer (line 24 col 41) `1`>,
+                                    <rsquare (line 24 col 42) `]`>
+                                  )
+                                )
+                              )
+                            ),
+                            <rparen (line 24 col 43) `)`>
+                          ),
+                          (_gen5:
+                            (lexer_target:
+                              (terminal:
+                                <terminal (line 24 col 46) `all`>,
+                                (_gen9: )
+                              )
+                            ),
+                            (_gen5: )
+                          )
+                        )
+                      )
+                    )
+                  ),
+                  (_gen1:
+                    (lexer_atom:
+                      (lexer_regex:
+                        <regex (line 25 col 5) `"\\s+"`>,
+                        (_gen4: ),
+                        <arrow (line 25 col 12) `->`>,
+                        (_gen5:
+                          (lexer_target:
+                            <null (line 25 col 15) `null`>
+                          ),
+                          (_gen5: )
+                        )
+                      )
+                    ),
+                    (_gen1: )
+                  )
+                )
+              ),
+              (_gen2:
+                <code (line 26 col 11) `
+public void f(LexerContext ctx, TerminalIdentifier terminal, String source_string, int line, int col) {
+    default_action(ctx, terminal, source_string, line, col);
+}
+    `>
+              ),
+              <rbrace (line 31 col 3) `}`>
+            )
+          )
+        ),
+        (_gen0:
+          (body_element:
+            (body_element_sub:
+              (lexer:
+                <lexer (line 32 col 3) `lexer`>,
+                <langle (line 32 col 8) `<`>,
+                <identifier (line 32 col 9) `javascript`>,
+                <rangle (line 32 col 19) `>`>,
+                <lbrace (line 32 col 21) `{`>,
+                (_gen1:
+                  (lexer_atom:
+                    (lexer_regex:
+                      <regex (line 33 col 5) `"(a)(b)(c)"`>,
+                      (_gen4: ),
+                      <arrow (line 33 col 17) `->`>,
+                      (_gen5:
+                        (lexer_target:
+                          (terminal:
+                            <terminal (line 33 col 21) `a`>,
+                            (_gen9:
+                              (match_group:
+                                <lsquare (line 33 col 22) `[`>,
+                                <integer (line 33 col 23) `1`>,
+                                <rsquare (line 33 col 24) `]`>
+                              )
+                            )
+                          )
+                        ),
+                        (_gen5:
+                          (lexer_target:
+                            (terminal:
+                              <terminal (line 33 col 27) `b`>,
+                              (_gen9:
+                                (match_group:
+                                  <lsquare (line 33 col 28) `[`>,
+                                  <integer (line 33 col 29) `2`>,
+                                  <rsquare (line 33 col 30) `]`>
+                                )
+                              )
+                            )
+                          ),
+                          (_gen5:
+                            (lexer_target:
+                              (terminal:
+                                <terminal (line 33 col 33) `c`>,
+                                (_gen9:
+                                  (match_group:
+                                    <lsquare (line 33 col 34) `[`>,
+                                    <integer (line 33 col 35) `3`>,
+                                    <rsquare (line 33 col 36) `]`>
+                                  )
+                                )
+                              )
+                            ),
+                            (_gen5:
+                              (lexer_target:
+                                (terminal:
+                                  <terminal (line 33 col 39) `abc`>,
+                                  (_gen9:
+                                    (match_group:
+                                      <lsquare (line 33 col 42) `[`>,
+                                      <integer (line 33 col 43) `0`>,
+                                      <rsquare (line 33 col 44) `]`>
+                                    )
+                                  )
+                                )
+                              ),
+                              (_gen5: )
+                            )
+                          )
+                        )
+                      )
+                    )
+                  ),
+                  (_gen1:
+                    (lexer_atom:
+                      (lexer_regex:
+                        <regex (line 34 col 5) `"(x)\\s*(y)\\s*(z)"`>,
+                        (_gen4: ),
+                        <arrow (line 34 col 25) `->`>,
+                        (_gen5:
+                          (lexer_target:
+                            (terminal:
+                              <terminal (line 34 col 29) `hint`>,
+                              (_gen9:
+                                (match_group:
+                                  <no_group (line 34 col 33) `[]`>
+                                )
+                              )
+                            )
+                          ),
+                          (_gen5:
+                            (lexer_target:
+                              <identifier (line 34 col 36) `f`>,
+                              <lparen (line 34 col 37) `(`>,
+                              (_gen8:
+                                (terminal:
+                                  <terminal (line 34 col 39) `x`>,
+                                  (_gen9:
+                                    (match_group:
+                                      <lsquare (line 34 col 40) `[`>,
+                                      <integer (line 34 col 41) `1`>,
+                                      <rsquare (line 34 col 42) `]`>
+                                    )
+                                  )
+                                )
+                              ),
+                              <rparen (line 34 col 43) `)`>
+                            ),
+                            (_gen5:
+                              (lexer_target:
+                                (terminal:
+                                  <terminal (line 34 col 46) `all`>,
+                                  (_gen9: )
+                                )
+                              ),
+                              (_gen5: )
+                            )
+                          )
+                        )
+                      )
+                    ),
+                    (_gen1:
+                      (lexer_atom:
+                        (lexer_regex:
+                          <regex (line 35 col 5) `"\\s+"`>,
+                          (_gen4: ),
+                          <arrow (line 35 col 12) `->`>,
+                          (_gen5:
+                            (lexer_target:
+                              <null (line 35 col 15) `null`>
+                            ),
+                            (_gen5: )
+                          )
+                        )
+                      ),
+                      (_gen1: )
+                    )
+                  )
+                ),
+                (_gen2:
+                  <code (line 36 col 11) `
+function f(ctx, terminal, source_string, line, col) {
+    default_action(ctx, terminal, source_string, line, col);
+}
+    `>
+                ),
+                <rbrace (line 41 col 3) `}`>
+              )
+            )
+          ),
+          (_gen0: )
+        )
+      )
+    )
+  ),
+  <rbrace (line 42 col 1) `}`>
+)

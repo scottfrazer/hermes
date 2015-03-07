@@ -1,17 +1,28 @@
 import os
 import json
+import re
 
 import hermes.factory
 from hermes.grammar import NonTerminal
 from hermes.hermes_parser import parse, lex
 
-base_dir = os.path.join(os.path.dirname(__file__), 'cases/grammar')
+base_dir = os.path.join(os.path.dirname(__file__), 'cases/grammar/')
+grammars_dir = os.path.join(os.path.dirname(__file__), 'grammars/')
 
 def get_grammar(directory, name='grammar.zgr'):
     with open(os.path.join(directory, name)) as fp:
         return hermes.factory.parse(fp.read(), 'grammar')
 
 def test_all():
+    for root, _, files in os.walk(grammars_dir):
+        for filename in files:
+            if filename.endswith('.zgr'):
+                subdir = os.path.join(base_dir, root.replace(grammars_dir, ''), re.match(r'(.*?)\.zgr$', filename).group(1))
+                if not os.path.exists(subdir):
+                    os.makedirs(subdir)
+                grammar_symlink = os.path.join(subdir, 'grammar.zgr')
+                if not os.path.exists(grammar_symlink):
+                    os.symlink(os.path.relpath(os.path.join(root, filename), subdir), grammar_symlink)
     for test_dir, dirs, files in os.walk(base_dir):
         if 'grammar.zgr' not in files:
             continue
@@ -65,7 +76,6 @@ def compare(test_dir, filename, actual):
     if not os.path.isfile(expected_file):
       with open(expected_file, 'w') as fp:
         fp.write(actual)
-      print("Generated: " + expected_file)
     with open(expected_file) as fp:
       expected = fp.read()
     assert expected == actual

@@ -1,0 +1,351 @@
+(grammar:
+  <grammar (line 1 col 1) `grammar`>,
+  <lbrace (line 1 col 9) `{`>,
+  (_gen0:
+    (body_element:
+      (body_element_sub:
+        (parser:
+          (parser_ll1:
+            <parser_ll1 (line 2 col 3) `parser<ll1>`>,
+            <lbrace (line 2 col 15) `{`>,
+            (_gen10:
+              (ll1_rule:
+                <ll1_rule_hint (line 3 col 5) ``>,
+                <nonterminal (line 3 col 6) `object`>,
+                <equals (line 3 col 13) `=`>,
+                (ll1_rule_rhs:
+                  (_gen11:
+                    (rule:
+                      (_gen13:
+                        (morpheme:
+                          <terminal (line 3 col 16) `lbrace`>
+                        ),
+                        (_gen13:
+                          (morpheme:
+                            (macro:
+                              <identifier (line 3 col 23) `list`>,
+                              <lparen (line 3 col 27) `(`>,
+                              (_gen20:
+                                (macro_parameter:
+                                  <nonterminal (line 3 col 29) `name_value_pair`>
+                                ),
+                                (_gen21:
+                                  <comma (line 3 col 44) `,`>,
+                                  (macro_parameter:
+                                    <terminal (line 3 col 47) `comma`>
+                                  ),
+                                  (_gen21: )
+                                )
+                              ),
+                              <rparen (line 3 col 52) `)`>
+                            )
+                          ),
+                          (_gen13:
+                            (morpheme:
+                              <terminal (line 3 col 55) `rbrace`>
+                            ),
+                            (_gen13: )
+                          )
+                        )
+                      ),
+                      (_gen14:
+                        (ast_transform:
+                          <arrow (line 3 col 62) `->`>,
+                          (ast_transform_sub:
+                            <identifier (line 3 col 65) `Object`>,
+                            <lparen (line 3 col 71) `(`>,
+                            (_gen18:
+                              (ast_parameter:
+                                <identifier (line 3 col 73) `attributes`>,
+                                <equals (line 3 col 83) `=`>,
+                                <nonterminal_reference (line 3 col 85) `1`>
+                              ),
+                              (_gen19: )
+                            ),
+                            <rparen (line 3 col 87) `)`>
+                          )
+                        )
+                      )
+                    ),
+                    (_gen12: )
+                  )
+                )
+              ),
+              (_gen10:
+                (ll1_rule:
+                  <ll1_rule_hint (line 4 col 5) ``>,
+                  <nonterminal (line 4 col 6) `array`>,
+                  <equals (line 4 col 12) `=`>,
+                  (ll1_rule_rhs:
+                    (_gen11:
+                      (rule:
+                        (_gen13:
+                          (morpheme:
+                            <terminal (line 4 col 15) `lsquare`>
+                          ),
+                          (_gen13:
+                            (morpheme:
+                              (macro:
+                                <identifier (line 4 col 23) `list`>,
+                                <lparen (line 4 col 27) `(`>,
+                                (_gen20:
+                                  (macro_parameter:
+                                    <nonterminal (line 4 col 29) `value`>
+                                  ),
+                                  (_gen21:
+                                    <comma (line 4 col 34) `,`>,
+                                    (macro_parameter:
+                                      <terminal (line 4 col 37) `comma`>
+                                    ),
+                                    (_gen21: )
+                                  )
+                                ),
+                                <rparen (line 4 col 42) `)`>
+                              )
+                            ),
+                            (_gen13:
+                              (morpheme:
+                                <terminal (line 4 col 45) `rsquare`>
+                              ),
+                              (_gen13: )
+                            )
+                          )
+                        ),
+                        (_gen14:
+                          (ast_transform:
+                            <arrow (line 4 col 53) `->`>,
+                            (ast_transform_sub:
+                              <identifier (line 4 col 56) `Array`>,
+                              <lparen (line 4 col 61) `(`>,
+                              (_gen18:
+                                (ast_parameter:
+                                  <identifier (line 4 col 63) `items`>,
+                                  <equals (line 4 col 68) `=`>,
+                                  <nonterminal_reference (line 4 col 70) `1`>
+                                ),
+                                (_gen19: )
+                              ),
+                              <rparen (line 4 col 72) `)`>
+                            )
+                          )
+                        )
+                      ),
+                      (_gen12: )
+                    )
+                  )
+                ),
+                (_gen10:
+                  (ll1_rule:
+                    <ll1_rule_hint (line 5 col 5) ``>,
+                    <nonterminal (line 5 col 6) `value`>,
+                    <equals (line 5 col 12) `=`>,
+                    (ll1_rule_rhs:
+                      (_gen11:
+                        (rule:
+                          (_gen13:
+                            (morpheme:
+                              <nonterminal (line 5 col 15) `object`>
+                            ),
+                            (_gen13: )
+                          ),
+                          (_gen14: )
+                        ),
+                        (_gen12: )
+                      )
+                    )
+                  ),
+                  (_gen10:
+                    (ll1_rule:
+                      <ll1_rule_hint (line 6 col 5) ``>,
+                      <nonterminal (line 6 col 6) `value`>,
+                      <equals (line 6 col 12) `=`>,
+                      (ll1_rule_rhs:
+                        (_gen11:
+                          (rule:
+                            (_gen13:
+                              (morpheme:
+                                <nonterminal (line 6 col 15) `array`>
+                              ),
+                              (_gen13: )
+                            ),
+                            (_gen14: )
+                          ),
+                          (_gen12: )
+                        )
+                      )
+                    ),
+                    (_gen10:
+                      (ll1_rule:
+                        <ll1_rule_hint (line 7 col 5) ``>,
+                        <nonterminal (line 7 col 6) `value`>,
+                        <equals (line 7 col 12) `=`>,
+                        (ll1_rule_rhs:
+                          (_gen11:
+                            (rule:
+                              (_gen13:
+                                (morpheme:
+                                  <terminal (line 7 col 15) `string`>
+                                ),
+                                (_gen13: )
+                              ),
+                              (_gen14: )
+                            ),
+                            (_gen12: )
+                          )
+                        )
+                      ),
+                      (_gen10:
+                        (ll1_rule:
+                          <ll1_rule_hint (line 8 col 5) ``>,
+                          <nonterminal (line 8 col 6) `value`>,
+                          <equals (line 8 col 12) `=`>,
+                          (ll1_rule_rhs:
+                            (_gen11:
+                              (rule:
+                                (_gen13:
+                                  (morpheme:
+                                    <terminal (line 8 col 15) `number`>
+                                  ),
+                                  (_gen13: )
+                                ),
+                                (_gen14: )
+                              ),
+                              (_gen12: )
+                            )
+                          )
+                        ),
+                        (_gen10:
+                          (ll1_rule:
+                            <ll1_rule_hint (line 9 col 5) ``>,
+                            <nonterminal (line 9 col 6) `value`>,
+                            <equals (line 9 col 12) `=`>,
+                            (ll1_rule_rhs:
+                              (_gen11:
+                                (rule:
+                                  (_gen13:
+                                    (morpheme:
+                                      <terminal (line 9 col 15) `true`>
+                                    ),
+                                    (_gen13: )
+                                  ),
+                                  (_gen14: )
+                                ),
+                                (_gen12: )
+                              )
+                            )
+                          ),
+                          (_gen10:
+                            (ll1_rule:
+                              <ll1_rule_hint (line 10 col 5) ``>,
+                              <nonterminal (line 10 col 6) `value`>,
+                              <equals (line 10 col 12) `=`>,
+                              (ll1_rule_rhs:
+                                (_gen11:
+                                  (rule:
+                                    (_gen13:
+                                      (morpheme:
+                                        <terminal (line 10 col 15) `false`>
+                                      ),
+                                      (_gen13: )
+                                    ),
+                                    (_gen14: )
+                                  ),
+                                  (_gen12: )
+                                )
+                              )
+                            ),
+                            (_gen10:
+                              (ll1_rule:
+                                <ll1_rule_hint (line 11 col 5) ``>,
+                                <nonterminal (line 11 col 6) `value`>,
+                                <equals (line 11 col 12) `=`>,
+                                (ll1_rule_rhs:
+                                  (_gen11:
+                                    (rule:
+                                      (_gen13:
+                                        (morpheme:
+                                          <terminal (line 11 col 15) `null`>
+                                        ),
+                                        (_gen13: )
+                                      ),
+                                      (_gen14: )
+                                    ),
+                                    (_gen12: )
+                                  )
+                                )
+                              ),
+                              (_gen10:
+                                (ll1_rule:
+                                  <ll1_rule_hint (line 12 col 5) ``>,
+                                  <nonterminal (line 12 col 6) `name_value_pair`>,
+                                  <equals (line 12 col 22) `=`>,
+                                  (ll1_rule_rhs:
+                                    (_gen11:
+                                      (rule:
+                                        (_gen13:
+                                          (morpheme:
+                                            <terminal (line 12 col 25) `string`>
+                                          ),
+                                          (_gen13:
+                                            (morpheme:
+                                              <terminal (line 12 col 33) `colon`>
+                                            ),
+                                            (_gen13:
+                                              (morpheme:
+                                                <nonterminal (line 12 col 40) `value`>
+                                              ),
+                                              (_gen13: )
+                                            )
+                                          )
+                                        ),
+                                        (_gen14:
+                                          (ast_transform:
+                                            <arrow (line 12 col 46) `->`>,
+                                            (ast_transform_sub:
+                                              <identifier (line 12 col 49) `NameValuePair`>,
+                                              <lparen (line 12 col 62) `(`>,
+                                              (_gen18:
+                                                (ast_parameter:
+                                                  <identifier (line 12 col 64) `name`>,
+                                                  <equals (line 12 col 68) `=`>,
+                                                  <nonterminal_reference (line 12 col 70) `0`>
+                                                ),
+                                                (_gen19:
+                                                  <comma (line 12 col 71) `,`>,
+                                                  (ast_parameter:
+                                                    <identifier (line 12 col 73) `value`>,
+                                                    <equals (line 12 col 78) `=`>,
+                                                    <nonterminal_reference (line 12 col 80) `2`>
+                                                  ),
+                                                  (_gen19: )
+                                                )
+                                              ),
+                                              <rparen (line 12 col 82) `)`>
+                                            )
+                                          )
+                                        )
+                                      ),
+                                      (_gen12: )
+                                    )
+                                  )
+                                ),
+                                (_gen10: )
+                              )
+                            )
+                          )
+                        )
+                      )
+                    )
+                  )
+                )
+              )
+            ),
+            <rbrace (line 13 col 3) `}`>
+          )
+        )
+      )
+    ),
+    (_gen0: )
+  ),
+  <rbrace (line 14 col 1) `}`>
+)

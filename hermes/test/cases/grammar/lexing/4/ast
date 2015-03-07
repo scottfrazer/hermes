@@ -1,0 +1,252 @@
+(Grammar:
+  body=[
+    (Lexer:
+      language=<identifier (line 2 col 9) `python`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 3 col 5) `r'(a)(b)(c)'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 3 col 22) `a`>,
+              group=<integer (line 3 col 24) `1`>
+            ),
+            (Terminal:
+              name=<terminal (line 3 col 28) `b`>,
+              group=<integer (line 3 col 30) `2`>
+            ),
+            (Terminal:
+              name=<terminal (line 3 col 34) `c`>,
+              group=<integer (line 3 col 36) `3`>
+            ),
+            (Terminal:
+              name=<terminal (line 3 col 40) `abc`>,
+              group=<integer (line 3 col 44) `0`>
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 4 col 5) `r'(x)\s*(y)\s*(z)'`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 4 col 28) `hint`>,
+              group=<no_group (line 4 col 32) `[]`>
+            ),
+            (LexerFunctionCall:
+              name=<identifier (line 4 col 35) `f`>,
+              terminal=(Terminal:
+                name=<terminal (line 4 col 38) `x`>,
+                group=<integer (line 4 col 40) `1`>
+              )
+            ),
+            (Terminal:
+              name=<terminal (line 4 col 45) `all`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 5 col 5) `r'\s+'`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        )
+      ],
+      code=<code (line 6 col 11) `
+def f(ctx, terminal, source_string, line, col):
+    default_action(ctx, terminal, source_string, line, col)
+    `>
+    ),
+    (Lexer:
+      language=<identifier (line 11 col 9) `c`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 12 col 5) `"(a)(b)(c)"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 12 col 21) `a`>,
+              group=<integer (line 12 col 23) `1`>
+            ),
+            (Terminal:
+              name=<terminal (line 12 col 27) `b`>,
+              group=<integer (line 12 col 29) `2`>
+            ),
+            (Terminal:
+              name=<terminal (line 12 col 33) `c`>,
+              group=<integer (line 12 col 35) `3`>
+            ),
+            (Terminal:
+              name=<terminal (line 12 col 39) `abc`>,
+              group=<integer (line 12 col 43) `0`>
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 13 col 5) `"(x)\\s*(y)\\s*(z)"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 13 col 29) `hint`>,
+              group=<no_group (line 13 col 33) `[]`>
+            ),
+            (LexerFunctionCall:
+              name=<identifier (line 13 col 36) `f`>,
+              terminal=(Terminal:
+                name=<terminal (line 13 col 39) `x`>,
+                group=<integer (line 13 col 41) `1`>
+              )
+            ),
+            (Terminal:
+              name=<terminal (line 13 col 46) `all`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 14 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        )
+      ],
+      code=<code (line 15 col 11) `
+static void f(LEXER_CONTEXT_T * ctx, TERMINAL_T * terminal, char * source_string, int line, int col)
+{
+    default_action(ctx, terminal, source_string, line, col);
+}
+    `>
+    ),
+    (Lexer:
+      language=<identifier (line 22 col 9) `java`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 23 col 5) `"(a)(b)(c)"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 23 col 21) `a`>,
+              group=<integer (line 23 col 23) `1`>
+            ),
+            (Terminal:
+              name=<terminal (line 23 col 27) `b`>,
+              group=<integer (line 23 col 29) `2`>
+            ),
+            (Terminal:
+              name=<terminal (line 23 col 33) `c`>,
+              group=<integer (line 23 col 35) `3`>
+            ),
+            (Terminal:
+              name=<terminal (line 23 col 39) `abc`>,
+              group=<integer (line 23 col 43) `0`>
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 24 col 5) `"(x)\\s*(y)\\s*(z)"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 24 col 29) `hint`>,
+              group=<no_group (line 24 col 33) `[]`>
+            ),
+            (LexerFunctionCall:
+              name=<identifier (line 24 col 36) `f`>,
+              terminal=(Terminal:
+                name=<terminal (line 24 col 39) `x`>,
+                group=<integer (line 24 col 41) `1`>
+              )
+            ),
+            (Terminal:
+              name=<terminal (line 24 col 46) `all`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 25 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        )
+      ],
+      code=<code (line 26 col 11) `
+public void f(LexerContext ctx, TerminalIdentifier terminal, String source_string, int line, int col) {
+    default_action(ctx, terminal, source_string, line, col);
+}
+    `>
+    ),
+    (Lexer:
+      language=<identifier (line 32 col 9) `javascript`>,
+      atoms=[
+        (Regex:
+          regex=<regex (line 33 col 5) `"(a)(b)(c)"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 33 col 21) `a`>,
+              group=<integer (line 33 col 23) `1`>
+            ),
+            (Terminal:
+              name=<terminal (line 33 col 27) `b`>,
+              group=<integer (line 33 col 29) `2`>
+            ),
+            (Terminal:
+              name=<terminal (line 33 col 33) `c`>,
+              group=<integer (line 33 col 35) `3`>
+            ),
+            (Terminal:
+              name=<terminal (line 33 col 39) `abc`>,
+              group=<integer (line 33 col 43) `0`>
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 34 col 5) `"(x)\\s*(y)\\s*(z)"`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 34 col 29) `hint`>,
+              group=<no_group (line 34 col 33) `[]`>
+            ),
+            (LexerFunctionCall:
+              name=<identifier (line 34 col 36) `f`>,
+              terminal=(Terminal:
+                name=<terminal (line 34 col 39) `x`>,
+                group=<integer (line 34 col 41) `1`>
+              )
+            ),
+            (Terminal:
+              name=<terminal (line 34 col 46) `all`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 35 col 5) `"\\s+"`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        )
+      ],
+      code=<code (line 36 col 11) `
+function f(ctx, terminal, source_string, line, col) {
+    default_action(ctx, terminal, source_string, line, col);
+}
+    `>
+    )
+  ]
+)

@@ -1,115 +1,115 @@
 {
-    "$unary_add_op": [
-        ":minus", 
-        ":plus", 
-        ":_empty"
-    ], 
-    "$block_var1": [
-        ":comma", 
-        ":_empty"
-    ], 
-    "$add_op": [
-        ":minus", 
-        ":plus"
-    ], 
-    "$block_var": [
-        ":var", 
-        ":_empty"
-    ], 
+    "$block_const": [
+        ":_empty",
+        ":const"
+    ],
     "$expression_sub1": [
-        ":minus", 
-        ":plus", 
+        ":plus",
+        ":minus",
         ":_empty"
-    ], 
-    "$mul_op": [
-        ":times", 
-        ":divide"
-    ], 
+    ],
     "$number": [
         ":number"
-    ], 
-    "$condition": [
-        ":minus", 
-        ":plus", 
-        ":odd", 
-        ":ident", 
-        ":number", 
-        ":lparen"
-    ], 
-    "$expression": [
-        ":plus", 
-        ":lparen", 
-        ":ident", 
-        ":minus", 
+    ],
+    "$statement": [
+        ":if",
+        ":while",
+        ":begin",
+        ":ident",
+        ":call"
+    ],
+    "$term_sub1": [
+        ":times",
+        ":divide",
+        ":_empty"
+    ],
+    "$block_var1": [
+        ":comma",
+        ":_empty"
+    ],
+    "$block_const1": [
+        ":comma",
+        ":_empty"
+    ],
+    "$op": [
+        ":equal",
+        ":gteq",
+        ":lteq",
+        ":pound",
+        ":lt",
+        ":gt"
+    ],
+    "$add_op": [
+        ":plus",
+        ":minus"
+    ],
+    "$term": [
+        ":lparen",
+        ":ident",
         ":number"
-    ], 
+    ],
     "$block_proc": [
-        ":procedure", 
+        ":procedure",
         ":_empty"
-    ], 
-    "$program": [
-        ":const", 
-        ":while", 
-        ":begin", 
-        ":var", 
-        ":if", 
-        ":call", 
-        ":ident", 
-        ":procedure"
-    ], 
-    "$block": [
-        ":const", 
-        ":begin", 
-        ":while", 
-        ":var", 
-        ":if", 
-        ":call", 
-        ":ident", 
-        ":procedure"
-    ], 
-    "$block_const": [
-        ":const", 
-        ":_empty"
-    ], 
+    ],
+    "$factor": [
+        ":lparen",
+        ":ident",
+        ":number"
+    ],
+    "$expression": [
+        ":lparen",
+        ":plus",
+        ":minus",
+        ":ident",
+        ":number"
+    ],
     "$ident": [
         ":ident"
-    ], 
-    "$statement": [
-        ":if", 
-        ":call", 
-        ":begin", 
-        ":ident", 
-        ":while"
-    ], 
-    "$block_const1": [
-        ":comma", 
-        ":_empty"
-    ], 
-    "$term_sub1": [
-        ":times", 
-        ":divide", 
-        ":_empty"
-    ], 
-    "$factor": [
-        ":lparen", 
-        ":number", 
-        ":ident"
-    ], 
-    "$op": [
-        ":equal", 
-        ":lt", 
-        ":pound", 
-        ":gteq", 
-        ":gt", 
-        ":lteq"
-    ], 
+    ],
+    "$condition": [
+        ":odd",
+        ":lparen",
+        ":plus",
+        ":minus",
+        ":ident",
+        ":number"
+    ],
     "$statement_sub1": [
-        ":semi", 
+        ":_empty",
+        ":semi"
+    ],
+    "$mul_op": [
+        ":times",
+        ":divide"
+    ],
+    "$unary_add_op": [
+        ":plus",
+        ":minus",
         ":_empty"
-    ], 
-    "$term": [
-        ":lparen", 
-        ":number", 
-        ":ident"
+    ],
+    "$block": [
+        ":procedure",
+        ":if",
+        ":while",
+        ":begin",
+        ":var",
+        ":ident",
+        ":call",
+        ":const"
+    ],
+    "$program": [
+        ":procedure",
+        ":if",
+        ":while",
+        ":begin",
+        ":var",
+        ":ident",
+        ":call",
+        ":const"
+    ],
+    "$block_var": [
+        ":_empty",
+        ":var"
     ]
 }

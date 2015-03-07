@@ -1,38 +1,38 @@
 {
     "$statements": [
-        ":sub", 
-        ":e", 
-        ":identifier", 
-        ":a", 
-        ":b"
-    ], 
+        ":sub",
+        ":a",
+        ":b",
+        ":identifier",
+        ":e"
+    ],
+    "$_gen1": [
+        ":comma",
+        ":_empty"
+    ],
     "$start": [
-        ":sub", 
-        ":identifier", 
-        ":_empty", 
-        ":e", 
-        ":a", 
-        ":b"
-    ], 
+        ":sub",
+        ":a",
+        ":b",
+        ":identifier",
+        ":_empty",
+        ":e"
+    ],
+    "$e": [
+        ":sub",
+        ":a",
+        ":b",
+        ":e"
+    ],
     "$assignstatement": [
         ":identifier"
-    ], 
-    "$e": [
-        ":sub", 
-        ":e", 
-        ":a", 
-        ":b"
-    ], 
-    "$_gen1": [
-        ":comma", 
-        ":_empty"
-    ], 
+    ],
     "$_gen0": [
-        ":sub", 
-        ":identifier", 
-        ":_empty", 
-        ":e", 
-        ":a", 
-        ":b"
+        ":sub",
+        ":a",
+        ":b",
+        ":identifier",
+        ":_empty",
+        ":e"
     ]
 }
