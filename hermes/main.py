@@ -103,6 +103,9 @@ def cli():
     commands['lex'].add_argument(
         '--base64', action='store_true', help='Base64 encode source'
     )
+    commands['lex'].add_argument(
+        '--json', action='store_true', help='Output tokens in JSON.  Implies --base64'
+    )
 
     cli = parser.parse_args()
 
@@ -150,15 +153,33 @@ def cli():
         )
 
     elif cli.action == 'lex':
-        if cli.grammar == '-':
+        if cli.json: cli.base64 = True
+
+        if cli.grammar == '--':
             user_parser = hermes.hermes_parser
+        elif cli.grammar == '-':
+            user_parser = hermes.compile(sys.stdin.read())
         else:
             with open(cli.grammar) as fp:
                 user_parser = hermes.compile(fp)
 
-        with open(cli.input) as fp:
-            for token in user_parser.lex(fp.read(), '<string>', debug=cli.debug):
+        if cli.input == '-':
+            input = sys.stdin.read()
+            resource = '<stdin>'
+        else:
+            with open(cli.input) as fp:
+                input = fp.read()
+                resource = cli.input
+        tokens = user_parser.lex(input, resource, debug=cli.debug)
+
+        if cli.json:
+            sys.stdout.write('[\n    ')
+            sys.stdout.write(',\n    '.join([token.dumps(b64_source=cli.base64, json=cli.json) for token in tokens]))
+            sys.stdout.write('\n]\n')
+        else:
+            for token in tokens:
                 print(token.dumps(b64_source=cli.base64))
+
 
     elif cli.action == 'parse':
         lexer = get_lexer_by_name("htree") if cli.tree else get_lexer_by_name("hast")

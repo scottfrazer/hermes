@@ -19,7 +19,7 @@ def no_color(string, color):
 def term_color(string, intcolor):
   return "\033[38;5;{0}m{1}\033[0m".format(intcolor, string)
 
-def parse_tree_string(parsetree, indent=None, color=no_color, b64_source=False, indent_level=0):
+def parse_tree_string(parsetree, indent=None, color=no_color, b64_source=True, indent_level=0):
     indent_str = (' ' * indent * indent_level) if indent else ''
     if isinstance(parsetree, ParseTree):
         children = [parse_tree_string(child, indent, color, b64_source, indent_level+1) for child in parsetree.children]
@@ -35,7 +35,7 @@ def parse_tree_string(parsetree, indent=None, color=no_color, b64_source=False, 
     elif isinstance(parsetree, Terminal):
         return indent_str + color(parsetree.dumps(b64_source=b64_source), 6)
 
-def ast_string(ast, indent=None, color=no_color, b64_source=False, indent_level=0):
+def ast_string(ast, indent=None, color=no_color, b64_source=True, indent_level=0):
     indent_str = (' ' * indent * indent_level) if indent else ''
     next_indent_str = (' ' * indent * (indent_level+1)) if indent else ''
     if isinstance(ast, Ast):
@@ -65,16 +65,22 @@ def ast_string(ast, indent=None, color=no_color, b64_source=False, indent_level=
 
 class Terminal:
   def __init__(self, id, str, source_string, resource, line, col):
-    self.__dict__.update(locals())
+      self.__dict__.update(locals())
   def getId(self):
-    return self.id
+      return self.id
   def toAst(self):
-    return self
-  def dumps(self, b64_source=False, **kwargs):
-    source_string = base64.b64encode(self.source_string.encode('utf-8')).decode('utf-8') if b64_source else self.source_string
-    return '<{} (line {} col {}) `{}`>'.format(self.str, self.line, self.col, source_string)
+      return self
+  def dumps(self, b64_source=True, json=False, **kwargs):
+      if not b64_source and json:
+          raise Exception('b64_source must be set to True if json=True')
+      source_string = base64.b64encode(self.source_string.encode('utf-8')).decode('utf-8') if b64_source else self.source_string
+      if json:
+          json_fmt = '"terminal": "{0}", "resource": "{1}", "line": {2}, "col": {3}, "source_string": "{4}"'
+          return '{' + json_fmt.format(self.str, self.resource, self.line, self.col, source_string) + '}'
+      else:
+          return '<{} (line {} col {}) `{}`>'.format(self.str, self.line, self.col, source_string)
   def __str__(self):
-    return self.dumps()
+      return self.dumps()
 
 class NonTerminal():
   def __init__(self, id, str):
@@ -108,7 +114,7 @@ class AstList(list):
       for ast in self:
           retval.append(ast.toAst())
       return retval
-  def dumps(self, indent=None, color=no_color, b64_source=False):
+  def dumps(self, indent=None, color=no_color, b64_source=True):
       args = locals()
       del args['self']
       return ast_string(self, **args)
@@ -199,7 +205,7 @@ class ParseTree():
           else:
               return None
 
-  def dumps(self, indent=None, color=no_color, b64_source=False):
+  def dumps(self, indent=None, color=no_color, b64_source=True):
       args = locals()
       del args['self']
       return parse_tree_string(self, **args)
@@ -209,67 +215,57 @@ class Ast():
         self.__dict__.update(locals())
     def getAttr(self, attr):
         return self.attributes[attr]
-    def dumps(self, indent=None, color=no_color, b64_source=False):
+    def dumps(self, indent=None, color=no_color, b64_source=True):
         args = locals()
         del args['self']
         return ast_string(self, **args)
 
 class SyntaxError(Exception):
-  def __init__(self, message):
-    self.__dict__.update(locals())
-  def __str__(self):
-    return self.message
+    def __init__(self, message):
+        self.__dict__.update(locals())
+    def __str__(self):
+        return self.message
 
 class TokenStream(list):
-  def __init__(self, arg=[]):
-    super().__init__(arg)
-    self.index = 0
-  def advance(self):
-    self.index += 1
-    return self.current()
-  def last(self):
-    return self[-1]
-  def json(self):
-    if len(self) == 0:
-      return '[]'
-    tokens_json = []
-    json_fmt = '"terminal": "{terminal}", "resource": "{resource}", "line": {line}, "col": {col}, "source_string": "{source_string}"'
-    for token in self:
-        tokens_json.append(
-            '{' +
-            json_fmt.format(
-              terminal=token.str,
-              resource=token.resource,
-              line=token.line,
-              col=token.col,
-              source_string=base64.b64encode(token.source_string.encode('utf-8')).decode('utf-8')
-            ) +
-            '}'
-        )
-    return '[\n    ' + ',\n    '.join(tokens_json) + '\n]'
-  def current(self):
-    try:
-      return self[self.index]
-    except IndexError:
-      return None
+    def __init__(self, arg=[]):
+        super().__init__(arg)
+        self.index = 0
+    def advance(self):
+        self.index += 1
+        return self.current()
+    def last(self):
+        return self[-1]
+    def json(self):
+        if len(self) == 0:
+            return '[]'
+        tokens_json = []
+        json_fmt = '"terminal": "{terminal}", "resource": "{resource}", "line": {line}, "col": {col}, "source_string": "{source_string}"'
+        for token in self:
+            tokens_json.append(token.dumps(json=True, b64_source=True))
+        return '[\n    ' + ',\n    '.join(tokens_json) + '\n]'
+    def current(self):
+        try:
+            return self[self.index]
+        except IndexError:
+            return None
 
 class DefaultSyntaxErrorFormatter:
-  def unexpected_eof(self, nonterminal, expected_terminals, nonterminal_rules):
-    return "Error: unexpected end of file"
-  def excess_tokens(self, nonterminal, terminal):
-    return "Finished parsing without consuming all tokens."
-  def unexpected_symbol(self, nonterminal, actual_terminal, expected_terminals, rule):
-    return "Unexpected symbol (line {line}, col {col}) when parsing parse_{nt}.  Expected {expected}, got {actual}.".format(
-      line=actual_terminal.line,
-      col=actual_terminal.col,
-      nt=nonterminal,
-      expected=', '.join(expected_terminals),
-      actual=actual_terminal
-    )
-  def no_more_tokens(self, nonterminal, expected_terminal, last_terminal):
-    return "No more tokens.  Expecting " + expected_terminal
-  def invalid_terminal(nonterminal, invalid_terminal):
-    return "Invalid symbol ID: {} ({})".format(invalid_terminal.id, invalid_terminal.string)
+    def unexpected_eof(self, nonterminal, expected_terminals, nonterminal_rules):
+        return "Error: unexpected end of file"
+    def excess_tokens(self, nonterminal, terminal):
+        return "Finished parsing without consuming all tokens."
+    def unexpected_symbol(self, nonterminal, actual_terminal, expected_terminals, rule):
+        return "Unexpected symbol (line {line}, col {col}) when parsing parse_{nt}.  Expected {expected}, got {actual}.".format(
+            line=actual_terminal.line,
+            col=actual_terminal.col,
+            nt=nonterminal,
+            expected=', '.join(expected_terminals),
+            actual=actual_terminal
+        )
+    def no_more_tokens(self, nonterminal, expected_terminal, last_terminal):
+        return "No more tokens.  Expecting " + expected_terminal
+    def invalid_terminal(nonterminal, invalid_terminal):
+        return "Invalid symbol ID: {} ({})".format(invalid_terminal.id, invalid_terminal.string)
 
 class ParserContext:
   def __init__(self, tokens, error_formatter):
@@ -783,7 +779,7 @@ def cli():
                 tokens.append(Terminal(
                     terminals[json_token['terminal']],
                     json_token['terminal'],
-                    json_token['source_string'],
+                    base64.b64decode(json_token['source_string']).decode('utf-8'),
                     json_token['resource'],
                     json_token['line'],
                     json_token['col']
