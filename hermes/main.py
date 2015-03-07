@@ -185,15 +185,21 @@ def cli():
         lexer = get_lexer_by_name("htree") if cli.tree else get_lexer_by_name("hast")
         formatter = TerminalFormatter()
 
-        if cli.grammar == '-':
+        if cli.grammar == '--':
             parser = hermes.hermes_parser
+        elif cli.grammar == '-':
+            parser = hermes.compile(sys.stdin.read())
         else:
             with open(cli.grammar) as fp:
                 parser = hermes.compile(fp)
 
-        with open(cli.input) as fp:
-            tree = parser.parse(fp.read())
+        if cli.input == '-':
+            input = sys.stdin.read()
+        else:
+            with open(cli.input) as fp:
+                input = fp.read()
 
+        tree = parser.parse(input)
         string = tree.dumps(indent=2) if cli.tree else tree.toAst().dumps(indent=2)
         print(string if cli.no_color else highlight(string, lexer, formatter).strip())
 
