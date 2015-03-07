@@ -80,13 +80,10 @@ def cli():
         'parse', description=command_help['parse'], help=command_help['parse']
     )
     commands['parse'].add_argument(
-        'grammar', metavar='GRAMMAR', help='Grammar file'
+        'grammar', metavar='GRAMMAR', help='Hermes grammar file path.  A single dash reads from stdin.'
     )
     commands['parse'].add_argument(
-        'input', metavar='INPUT', help='Source input'
-    )
-    commands['parse'].add_argument(
-        '--base64', action='store_true', help='Base64 encode source'
+        'input', metavar='INPUT', help='Source input.  A single dash reads from stdin.'
     )
     commands['parse'].add_argument(
         '--tree', default=False, action='store_true', help='Print parse tree instead of AST'
@@ -95,13 +92,13 @@ def cli():
         'lex', description=command_help['lex'], help=command_help['lex']
     )
     commands['lex'].add_argument(
-        'grammar', metavar='GRAMMAR', help='Grammar file'
+        'grammar', metavar='GRAMMAR', help='Hermes grammar file.  A single dash reads from stdin.'
     )
     commands['lex'].add_argument(
-        'input', metavar='INPUT', help='Source input'
+        'input', metavar='INPUT', help='Source input.  A single dash reads from stdin.'
     )
     commands['lex'].add_argument(
-        '--base64', action='store_true', help='Base64 encode source'
+        '--no-base64', action='store_true', help='Do not base64 encode source strings.  Incompatible with --json'
     )
     commands['lex'].add_argument(
         '--json', action='store_true', help='Output tokens in JSON.  Implies --base64'
@@ -153,7 +150,9 @@ def cli():
         )
 
     elif cli.action == 'lex':
-        if cli.json: cli.base64 = True
+        if cli.no_base64 and cli.json:
+            sys.stderr.write('--json and --no-base64 are mutually exclusive\n')
+            sys.exit(-1)
 
         if cli.grammar == '--':
             user_parser = hermes.hermes_parser
@@ -174,7 +173,7 @@ def cli():
 
         if cli.json:
             sys.stdout.write('[\n    ')
-            sys.stdout.write(',\n    '.join([token.dumps(b64_source=cli.base64, json=cli.json) for token in tokens]))
+            sys.stdout.write(',\n    '.join([token.dumps(b64_source=not cli.no_base64, json=cli.json) for token in tokens]))
             sys.stdout.write('\n]\n')
         else:
             for token in tokens:
