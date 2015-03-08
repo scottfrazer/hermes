@@ -1,4 +1,5 @@
 from copy import copy, deepcopy
+import re
 from collections import OrderedDict
 
 
@@ -289,6 +290,46 @@ class Lexer(OrderedDict):
             for regex in regex_list:
                 for partial_name, partial in self.regex_partials.items():
                     regex.regex = regex.regex.replace('{{%{0}%}}'.format(partial_name), partial)
+
+    def convert_regex_str(self, regex_str, language):
+        if regex_str[0] == "'" and language in ['c', 'java']:
+            regex_str = regex_str[1:-1].replace('"', '\\"')
+            return '"{}"'.format(regex_str)
+
+        if regex_str[:2] in ["r'", 'r"'] and language in ['c', 'java', 'javascript']:
+            # http://en.wikipedia.org/wiki/Escape_sequences_in_C#Table_of_escape_sequences
+            regex_str = re.sub(r'\\(?![abfnrtv\'\?"]|u[0-9a-fA-F]{4}|[0-7]{3}|x[0-9a-fA-F]{2})', r'\\\\', regex_str[2:-1])
+            regex_str = re.sub(r'"(?<!\\)', r'\"', regex_str)
+            regex_str = re.sub(r"'(?<!\\)", r"\'", regex_str)
+            return '"{}"'.format(regex_str)
+
+        return regex_str
+
+    def convert_regex(self, regex, language):
+        regex.regex = self.convert_regex_str(regex.regex, language)
+        return regex
+
+    def strip_quotes(self, regex_str):
+        if regex_str[:2] in ['r"', "r'"]:
+            return regex_str[2:-1]
+        if regex_str[0] in ['"', "'"]:
+            return regex_str[1:-1]
+
+    def post_process(self, language):
+        # 1) String processing to make compatible for target language
+        for mode in self.keys():
+            self[mode] = [self.convert_regex(regex, language) for regex in self[mode]]
+        # 2) Regex partials replacement
+        for partial_name, partial in self.regex_partials.items():
+            self.regex_partials[partial_name] = self.strip_quotes(self.convert_regex_str(partial, language))
+        for partial_name, partial in self.regex_partials.items():
+            for partial_name1, partial1 in self.regex_partials.items():
+                self.regex_partials[partial_name] = self.regex_partials[partial_name].replace('{{%{0}%}}'.format(partial_name1), partial1)
+        for mode, regex_list in self.items():
+            for regex in regex_list:
+                for partial_name, partial in self.regex_partials.items():
+                    regex.regex = regex.regex.replace('{{%{0}%}}'.format(partial_name), partial)
+
 
     def __str__(self):
         return ', '.join(self.keys())

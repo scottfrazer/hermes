@@ -1,4 +1,5 @@
 import re
+from copy import deepcopy
 from collections import OrderedDict
 
 from hermes.grammar import *
@@ -6,6 +7,8 @@ from hermes.hermes_parser import Terminal as HermesTerminal
 from hermes.hermes_parser import Ast, AstList
 from hermes.hermes_parser import lex as hermes_lex
 from hermes.hermes_parser import parse as hermes_parse
+
+supported_languages = ['python', 'c', 'java', 'javascript']
 
 class GrammarFactory:
     # TODO: I want to get rid of name and start parameters
@@ -23,9 +26,15 @@ class GrammarFactory:
         lexer_asts = self.walk_ast(ast, 'Lexer')
         for lexer_ast in lexer_asts:
             lexer = self.parse_lexer(lexer_ast, all_terminals)
-            if lexer.language in lexers:
-                raise Exception('More than one lexer for language target: ' + lexer.language)
-            lexers[lexer.language] = lexer
+
+            langs_ast_list = lexer_ast.getAttr('languages')
+            langs = [t.source_string.lower() for t in langs_ast_list] if langs_ast_list else supported_languages
+
+            for lang in langs:
+                if lang in lexers:
+                    raise Exception('More than one lexer for language target: ' + lexer.language)
+                lexers[lang] = deepcopy(lexer)
+                lexers[lang].post_process(lang)
 
         expression_parser_asts = []
         start = None
@@ -97,17 +106,15 @@ class GrammarFactory:
                 lexer['default'].append(regex)
             if lexer_atom.name == 'Mode':
                 mode_name = lexer_atom.getAttr('name').source_string
+                if mode_name in lexer:
+                    raise Exception("Lexer mode '{}' already exists".format(mode_name))
                 lexer[mode_name] = self.parse_lexer_mode(lexer_atom, terminals, nonterminals)
             if lexer_atom.name == 'RegexPartials':
                 for partial in lexer_atom.getAttr('list'):
                     name = partial.getAttr('name').source_string
                     regex = partial.getAttr('regex').source_string
-                    if regex.startswith("r'"): regex = regex[2:-1]
-                    if regex.startswith("'") or regex.startswith('"'): regex = regex[1:-1]
                     lexer.regex_partials[name] = regex
-        lexer.language = lexer_ast.getAttr('language').source_string
         lexer.code = lexer_ast.getAttr('code').source_string if lexer_ast.getAttr('code') else ''
-        lexer.replace_partials()
         return lexer
 
     def parse_regex(self, regex_ast, terminals, nonterminals):

@@ -2594,7 +2594,7 @@ void
     lexer[{{prefix.upper()}}LEXER_{{mode.upper()}}_MODE_E] = calloc({{len(regex_list)}} + 1, sizeof(LEXER_REGEX_T *));
   {% for i, regex in enumerate(regex_list) %}
     r = calloc(1, sizeof(LEXER_REGEX_T));
-    r->regex = pcre_compile({{regex.regex}}, 0, &r->pcre_errptr, &r->pcre_erroffset, NULL);
+    r->regex = pcre_compile({{regex.regex}}, PCRE_UTF8, &r->pcre_errptr, &r->pcre_erroffset, NULL);
     r->pattern = {{regex.regex}};
     {% if len(regex.outputs) %}
     r->outputs = calloc({{len(regex.outputs)}}, sizeof(LEXER_REGEX_OUTPUT_T));

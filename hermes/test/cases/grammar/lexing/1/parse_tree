@@ -6,81 +6,88 @@
       (body_element_sub:
         (lexer:
           <lexer (line 2 col 3) `bGV4ZXI=`>,
-          <langle (line 2 col 8) `PA==`>,
-          <identifier (line 2 col 9) `cHl0aG9u`>,
-          <rangle (line 2 col 15) `Pg==`>,
-          <lbrace (line 2 col 17) `ew==`>,
           (_gen1:
+            (lexer_languages:
+              <langle (line 2 col 8) `PA==`>,
+              (_gen4:
+                <identifier (line 2 col 9) `cHl0aG9u`>,
+                (_gen5: )
+              ),
+              <rangle (line 2 col 15) `Pg==`>
+            )
+          ),
+          <lbrace (line 2 col 17) `ew==`>,
+          (_gen2:
             (lexer_atom:
               (lexer_regex:
                 <regex (line 3 col 5) `cidbYS16XSsn`>,
-                (_gen4: ),
+                (_gen7: ),
                 <arrow (line 3 col 15) `LT4=`>,
-                (_gen5:
+                (_gen8:
                   (lexer_target:
                     (terminal:
                       <terminal (line 3 col 19) `aWRlbnRpZmllcg==`>,
-                      (_gen9: )
+                      (_gen10: )
                     )
                   ),
-                  (_gen5: )
+                  (_gen8: )
                 )
               )
             ),
-            (_gen1:
+            (_gen2:
               (lexer_atom:
                 (lexer_regex:
                   <regex (line 4 col 5) `cidbMC05XSsn`>,
-                  (_gen4: ),
+                  (_gen7: ),
                   <arrow (line 4 col 15) `LT4=`>,
-                  (_gen5:
+                  (_gen8:
                     (lexer_target:
                       (terminal:
                         <terminal (line 4 col 19) `bnVtYmVy`>,
-                        (_gen9: )
+                        (_gen10: )
                       )
                     ),
-                    (_gen5: )
+                    (_gen8: )
                   )
                 )
               ),
-              (_gen1:
+              (_gen2:
                 (lexer_atom:
                   (lexer_regex:
                     <regex (line 5 col 5) `cidcbisn`>,
-                    (_gen4: ),
+                    (_gen7: ),
                     <arrow (line 5 col 12) `LT4=`>,
-                    (_gen5:
+                    (_gen8:
                       (lexer_target:
                         (terminal:
                           <terminal (line 5 col 16) `bmV3bGluZQ==`>,
-                          (_gen9: )
+                          (_gen10: )
                         )
                       ),
-                      (_gen5: )
+                      (_gen8: )
                     )
                   )
                 ),
-                (_gen1:
+                (_gen2:
                   (lexer_atom:
                     (lexer_regex:
                       <regex (line 6 col 5) `cidccysn`>,
-                      (_gen4: ),
+                      (_gen7: ),
                       <arrow (line 6 col 12) `LT4=`>,
-                      (_gen5:
+                      (_gen8:
                         (lexer_target:
                           <null (line 6 col 15) `bnVsbA==`>
                         ),
-                        (_gen5: )
+                        (_gen8: )
                       )
                     )
                   ),
-                  (_gen1: )
+                  (_gen2: )
                 )
               )
             )
           ),
-          (_gen2: ),
+          (_gen3: ),
           <rbrace (line 7 col 3) `fQ==`>
         )
       )
@@ -90,81 +97,88 @@
         (body_element_sub:
           (lexer:
             <lexer (line 8 col 3) `bGV4ZXI=`>,
-            <langle (line 8 col 8) `PA==`>,
-            <identifier (line 8 col 9) `Yw==`>,
-            <rangle (line 8 col 10) `Pg==`>,
-            <lbrace (line 8 col 12) `ew==`>,
             (_gen1:
+              (lexer_languages:
+                <langle (line 8 col 8) `PA==`>,
+                (_gen4:
+                  <identifier (line 8 col 9) `Yw==`>,
+                  (_gen5: )
+                ),
+                <rangle (line 8 col 10) `Pg==`>
+              )
+            ),
+            <lbrace (line 8 col 12) `ew==`>,
+            (_gen2:
               (lexer_atom:
                 (lexer_regex:
                   <regex (line 9 col 5) `IlthLXpdKyI=`>,
-                  (_gen4: ),
+                  (_gen7: ),
                   <arrow (line 9 col 14) `LT4=`>,
-                  (_gen5:
+                  (_gen8:
                     (lexer_target:
                       (terminal:
                         <terminal (line 9 col 18) `aWRlbnRpZmllcg==`>,
-                        (_gen9: )
+                        (_gen10: )
                       )
                     ),
-                    (_gen5: )
+                    (_gen8: )
                   )
                 )
               ),
-              (_gen1:
+              (_gen2:
                 (lexer_atom:
                   (lexer_regex:
                     <regex (line 10 col 5) `IlswLTldKyI=`>,
-                    (_gen4: ),
+                    (_gen7: ),
                     <arrow (line 10 col 14) `LT4=`>,
-                    (_gen5:
+                    (_gen8:
                       (lexer_target:
                         (terminal:
                           <terminal (line 10 col 18) `bnVtYmVy`>,
-                          (_gen9: )
+                          (_gen10: )
                         )
                       ),
-                      (_gen5: )
+                      (_gen8: )
                     )
                   )
                 ),
-                (_gen1:
+                (_gen2:
                   (lexer_atom:
                     (lexer_regex:
                       <regex (line 11 col 5) `Ilxcbisi`>,
-                      (_gen4: ),
+                      (_gen7: ),
                       <arrow (line 11 col 12) `LT4=`>,
-                      (_gen5:
+                      (_gen8:
                         (lexer_target:
                           (terminal:
                             <terminal (line 11 col 16) `bmV3bGluZQ==`>,
-                            (_gen9: )
+                            (_gen10: )
                           )
                         ),
-                        (_gen5: )
+                        (_gen8: )
                       )
                     )
                   ),
-                  (_gen1:
+                  (_gen2:
                     (lexer_atom:
                       (lexer_regex:
                         <regex (line 12 col 5) `Ilxccysi`>,
-                        (_gen4: ),
+                        (_gen7: ),
                         <arrow (line 12 col 12) `LT4=`>,
-                        (_gen5:
+                        (_gen8:
                           (lexer_target:
                             <null (line 12 col 15) `bnVsbA==`>
                           ),
-                          (_gen5: )
+                          (_gen8: )
                         )
                       )
                     ),
-                    (_gen1: )
+                    (_gen2: )
                   )
                 )
               )
             ),
-            (_gen2: ),
+            (_gen3: ),
             <rbrace (line 13 col 3) `fQ==`>
           )
         )
@@ -174,81 +188,88 @@
           (body_element_sub:
             (lexer:
               <lexer (line 14 col 3) `bGV4ZXI=`>,
-              <langle (line 14 col 8) `PA==`>,
-              <identifier (line 14 col 9) `amF2YQ==`>,
-              <rangle (line 14 col 13) `Pg==`>,
-              <lbrace (line 14 col 15) `ew==`>,
               (_gen1:
+                (lexer_languages:
+                  <langle (line 14 col 8) `PA==`>,
+                  (_gen4:
+                    <identifier (line 14 col 9) `amF2YQ==`>,
+                    (_gen5: )
+                  ),
+                  <rangle (line 14 col 13) `Pg==`>
+                )
+              ),
+              <lbrace (line 14 col 15) `ew==`>,
+              (_gen2:
                 (lexer_atom:
                   (lexer_regex:
                     <regex (line 15 col 5) `IlthLXpdKyI=`>,
-                    (_gen4: ),
+                    (_gen7: ),
                     <arrow (line 15 col 14) `LT4=`>,
-                    (_gen5:
+                    (_gen8:
                       (lexer_target:
                         (terminal:
                           <terminal (line 15 col 18) `aWRlbnRpZmllcg==`>,
-                          (_gen9: )
+                          (_gen10: )
                         )
                       ),
-                      (_gen5: )
+                      (_gen8: )
                     )
                   )
                 ),
-                (_gen1:
+                (_gen2:
                   (lexer_atom:
                     (lexer_regex:
                       <regex (line 16 col 5) `IlswLTldKyI=`>,
-                      (_gen4: ),
+                      (_gen7: ),
                       <arrow (line 16 col 14) `LT4=`>,
-                      (_gen5:
+                      (_gen8:
                         (lexer_target:
                           (terminal:
                             <terminal (line 16 col 18) `bnVtYmVy`>,
-                            (_gen9: )
+                            (_gen10: )
                           )
                         ),
-                        (_gen5: )
+                        (_gen8: )
                       )
                     )
                   ),
-                  (_gen1:
+                  (_gen2:
                     (lexer_atom:
                       (lexer_regex:
                         <regex (line 17 col 5) `Ilxcbisi`>,
-                        (_gen4: ),
+                        (_gen7: ),
                         <arrow (line 17 col 12) `LT4=`>,
-                        (_gen5:
+                        (_gen8:
                           (lexer_target:
                             (terminal:
                               <terminal (line 17 col 16) `bmV3bGluZQ==`>,
-                              (_gen9: )
+                              (_gen10: )
                             )
                           ),
-                          (_gen5: )
+                          (_gen8: )
                         )
                       )
                     ),
-                    (_gen1:
+                    (_gen2:
                       (lexer_atom:
                         (lexer_regex:
                           <regex (line 18 col 5) `Ilxccysi`>,
-                          (_gen4: ),
+                          (_gen7: ),
                           <arrow (line 18 col 12) `LT4=`>,
-                          (_gen5:
+                          (_gen8:
                             (lexer_target:
                               <null (line 18 col 15) `bnVsbA==`>
                             ),
-                            (_gen5: )
+                            (_gen8: )
                           )
                         )
                       ),
-                      (_gen1: )
+                      (_gen2: )
                     )
                   )
                 )
               ),
-              (_gen2: ),
+              (_gen3: ),
               <rbrace (line 19 col 3) `fQ==`>
             )
           )
@@ -258,81 +279,88 @@
             (body_element_sub:
               (lexer:
                 <lexer (line 20 col 3) `bGV4ZXI=`>,
-                <langle (line 20 col 8) `PA==`>,
-                <identifier (line 20 col 9) `amF2YXNjcmlwdA==`>,
-                <rangle (line 20 col 19) `Pg==`>,
-                <lbrace (line 20 col 21) `ew==`>,
                 (_gen1:
+                  (lexer_languages:
+                    <langle (line 20 col 8) `PA==`>,
+                    (_gen4:
+                      <identifier (line 20 col 9) `amF2YXNjcmlwdA==`>,
+                      (_gen5: )
+                    ),
+                    <rangle (line 20 col 19) `Pg==`>
+                  )
+                ),
+                <lbrace (line 20 col 21) `ew==`>,
+                (_gen2:
                   (lexer_atom:
                     (lexer_regex:
                       <regex (line 21 col 5) `IlthLXpdKyI=`>,
-                      (_gen4: ),
+                      (_gen7: ),
                       <arrow (line 21 col 14) `LT4=`>,
-                      (_gen5:
+                      (_gen8:
                         (lexer_target:
                           (terminal:
                             <terminal (line 21 col 18) `aWRlbnRpZmllcg==`>,
-                            (_gen9: )
+                            (_gen10: )
                           )
                         ),
-                        (_gen5: )
+                        (_gen8: )
                       )
                     )
                   ),
-                  (_gen1:
+                  (_gen2:
                     (lexer_atom:
                       (lexer_regex:
                         <regex (line 22 col 5) `IlswLTldKyI=`>,
-                        (_gen4: ),
+                        (_gen7: ),
                         <arrow (line 22 col 14) `LT4=`>,
-                        (_gen5:
+                        (_gen8:
                           (lexer_target:
                             (terminal:
                               <terminal (line 22 col 18) `bnVtYmVy`>,
-                              (_gen9: )
+                              (_gen10: )
                             )
                           ),
-                          (_gen5: )
+                          (_gen8: )
                         )
                       )
                     ),
-                    (_gen1:
+                    (_gen2:
                       (lexer_atom:
                         (lexer_regex:
                           <regex (line 23 col 5) `Ilxcbisi`>,
-                          (_gen4: ),
+                          (_gen7: ),
                           <arrow (line 23 col 12) `LT4=`>,
-                          (_gen5:
+                          (_gen8:
                             (lexer_target:
                               (terminal:
                                 <terminal (line 23 col 16) `bmV3bGluZQ==`>,
-                                (_gen9: )
+                                (_gen10: )
                               )
                             ),
-                            (_gen5: )
+                            (_gen8: )
                           )
                         )
                       ),
-                      (_gen1:
+                      (_gen2:
                         (lexer_atom:
                           (lexer_regex:
                             <regex (line 24 col 5) `Ilxccysi`>,
-                            (_gen4: ),
+                            (_gen7: ),
                             <arrow (line 24 col 12) `LT4=`>,
-                            (_gen5:
+                            (_gen8:
                               (lexer_target:
                                 <null (line 24 col 15) `bnVsbA==`>
                               ),
-                              (_gen5: )
+                              (_gen8: )
                             )
                           )
                         ),
-                        (_gen1: )
+                        (_gen2: )
                       )
                     )
                   )
                 ),
-                (_gen2: ),
+                (_gen3: ),
                 <rbrace (line 25 col 3) `fQ==`>
               )
             )

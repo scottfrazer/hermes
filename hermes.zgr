@@ -4,6 +4,8 @@ grammar {
       r'\#.*' -> _comment
       r'\s+' -> _ws
       r'[a-zA-Z][a-zA-Z0-9_]*' -> _identifier
+      r':({%_identifier%}|_empty)' -> _terminal
+      r'\$({%_identifier%})' -> _nonterminal
     }
 
     r'(grammar)\s*({)' -> :grammar[1] :lbrace[2] @grammar
@@ -38,7 +40,7 @@ grammar {
       r',' -> :comma
       r'@({%_identifier%})' -> :stack_push[1]
       r'%({%_identifier%})' -> :action[1]
-      r':({%_identifier%}|_empty)' -> :terminal[1]
+      r'{%_terminal%}' -> :terminal[1]
       r'_{%_identifier%}' -> :regex_partial
       r'null' -> :null
       r'mode' -> :mode @lexer
@@ -68,9 +70,9 @@ grammar {
       r',' -> :comma
       r'->' -> :arrow
       r'parser\s*<\s*expression\s*>\s*({)' -> :parser_expression[] :lbrace[1] @parser_expr
-      r':({%_identifier%}|_empty)' -> :terminal[1]
-      r'\$({%_identifier%})(?=\s*\=)' -> :ll1_rule_hint[] :nonterminal[1]
-      r'\$({%_identifier%})' -> :nonterminal[1]
+      r'{%_terminal%}' -> :terminal[1]
+      r'{%_nonterminal%}(?=\s*\=)' -> :ll1_rule_hint[] :nonterminal[1]
+      r'{%_nonterminal%}' -> :nonterminal[1]
       r'\$([0-9]+|\$)' -> :nonterminal_reference[1]
       r'{%_identifier%}' -> :identifier
       r'"[^"]+"' -> :string
@@ -90,14 +92,14 @@ grammar {
       r'\(' -> :lparen
       r'\)' -> :rparen
       r',' -> :comma
-      r':({%_identifier%}|_empty)' -> :terminal[1]
-      r'(\$({%_identifier%}))[ \t]*(=)[ \t]*\1[ \t]+:({%_identifier%})[ \t]+\1(?![ \t]+(:|\$))'
+      r'{%_terminal%}' -> :terminal[1]
+      r'({%_nonterminal%})[ \t]*(=)[ \t]*\1[ \t]+:({%_identifier%})[ \t]+\1(?![ \t]+(:|\$))'
           -> :expr_rule_hint[] :nonterminal[2] :equals[3] :infix_rule_hint[] :nonterminal[2] :terminal[4] :nonterminal[2]
-      r'(\$({%_identifier%}))[ \t]*(=)[ \t]*:({%_identifier%})[ \t]+\1(?![ \t](:|\$))'
+      r'({%_nonterminal%})[ \t]*(=)[ \t]*:({%_identifier%})[ \t]+\1(?![ \t](:|\$))'
           -> :expr_rule_hint[] :nonterminal[2] :equals[3] :prefix_rule_hint[] :terminal[4] :nonterminal[2]
-      r'\$({%_identifier%})\s*(=)'
+      r'{%_nonterminal%}\s*(=)'
           -> :expr_rule_hint[] :nonterminal[1] :equals[2] :mixfix_rule_hint[]
-      r'\$({%_identifier%})' -> :nonterminal[1]
+      r'{%_nonterminal%}' -> :nonterminal[1]
       r'\$([0-9]+|\$)' -> :nonterminal_reference[1]
       r'{%_identifier%}' -> :identifier
       r'"[^"]+"' -> :string
@@ -120,7 +122,8 @@ grammar {
     $grammar = :grammar :lbrace list($body_element) :rbrace -> Grammar(body=$2)
     $body_element = $body_element_sub -> $0
     $body_element_sub = $lexer | $parser
-    $lexer = :lexer :langle :identifier :rangle :lbrace list($lexer_atom) optional(:code) :rbrace -> Lexer(language=$2, atoms=$5, code=$6)
+    $lexer = :lexer optional($lexer_languages) :lbrace list($lexer_atom) optional(:code) :rbrace -> Lexer(languages=$1, atoms=$3, code=$4)
+    $lexer_languages = :langle list(:identifier, :comma) :rangle -> $1
     $lexer_atom = $lexer_regex | $lexer_mode | $lexer_partials
     $lexer_partials = :partials :lbrace list($regex_partial) :rbrace -> RegexPartials(list=$2)
     $regex_partial = :regex :arrow :regex_partial -> RegexPartial(regex=$0, name=$2)

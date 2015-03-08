@@ -1,7 +1,9 @@
 (Grammar:
   body=[
     (Lexer:
-      language=<identifier (line 2 col 9) `cHl0aG9u`>,
+      languages=[
+        <identifier (line 2 col 9) `cHl0aG9u`>
+      ],
       atoms=[
         (RegexPartials:
           list=[
@@ -76,7 +78,9 @@
       code=None
     ),
     (Lexer:
-      language=<identifier (line 15 col 9) `Yw==`>,
+      languages=[
+        <identifier (line 15 col 9) `Yw==`>
+      ],
       atoms=[
         (RegexPartials:
           list=[
@@ -151,7 +155,9 @@
       code=None
     ),
     (Lexer:
-      language=<identifier (line 28 col 9) `amF2YQ==`>,
+      languages=[
+        <identifier (line 28 col 9) `amF2YQ==`>
+      ],
       atoms=[
         (RegexPartials:
           list=[
@@ -226,7 +232,9 @@
       code=None
     ),
     (Lexer:
-      language=<identifier (line 41 col 9) `amF2YXNjcmlwdA==`>,
+      languages=[
+        <identifier (line 41 col 9) `amF2YXNjcmlwdA==`>
+      ],
       atoms=[
         (RegexPartials:
           list=[
