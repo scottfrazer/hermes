@@ -3,30 +3,30 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 3 col 6) `start`>,
+          nonterminal=<nonterminal (line 3 col 6) `c3RhcnQ=`>,
           production=[
             (Production:
               morphemes=[
                 (Macro:
-                  name=<identifier (line 3 col 14) `otlist`>,
+                  name=<identifier (line 3 col 14) `b3RsaXN0`>,
                   parameters=[
-                    <terminal (line 3 col 22) `item`>,
-                    <terminal (line 3 col 29) `comma`>,
-                    <integer (line 3 col 36) `1`>
+                    <terminal (line 3 col 22) `aXRlbQ==`>,
+                    <terminal (line 3 col 29) `Y29tbWE=`>,
+                    <integer (line 3 col 36) `MQ==`>
                   ]
                 ),
-                <terminal (line 3 col 40) `next`>
+                <terminal (line 3 col 40) `bmV4dA==`>
               ],
               ast=(AstTransformation:
-                name=<identifier (line 3 col 48) `Thing`>,
+                name=<identifier (line 3 col 48) `VGhpbmc=`>,
                 parameters=[
                   (AstParameter:
-                    name=<identifier (line 3 col 54) `x`>,
-                    index=<nonterminal_reference (line 3 col 57) `0`>
+                    name=<identifier (line 3 col 54) `eA==`>,
+                    index=<nonterminal_reference (line 3 col 57) `MA==`>
                   ),
                   (AstParameter:
-                    name=<identifier (line 3 col 60) `y`>,
-                    index=<nonterminal_reference (line 3 col 63) `1`>
+                    name=<identifier (line 3 col 60) `eQ==`>,
+                    index=<nonterminal_reference (line 3 col 63) `MQ==`>
                   )
                 ]
               )

@@ -3,35 +3,35 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 3 col 6) `s`>,
+          nonterminal=<nonterminal (line 3 col 6) `cw==`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 3 col 11) `a`>,
-                <terminal (line 3 col 14) `c`>,
-                <terminal (line 3 col 17) `b`>
+                <nonterminal (line 3 col 11) `YQ==`>,
+                <terminal (line 3 col 14) `Yw==`>,
+                <terminal (line 3 col 17) `Yg==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 4 col 6) `a`>,
+          nonterminal=<nonterminal (line 4 col 6) `YQ==`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 4 col 11) `c`>
+                <terminal (line 4 col 11) `Yw==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 5 col 6) `a`>,
+          nonterminal=<nonterminal (line 5 col 6) `YQ==`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 5 col 11) `_empty`>
+                <terminal (line 5 col 11) `X2VtcHR5`>
               ],
               ast=None
             )

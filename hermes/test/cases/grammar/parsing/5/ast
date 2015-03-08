@@ -3,24 +3,24 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 3 col 6) `start`>,
+          nonterminal=<nonterminal (line 3 col 6) `c3RhcnQ=`>,
           production=[
             (Production:
               morphemes=[
                 (Macro:
-                  name=<identifier (line 3 col 14) `list`>,
+                  name=<identifier (line 3 col 14) `bGlzdA==`>,
                   parameters=[
-                    <nonterminal (line 3 col 20) `sub`>,
-                    <terminal (line 3 col 26) `comma`>
+                    <nonterminal (line 3 col 20) `c3Vi`>,
+                    <terminal (line 3 col 26) `Y29tbWE=`>
                   ]
                 )
               ],
               ast=(AstTransformation:
-                name=<identifier (line 3 col 36) `Statements`>,
+                name=<identifier (line 3 col 36) `U3RhdGVtZW50cw==`>,
                 parameters=[
                   (AstParameter:
-                    name=<identifier (line 3 col 48) `list`>,
-                    index=<nonterminal_reference (line 3 col 54) `0`>
+                    name=<identifier (line 3 col 48) `bGlzdA==`>,
+                    index=<nonterminal_reference (line 3 col 54) `MA==`>
                   )
                 ]
               )
@@ -28,18 +28,18 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 4 col 6) `sub`>,
+          nonterminal=<nonterminal (line 4 col 6) `c3Vi`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 4 col 13) `item`>
+                <nonterminal (line 4 col 13) `aXRlbQ==`>
               ],
               ast=(AstTransformation:
-                name=<identifier (line 4 col 21) `Item`>,
+                name=<identifier (line 4 col 21) `SXRlbQ==`>,
                 parameters=[
                   (AstParameter:
-                    name=<identifier (line 4 col 27) `name`>,
-                    index=<nonterminal_reference (line 4 col 33) `0`>
+                    name=<identifier (line 4 col 27) `bmFtZQ==`>,
+                    index=<nonterminal_reference (line 4 col 33) `MA==`>
                   )
                 ]
               )
@@ -47,64 +47,64 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 5 col 6) `sub`>,
+          nonterminal=<nonterminal (line 5 col 6) `c3Vi`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 5 col 13) `e`>
+                <nonterminal (line 5 col 13) `ZQ==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 6 col 6) `item`>,
+          nonterminal=<nonterminal (line 6 col 6) `aXRlbQ==`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 6 col 14) `b`>
+                <terminal (line 6 col 14) `Yg==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 7 col 6) `item`>,
+          nonterminal=<nonterminal (line 7 col 6) `aXRlbQ==`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 7 col 14) `a`>
+                <terminal (line 7 col 14) `YQ==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 8 col 6) `e`>,
+          nonterminal=<nonterminal (line 8 col 6) `ZQ==`>,
           production=(ExpressionParser:
             rules=[
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<asterisk (line 9 col 8) `*`>,
-                  associativity=<left (line 9 col 10) `left`>
+                  marker=<asterisk (line 9 col 8) `Kg==`>,
+                  associativity=<left (line 9 col 10) `bGVmdA==`>
                 ),
-                nonterminal=<nonterminal (line 9 col 17) `e`>,
+                nonterminal=<nonterminal (line 9 col 17) `ZQ==`>,
                 production=(InfixProduction:
                   morphemes=[
-                    <nonterminal (line 9 col 17) `e`>,
-                    <terminal (line 9 col 25) `add`>,
-                    <nonterminal (line 9 col 17) `e`>
+                    <nonterminal (line 9 col 17) `ZQ==`>,
+                    <terminal (line 9 col 25) `YWRk`>,
+                    <nonterminal (line 9 col 17) `ZQ==`>
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 9 col 35) `Add`>,
+                    name=<identifier (line 9 col 35) `QWRk`>,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 9 col 40) `l`>,
-                        index=<nonterminal_reference (line 9 col 43) `0`>
+                        name=<identifier (line 9 col 40) `bA==`>,
+                        index=<nonterminal_reference (line 9 col 43) `MA==`>
                       ),
                       (AstParameter:
-                        name=<identifier (line 9 col 46) `r`>,
-                        index=<nonterminal_reference (line 9 col 49) `2`>
+                        name=<identifier (line 9 col 46) `cg==`>,
+                        index=<nonterminal_reference (line 9 col 49) `Mg==`>
                       )
                     ]
                   )
@@ -112,26 +112,26 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<dash (line 10 col 8) `-`>,
-                  associativity=<left (line 10 col 10) `left`>
+                  marker=<dash (line 10 col 8) `LQ==`>,
+                  associativity=<left (line 10 col 10) `bGVmdA==`>
                 ),
-                nonterminal=<nonterminal (line 10 col 17) `e`>,
+                nonterminal=<nonterminal (line 10 col 17) `ZQ==`>,
                 production=(InfixProduction:
                   morphemes=[
-                    <nonterminal (line 10 col 17) `e`>,
-                    <terminal (line 10 col 25) `subtract`>,
-                    <nonterminal (line 10 col 17) `e`>
+                    <nonterminal (line 10 col 17) `ZQ==`>,
+                    <terminal (line 10 col 25) `c3VidHJhY3Q=`>,
+                    <nonterminal (line 10 col 17) `ZQ==`>
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 10 col 40) `Sub`>,
+                    name=<identifier (line 10 col 40) `U3Vi`>,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 10 col 45) `l`>,
-                        index=<nonterminal_reference (line 10 col 48) `0`>
+                        name=<identifier (line 10 col 45) `bA==`>,
+                        index=<nonterminal_reference (line 10 col 48) `MA==`>
                       ),
                       (AstParameter:
-                        name=<identifier (line 10 col 51) `r`>,
-                        index=<nonterminal_reference (line 10 col 54) `2`>
+                        name=<identifier (line 10 col 51) `cg==`>,
+                        index=<nonterminal_reference (line 10 col 54) `Mg==`>
                       )
                     ]
                   )
@@ -139,26 +139,26 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<asterisk (line 11 col 8) `*`>,
-                  associativity=<left (line 11 col 10) `left`>
+                  marker=<asterisk (line 11 col 8) `Kg==`>,
+                  associativity=<left (line 11 col 10) `bGVmdA==`>
                 ),
-                nonterminal=<nonterminal (line 11 col 17) `e`>,
+                nonterminal=<nonterminal (line 11 col 17) `ZQ==`>,
                 production=(InfixProduction:
                   morphemes=[
-                    <nonterminal (line 11 col 17) `e`>,
-                    <terminal (line 11 col 25) `multiply`>,
-                    <nonterminal (line 11 col 17) `e`>
+                    <nonterminal (line 11 col 17) `ZQ==`>,
+                    <terminal (line 11 col 25) `bXVsdGlwbHk=`>,
+                    <nonterminal (line 11 col 17) `ZQ==`>
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 11 col 40) `Mul`>,
+                    name=<identifier (line 11 col 40) `TXVs`>,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 11 col 45) `l`>,
-                        index=<nonterminal_reference (line 11 col 48) `0`>
+                        name=<identifier (line 11 col 45) `bA==`>,
+                        index=<nonterminal_reference (line 11 col 48) `MA==`>
                       ),
                       (AstParameter:
-                        name=<identifier (line 11 col 51) `r`>,
-                        index=<nonterminal_reference (line 11 col 54) `2`>
+                        name=<identifier (line 11 col 51) `cg==`>,
+                        index=<nonterminal_reference (line 11 col 54) `Mg==`>
                       )
                     ]
                   )
@@ -166,26 +166,26 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<dash (line 12 col 8) `-`>,
-                  associativity=<left (line 12 col 10) `left`>
+                  marker=<dash (line 12 col 8) `LQ==`>,
+                  associativity=<left (line 12 col 10) `bGVmdA==`>
                 ),
-                nonterminal=<nonterminal (line 12 col 17) `e`>,
+                nonterminal=<nonterminal (line 12 col 17) `ZQ==`>,
                 production=(InfixProduction:
                   morphemes=[
-                    <nonterminal (line 12 col 17) `e`>,
-                    <terminal (line 12 col 25) `divide`>,
-                    <nonterminal (line 12 col 17) `e`>
+                    <nonterminal (line 12 col 17) `ZQ==`>,
+                    <terminal (line 12 col 25) `ZGl2aWRl`>,
+                    <nonterminal (line 12 col 17) `ZQ==`>
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 12 col 38) `Div`>,
+                    name=<identifier (line 12 col 38) `RGl2`>,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 12 col 43) `l`>,
-                        index=<nonterminal_reference (line 12 col 46) `0`>
+                        name=<identifier (line 12 col 43) `bA==`>,
+                        index=<nonterminal_reference (line 12 col 46) `MA==`>
                       ),
                       (AstParameter:
-                        name=<identifier (line 12 col 49) `r`>,
-                        index=<nonterminal_reference (line 12 col 52) `2`>
+                        name=<identifier (line 12 col 49) `cg==`>,
+                        index=<nonterminal_reference (line 12 col 52) `Mg==`>
                       )
                     ]
                   )
@@ -193,21 +193,21 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<asterisk (line 13 col 8) `*`>,
-                  associativity=<unary (line 13 col 10) `unary`>
+                  marker=<asterisk (line 13 col 8) `Kg==`>,
+                  associativity=<unary (line 13 col 10) `dW5hcnk=`>
                 ),
-                nonterminal=<nonterminal (line 13 col 18) `e`>,
+                nonterminal=<nonterminal (line 13 col 18) `ZQ==`>,
                 production=(PrefixProduction:
                   morphemes=[
-                    <terminal (line 13 col 23) `subtract`>,
-                    <nonterminal (line 13 col 18) `e`>
+                    <terminal (line 13 col 23) `c3VidHJhY3Q=`>,
+                    <nonterminal (line 13 col 18) `ZQ==`>
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 13 col 38) `UMinus`>,
+                    name=<identifier (line 13 col 38) `VU1pbnVz`>,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 13 col 46) `arg`>,
-                        index=<nonterminal_reference (line 13 col 51) `1`>
+                        name=<identifier (line 13 col 46) `YXJn`>,
+                        index=<nonterminal_reference (line 13 col 51) `MQ==`>
                       )
                     ]
                   )
@@ -215,36 +215,36 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<asterisk (line 14 col 8) `*`>,
-                  associativity=<left (line 14 col 10) `left`>
+                  marker=<asterisk (line 14 col 8) `Kg==`>,
+                  associativity=<left (line 14 col 10) `bGVmdA==`>
                 ),
-                nonterminal=<nonterminal (line 14 col 17) `e`>,
+                nonterminal=<nonterminal (line 14 col 17) `ZQ==`>,
                 production=(MixfixProduction:
                   nud=[
-                    <terminal (line 14 col 22) `identifier`>
+                    <terminal (line 14 col 22) `aWRlbnRpZmllcg==`>
                   ],
                   nud_ast=None,
                   led=[
-                    <terminal (line 14 col 38) `lparen`>,
+                    <terminal (line 14 col 38) `bHBhcmVu`>,
                     (Macro:
-                      name=<identifier (line 14 col 45) `list`>,
+                      name=<identifier (line 14 col 45) `bGlzdA==`>,
                       parameters=[
-                        <nonterminal (line 14 col 51) `e`>,
-                        <terminal (line 14 col 55) `comma`>
+                        <nonterminal (line 14 col 51) `ZQ==`>,
+                        <terminal (line 14 col 55) `Y29tbWE=`>
                       ]
                     ),
-                    <terminal (line 14 col 63) `rparen`>
+                    <terminal (line 14 col 63) `cnBhcmVu`>
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 14 col 73) `FuncCall`>,
+                    name=<identifier (line 14 col 73) `RnVuY0NhbGw=`>,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 14 col 83) `name`>,
-                        index=<nonterminal_reference (line 14 col 89) `0`>
+                        name=<identifier (line 14 col 83) `bmFtZQ==`>,
+                        index=<nonterminal_reference (line 14 col 89) `MA==`>
                       ),
                       (AstParameter:
-                        name=<identifier (line 14 col 92) `params`>,
-                        index=<nonterminal_reference (line 14 col 100) `2`>
+                        name=<identifier (line 14 col 92) `cGFyYW1z`>,
+                        index=<nonterminal_reference (line 14 col 100) `Mg==`>
                       )
                     ]
                   )
@@ -252,25 +252,25 @@
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<nonterminal (line 15 col 8) `e`>,
+                nonterminal=<nonterminal (line 15 col 8) `ZQ==`>,
                 production=(MixfixProduction:
                   nud=[
-                    <terminal (line 15 col 13) `lsquare`>,
+                    <terminal (line 15 col 13) `bHNxdWFyZQ==`>,
                     (Macro:
-                      name=<identifier (line 15 col 21) `list`>,
+                      name=<identifier (line 15 col 21) `bGlzdA==`>,
                       parameters=[
-                        <nonterminal (line 15 col 27) `e`>,
-                        <terminal (line 15 col 31) `comma`>
+                        <nonterminal (line 15 col 27) `ZQ==`>,
+                        <terminal (line 15 col 31) `Y29tbWE=`>
                       ]
                     ),
-                    <terminal (line 15 col 39) `rsquare`>
+                    <terminal (line 15 col 39) `cnNxdWFyZQ==`>
                   ],
                   nud_ast=(AstTransformation:
-                    name=<identifier (line 15 col 50) `ListDecl`>,
+                    name=<identifier (line 15 col 50) `TGlzdERlY2w=`>,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 15 col 60) `items`>,
-                        index=<nonterminal_reference (line 15 col 67) `1`>
+                        name=<identifier (line 15 col 60) `aXRlbXM=`>,
+                        index=<nonterminal_reference (line 15 col 67) `MQ==`>
                       )
                     ]
                   ),
@@ -280,25 +280,25 @@
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<nonterminal (line 16 col 8) `e`>,
+                nonterminal=<nonterminal (line 16 col 8) `ZQ==`>,
                 production=(MixfixProduction:
                   nud=[
-                    <terminal (line 16 col 13) `lbrace`>,
+                    <terminal (line 16 col 13) `bGJyYWNl`>,
                     (Macro:
-                      name=<identifier (line 16 col 20) `list`>,
+                      name=<identifier (line 16 col 20) `bGlzdA==`>,
                       parameters=[
-                        <nonterminal (line 16 col 26) `e`>,
-                        <terminal (line 16 col 30) `comma`>
+                        <nonterminal (line 16 col 26) `ZQ==`>,
+                        <terminal (line 16 col 30) `Y29tbWE=`>
                       ]
                     ),
-                    <terminal (line 16 col 38) `rbrace`>
+                    <terminal (line 16 col 38) `cmJyYWNl`>
                   ],
                   nud_ast=(AstTransformation:
-                    name=<identifier (line 16 col 48) `SetDecl`>,
+                    name=<identifier (line 16 col 48) `U2V0RGVjbA==`>,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 16 col 57) `items`>,
-                        index=<nonterminal_reference (line 16 col 64) `1`>
+                        name=<identifier (line 16 col 57) `aXRlbXM=`>,
+                        index=<nonterminal_reference (line 16 col 64) `MQ==`>
                       )
                     ]
                   ),
@@ -308,12 +308,12 @@
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<nonterminal (line 17 col 8) `e`>,
+                nonterminal=<nonterminal (line 17 col 8) `ZQ==`>,
                 production=(MixfixProduction:
                   nud=[
-                    <terminal (line 17 col 13) `lparen`>,
-                    <nonterminal (line 17 col 21) `e`>,
-                    <terminal (line 17 col 24) `rparen`>
+                    <terminal (line 17 col 13) `bHBhcmVu`>,
+                    <nonterminal (line 17 col 21) `ZQ==`>,
+                    <terminal (line 17 col 24) `cnBhcmVu`>
                   ],
                   nud_ast=None,
                   led=None,
@@ -322,10 +322,10 @@
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<nonterminal (line 18 col 8) `e`>,
+                nonterminal=<nonterminal (line 18 col 8) `ZQ==`>,
                 production=(MixfixProduction:
                   nud=[
-                    <terminal (line 18 col 13) `identifier`>
+                    <terminal (line 18 col 13) `aWRlbnRpZmllcg==`>
                   ],
                   nud_ast=None,
                   led=None,
@@ -334,10 +334,10 @@
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<nonterminal (line 19 col 8) `e`>,
+                nonterminal=<nonterminal (line 19 col 8) `ZQ==`>,
                 production=(MixfixProduction:
                   nud=[
-                    <terminal (line 19 col 13) `number`>
+                    <terminal (line 19 col 13) `bnVtYmVy`>
                   ],
                   nud_ast=None,
                   led=None,

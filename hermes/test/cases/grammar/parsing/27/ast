@@ -3,15 +3,15 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 3 col 6) `start`>,
+          nonterminal=<nonterminal (line 3 col 6) `c3RhcnQ=`>,
           production=[
             (Production:
               morphemes=[
                 (Macro:
-                  name=<identifier (line 3 col 14) `tlist`>,
+                  name=<identifier (line 3 col 14) `dGxpc3Q=`>,
                   parameters=[
-                    <nonterminal (line 3 col 21) `item`>,
-                    <terminal (line 3 col 28) `newline`>
+                    <nonterminal (line 3 col 21) `aXRlbQ==`>,
+                    <terminal (line 3 col 28) `bmV3bGluZQ==`>
                   ]
                 )
               ],
@@ -20,14 +20,14 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 4 col 6) `item`>,
+          nonterminal=<nonterminal (line 4 col 6) `aXRlbQ==`>,
           production=[
             (Production:
               morphemes=[
                 (Macro:
-                  name=<identifier (line 4 col 13) `list`>,
+                  name=<identifier (line 4 col 13) `bGlzdA==`>,
                   parameters=[
-                    <terminal (line 4 col 19) `a`>
+                    <terminal (line 4 col 19) `YQ==`>
                   ]
                 )
               ],
@@ -36,9 +36,9 @@
             (Production:
               morphemes=[
                 (Macro:
-                  name=<identifier (line 4 col 24) `list`>,
+                  name=<identifier (line 4 col 24) `bGlzdA==`>,
                   parameters=[
-                    <terminal (line 4 col 30) `b`>
+                    <terminal (line 4 col 30) `Yg==`>
                   ]
                 )
               ],

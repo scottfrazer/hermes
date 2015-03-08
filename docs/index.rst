@@ -182,7 +182,7 @@ test.gr
         </code>
       }
 
-      parser<ll1> {
+      parser {
         $start = list($item)
         $item = :constant | :lbrace $e :rbrace -> $1
         $e = parser<expression> {

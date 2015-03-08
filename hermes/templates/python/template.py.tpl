@@ -13,46 +13,40 @@ from collections import OrderedDict
 # Common Code #
 ###############
 
-def no_color(string, color):
-  return string
-
-def term_color(string, intcolor):
-  return "\033[38;5;{0}m{1}\033[0m".format(intcolor, string)
-
-def parse_tree_string(parsetree, indent=None, color=no_color, b64_source=True, indent_level=0):
+def parse_tree_string(parsetree, indent=None, b64_source=True, indent_level=0):
     indent_str = (' ' * indent * indent_level) if indent else ''
     if isinstance(parsetree, ParseTree):
-        children = [parse_tree_string(child, indent, color, b64_source, indent_level+1) for child in parsetree.children]
+        children = [parse_tree_string(child, indent, b64_source, indent_level+1) for child in parsetree.children]
         if indent is None or len(children) == 0:
-            return '{0}({1}: {2})'.format(indent_str, color(parsetree.nonterminal, 10), ', '.join(children))
+            return '{0}({1}: {2})'.format(indent_str, parsetree.nonterminal, ', '.join(children))
         else:
             return '{0}({1}:\n{2}\n{3})'.format(
                 indent_str,
-                color(parsetree.nonterminal, 10),
+                parsetree.nonterminal,
                 ',\n'.join(children),
                 indent_str
             )
     elif isinstance(parsetree, Terminal):
-        return indent_str + color(parsetree.dumps(b64_source=b64_source), 6)
+        return indent_str + parsetree.dumps(b64_source=b64_source)
 
-def ast_string(ast, indent=None, color=no_color, b64_source=True, indent_level=0):
+def ast_string(ast, indent=None, b64_source=True, indent_level=0):
     indent_str = (' ' * indent * indent_level) if indent else ''
     next_indent_str = (' ' * indent * (indent_level+1)) if indent else ''
     if isinstance(ast, Ast):
-        children = OrderedDict([(k, ast_string(v, indent, color, b64_source, indent_level+1)) for k, v in ast.attributes.items()])
+        children = OrderedDict([(k, ast_string(v, indent, b64_source, indent_level+1)) for k, v in ast.attributes.items()])
         if indent is None:
             return '({0}: {1})'.format(
-                color(ast.name, 9),
-                ', '.join('{0}={1}'.format(color(k, 2), v) for k, v in children.items())
+                ast.name,
+                ', '.join('{0}={1}'.format(k, v) for k, v in children.items())
             )
         else:
             return '({0}:\n{1}\n{2})'.format(
-                color(ast.name, 9),
-                ',\n'.join(['{0}{1}={2}'.format(next_indent_str, color(k, 2), v) for k, v in children.items()]),
+                ast.name,
+                ',\n'.join(['{0}{1}={2}'.format(next_indent_str, k, v) for k, v in children.items()]),
                 indent_str
             )
     elif isinstance(ast, list):
-        children = [ast_string(element, indent, color, b64_source, indent_level+1) for element in ast]
+        children = [ast_string(element, indent, b64_source, indent_level+1) for element in ast]
         if indent is None or len(children) == 0:
             return '[{0}]'.format(', '.join(children))
         else:
@@ -61,7 +55,7 @@ def ast_string(ast, indent=None, color=no_color, b64_source=True, indent_level=0
                 ',\n'.join(['{0}{1}'.format(next_indent_str, child) for child in children]),
             )
     elif isinstance(ast, Terminal):
-        return color(ast.dumps(b64_source=b64_source), 6)
+        return ast.dumps(b64_source=b64_source)
 
 class Terminal:
   def __init__(self, id, str, source_string, resource, line, col):
@@ -114,7 +108,7 @@ class AstList(list):
       for ast in self:
           retval.append(ast.toAst())
       return retval
-  def dumps(self, indent=None, color=no_color, b64_source=True):
+  def dumps(self, indent=None, b64_source=True):
       args = locals()
       del args['self']
       return ast_string(self, **args)
@@ -205,7 +199,7 @@ class ParseTree():
           else:
               return None
 
-  def dumps(self, indent=None, color=no_color, b64_source=True):
+  def dumps(self, indent=None, b64_source=True):
       args = locals()
       del args['self']
       return parse_tree_string(self, **args)
@@ -215,7 +209,7 @@ class Ast():
         self.__dict__.update(locals())
     def getAttr(self, attr):
         return self.attributes[attr]
-    def dumps(self, indent=None, color=no_color, b64_source=True):
+    def dumps(self, indent=None, b64_source=True):
         args = locals()
         del args['self']
         return ast_string(self, **args)
@@ -686,9 +680,10 @@ class HermesLexer:
         for regex, outputs in self.regex[ctx.stack[-1]].items():
 
             if debug:
+                from xtermcolor import colorize
                 token_count = len(ctx.tokens)
-                print('trying: `{1}` ({2}, {3}) against {0}'.format(
-                    regex, ctx.string[:20].replace('\n', '\\n'), ctx.line, ctx.col)
+                print('{1} ({2}, {3}) regex: {0}'.format(
+                    colorize(regex.pattern, ansi=40), colorize(ctx.string[:20].replace('\n', '\\n'), ansi=15), ctx.line, ctx.col)
                 )
 
             match = regex.match(ctx.string)
@@ -708,15 +703,26 @@ class HermesLexer:
                             group_col
                         )
                         if debug:
-                            print('    match: string={}'.format(match.group(0).replace('\n', '\\n')))
+                            print('    matched: {}'.format(colorize(match.group(0).replace('\n', '\\n'), ansi=3)))
                             for token in ctx.tokens[token_count:]:
-                                print('           emit token: {}'.format(token))
+                                print('    emit: [{}] [{}, {}] [{}] stack:{} context:{}'.format(
+                                    colorize(token.str, ansi=9),
+                                    colorize(str(token.line), ansi=5),
+                                    colorize(str(token.col), ansi=5),
+                                    colorize(token.source_string, ansi=3),
+                                    colorize(str(ctx.stack), ansi=4),
+                                    colorize(str(ctx.user_context), ansi=13)
+                                ))
                             token_count = len(ctx.tokens)
                     if isinstance(output, LexerStackPush):
                         ctx.stack.append(output.mode)
+                        if debug:
+                            print('    push on stack: {}'.format(colorize(output.mode, ansi=4)))
                     if isinstance(output, LexerAction):
                         if output.action == 'pop':
-                            ctx.stack.pop()
+                            mode = ctx.stack.pop()
+                            if debug:
+                                print('    pop off stack: {}'.format(colorize(mode, ansi=4)))
 
                 self._advance_string(ctx, match.group(0))
                 return len(match.group(0)) > 0
@@ -728,21 +734,9 @@ class HermesLexer:
         ctx = LexerContext(string, resource, user_context)
 
         while len(ctx.string):
-            matched = self._next(ctx)
+            matched = self._next(ctx, debug)
             if matched == False:
                 self._unrecognized_token(string_copy, ctx.line, ctx.col)
-
-            if debug:
-                from xtermcolor import colorize
-                for token in tokens:
-                    print('token --> [{}] [{}, {}] [{}] [{}] [{}]'.format(
-                        colorize(token.str, ansi=9),
-                        colorize(str(token.line), ansi=5),
-                        colorize(str(token.col), ansi=5),
-                        colorize(token.source_string, ansi=3),
-                        colorize(str(mode_stack), ansi=4),
-                        colorize(str(context), ansi=13)
-                    ))
 
         destroy(ctx.user_context)
         return ctx.tokens

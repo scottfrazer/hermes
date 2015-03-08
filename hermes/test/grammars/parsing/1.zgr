@@ -1,5 +1,5 @@
 grammar {
-  parser<ll1> {
+  parser {
     $start = list($statements, :comma) -> Program( statements=$0 )
     $start = :_empty
     $statements = $e

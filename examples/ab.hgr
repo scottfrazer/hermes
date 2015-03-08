@@ -19,7 +19,7 @@ grammar {
     "b" -> :b
     "\\s+" -> null
   }
-  parser<ll1> {
+  parser {
     $start = mslist(:a, :b, 5) | :_empty
     $start1 = :a $start :b | :_empty
   }

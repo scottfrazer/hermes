@@ -1,5 +1,5 @@
 grammar {
-  parser<ll1> {
+  parser {
     $object = :lbrace list($name_value_pair, :comma) :rbrace -> Object( attributes=$1 )
     $array = :lsquare list($value, :comma) :rsquare -> Array( items=$1 )
     $value = $object

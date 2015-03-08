@@ -1,5 +1,5 @@
 grammar {
-  parser<ll1> {
+  parser {
     $start = $e
     $e = parser<expression> {
       (*:left) $e = $e :add $e -> Add( left=$0, right=$2 )

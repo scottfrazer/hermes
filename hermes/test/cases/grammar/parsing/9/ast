@@ -3,51 +3,51 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 3 col 6) `start`>,
+          nonterminal=<nonterminal (line 3 col 6) `c3RhcnQ=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 3 col 15) `lparen`>,
+                <terminal (line 3 col 15) `bHBhcmVu`>,
                 (Macro:
-                  name=<identifier (line 3 col 22) `list`>,
+                  name=<identifier (line 3 col 22) `bGlzdA==`>,
                   parameters=[
-                    <nonterminal (line 3 col 28) `item`>
+                    <nonterminal (line 3 col 28) `aXRlbQ==`>
                   ]
                 ),
-                <terminal (line 3 col 35) `rparen`>
+                <terminal (line 3 col 35) `cnBhcmVu`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 4 col 6) `item`>,
+          nonterminal=<nonterminal (line 4 col 6) `aXRlbQ==`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 4 col 14) `a`>
+                <terminal (line 4 col 14) `YQ==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 5 col 6) `item`>,
+          nonterminal=<nonterminal (line 5 col 6) `aXRlbQ==`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 5 col 14) `b`>
+                <terminal (line 5 col 14) `Yg==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 6 col 6) `item`>,
+          nonterminal=<nonterminal (line 6 col 6) `aXRlbQ==`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 6 col 14) `rparen`>
+                <terminal (line 6 col 14) `cnBhcmVu`>
               ],
               ast=None
             )

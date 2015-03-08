@@ -114,7 +114,7 @@ def destroy(ctx):
         raise SyntaxError("Unclosed tags: {}".format(ctx['stack']))
     </code>
   }
-  parser<ll1> {
+  parser {
     $document = $prolog $element list($misc)
         $prolog = optional($xml_decl) list($misc) optional($doctype)
             $xml_decl = :xml_decl_start $version_info optional($encoding_decl) optional($sd_decl) :xml_decl_end

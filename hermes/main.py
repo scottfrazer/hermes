@@ -15,9 +15,9 @@ import hermes.code
 def cli():
     version = sys.version_info
 
-    if version.major < 3 or (version.major == 3 and version.minor < 3):
-      print("Python 3.3+ required. {}.{}.{} installed".format(version.major, version.minor, version.micro))
-      sys.exit(-1)
+    if version.major < 3 or (version.major == 3 and version.minor < 4):
+        print("Python 3.4+ required. {}.{}.{} installed".format(version.major, version.minor, version.micro))
+        sys.exit(-1)
 
     command_help = {
         "analyze": "Analyze a grammer, find conflicts, and print out first/follow sets",
@@ -154,7 +154,7 @@ def cli():
             sys.stderr.write('--json and --no-base64 are mutually exclusive\n')
             sys.exit(-1)
 
-        if cli.grammar == '--':
+        if cli.grammar == '__internal__':
             user_parser = hermes.hermes_parser
         elif cli.grammar == '-':
             user_parser = hermes.compile(sys.stdin.read())
@@ -169,6 +169,7 @@ def cli():
             with open(cli.input) as fp:
                 input = fp.read()
                 resource = cli.input
+
         tokens = user_parser.lex(input, resource, debug=cli.debug)
 
         if cli.json:
@@ -177,14 +178,14 @@ def cli():
             sys.stdout.write('\n]\n')
         else:
             for token in tokens:
-                print(token.dumps(b64_source=cli.base64))
+                print(token.dumps(b64_source=not cli.no_base64))
 
 
     elif cli.action == 'parse':
         lexer = get_lexer_by_name("htree") if cli.tree else get_lexer_by_name("hast")
         formatter = TerminalFormatter()
 
-        if cli.grammar == '--':
+        if cli.grammar == '__internal__':
             parser = hermes.hermes_parser
         elif cli.grammar == '-':
             parser = hermes.compile(sys.stdin.read())

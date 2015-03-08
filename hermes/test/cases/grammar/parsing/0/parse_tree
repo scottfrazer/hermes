@@ -1,28 +1,28 @@
 (grammar:
-  <grammar (line 1 col 1) `grammar`>,
-  <lbrace (line 1 col 9) `{`>,
+  <grammar (line 1 col 1) `Z3JhbW1hcg==`>,
+  <lbrace (line 1 col 9) `ew==`>,
   (_gen0:
     (body_element:
       (body_element_sub:
         (parser:
           (parser_ll1:
-            <parser_ll1 (line 2 col 3) `parser<ll1>`>,
-            <lbrace (line 2 col 15) `{`>,
+            <parser (line 2 col 3) `cGFyc2Vy`>,
+            <lbrace (line 2 col 10) `ew==`>,
             (_gen10:
               (ll1_rule:
                 <ll1_rule_hint (line 3 col 5) ``>,
-                <nonterminal (line 3 col 6) `start`>,
-                <equals (line 3 col 12) `=`>,
+                <nonterminal (line 3 col 6) `c3RhcnQ=`>,
+                <equals (line 3 col 12) `PQ==`>,
                 (ll1_rule_rhs:
                   (_gen11:
                     (rule:
                       (_gen13:
                         (morpheme:
-                          <nonterminal (line 3 col 15) `sub`>
+                          <nonterminal (line 3 col 15) `c3Vi`>
                         ),
                         (_gen13:
                           (morpheme:
-                            <terminal (line 3 col 20) `semi`>
+                            <terminal (line 3 col 20) `c2VtaQ==`>
                           ),
                           (_gen13: )
                         )
@@ -36,22 +36,22 @@
               (_gen10:
                 (ll1_rule:
                   <ll1_rule_hint (line 4 col 5) ``>,
-                  <nonterminal (line 4 col 6) `sub`>,
-                  <equals (line 4 col 10) `=`>,
+                  <nonterminal (line 4 col 6) `c3Vi`>,
+                  <equals (line 4 col 10) `PQ==`>,
                   (ll1_rule_rhs:
                     (_gen11:
                       (rule:
                         (_gen13:
                           (morpheme:
-                            <terminal (line 4 col 13) `a`>
+                            <terminal (line 4 col 13) `YQ==`>
                           ),
                           (_gen13:
                             (morpheme:
-                              <nonterminal (line 4 col 16) `sub`>
+                              <nonterminal (line 4 col 16) `c3Vi`>
                             ),
                             (_gen13:
                               (morpheme:
-                                <terminal (line 4 col 21) `b`>
+                                <terminal (line 4 col 21) `Yg==`>
                               ),
                               (_gen13: )
                             )
@@ -66,14 +66,14 @@
                 (_gen10:
                   (ll1_rule:
                     <ll1_rule_hint (line 5 col 5) ``>,
-                    <nonterminal (line 5 col 6) `sub`>,
-                    <equals (line 5 col 10) `=`>,
+                    <nonterminal (line 5 col 6) `c3Vi`>,
+                    <equals (line 5 col 10) `PQ==`>,
                     (ll1_rule_rhs:
                       (_gen11:
                         (rule:
                           (_gen13:
                             (morpheme:
-                              <terminal (line 5 col 13) `_empty`>
+                              <terminal (line 5 col 13) `X2VtcHR5`>
                             ),
                             (_gen13: )
                           ),
@@ -87,12 +87,12 @@
                 )
               )
             ),
-            <rbrace (line 6 col 3) `}`>
+            <rbrace (line 6 col 3) `fQ==`>
           )
         )
       )
     ),
     (_gen0: )
   ),
-  <rbrace (line 7 col 1) `}`>
+  <rbrace (line 7 col 1) `fQ==`>
 )

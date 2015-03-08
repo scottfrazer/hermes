@@ -117,7 +117,7 @@ grammar {
     r'b' -> :b
     r';' -> :semi
   }
-  parser<ll1> {
+  parser {
     $start = $sub :semi
     $sub = :a $sub :b | :_empty
   }
@@ -133,7 +133,7 @@ grammar {
   lexer<c> {
     ... lexer regular expressions ...
   }
-  parser<ll1> {
+  parser {
     ... rules ...
     $e = parser<expression> {
       ... expression rules ...

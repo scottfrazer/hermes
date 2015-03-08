@@ -1,5 +1,5 @@
 grammar {
-  parser<ll1> {
+  parser {
     $program = list($statement) -> Program( statements=$0 )
     $program = :_empty
     $statement = $funcdef

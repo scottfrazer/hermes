@@ -1,39 +1,39 @@
 (grammar:
-  <grammar (line 1 col 1) `grammar`>,
-  <lbrace (line 1 col 9) `{`>,
+  <grammar (line 1 col 1) `Z3JhbW1hcg==`>,
+  <lbrace (line 1 col 9) `ew==`>,
   (_gen0:
     (body_element:
       (body_element_sub:
         (parser:
           (parser_ll1:
-            <parser_ll1 (line 2 col 3) `parser<ll1>`>,
-            <lbrace (line 2 col 15) `{`>,
+            <parser (line 2 col 3) `cGFyc2Vy`>,
+            <lbrace (line 2 col 10) `ew==`>,
             (_gen10:
               (ll1_rule:
                 <ll1_rule_hint (line 3 col 5) ``>,
-                <nonterminal (line 3 col 6) `start`>,
-                <equals (line 3 col 12) `=`>,
+                <nonterminal (line 3 col 6) `c3RhcnQ=`>,
+                <equals (line 3 col 12) `PQ==`>,
                 (ll1_rule_rhs:
                   (_gen11:
                     (rule:
                       (_gen13:
                         (morpheme:
                           (macro:
-                            <identifier (line 3 col 14) `list`>,
-                            <lparen (line 3 col 18) `(`>,
+                            <identifier (line 3 col 14) `bGlzdA==`>,
+                            <lparen (line 3 col 18) `KA==`>,
                             (_gen20:
                               (macro_parameter:
-                                <terminal (line 3 col 20) `a`>
+                                <terminal (line 3 col 20) `YQ==`>
                               ),
                               (_gen21:
-                                <comma (line 3 col 21) `,`>,
+                                <comma (line 3 col 21) `LA==`>,
                                 (macro_parameter:
-                                  <terminal (line 3 col 24) `comma`>
+                                  <terminal (line 3 col 24) `Y29tbWE=`>
                                 ),
                                 (_gen21: )
                               )
                             ),
-                            <rparen (line 3 col 29) `)`>
+                            <rparen (line 3 col 29) `KQ==`>
                           )
                         ),
                         (_gen13: )
@@ -46,12 +46,12 @@
               ),
               (_gen10: )
             ),
-            <rbrace (line 4 col 3) `}`>
+            <rbrace (line 4 col 3) `fQ==`>
           )
         )
       )
     ),
     (_gen0: )
   ),
-  <rbrace (line 5 col 1) `}`>
+  <rbrace (line 5 col 1) `fQ==`>
 )

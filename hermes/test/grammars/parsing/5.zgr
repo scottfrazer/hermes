@@ -1,5 +1,5 @@
 grammar {
-  parser<ll1> {
+  parser {
     $start = list($sub, :comma) -> Statements( list=$0 )
     $sub = $item -> Item( name=$0 )
     $sub = $e

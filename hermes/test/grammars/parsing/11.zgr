@@ -1,5 +1,5 @@
 grammar {
-  parser<ll1> {
+  parser {
     $s = list($t)
     $s = :_empty
     $t = :x

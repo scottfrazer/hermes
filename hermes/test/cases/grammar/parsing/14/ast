@@ -3,527 +3,527 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 3 col 6) `program`>,
+          nonterminal=<nonterminal (line 3 col 6) `cHJvZ3JhbQ==`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 3 col 17) `block`>,
-                <terminal (line 3 col 24) `dot`>
+                <nonterminal (line 3 col 17) `YmxvY2s=`>,
+                <terminal (line 3 col 24) `ZG90`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 4 col 6) `block`>,
+          nonterminal=<nonterminal (line 4 col 6) `YmxvY2s=`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 4 col 15) `block_const`>,
-                <nonterminal (line 4 col 28) `block_var`>,
-                <nonterminal (line 4 col 39) `block_proc`>,
-                <nonterminal (line 4 col 51) `statement`>
+                <nonterminal (line 4 col 15) `YmxvY2tfY29uc3Q=`>,
+                <nonterminal (line 4 col 28) `YmxvY2tfdmFy`>,
+                <nonterminal (line 4 col 39) `YmxvY2tfcHJvYw==`>,
+                <nonterminal (line 4 col 51) `c3RhdGVtZW50`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 5 col 6) `block_const`>,
+          nonterminal=<nonterminal (line 5 col 6) `YmxvY2tfY29uc3Q=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 5 col 21) `const`>,
-                <nonterminal (line 5 col 28) `ident`>,
-                <terminal (line 5 col 35) `equal`>,
-                <nonterminal (line 5 col 42) `number`>,
-                <nonterminal (line 5 col 50) `block_const1`>
+                <terminal (line 5 col 21) `Y29uc3Q=`>,
+                <nonterminal (line 5 col 28) `aWRlbnQ=`>,
+                <terminal (line 5 col 35) `ZXF1YWw=`>,
+                <nonterminal (line 5 col 42) `bnVtYmVy`>,
+                <nonterminal (line 5 col 50) `YmxvY2tfY29uc3Qx`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 6 col 6) `block_const`>,
+          nonterminal=<nonterminal (line 6 col 6) `YmxvY2tfY29uc3Q=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 6 col 21) `_empty`>
+                <terminal (line 6 col 21) `X2VtcHR5`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 7 col 6) `block_const1`>,
+          nonterminal=<nonterminal (line 7 col 6) `YmxvY2tfY29uc3Qx`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 7 col 22) `comma`>,
-                <nonterminal (line 7 col 29) `ident`>,
-                <terminal (line 7 col 36) `equal`>,
-                <nonterminal (line 7 col 43) `number`>
+                <terminal (line 7 col 22) `Y29tbWE=`>,
+                <nonterminal (line 7 col 29) `aWRlbnQ=`>,
+                <terminal (line 7 col 36) `ZXF1YWw=`>,
+                <nonterminal (line 7 col 43) `bnVtYmVy`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 8 col 6) `block_const1`>,
+          nonterminal=<nonterminal (line 8 col 6) `YmxvY2tfY29uc3Qx`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 8 col 22) `_empty`>
+                <terminal (line 8 col 22) `X2VtcHR5`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 9 col 6) `block_var`>,
+          nonterminal=<nonterminal (line 9 col 6) `YmxvY2tfdmFy`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 9 col 19) `var`>,
-                <nonterminal (line 9 col 24) `ident`>,
-                <nonterminal (line 9 col 31) `block_var1`>,
-                <terminal (line 9 col 43) `semi`>
+                <terminal (line 9 col 19) `dmFy`>,
+                <nonterminal (line 9 col 24) `aWRlbnQ=`>,
+                <nonterminal (line 9 col 31) `YmxvY2tfdmFyMQ==`>,
+                <terminal (line 9 col 43) `c2VtaQ==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 10 col 6) `block_var`>,
+          nonterminal=<nonterminal (line 10 col 6) `YmxvY2tfdmFy`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 10 col 19) `_empty`>
+                <terminal (line 10 col 19) `X2VtcHR5`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 11 col 6) `block_var1`>,
+          nonterminal=<nonterminal (line 11 col 6) `YmxvY2tfdmFyMQ==`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 11 col 20) `comma`>,
-                <nonterminal (line 11 col 27) `ident`>
+                <terminal (line 11 col 20) `Y29tbWE=`>,
+                <nonterminal (line 11 col 27) `aWRlbnQ=`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 12 col 6) `block_var1`>,
+          nonterminal=<nonterminal (line 12 col 6) `YmxvY2tfdmFyMQ==`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 12 col 20) `_empty`>
+                <terminal (line 12 col 20) `X2VtcHR5`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 13 col 6) `block_proc`>,
+          nonterminal=<nonterminal (line 13 col 6) `YmxvY2tfcHJvYw==`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 13 col 20) `procedure`>,
-                <nonterminal (line 13 col 31) `ident`>,
-                <terminal (line 13 col 38) `semi`>,
-                <nonterminal (line 13 col 44) `block`>,
-                <terminal (line 13 col 51) `semi`>,
-                <nonterminal (line 13 col 57) `block_proc`>
+                <terminal (line 13 col 20) `cHJvY2VkdXJl`>,
+                <nonterminal (line 13 col 31) `aWRlbnQ=`>,
+                <terminal (line 13 col 38) `c2VtaQ==`>,
+                <nonterminal (line 13 col 44) `YmxvY2s=`>,
+                <terminal (line 13 col 51) `c2VtaQ==`>,
+                <nonterminal (line 13 col 57) `YmxvY2tfcHJvYw==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 14 col 6) `block_proc`>,
+          nonterminal=<nonterminal (line 14 col 6) `YmxvY2tfcHJvYw==`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 14 col 20) `_empty`>
+                <terminal (line 14 col 20) `X2VtcHR5`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 15 col 6) `statement`>,
+          nonterminal=<nonterminal (line 15 col 6) `c3RhdGVtZW50`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 15 col 19) `ident`>,
-                <terminal (line 15 col 26) `assign`>,
-                <nonterminal (line 15 col 34) `expression`>
+                <nonterminal (line 15 col 19) `aWRlbnQ=`>,
+                <terminal (line 15 col 26) `YXNzaWdu`>,
+                <nonterminal (line 15 col 34) `ZXhwcmVzc2lvbg==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 16 col 6) `statement`>,
+          nonterminal=<nonterminal (line 16 col 6) `c3RhdGVtZW50`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 16 col 19) `call`>,
-                <nonterminal (line 16 col 25) `ident`>
+                <terminal (line 16 col 19) `Y2FsbA==`>,
+                <nonterminal (line 16 col 25) `aWRlbnQ=`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 17 col 6) `statement`>,
+          nonterminal=<nonterminal (line 17 col 6) `c3RhdGVtZW50`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 17 col 19) `begin`>,
-                <nonterminal (line 17 col 26) `statement`>,
-                <nonterminal (line 17 col 37) `statement_sub1`>,
-                <terminal (line 17 col 53) `end`>
+                <terminal (line 17 col 19) `YmVnaW4=`>,
+                <nonterminal (line 17 col 26) `c3RhdGVtZW50`>,
+                <nonterminal (line 17 col 37) `c3RhdGVtZW50X3N1YjE=`>,
+                <terminal (line 17 col 53) `ZW5k`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 18 col 6) `statement`>,
+          nonterminal=<nonterminal (line 18 col 6) `c3RhdGVtZW50`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 18 col 19) `if`>,
-                <nonterminal (line 18 col 23) `condition`>,
-                <terminal (line 18 col 34) `then`>,
-                <nonterminal (line 18 col 40) `statement`>
+                <terminal (line 18 col 19) `aWY=`>,
+                <nonterminal (line 18 col 23) `Y29uZGl0aW9u`>,
+                <terminal (line 18 col 34) `dGhlbg==`>,
+                <nonterminal (line 18 col 40) `c3RhdGVtZW50`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 19 col 6) `statement`>,
+          nonterminal=<nonterminal (line 19 col 6) `c3RhdGVtZW50`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 19 col 19) `while`>,
-                <nonterminal (line 19 col 26) `condition`>,
-                <terminal (line 19 col 37) `do`>,
-                <nonterminal (line 19 col 41) `statement`>
+                <terminal (line 19 col 19) `d2hpbGU=`>,
+                <nonterminal (line 19 col 26) `Y29uZGl0aW9u`>,
+                <terminal (line 19 col 37) `ZG8=`>,
+                <nonterminal (line 19 col 41) `c3RhdGVtZW50`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 20 col 6) `statement_sub1`>,
+          nonterminal=<nonterminal (line 20 col 6) `c3RhdGVtZW50X3N1YjE=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 20 col 24) `semi`>,
-                <nonterminal (line 20 col 30) `statement`>
+                <terminal (line 20 col 24) `c2VtaQ==`>,
+                <nonterminal (line 20 col 30) `c3RhdGVtZW50`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 21 col 6) `statement_sub1`>,
+          nonterminal=<nonterminal (line 21 col 6) `c3RhdGVtZW50X3N1YjE=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 21 col 24) `_empty`>
+                <terminal (line 21 col 24) `X2VtcHR5`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 22 col 6) `condition`>,
+          nonterminal=<nonterminal (line 22 col 6) `Y29uZGl0aW9u`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 22 col 19) `odd`>,
-                <nonterminal (line 22 col 24) `expression`>
+                <terminal (line 22 col 19) `b2Rk`>,
+                <nonterminal (line 22 col 24) `ZXhwcmVzc2lvbg==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 23 col 6) `condition`>,
+          nonterminal=<nonterminal (line 23 col 6) `Y29uZGl0aW9u`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 23 col 19) `expression`>,
-                <nonterminal (line 23 col 31) `op`>,
-                <nonterminal (line 23 col 35) `expression`>
+                <nonterminal (line 23 col 19) `ZXhwcmVzc2lvbg==`>,
+                <nonterminal (line 23 col 31) `b3A=`>,
+                <nonterminal (line 23 col 35) `ZXhwcmVzc2lvbg==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 24 col 6) `op`>,
+          nonterminal=<nonterminal (line 24 col 6) `b3A=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 24 col 12) `equal`>
+                <terminal (line 24 col 12) `ZXF1YWw=`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 25 col 6) `op`>,
+          nonterminal=<nonterminal (line 25 col 6) `b3A=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 25 col 12) `pound`>
+                <terminal (line 25 col 12) `cG91bmQ=`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 26 col 6) `op`>,
+          nonterminal=<nonterminal (line 26 col 6) `b3A=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 26 col 12) `lt`>
+                <terminal (line 26 col 12) `bHQ=`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 27 col 6) `op`>,
+          nonterminal=<nonterminal (line 27 col 6) `b3A=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 27 col 12) `lteq`>
+                <terminal (line 27 col 12) `bHRlcQ==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 28 col 6) `op`>,
+          nonterminal=<nonterminal (line 28 col 6) `b3A=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 28 col 12) `gt`>
+                <terminal (line 28 col 12) `Z3Q=`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 29 col 6) `op`>,
+          nonterminal=<nonterminal (line 29 col 6) `b3A=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 29 col 12) `gteq`>
+                <terminal (line 29 col 12) `Z3RlcQ==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 30 col 6) `expression`>,
+          nonterminal=<nonterminal (line 30 col 6) `ZXhwcmVzc2lvbg==`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 30 col 20) `unary_add_op`>,
-                <nonterminal (line 30 col 34) `term`>,
-                <nonterminal (line 30 col 40) `expression_sub1`>
+                <nonterminal (line 30 col 20) `dW5hcnlfYWRkX29w`>,
+                <nonterminal (line 30 col 34) `dGVybQ==`>,
+                <nonterminal (line 30 col 40) `ZXhwcmVzc2lvbl9zdWIx`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 31 col 6) `unary_add_op`>,
+          nonterminal=<nonterminal (line 31 col 6) `dW5hcnlfYWRkX29w`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 31 col 22) `add_op`>
+                <nonterminal (line 31 col 22) `YWRkX29w`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 32 col 6) `unary_add_op`>,
+          nonterminal=<nonterminal (line 32 col 6) `dW5hcnlfYWRkX29w`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 32 col 22) `_empty`>
+                <terminal (line 32 col 22) `X2VtcHR5`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 33 col 6) `expression_sub1`>,
+          nonterminal=<nonterminal (line 33 col 6) `ZXhwcmVzc2lvbl9zdWIx`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 33 col 25) `add_op`>,
-                <nonterminal (line 33 col 33) `expression_sub1`>
+                <nonterminal (line 33 col 25) `YWRkX29w`>,
+                <nonterminal (line 33 col 33) `ZXhwcmVzc2lvbl9zdWIx`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 34 col 6) `expression_sub1`>,
+          nonterminal=<nonterminal (line 34 col 6) `ZXhwcmVzc2lvbl9zdWIx`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 34 col 25) `_empty`>
+                <terminal (line 34 col 25) `X2VtcHR5`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 35 col 6) `add_op`>,
+          nonterminal=<nonterminal (line 35 col 6) `YWRkX29w`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 35 col 16) `plus`>
+                <terminal (line 35 col 16) `cGx1cw==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 36 col 6) `add_op`>,
+          nonterminal=<nonterminal (line 36 col 6) `YWRkX29w`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 36 col 16) `minus`>
+                <terminal (line 36 col 16) `bWludXM=`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 37 col 6) `mul_op`>,
+          nonterminal=<nonterminal (line 37 col 6) `bXVsX29w`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 37 col 16) `times`>
+                <terminal (line 37 col 16) `dGltZXM=`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 38 col 6) `mul_op`>,
+          nonterminal=<nonterminal (line 38 col 6) `bXVsX29w`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 38 col 16) `divide`>
+                <terminal (line 38 col 16) `ZGl2aWRl`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 39 col 6) `term`>,
+          nonterminal=<nonterminal (line 39 col 6) `dGVybQ==`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 39 col 14) `factor`>,
-                <nonterminal (line 39 col 22) `term_sub1`>
+                <nonterminal (line 39 col 14) `ZmFjdG9y`>,
+                <nonterminal (line 39 col 22) `dGVybV9zdWIx`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 40 col 6) `term_sub1`>,
+          nonterminal=<nonterminal (line 40 col 6) `dGVybV9zdWIx`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 40 col 19) `mul_op`>,
-                <nonterminal (line 40 col 27) `term_sub1`>
+                <nonterminal (line 40 col 19) `bXVsX29w`>,
+                <nonterminal (line 40 col 27) `dGVybV9zdWIx`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 41 col 6) `term_sub1`>,
+          nonterminal=<nonterminal (line 41 col 6) `dGVybV9zdWIx`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 41 col 19) `_empty`>
+                <terminal (line 41 col 19) `X2VtcHR5`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 42 col 6) `factor`>,
+          nonterminal=<nonterminal (line 42 col 6) `ZmFjdG9y`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 42 col 16) `ident`>
+                <nonterminal (line 42 col 16) `aWRlbnQ=`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 43 col 6) `factor`>,
+          nonterminal=<nonterminal (line 43 col 6) `ZmFjdG9y`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 43 col 16) `number`>
+                <nonterminal (line 43 col 16) `bnVtYmVy`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 44 col 6) `factor`>,
+          nonterminal=<nonterminal (line 44 col 6) `ZmFjdG9y`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 44 col 16) `lparen`>,
-                <nonterminal (line 44 col 24) `expression`>,
-                <terminal (line 44 col 36) `rparen`>
+                <terminal (line 44 col 16) `bHBhcmVu`>,
+                <nonterminal (line 44 col 24) `ZXhwcmVzc2lvbg==`>,
+                <terminal (line 44 col 36) `cnBhcmVu`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 45 col 6) `ident`>,
+          nonterminal=<nonterminal (line 45 col 6) `aWRlbnQ=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 45 col 15) `ident`>
+                <terminal (line 45 col 15) `aWRlbnQ=`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 46 col 6) `number`>,
+          nonterminal=<nonterminal (line 46 col 6) `bnVtYmVy`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 46 col 16) `number`>
+                <terminal (line 46 col 16) `bnVtYmVy`>
               ],
               ast=None
             )

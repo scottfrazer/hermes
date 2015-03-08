@@ -1,5 +1,5 @@
 grammar {
-  parser<ll1> {
+  parser {
     $program = $block :dot
     $block = $block_const $block_var $block_proc $statement
     $block_const = :const $ident :equal $number $block_const1

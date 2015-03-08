@@ -1,61 +1,61 @@
 (grammar:
-  <grammar (line 1 col 1) `grammar`>,
-  <lbrace (line 1 col 9) `{`>,
+  <grammar (line 1 col 1) `Z3JhbW1hcg==`>,
+  <lbrace (line 1 col 9) `ew==`>,
   (_gen0:
     (body_element:
       (body_element_sub:
         (lexer:
-          <lexer (line 2 col 3) `lexer`>,
-          <langle (line 2 col 8) `<`>,
-          <identifier (line 2 col 9) `python`>,
-          <rangle (line 2 col 15) `>`>,
-          <lbrace (line 2 col 17) `{`>,
+          <lexer (line 2 col 3) `bGV4ZXI=`>,
+          <langle (line 2 col 8) `PA==`>,
+          <identifier (line 2 col 9) `cHl0aG9u`>,
+          <rangle (line 2 col 15) `Pg==`>,
+          <lbrace (line 2 col 17) `ew==`>,
           (_gen1:
             (lexer_atom:
               (lexer_partials:
-                <partials (line 3 col 5) `partials`>,
-                <lbrace (line 3 col 14) `{`>,
+                <partials (line 3 col 5) `cGFydGlhbHM=`>,
+                <lbrace (line 3 col 14) `ew==`>,
                 (_gen3:
                   (regex_partial:
-                    <regex (line 4 col 7) `r'abc'`>,
-                    <arrow (line 4 col 14) `->`>,
-                    <regex_partial (line 4 col 17) `_abc`>
+                    <regex (line 4 col 7) `cidhYmMn`>,
+                    <arrow (line 4 col 14) `LT4=`>,
+                    <regex_partial (line 4 col 17) `X2FiYw==`>
                   ),
                   (_gen3:
                     (regex_partial:
-                      <regex (line 5 col 7) `r'xyz'`>,
-                      <arrow (line 5 col 14) `->`>,
-                      <regex_partial (line 5 col 17) `_xyz`>
+                      <regex (line 5 col 7) `cid4eXon`>,
+                      <arrow (line 5 col 14) `LT4=`>,
+                      <regex_partial (line 5 col 17) `X3h5eg==`>
                     ),
                     (_gen3:
                       (regex_partial:
-                        <regex (line 6 col 7) `r'[0-9]+'`>,
-                        <arrow (line 6 col 17) `->`>,
-                        <regex_partial (line 6 col 20) `_num`>
+                        <regex (line 6 col 7) `cidbMC05XSsn`>,
+                        <arrow (line 6 col 17) `LT4=`>,
+                        <regex_partial (line 6 col 20) `X251bQ==`>
                       ),
                       (_gen3:
                         (regex_partial:
-                          <regex (line 7 col 7) `r'{%_xyz%}{%_abc%}'`>,
-                          <arrow (line 7 col 27) `->`>,
-                          <regex_partial (line 7 col 30) `_xyz_abc`>
+                          <regex (line 7 col 7) `cid7JV94eXolfXslX2FiYyV9Jw==`>,
+                          <arrow (line 7 col 27) `LT4=`>,
+                          <regex_partial (line 7 col 30) `X3h5el9hYmM=`>
                         ),
                         (_gen3: )
                       )
                     )
                   )
                 ),
-                <rbrace (line 8 col 5) `}`>
+                <rbrace (line 8 col 5) `fQ==`>
               )
             ),
             (_gen1:
               (lexer_atom:
                 (lexer_regex:
-                  <regex (line 9 col 5) `r'\s+'`>,
+                  <regex (line 9 col 5) `cidccysn`>,
                   (_gen4: ),
-                  <arrow (line 9 col 12) `->`>,
+                  <arrow (line 9 col 12) `LT4=`>,
                   (_gen5:
                     (lexer_target:
-                      <null (line 9 col 15) `null`>
+                      <null (line 9 col 15) `bnVsbA==`>
                     ),
                     (_gen5: )
                   )
@@ -64,13 +64,13 @@
               (_gen1:
                 (lexer_atom:
                   (lexer_regex:
-                    <regex (line 10 col 5) `r'{%_abc%}'`>,
+                    <regex (line 10 col 5) `cid7JV9hYmMlfSc=`>,
                     (_gen4: ),
-                    <arrow (line 10 col 17) `->`>,
+                    <arrow (line 10 col 17) `LT4=`>,
                     (_gen5:
                       (lexer_target:
                         (terminal:
-                          <terminal (line 10 col 21) `abc`>,
+                          <terminal (line 10 col 21) `YWJj`>,
                           (_gen9: )
                         )
                       ),
@@ -81,13 +81,13 @@
                 (_gen1:
                   (lexer_atom:
                     (lexer_regex:
-                      <regex (line 11 col 5) `r'{%_num%}'`>,
+                      <regex (line 11 col 5) `cid7JV9udW0lfSc=`>,
                       (_gen4: ),
-                      <arrow (line 11 col 17) `->`>,
+                      <arrow (line 11 col 17) `LT4=`>,
                       (_gen5:
                         (lexer_target:
                           (terminal:
-                            <terminal (line 11 col 21) `num`>,
+                            <terminal (line 11 col 21) `bnVt`>,
                             (_gen9: )
                           )
                         ),
@@ -98,13 +98,13 @@
                   (_gen1:
                     (lexer_atom:
                       (lexer_regex:
-                        <regex (line 12 col 5) `r'{%_xyz%}{%_num%}[jkl]+'`>,
+                        <regex (line 12 col 5) `cid7JV94eXolfXslX251bSV9W2prbF0rJw==`>,
                         (_gen4: ),
-                        <arrow (line 12 col 31) `->`>,
+                        <arrow (line 12 col 31) `LT4=`>,
                         (_gen5:
                           (lexer_target:
                             (terminal:
-                              <terminal (line 12 col 35) `xyz`>,
+                              <terminal (line 12 col 35) `eHl6`>,
                               (_gen9: )
                             )
                           ),
@@ -115,13 +115,13 @@
                     (_gen1:
                       (lexer_atom:
                         (lexer_regex:
-                          <regex (line 13 col 5) `r'{%_xyz_abc%}'`>,
+                          <regex (line 13 col 5) `cid7JV94eXpfYWJjJX0n`>,
                           (_gen4: ),
-                          <arrow (line 13 col 21) `->`>,
+                          <arrow (line 13 col 21) `LT4=`>,
                           (_gen5:
                             (lexer_target:
                               (terminal:
-                                <terminal (line 13 col 25) `xyz_abc`>,
+                                <terminal (line 13 col 25) `eHl6X2FiYw==`>,
                                 (_gen9: )
                               )
                             ),
@@ -137,7 +137,7 @@
             )
           ),
           (_gen2: ),
-          <rbrace (line 14 col 3) `}`>
+          <rbrace (line 14 col 3) `fQ==`>
         )
       )
     ),
@@ -145,57 +145,57 @@
       (body_element:
         (body_element_sub:
           (lexer:
-            <lexer (line 15 col 3) `lexer`>,
-            <langle (line 15 col 8) `<`>,
-            <identifier (line 15 col 9) `c`>,
-            <rangle (line 15 col 10) `>`>,
-            <lbrace (line 15 col 12) `{`>,
+            <lexer (line 15 col 3) `bGV4ZXI=`>,
+            <langle (line 15 col 8) `PA==`>,
+            <identifier (line 15 col 9) `Yw==`>,
+            <rangle (line 15 col 10) `Pg==`>,
+            <lbrace (line 15 col 12) `ew==`>,
             (_gen1:
               (lexer_atom:
                 (lexer_partials:
-                  <partials (line 16 col 5) `partials`>,
-                  <lbrace (line 16 col 14) `{`>,
+                  <partials (line 16 col 5) `cGFydGlhbHM=`>,
+                  <lbrace (line 16 col 14) `ew==`>,
                   (_gen3:
                     (regex_partial:
-                      <regex (line 17 col 7) `"abc"`>,
-                      <arrow (line 17 col 13) `->`>,
-                      <regex_partial (line 17 col 16) `_abc`>
+                      <regex (line 17 col 7) `ImFiYyI=`>,
+                      <arrow (line 17 col 13) `LT4=`>,
+                      <regex_partial (line 17 col 16) `X2FiYw==`>
                     ),
                     (_gen3:
                       (regex_partial:
-                        <regex (line 18 col 7) `"xyz"`>,
-                        <arrow (line 18 col 13) `->`>,
-                        <regex_partial (line 18 col 16) `_xyz`>
+                        <regex (line 18 col 7) `Inh5eiI=`>,
+                        <arrow (line 18 col 13) `LT4=`>,
+                        <regex_partial (line 18 col 16) `X3h5eg==`>
                       ),
                       (_gen3:
                         (regex_partial:
-                          <regex (line 19 col 7) `"[0-9]+"`>,
-                          <arrow (line 19 col 16) `->`>,
-                          <regex_partial (line 19 col 19) `_num`>
+                          <regex (line 19 col 7) `IlswLTldKyI=`>,
+                          <arrow (line 19 col 16) `LT4=`>,
+                          <regex_partial (line 19 col 19) `X251bQ==`>
                         ),
                         (_gen3:
                           (regex_partial:
-                            <regex (line 20 col 7) `"{%_xyz%}{%_abc%}"`>,
-                            <arrow (line 20 col 26) `->`>,
-                            <regex_partial (line 20 col 29) `_xyz_abc`>
+                            <regex (line 20 col 7) `InslX3h5eiV9eyVfYWJjJX0i`>,
+                            <arrow (line 20 col 26) `LT4=`>,
+                            <regex_partial (line 20 col 29) `X3h5el9hYmM=`>
                           ),
                           (_gen3: )
                         )
                       )
                     )
                   ),
-                  <rbrace (line 21 col 5) `}`>
+                  <rbrace (line 21 col 5) `fQ==`>
                 )
               ),
               (_gen1:
                 (lexer_atom:
                   (lexer_regex:
-                    <regex (line 22 col 5) `"\\s+"`>,
+                    <regex (line 22 col 5) `Ilxccysi`>,
                     (_gen4: ),
-                    <arrow (line 22 col 12) `->`>,
+                    <arrow (line 22 col 12) `LT4=`>,
                     (_gen5:
                       (lexer_target:
-                        <null (line 22 col 15) `null`>
+                        <null (line 22 col 15) `bnVsbA==`>
                       ),
                       (_gen5: )
                     )
@@ -204,13 +204,13 @@
                 (_gen1:
                   (lexer_atom:
                     (lexer_regex:
-                      <regex (line 23 col 5) `"{%_abc%}"`>,
+                      <regex (line 23 col 5) `InslX2FiYyV9Ig==`>,
                       (_gen4: ),
-                      <arrow (line 23 col 16) `->`>,
+                      <arrow (line 23 col 16) `LT4=`>,
                       (_gen5:
                         (lexer_target:
                           (terminal:
-                            <terminal (line 23 col 20) `abc`>,
+                            <terminal (line 23 col 20) `YWJj`>,
                             (_gen9: )
                           )
                         ),
@@ -221,13 +221,13 @@
                   (_gen1:
                     (lexer_atom:
                       (lexer_regex:
-                        <regex (line 24 col 5) `"{%_num%}"`>,
+                        <regex (line 24 col 5) `InslX251bSV9Ig==`>,
                         (_gen4: ),
-                        <arrow (line 24 col 16) `->`>,
+                        <arrow (line 24 col 16) `LT4=`>,
                         (_gen5:
                           (lexer_target:
                             (terminal:
-                              <terminal (line 24 col 20) `num`>,
+                              <terminal (line 24 col 20) `bnVt`>,
                               (_gen9: )
                             )
                           ),
@@ -238,13 +238,13 @@
                     (_gen1:
                       (lexer_atom:
                         (lexer_regex:
-                          <regex (line 25 col 5) `"{%_xyz%}{%_num%}[jkl]+"`>,
+                          <regex (line 25 col 5) `InslX3h5eiV9eyVfbnVtJX1bamtsXSsi`>,
                           (_gen4: ),
-                          <arrow (line 25 col 30) `->`>,
+                          <arrow (line 25 col 30) `LT4=`>,
                           (_gen5:
                             (lexer_target:
                               (terminal:
-                                <terminal (line 25 col 34) `xyz`>,
+                                <terminal (line 25 col 34) `eHl6`>,
                                 (_gen9: )
                               )
                             ),
@@ -255,13 +255,13 @@
                       (_gen1:
                         (lexer_atom:
                           (lexer_regex:
-                            <regex (line 26 col 5) `"{%_xyz_abc%}"`>,
+                            <regex (line 26 col 5) `InslX3h5el9hYmMlfSI=`>,
                             (_gen4: ),
-                            <arrow (line 26 col 20) `->`>,
+                            <arrow (line 26 col 20) `LT4=`>,
                             (_gen5:
                               (lexer_target:
                                 (terminal:
-                                  <terminal (line 26 col 24) `xyz_abc`>,
+                                  <terminal (line 26 col 24) `eHl6X2FiYw==`>,
                                   (_gen9: )
                                 )
                               ),
@@ -277,7 +277,7 @@
               )
             ),
             (_gen2: ),
-            <rbrace (line 27 col 3) `}`>
+            <rbrace (line 27 col 3) `fQ==`>
           )
         )
       ),
@@ -285,57 +285,57 @@
         (body_element:
           (body_element_sub:
             (lexer:
-              <lexer (line 28 col 3) `lexer`>,
-              <langle (line 28 col 8) `<`>,
-              <identifier (line 28 col 9) `java`>,
-              <rangle (line 28 col 13) `>`>,
-              <lbrace (line 28 col 15) `{`>,
+              <lexer (line 28 col 3) `bGV4ZXI=`>,
+              <langle (line 28 col 8) `PA==`>,
+              <identifier (line 28 col 9) `amF2YQ==`>,
+              <rangle (line 28 col 13) `Pg==`>,
+              <lbrace (line 28 col 15) `ew==`>,
               (_gen1:
                 (lexer_atom:
                   (lexer_partials:
-                    <partials (line 29 col 5) `partials`>,
-                    <lbrace (line 29 col 14) `{`>,
+                    <partials (line 29 col 5) `cGFydGlhbHM=`>,
+                    <lbrace (line 29 col 14) `ew==`>,
                     (_gen3:
                       (regex_partial:
-                        <regex (line 30 col 7) `"abc"`>,
-                        <arrow (line 30 col 13) `->`>,
-                        <regex_partial (line 30 col 16) `_abc`>
+                        <regex (line 30 col 7) `ImFiYyI=`>,
+                        <arrow (line 30 col 13) `LT4=`>,
+                        <regex_partial (line 30 col 16) `X2FiYw==`>
                       ),
                       (_gen3:
                         (regex_partial:
-                          <regex (line 31 col 7) `"xyz"`>,
-                          <arrow (line 31 col 13) `->`>,
-                          <regex_partial (line 31 col 16) `_xyz`>
+                          <regex (line 31 col 7) `Inh5eiI=`>,
+                          <arrow (line 31 col 13) `LT4=`>,
+                          <regex_partial (line 31 col 16) `X3h5eg==`>
                         ),
                         (_gen3:
                           (regex_partial:
-                            <regex (line 32 col 7) `"[0-9]+"`>,
-                            <arrow (line 32 col 16) `->`>,
-                            <regex_partial (line 32 col 19) `_num`>
+                            <regex (line 32 col 7) `IlswLTldKyI=`>,
+                            <arrow (line 32 col 16) `LT4=`>,
+                            <regex_partial (line 32 col 19) `X251bQ==`>
                           ),
                           (_gen3:
                             (regex_partial:
-                              <regex (line 33 col 7) `"{%_xyz%}{%_abc%}"`>,
-                              <arrow (line 33 col 26) `->`>,
-                              <regex_partial (line 33 col 29) `_xyz_abc`>
+                              <regex (line 33 col 7) `InslX3h5eiV9eyVfYWJjJX0i`>,
+                              <arrow (line 33 col 26) `LT4=`>,
+                              <regex_partial (line 33 col 29) `X3h5el9hYmM=`>
                             ),
                             (_gen3: )
                           )
                         )
                       )
                     ),
-                    <rbrace (line 34 col 5) `}`>
+                    <rbrace (line 34 col 5) `fQ==`>
                   )
                 ),
                 (_gen1:
                   (lexer_atom:
                     (lexer_regex:
-                      <regex (line 35 col 5) `"\\s+"`>,
+                      <regex (line 35 col 5) `Ilxccysi`>,
                       (_gen4: ),
-                      <arrow (line 35 col 12) `->`>,
+                      <arrow (line 35 col 12) `LT4=`>,
                       (_gen5:
                         (lexer_target:
-                          <null (line 35 col 15) `null`>
+                          <null (line 35 col 15) `bnVsbA==`>
                         ),
                         (_gen5: )
                       )
@@ -344,13 +344,13 @@
                   (_gen1:
                     (lexer_atom:
                       (lexer_regex:
-                        <regex (line 36 col 5) `"{%_abc%}"`>,
+                        <regex (line 36 col 5) `InslX2FiYyV9Ig==`>,
                         (_gen4: ),
-                        <arrow (line 36 col 16) `->`>,
+                        <arrow (line 36 col 16) `LT4=`>,
                         (_gen5:
                           (lexer_target:
                             (terminal:
-                              <terminal (line 36 col 20) `abc`>,
+                              <terminal (line 36 col 20) `YWJj`>,
                               (_gen9: )
                             )
                           ),
@@ -361,13 +361,13 @@
                     (_gen1:
                       (lexer_atom:
                         (lexer_regex:
-                          <regex (line 37 col 5) `"{%_num%}"`>,
+                          <regex (line 37 col 5) `InslX251bSV9Ig==`>,
                           (_gen4: ),
-                          <arrow (line 37 col 16) `->`>,
+                          <arrow (line 37 col 16) `LT4=`>,
                           (_gen5:
                             (lexer_target:
                               (terminal:
-                                <terminal (line 37 col 20) `num`>,
+                                <terminal (line 37 col 20) `bnVt`>,
                                 (_gen9: )
                               )
                             ),
@@ -378,13 +378,13 @@
                       (_gen1:
                         (lexer_atom:
                           (lexer_regex:
-                            <regex (line 38 col 5) `"{%_xyz%}{%_num%}[jkl]+"`>,
+                            <regex (line 38 col 5) `InslX3h5eiV9eyVfbnVtJX1bamtsXSsi`>,
                             (_gen4: ),
-                            <arrow (line 38 col 30) `->`>,
+                            <arrow (line 38 col 30) `LT4=`>,
                             (_gen5:
                               (lexer_target:
                                 (terminal:
-                                  <terminal (line 38 col 34) `xyz`>,
+                                  <terminal (line 38 col 34) `eHl6`>,
                                   (_gen9: )
                                 )
                               ),
@@ -395,13 +395,13 @@
                         (_gen1:
                           (lexer_atom:
                             (lexer_regex:
-                              <regex (line 39 col 5) `"{%_xyz_abc%}"`>,
+                              <regex (line 39 col 5) `InslX3h5el9hYmMlfSI=`>,
                               (_gen4: ),
-                              <arrow (line 39 col 20) `->`>,
+                              <arrow (line 39 col 20) `LT4=`>,
                               (_gen5:
                                 (lexer_target:
                                   (terminal:
-                                    <terminal (line 39 col 24) `xyz_abc`>,
+                                    <terminal (line 39 col 24) `eHl6X2FiYw==`>,
                                     (_gen9: )
                                   )
                                 ),
@@ -417,7 +417,7 @@
                 )
               ),
               (_gen2: ),
-              <rbrace (line 40 col 3) `}`>
+              <rbrace (line 40 col 3) `fQ==`>
             )
           )
         ),
@@ -425,57 +425,57 @@
           (body_element:
             (body_element_sub:
               (lexer:
-                <lexer (line 41 col 3) `lexer`>,
-                <langle (line 41 col 8) `<`>,
-                <identifier (line 41 col 9) `javascript`>,
-                <rangle (line 41 col 19) `>`>,
-                <lbrace (line 41 col 21) `{`>,
+                <lexer (line 41 col 3) `bGV4ZXI=`>,
+                <langle (line 41 col 8) `PA==`>,
+                <identifier (line 41 col 9) `amF2YXNjcmlwdA==`>,
+                <rangle (line 41 col 19) `Pg==`>,
+                <lbrace (line 41 col 21) `ew==`>,
                 (_gen1:
                   (lexer_atom:
                     (lexer_partials:
-                      <partials (line 42 col 5) `partials`>,
-                      <lbrace (line 42 col 14) `{`>,
+                      <partials (line 42 col 5) `cGFydGlhbHM=`>,
+                      <lbrace (line 42 col 14) `ew==`>,
                       (_gen3:
                         (regex_partial:
-                          <regex (line 43 col 7) `"abc"`>,
-                          <arrow (line 43 col 13) `->`>,
-                          <regex_partial (line 43 col 16) `_abc`>
+                          <regex (line 43 col 7) `ImFiYyI=`>,
+                          <arrow (line 43 col 13) `LT4=`>,
+                          <regex_partial (line 43 col 16) `X2FiYw==`>
                         ),
                         (_gen3:
                           (regex_partial:
-                            <regex (line 44 col 7) `"xyz"`>,
-                            <arrow (line 44 col 13) `->`>,
-                            <regex_partial (line 44 col 16) `_xyz`>
+                            <regex (line 44 col 7) `Inh5eiI=`>,
+                            <arrow (line 44 col 13) `LT4=`>,
+                            <regex_partial (line 44 col 16) `X3h5eg==`>
                           ),
                           (_gen3:
                             (regex_partial:
-                              <regex (line 45 col 7) `"[0-9]+"`>,
-                              <arrow (line 45 col 16) `->`>,
-                              <regex_partial (line 45 col 19) `_num`>
+                              <regex (line 45 col 7) `IlswLTldKyI=`>,
+                              <arrow (line 45 col 16) `LT4=`>,
+                              <regex_partial (line 45 col 19) `X251bQ==`>
                             ),
                             (_gen3:
                               (regex_partial:
-                                <regex (line 46 col 7) `"{%_xyz%}{%_abc%}"`>,
-                                <arrow (line 46 col 26) `->`>,
-                                <regex_partial (line 46 col 29) `_xyz_abc`>
+                                <regex (line 46 col 7) `InslX3h5eiV9eyVfYWJjJX0i`>,
+                                <arrow (line 46 col 26) `LT4=`>,
+                                <regex_partial (line 46 col 29) `X3h5el9hYmM=`>
                               ),
                               (_gen3: )
                             )
                           )
                         )
                       ),
-                      <rbrace (line 47 col 5) `}`>
+                      <rbrace (line 47 col 5) `fQ==`>
                     )
                   ),
                   (_gen1:
                     (lexer_atom:
                       (lexer_regex:
-                        <regex (line 48 col 5) `"\\s+"`>,
+                        <regex (line 48 col 5) `Ilxccysi`>,
                         (_gen4: ),
-                        <arrow (line 48 col 12) `->`>,
+                        <arrow (line 48 col 12) `LT4=`>,
                         (_gen5:
                           (lexer_target:
-                            <null (line 48 col 15) `null`>
+                            <null (line 48 col 15) `bnVsbA==`>
                           ),
                           (_gen5: )
                         )
@@ -484,13 +484,13 @@
                     (_gen1:
                       (lexer_atom:
                         (lexer_regex:
-                          <regex (line 49 col 5) `"{%_abc%}"`>,
+                          <regex (line 49 col 5) `InslX2FiYyV9Ig==`>,
                           (_gen4: ),
-                          <arrow (line 49 col 16) `->`>,
+                          <arrow (line 49 col 16) `LT4=`>,
                           (_gen5:
                             (lexer_target:
                               (terminal:
-                                <terminal (line 49 col 20) `abc`>,
+                                <terminal (line 49 col 20) `YWJj`>,
                                 (_gen9: )
                               )
                             ),
@@ -501,13 +501,13 @@
                       (_gen1:
                         (lexer_atom:
                           (lexer_regex:
-                            <regex (line 50 col 5) `"{%_num%}"`>,
+                            <regex (line 50 col 5) `InslX251bSV9Ig==`>,
                             (_gen4: ),
-                            <arrow (line 50 col 16) `->`>,
+                            <arrow (line 50 col 16) `LT4=`>,
                             (_gen5:
                               (lexer_target:
                                 (terminal:
-                                  <terminal (line 50 col 20) `num`>,
+                                  <terminal (line 50 col 20) `bnVt`>,
                                   (_gen9: )
                                 )
                               ),
@@ -518,13 +518,13 @@
                         (_gen1:
                           (lexer_atom:
                             (lexer_regex:
-                              <regex (line 51 col 5) `"{%_xyz%}{%_num%}[jkl]+"`>,
+                              <regex (line 51 col 5) `InslX3h5eiV9eyVfbnVtJX1bamtsXSsi`>,
                               (_gen4: ),
-                              <arrow (line 51 col 30) `->`>,
+                              <arrow (line 51 col 30) `LT4=`>,
                               (_gen5:
                                 (lexer_target:
                                   (terminal:
-                                    <terminal (line 51 col 34) `xyz`>,
+                                    <terminal (line 51 col 34) `eHl6`>,
                                     (_gen9: )
                                   )
                                 ),
@@ -535,13 +535,13 @@
                           (_gen1:
                             (lexer_atom:
                               (lexer_regex:
-                                <regex (line 52 col 5) `"{%_xyz_abc%}"`>,
+                                <regex (line 52 col 5) `InslX3h5el9hYmMlfSI=`>,
                                 (_gen4: ),
-                                <arrow (line 52 col 20) `->`>,
+                                <arrow (line 52 col 20) `LT4=`>,
                                 (_gen5:
                                   (lexer_target:
                                     (terminal:
-                                      <terminal (line 52 col 24) `xyz_abc`>,
+                                      <terminal (line 52 col 24) `eHl6X2FiYw==`>,
                                       (_gen9: )
                                     )
                                   ),
@@ -557,7 +557,7 @@
                   )
                 ),
                 (_gen2: ),
-                <rbrace (line 53 col 3) `}`>
+                <rbrace (line 53 col 3) `fQ==`>
               )
             )
           ),
@@ -566,5 +566,5 @@
       )
     )
   ),
-  <rbrace (line 54 col 1) `}`>
+  <rbrace (line 54 col 1) `fQ==`>
 )

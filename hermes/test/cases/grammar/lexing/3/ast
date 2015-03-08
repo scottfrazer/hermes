@@ -1,30 +1,30 @@
 (Grammar:
   body=[
     (Lexer:
-      language=<identifier (line 2 col 9) `python`>,
+      language=<identifier (line 2 col 9) `cHl0aG9u`>,
       atoms=[
         (RegexPartials:
           list=[
             (RegexPartial:
-              regex=<regex (line 4 col 7) `r'abc'`>,
-              name=<regex_partial (line 4 col 17) `_abc`>
+              regex=<regex (line 4 col 7) `cidhYmMn`>,
+              name=<regex_partial (line 4 col 17) `X2FiYw==`>
             ),
             (RegexPartial:
-              regex=<regex (line 5 col 7) `r'xyz'`>,
-              name=<regex_partial (line 5 col 17) `_xyz`>
+              regex=<regex (line 5 col 7) `cid4eXon`>,
+              name=<regex_partial (line 5 col 17) `X3h5eg==`>
             ),
             (RegexPartial:
-              regex=<regex (line 6 col 7) `r'[0-9]+'`>,
-              name=<regex_partial (line 6 col 20) `_num`>
+              regex=<regex (line 6 col 7) `cidbMC05XSsn`>,
+              name=<regex_partial (line 6 col 20) `X251bQ==`>
             ),
             (RegexPartial:
-              regex=<regex (line 7 col 7) `r'{%_xyz%}{%_abc%}'`>,
-              name=<regex_partial (line 7 col 30) `_xyz_abc`>
+              regex=<regex (line 7 col 7) `cid7JV94eXolfXslX2FiYyV9Jw==`>,
+              name=<regex_partial (line 7 col 30) `X3h5el9hYmM=`>
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 9 col 5) `r'\s+'`>,
+          regex=<regex (line 9 col 5) `cidccysn`>,
           options=None,
           onmatch=[
             (Null:
@@ -33,41 +33,41 @@
           ]
         ),
         (Regex:
-          regex=<regex (line 10 col 5) `r'{%_abc%}'`>,
+          regex=<regex (line 10 col 5) `cid7JV9hYmMlfSc=`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 10 col 21) `abc`>,
+              name=<terminal (line 10 col 21) `YWJj`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 11 col 5) `r'{%_num%}'`>,
+          regex=<regex (line 11 col 5) `cid7JV9udW0lfSc=`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 11 col 21) `num`>,
+              name=<terminal (line 11 col 21) `bnVt`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 12 col 5) `r'{%_xyz%}{%_num%}[jkl]+'`>,
+          regex=<regex (line 12 col 5) `cid7JV94eXolfXslX251bSV9W2prbF0rJw==`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 12 col 35) `xyz`>,
+              name=<terminal (line 12 col 35) `eHl6`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 13 col 5) `r'{%_xyz_abc%}'`>,
+          regex=<regex (line 13 col 5) `cid7JV94eXpfYWJjJX0n`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 13 col 25) `xyz_abc`>,
+              name=<terminal (line 13 col 25) `eHl6X2FiYw==`>,
               group=None
             )
           ]
@@ -76,30 +76,30 @@
       code=None
     ),
     (Lexer:
-      language=<identifier (line 15 col 9) `c`>,
+      language=<identifier (line 15 col 9) `Yw==`>,
       atoms=[
         (RegexPartials:
           list=[
             (RegexPartial:
-              regex=<regex (line 17 col 7) `"abc"`>,
-              name=<regex_partial (line 17 col 16) `_abc`>
+              regex=<regex (line 17 col 7) `ImFiYyI=`>,
+              name=<regex_partial (line 17 col 16) `X2FiYw==`>
             ),
             (RegexPartial:
-              regex=<regex (line 18 col 7) `"xyz"`>,
-              name=<regex_partial (line 18 col 16) `_xyz`>
+              regex=<regex (line 18 col 7) `Inh5eiI=`>,
+              name=<regex_partial (line 18 col 16) `X3h5eg==`>
             ),
             (RegexPartial:
-              regex=<regex (line 19 col 7) `"[0-9]+"`>,
-              name=<regex_partial (line 19 col 19) `_num`>
+              regex=<regex (line 19 col 7) `IlswLTldKyI=`>,
+              name=<regex_partial (line 19 col 19) `X251bQ==`>
             ),
             (RegexPartial:
-              regex=<regex (line 20 col 7) `"{%_xyz%}{%_abc%}"`>,
-              name=<regex_partial (line 20 col 29) `_xyz_abc`>
+              regex=<regex (line 20 col 7) `InslX3h5eiV9eyVfYWJjJX0i`>,
+              name=<regex_partial (line 20 col 29) `X3h5el9hYmM=`>
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 22 col 5) `"\\s+"`>,
+          regex=<regex (line 22 col 5) `Ilxccysi`>,
           options=None,
           onmatch=[
             (Null:
@@ -108,41 +108,41 @@
           ]
         ),
         (Regex:
-          regex=<regex (line 23 col 5) `"{%_abc%}"`>,
+          regex=<regex (line 23 col 5) `InslX2FiYyV9Ig==`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 23 col 20) `abc`>,
+              name=<terminal (line 23 col 20) `YWJj`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 24 col 5) `"{%_num%}"`>,
+          regex=<regex (line 24 col 5) `InslX251bSV9Ig==`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 24 col 20) `num`>,
+              name=<terminal (line 24 col 20) `bnVt`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 25 col 5) `"{%_xyz%}{%_num%}[jkl]+"`>,
+          regex=<regex (line 25 col 5) `InslX3h5eiV9eyVfbnVtJX1bamtsXSsi`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 25 col 34) `xyz`>,
+              name=<terminal (line 25 col 34) `eHl6`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 26 col 5) `"{%_xyz_abc%}"`>,
+          regex=<regex (line 26 col 5) `InslX3h5el9hYmMlfSI=`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 26 col 24) `xyz_abc`>,
+              name=<terminal (line 26 col 24) `eHl6X2FiYw==`>,
               group=None
             )
           ]
@@ -151,30 +151,30 @@
       code=None
     ),
     (Lexer:
-      language=<identifier (line 28 col 9) `java`>,
+      language=<identifier (line 28 col 9) `amF2YQ==`>,
       atoms=[
         (RegexPartials:
           list=[
             (RegexPartial:
-              regex=<regex (line 30 col 7) `"abc"`>,
-              name=<regex_partial (line 30 col 16) `_abc`>
+              regex=<regex (line 30 col 7) `ImFiYyI=`>,
+              name=<regex_partial (line 30 col 16) `X2FiYw==`>
             ),
             (RegexPartial:
-              regex=<regex (line 31 col 7) `"xyz"`>,
-              name=<regex_partial (line 31 col 16) `_xyz`>
+              regex=<regex (line 31 col 7) `Inh5eiI=`>,
+              name=<regex_partial (line 31 col 16) `X3h5eg==`>
             ),
             (RegexPartial:
-              regex=<regex (line 32 col 7) `"[0-9]+"`>,
-              name=<regex_partial (line 32 col 19) `_num`>
+              regex=<regex (line 32 col 7) `IlswLTldKyI=`>,
+              name=<regex_partial (line 32 col 19) `X251bQ==`>
             ),
             (RegexPartial:
-              regex=<regex (line 33 col 7) `"{%_xyz%}{%_abc%}"`>,
-              name=<regex_partial (line 33 col 29) `_xyz_abc`>
+              regex=<regex (line 33 col 7) `InslX3h5eiV9eyVfYWJjJX0i`>,
+              name=<regex_partial (line 33 col 29) `X3h5el9hYmM=`>
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 35 col 5) `"\\s+"`>,
+          regex=<regex (line 35 col 5) `Ilxccysi`>,
           options=None,
           onmatch=[
             (Null:
@@ -183,41 +183,41 @@
           ]
         ),
         (Regex:
-          regex=<regex (line 36 col 5) `"{%_abc%}"`>,
+          regex=<regex (line 36 col 5) `InslX2FiYyV9Ig==`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 36 col 20) `abc`>,
+              name=<terminal (line 36 col 20) `YWJj`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 37 col 5) `"{%_num%}"`>,
+          regex=<regex (line 37 col 5) `InslX251bSV9Ig==`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 37 col 20) `num`>,
+              name=<terminal (line 37 col 20) `bnVt`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 38 col 5) `"{%_xyz%}{%_num%}[jkl]+"`>,
+          regex=<regex (line 38 col 5) `InslX3h5eiV9eyVfbnVtJX1bamtsXSsi`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 38 col 34) `xyz`>,
+              name=<terminal (line 38 col 34) `eHl6`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 39 col 5) `"{%_xyz_abc%}"`>,
+          regex=<regex (line 39 col 5) `InslX3h5el9hYmMlfSI=`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 39 col 24) `xyz_abc`>,
+              name=<terminal (line 39 col 24) `eHl6X2FiYw==`>,
               group=None
             )
           ]
@@ -226,30 +226,30 @@
       code=None
     ),
     (Lexer:
-      language=<identifier (line 41 col 9) `javascript`>,
+      language=<identifier (line 41 col 9) `amF2YXNjcmlwdA==`>,
       atoms=[
         (RegexPartials:
           list=[
             (RegexPartial:
-              regex=<regex (line 43 col 7) `"abc"`>,
-              name=<regex_partial (line 43 col 16) `_abc`>
+              regex=<regex (line 43 col 7) `ImFiYyI=`>,
+              name=<regex_partial (line 43 col 16) `X2FiYw==`>
             ),
             (RegexPartial:
-              regex=<regex (line 44 col 7) `"xyz"`>,
-              name=<regex_partial (line 44 col 16) `_xyz`>
+              regex=<regex (line 44 col 7) `Inh5eiI=`>,
+              name=<regex_partial (line 44 col 16) `X3h5eg==`>
             ),
             (RegexPartial:
-              regex=<regex (line 45 col 7) `"[0-9]+"`>,
-              name=<regex_partial (line 45 col 19) `_num`>
+              regex=<regex (line 45 col 7) `IlswLTldKyI=`>,
+              name=<regex_partial (line 45 col 19) `X251bQ==`>
             ),
             (RegexPartial:
-              regex=<regex (line 46 col 7) `"{%_xyz%}{%_abc%}"`>,
-              name=<regex_partial (line 46 col 29) `_xyz_abc`>
+              regex=<regex (line 46 col 7) `InslX3h5eiV9eyVfYWJjJX0i`>,
+              name=<regex_partial (line 46 col 29) `X3h5el9hYmM=`>
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 48 col 5) `"\\s+"`>,
+          regex=<regex (line 48 col 5) `Ilxccysi`>,
           options=None,
           onmatch=[
             (Null:
@@ -258,41 +258,41 @@
           ]
         ),
         (Regex:
-          regex=<regex (line 49 col 5) `"{%_abc%}"`>,
+          regex=<regex (line 49 col 5) `InslX2FiYyV9Ig==`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 49 col 20) `abc`>,
+              name=<terminal (line 49 col 20) `YWJj`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 50 col 5) `"{%_num%}"`>,
+          regex=<regex (line 50 col 5) `InslX251bSV9Ig==`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 50 col 20) `num`>,
+              name=<terminal (line 50 col 20) `bnVt`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 51 col 5) `"{%_xyz%}{%_num%}[jkl]+"`>,
+          regex=<regex (line 51 col 5) `InslX3h5eiV9eyVfbnVtJX1bamtsXSsi`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 51 col 34) `xyz`>,
+              name=<terminal (line 51 col 34) `eHl6`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 52 col 5) `"{%_xyz_abc%}"`>,
+          regex=<regex (line 52 col 5) `InslX3h5el9hYmMlfSI=`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 52 col 24) `xyz_abc`>,
+              name=<terminal (line 52 col 24) `eHl6X2FiYw==`>,
               group=None
             )
           ]

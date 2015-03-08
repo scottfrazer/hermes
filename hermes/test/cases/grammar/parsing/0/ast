@@ -3,36 +3,36 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 3 col 6) `start`>,
+          nonterminal=<nonterminal (line 3 col 6) `c3RhcnQ=`>,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 3 col 15) `sub`>,
-                <terminal (line 3 col 20) `semi`>
+                <nonterminal (line 3 col 15) `c3Vi`>,
+                <terminal (line 3 col 20) `c2VtaQ==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 4 col 6) `sub`>,
+          nonterminal=<nonterminal (line 4 col 6) `c3Vi`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 4 col 13) `a`>,
-                <nonterminal (line 4 col 16) `sub`>,
-                <terminal (line 4 col 21) `b`>
+                <terminal (line 4 col 13) `YQ==`>,
+                <nonterminal (line 4 col 16) `c3Vi`>,
+                <terminal (line 4 col 21) `Yg==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 5 col 6) `sub`>,
+          nonterminal=<nonterminal (line 5 col 6) `c3Vi`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 5 col 13) `_empty`>
+                <terminal (line 5 col 13) `X2VtcHR5`>
               ],
               ast=None
             )

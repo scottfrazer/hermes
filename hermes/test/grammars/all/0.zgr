@@ -39,7 +39,7 @@ grammar {
       "\\}" -> :rbrace %pop
     }
   }
-  parser<ll1> {
+  parser {
     $start = :LBrace list($sUb) :rBrAcE -> STUFF(LiSt=$1)
     $SUB = :NUMBER :LEttER -> NUMLEttER(n=$0, L=$1)
   }

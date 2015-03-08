@@ -1,31 +1,31 @@
 (Grammar:
   body=[
     (Lexer:
-      language=<identifier (line 2 col 9) `python`>,
+      language=<identifier (line 2 col 9) `cHl0aG9u`>,
       atoms=[
         (Regex:
-          regex=<regex (line 3 col 5) `r'[a-z]'`>,
+          regex=<regex (line 3 col 5) `cidbYS16XSc=`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 3 col 18) `letter`>,
+              name=<terminal (line 3 col 18) `bGV0dGVy`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 4 col 5) `r'{'`>,
+          regex=<regex (line 4 col 5) `cid7Jw==`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 4 col 14) `lbrace`>,
+              name=<terminal (line 4 col 14) `bGJyYWNl`>,
               group=None
             ),
-            <stack_push (line 4 col 22) `numbers`>
+            <stack_push (line 4 col 22) `bnVtYmVycw==`>
           ]
         ),
         (Regex:
-          regex=<regex (line 5 col 5) `r'\s+'`>,
+          regex=<regex (line 5 col 5) `cidccysn`>,
           options=None,
           onmatch=[
             (Null:
@@ -34,31 +34,31 @@
           ]
         ),
         (Mode:
-          name=<identifier (line 7 col 10) `numbers`>,
+          name=<identifier (line 7 col 10) `bnVtYmVycw==`>,
           atoms=[
             (Regex:
-              regex=<regex (line 8 col 7) `r'[0-9]'`>,
+              regex=<regex (line 8 col 7) `cidbMC05XSc=`>,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 8 col 20) `number`>,
+                  name=<terminal (line 8 col 20) `bnVtYmVy`>,
                   group=None
                 )
               ]
             ),
             (Regex:
-              regex=<regex (line 9 col 7) `r'}'`>,
+              regex=<regex (line 9 col 7) `cid9Jw==`>,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 9 col 16) `rbrace`>,
+                  name=<terminal (line 9 col 16) `cmJyYWNl`>,
                   group=None
                 ),
-                <action (line 9 col 24) `pop`>
+                <action (line 9 col 24) `cG9w`>
               ]
             ),
             (Regex:
-              regex=<regex (line 10 col 7) `r'\s+'`>,
+              regex=<regex (line 10 col 7) `cidccysn`>,
               options=None,
               onmatch=[
                 (Null:
@@ -72,31 +72,31 @@
       code=None
     ),
     (Lexer:
-      language=<identifier (line 14 col 9) `c`>,
+      language=<identifier (line 14 col 9) `Yw==`>,
       atoms=[
         (Regex:
-          regex=<regex (line 15 col 5) `"[a-z]"`>,
+          regex=<regex (line 15 col 5) `IlthLXpdIg==`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 15 col 17) `letter`>,
+              name=<terminal (line 15 col 17) `bGV0dGVy`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 16 col 5) `"{"`>,
+          regex=<regex (line 16 col 5) `Insi`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 16 col 13) `lbrace`>,
+              name=<terminal (line 16 col 13) `bGJyYWNl`>,
               group=None
             ),
-            <stack_push (line 16 col 21) `numbers`>
+            <stack_push (line 16 col 21) `bnVtYmVycw==`>
           ]
         ),
         (Regex:
-          regex=<regex (line 17 col 5) `"\\s+"`>,
+          regex=<regex (line 17 col 5) `Ilxccysi`>,
           options=None,
           onmatch=[
             (Null:
@@ -105,31 +105,31 @@
           ]
         ),
         (Mode:
-          name=<identifier (line 19 col 10) `numbers`>,
+          name=<identifier (line 19 col 10) `bnVtYmVycw==`>,
           atoms=[
             (Regex:
-              regex=<regex (line 20 col 7) `"[0-9]"`>,
+              regex=<regex (line 20 col 7) `IlswLTldIg==`>,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 20 col 19) `number`>,
+                  name=<terminal (line 20 col 19) `bnVtYmVy`>,
                   group=None
                 )
               ]
             ),
             (Regex:
-              regex=<regex (line 21 col 7) `"}"`>,
+              regex=<regex (line 21 col 7) `In0i`>,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 21 col 15) `rbrace`>,
+                  name=<terminal (line 21 col 15) `cmJyYWNl`>,
                   group=None
                 ),
-                <action (line 21 col 23) `pop`>
+                <action (line 21 col 23) `cG9w`>
               ]
             ),
             (Regex:
-              regex=<regex (line 22 col 7) `"\\s+"`>,
+              regex=<regex (line 22 col 7) `Ilxccysi`>,
               options=None,
               onmatch=[
                 (Null:
@@ -143,31 +143,31 @@
       code=None
     ),
     (Lexer:
-      language=<identifier (line 26 col 9) `java`>,
+      language=<identifier (line 26 col 9) `amF2YQ==`>,
       atoms=[
         (Regex:
-          regex=<regex (line 27 col 5) `"[a-z]"`>,
+          regex=<regex (line 27 col 5) `IlthLXpdIg==`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 27 col 17) `letter`>,
+              name=<terminal (line 27 col 17) `bGV0dGVy`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 28 col 5) `"\\{"`>,
+          regex=<regex (line 28 col 5) `IlxceyI=`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 28 col 15) `lbrace`>,
+              name=<terminal (line 28 col 15) `bGJyYWNl`>,
               group=None
             ),
-            <stack_push (line 28 col 23) `numbers`>
+            <stack_push (line 28 col 23) `bnVtYmVycw==`>
           ]
         ),
         (Regex:
-          regex=<regex (line 29 col 5) `"\\s+"`>,
+          regex=<regex (line 29 col 5) `Ilxccysi`>,
           options=None,
           onmatch=[
             (Null:
@@ -176,31 +176,31 @@
           ]
         ),
         (Mode:
-          name=<identifier (line 31 col 10) `numbers`>,
+          name=<identifier (line 31 col 10) `bnVtYmVycw==`>,
           atoms=[
             (Regex:
-              regex=<regex (line 32 col 7) `"[0-9]"`>,
+              regex=<regex (line 32 col 7) `IlswLTldIg==`>,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 32 col 19) `number`>,
+                  name=<terminal (line 32 col 19) `bnVtYmVy`>,
                   group=None
                 )
               ]
             ),
             (Regex:
-              regex=<regex (line 33 col 7) `"\\}"`>,
+              regex=<regex (line 33 col 7) `IlxcfSI=`>,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 33 col 17) `rbrace`>,
+                  name=<terminal (line 33 col 17) `cmJyYWNl`>,
                   group=None
                 ),
-                <action (line 33 col 25) `pop`>
+                <action (line 33 col 25) `cG9w`>
               ]
             ),
             (Regex:
-              regex=<regex (line 34 col 7) `"\\s+"`>,
+              regex=<regex (line 34 col 7) `Ilxccysi`>,
               options=None,
               onmatch=[
                 (Null:
@@ -214,31 +214,31 @@
       code=None
     ),
     (Lexer:
-      language=<identifier (line 38 col 9) `javascript`>,
+      language=<identifier (line 38 col 9) `amF2YXNjcmlwdA==`>,
       atoms=[
         (Regex:
-          regex=<regex (line 39 col 5) `"[a-z]"`>,
+          regex=<regex (line 39 col 5) `IlthLXpdIg==`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 39 col 17) `letter`>,
+              name=<terminal (line 39 col 17) `bGV0dGVy`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 40 col 5) `"{"`>,
+          regex=<regex (line 40 col 5) `Insi`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 40 col 13) `lbrace`>,
+              name=<terminal (line 40 col 13) `bGJyYWNl`>,
               group=None
             ),
-            <stack_push (line 40 col 21) `numbers`>
+            <stack_push (line 40 col 21) `bnVtYmVycw==`>
           ]
         ),
         (Regex:
-          regex=<regex (line 41 col 5) `"\\s+"`>,
+          regex=<regex (line 41 col 5) `Ilxccysi`>,
           options=None,
           onmatch=[
             (Null:
@@ -247,31 +247,31 @@
           ]
         ),
         (Mode:
-          name=<identifier (line 43 col 10) `numbers`>,
+          name=<identifier (line 43 col 10) `bnVtYmVycw==`>,
           atoms=[
             (Regex:
-              regex=<regex (line 44 col 7) `"[0-9]"`>,
+              regex=<regex (line 44 col 7) `IlswLTldIg==`>,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 44 col 19) `number`>,
+                  name=<terminal (line 44 col 19) `bnVtYmVy`>,
                   group=None
                 )
               ]
             ),
             (Regex:
-              regex=<regex (line 45 col 7) `"}"`>,
+              regex=<regex (line 45 col 7) `In0i`>,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 45 col 15) `rbrace`>,
+                  name=<terminal (line 45 col 15) `cmJyYWNl`>,
                   group=None
                 ),
-                <action (line 45 col 23) `pop`>
+                <action (line 45 col 23) `cG9w`>
               ]
             ),
             (Regex:
-              regex=<regex (line 46 col 7) `"\\s+"`>,
+              regex=<regex (line 46 col 7) `Ilxccysi`>,
               options=None,
               onmatch=[
                 (Null:

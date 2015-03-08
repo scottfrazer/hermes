@@ -14,7 +14,7 @@ def this_is_a_bug():
     </code>
   }
 
-  parser<ll1> {
+  parser {
     $query = list($segment)
     $segment = optional($scope) $node optional($specifier)
     $node = :node_name | :terminal_name

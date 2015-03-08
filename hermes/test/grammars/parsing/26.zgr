@@ -1,5 +1,5 @@
 grammar {
-  parser<ll1> {
+  parser {
     $start = otlist(:item, :comma, 1) :next -> Thing(x=$0, y=$1)
   }
 }

@@ -1,58 +1,58 @@
 (grammar:
-  <grammar (line 1 col 1) `grammar`>,
-  <lbrace (line 1 col 9) `{`>,
+  <grammar (line 1 col 1) `Z3JhbW1hcg==`>,
+  <lbrace (line 1 col 9) `ew==`>,
   (_gen0:
     (body_element:
       (body_element_sub:
         (parser:
           (parser_ll1:
-            <parser_ll1 (line 2 col 3) `parser<ll1>`>,
-            <lbrace (line 2 col 15) `{`>,
+            <parser (line 2 col 3) `cGFyc2Vy`>,
+            <lbrace (line 2 col 10) `ew==`>,
             (_gen10:
               (ll1_rule:
                 <ll1_rule_hint (line 3 col 5) ``>,
-                <nonterminal (line 3 col 6) `start`>,
-                <equals (line 3 col 12) `=`>,
+                <nonterminal (line 3 col 6) `c3RhcnQ=`>,
+                <equals (line 3 col 12) `PQ==`>,
                 (ll1_rule_rhs:
                   (_gen11:
                     (rule:
                       (_gen13:
                         (morpheme:
                           (macro:
-                            <identifier (line 3 col 14) `list`>,
-                            <lparen (line 3 col 18) `(`>,
+                            <identifier (line 3 col 14) `bGlzdA==`>,
+                            <lparen (line 3 col 18) `KA==`>,
                             (_gen20:
                               (macro_parameter:
-                                <nonterminal (line 3 col 20) `statements`>
+                                <nonterminal (line 3 col 20) `c3RhdGVtZW50cw==`>
                               ),
                               (_gen21:
-                                <comma (line 3 col 30) `,`>,
+                                <comma (line 3 col 30) `LA==`>,
                                 (macro_parameter:
-                                  <terminal (line 3 col 33) `comma`>
+                                  <terminal (line 3 col 33) `Y29tbWE=`>
                                 ),
                                 (_gen21: )
                               )
                             ),
-                            <rparen (line 3 col 38) `)`>
+                            <rparen (line 3 col 38) `KQ==`>
                           )
                         ),
                         (_gen13: )
                       ),
                       (_gen14:
                         (ast_transform:
-                          <arrow (line 3 col 40) `->`>,
+                          <arrow (line 3 col 40) `LT4=`>,
                           (ast_transform_sub:
-                            <identifier (line 3 col 43) `Program`>,
-                            <lparen (line 3 col 50) `(`>,
+                            <identifier (line 3 col 43) `UHJvZ3JhbQ==`>,
+                            <lparen (line 3 col 50) `KA==`>,
                             (_gen18:
                               (ast_parameter:
-                                <identifier (line 3 col 52) `statements`>,
-                                <equals (line 3 col 62) `=`>,
-                                <nonterminal_reference (line 3 col 64) `0`>
+                                <identifier (line 3 col 52) `c3RhdGVtZW50cw==`>,
+                                <equals (line 3 col 62) `PQ==`>,
+                                <nonterminal_reference (line 3 col 64) `MA==`>
                               ),
                               (_gen19: )
                             ),
-                            <rparen (line 3 col 66) `)`>
+                            <rparen (line 3 col 66) `KQ==`>
                           )
                         )
                       )
@@ -64,14 +64,14 @@
               (_gen10:
                 (ll1_rule:
                   <ll1_rule_hint (line 4 col 5) ``>,
-                  <nonterminal (line 4 col 6) `start`>,
-                  <equals (line 4 col 12) `=`>,
+                  <nonterminal (line 4 col 6) `c3RhcnQ=`>,
+                  <equals (line 4 col 12) `PQ==`>,
                   (ll1_rule_rhs:
                     (_gen11:
                       (rule:
                         (_gen13:
                           (morpheme:
-                            <terminal (line 4 col 15) `_empty`>
+                            <terminal (line 4 col 15) `X2VtcHR5`>
                           ),
                           (_gen13: )
                         ),
@@ -84,14 +84,14 @@
                 (_gen10:
                   (ll1_rule:
                     <ll1_rule_hint (line 5 col 5) ``>,
-                    <nonterminal (line 5 col 6) `statements`>,
-                    <equals (line 5 col 17) `=`>,
+                    <nonterminal (line 5 col 6) `c3RhdGVtZW50cw==`>,
+                    <equals (line 5 col 17) `PQ==`>,
                     (ll1_rule_rhs:
                       (_gen11:
                         (rule:
                           (_gen13:
                             (morpheme:
-                              <nonterminal (line 5 col 20) `e`>
+                              <nonterminal (line 5 col 20) `ZQ==`>
                             ),
                             (_gen13: )
                           ),
@@ -104,14 +104,14 @@
                   (_gen10:
                     (ll1_rule:
                       <ll1_rule_hint (line 6 col 5) ``>,
-                      <nonterminal (line 6 col 6) `statements`>,
-                      <equals (line 6 col 17) `=`>,
+                      <nonterminal (line 6 col 6) `c3RhdGVtZW50cw==`>,
+                      <equals (line 6 col 17) `PQ==`>,
                       (ll1_rule_rhs:
                         (_gen11:
                           (rule:
                             (_gen13:
                               (morpheme:
-                                <nonterminal (line 6 col 20) `assignstatement`>
+                                <nonterminal (line 6 col 20) `YXNzaWduc3RhdGVtZW50`>
                               ),
                               (_gen13: )
                             ),
@@ -124,22 +124,22 @@
                     (_gen10:
                       (ll1_rule:
                         <ll1_rule_hint (line 7 col 5) ``>,
-                        <nonterminal (line 7 col 6) `assignstatement`>,
-                        <equals (line 7 col 22) `=`>,
+                        <nonterminal (line 7 col 6) `YXNzaWduc3RhdGVtZW50`>,
+                        <equals (line 7 col 22) `PQ==`>,
                         (ll1_rule_rhs:
                           (_gen11:
                             (rule:
                               (_gen13:
                                 (morpheme:
-                                  <terminal (line 7 col 25) `identifier`>
+                                  <terminal (line 7 col 25) `aWRlbnRpZmllcg==`>
                                 ),
                                 (_gen13:
                                   (morpheme:
-                                    <terminal (line 7 col 37) `eq`>
+                                    <terminal (line 7 col 37) `ZXE=`>
                                   ),
                                   (_gen13:
                                     (morpheme:
-                                      <nonterminal (line 7 col 41) `e`>
+                                      <nonterminal (line 7 col 41) `ZQ==`>
                                     ),
                                     (_gen13: )
                                   )
@@ -147,27 +147,27 @@
                               ),
                               (_gen14:
                                 (ast_transform:
-                                  <arrow (line 7 col 43) `->`>,
+                                  <arrow (line 7 col 43) `LT4=`>,
                                   (ast_transform_sub:
-                                    <identifier (line 7 col 46) `Assign`>,
-                                    <lparen (line 7 col 52) `(`>,
+                                    <identifier (line 7 col 46) `QXNzaWdu`>,
+                                    <lparen (line 7 col 52) `KA==`>,
                                     (_gen18:
                                       (ast_parameter:
-                                        <identifier (line 7 col 54) `var`>,
-                                        <equals (line 7 col 57) `=`>,
-                                        <nonterminal_reference (line 7 col 59) `0`>
+                                        <identifier (line 7 col 54) `dmFy`>,
+                                        <equals (line 7 col 57) `PQ==`>,
+                                        <nonterminal_reference (line 7 col 59) `MA==`>
                                       ),
                                       (_gen19:
-                                        <comma (line 7 col 60) `,`>,
+                                        <comma (line 7 col 60) `LA==`>,
                                         (ast_parameter:
-                                          <identifier (line 7 col 62) `val`>,
-                                          <equals (line 7 col 65) `=`>,
-                                          <nonterminal_reference (line 7 col 67) `2`>
+                                          <identifier (line 7 col 62) `dmFs`>,
+                                          <equals (line 7 col 65) `PQ==`>,
+                                          <nonterminal_reference (line 7 col 67) `Mg==`>
                                         ),
                                         (_gen19: )
                                       )
                                     ),
-                                    <rparen (line 7 col 69) `)`>
+                                    <rparen (line 7 col 69) `KQ==`>
                                   )
                                 )
                               )
@@ -179,46 +179,46 @@
                       (_gen10:
                         (ll1_rule:
                           <ll1_rule_hint (line 8 col 5) ``>,
-                          <nonterminal (line 8 col 6) `e`>,
-                          <equals (line 8 col 8) `=`>,
+                          <nonterminal (line 8 col 6) `ZQ==`>,
+                          <equals (line 8 col 8) `PQ==`>,
                           (ll1_rule_rhs:
                             (parser:
                               (parser_expression:
                                 <parser_expression (line 8 col 10) ``>,
-                                <lbrace (line 8 col 29) `{`>,
+                                <lbrace (line 8 col 29) `ew==`>,
                                 (_gen15:
                                   (expression_rule:
                                     (_gen16:
                                       (binding_power:
-                                        <lparen (line 9 col 7) `(`>,
+                                        <lparen (line 9 col 7) `KA==`>,
                                         (precedence:
                                           (binding_power_marker:
-                                            <asterisk (line 9 col 8) `*`>
+                                            <asterisk (line 9 col 8) `Kg==`>
                                           ),
-                                          <colon (line 9 col 9) `:`>,
+                                          <colon (line 9 col 9) `Og==`>,
                                           (associativity:
-                                            <left (line 9 col 10) `left`>
+                                            <left (line 9 col 10) `bGVmdA==`>
                                           )
                                         ),
-                                        <rparen (line 9 col 14) `)`>
+                                        <rparen (line 9 col 14) `KQ==`>
                                       )
                                     ),
                                     <expr_rule_hint (line 9 col 16) ``>,
-                                    <nonterminal (line 9 col 17) `e`>,
-                                    <equals (line 9 col 19) `=`>,
+                                    <nonterminal (line 9 col 17) `ZQ==`>,
+                                    <equals (line 9 col 19) `PQ==`>,
                                     (expression_rule_production:
                                       <infix_rule_hint (line 9 col 16) ``>,
                                       (_gen13:
                                         (morpheme:
-                                          <nonterminal (line 9 col 17) `e`>
+                                          <nonterminal (line 9 col 17) `ZQ==`>
                                         ),
                                         (_gen13:
                                           (morpheme:
-                                            <terminal (line 9 col 25) `add`>
+                                            <terminal (line 9 col 25) `YWRk`>
                                           ),
                                           (_gen13:
                                             (morpheme:
-                                              <nonterminal (line 9 col 17) `e`>
+                                              <nonterminal (line 9 col 17) `ZQ==`>
                                             ),
                                             (_gen13: )
                                           )
@@ -226,27 +226,27 @@
                                       ),
                                       (_gen14:
                                         (ast_transform:
-                                          <arrow (line 9 col 32) `->`>,
+                                          <arrow (line 9 col 32) `LT4=`>,
                                           (ast_transform_sub:
-                                            <identifier (line 9 col 35) `Add`>,
-                                            <lparen (line 9 col 38) `(`>,
+                                            <identifier (line 9 col 35) `QWRk`>,
+                                            <lparen (line 9 col 38) `KA==`>,
                                             (_gen18:
                                               (ast_parameter:
-                                                <identifier (line 9 col 40) `lhs`>,
-                                                <equals (line 9 col 43) `=`>,
-                                                <nonterminal_reference (line 9 col 45) `0`>
+                                                <identifier (line 9 col 40) `bGhz`>,
+                                                <equals (line 9 col 43) `PQ==`>,
+                                                <nonterminal_reference (line 9 col 45) `MA==`>
                                               ),
                                               (_gen19:
-                                                <comma (line 9 col 46) `,`>,
+                                                <comma (line 9 col 46) `LA==`>,
                                                 (ast_parameter:
-                                                  <identifier (line 9 col 48) `rhs`>,
-                                                  <equals (line 9 col 51) `=`>,
-                                                  <nonterminal_reference (line 9 col 53) `2`>
+                                                  <identifier (line 9 col 48) `cmhz`>,
+                                                  <equals (line 9 col 51) `PQ==`>,
+                                                  <nonterminal_reference (line 9 col 53) `Mg==`>
                                                 ),
                                                 (_gen19: )
                                               )
                                             ),
-                                            <rparen (line 9 col 55) `)`>
+                                            <rparen (line 9 col 55) `KQ==`>
                                           )
                                         )
                                       )
@@ -256,35 +256,35 @@
                                     (expression_rule:
                                       (_gen16:
                                         (binding_power:
-                                          <lparen (line 10 col 7) `(`>,
+                                          <lparen (line 10 col 7) `KA==`>,
                                           (precedence:
                                             (binding_power_marker:
-                                              <dash (line 10 col 8) `-`>
+                                              <dash (line 10 col 8) `LQ==`>
                                             ),
-                                            <colon (line 10 col 9) `:`>,
+                                            <colon (line 10 col 9) `Og==`>,
                                             (associativity:
-                                              <left (line 10 col 10) `left`>
+                                              <left (line 10 col 10) `bGVmdA==`>
                                             )
                                           ),
-                                          <rparen (line 10 col 14) `)`>
+                                          <rparen (line 10 col 14) `KQ==`>
                                         )
                                       ),
                                       <expr_rule_hint (line 10 col 16) ``>,
-                                      <nonterminal (line 10 col 17) `e`>,
-                                      <equals (line 10 col 19) `=`>,
+                                      <nonterminal (line 10 col 17) `ZQ==`>,
+                                      <equals (line 10 col 19) `PQ==`>,
                                       (expression_rule_production:
                                         <infix_rule_hint (line 10 col 16) ``>,
                                         (_gen13:
                                           (morpheme:
-                                            <nonterminal (line 10 col 17) `e`>
+                                            <nonterminal (line 10 col 17) `ZQ==`>
                                           ),
                                           (_gen13:
                                             (morpheme:
-                                              <terminal (line 10 col 25) `sub`>
+                                              <terminal (line 10 col 25) `c3Vi`>
                                             ),
                                             (_gen13:
                                               (morpheme:
-                                                <nonterminal (line 10 col 17) `e`>
+                                                <nonterminal (line 10 col 17) `ZQ==`>
                                               ),
                                               (_gen13: )
                                             )
@@ -292,27 +292,27 @@
                                         ),
                                         (_gen14:
                                           (ast_transform:
-                                            <arrow (line 10 col 32) `->`>,
+                                            <arrow (line 10 col 32) `LT4=`>,
                                             (ast_transform_sub:
-                                              <identifier (line 10 col 35) `Subtract`>,
-                                              <lparen (line 10 col 43) `(`>,
+                                              <identifier (line 10 col 35) `U3VidHJhY3Q=`>,
+                                              <lparen (line 10 col 43) `KA==`>,
                                               (_gen18:
                                                 (ast_parameter:
-                                                  <identifier (line 10 col 45) `lhs`>,
-                                                  <equals (line 10 col 48) `=`>,
-                                                  <nonterminal_reference (line 10 col 50) `0`>
+                                                  <identifier (line 10 col 45) `bGhz`>,
+                                                  <equals (line 10 col 48) `PQ==`>,
+                                                  <nonterminal_reference (line 10 col 50) `MA==`>
                                                 ),
                                                 (_gen19:
-                                                  <comma (line 10 col 51) `,`>,
+                                                  <comma (line 10 col 51) `LA==`>,
                                                   (ast_parameter:
-                                                    <identifier (line 10 col 53) `rhs`>,
-                                                    <equals (line 10 col 56) `=`>,
-                                                    <nonterminal_reference (line 10 col 58) `2`>
+                                                    <identifier (line 10 col 53) `cmhz`>,
+                                                    <equals (line 10 col 56) `PQ==`>,
+                                                    <nonterminal_reference (line 10 col 58) `Mg==`>
                                                   ),
                                                   (_gen19: )
                                                 )
                                               ),
-                                              <rparen (line 10 col 60) `)`>
+                                              <rparen (line 10 col 60) `KQ==`>
                                             )
                                           )
                                         )
@@ -322,35 +322,35 @@
                                       (expression_rule:
                                         (_gen16:
                                           (binding_power:
-                                            <lparen (line 11 col 7) `(`>,
+                                            <lparen (line 11 col 7) `KA==`>,
                                             (precedence:
                                               (binding_power_marker:
-                                                <asterisk (line 11 col 8) `*`>
+                                                <asterisk (line 11 col 8) `Kg==`>
                                               ),
-                                              <colon (line 11 col 9) `:`>,
+                                              <colon (line 11 col 9) `Og==`>,
                                               (associativity:
-                                                <left (line 11 col 10) `left`>
+                                                <left (line 11 col 10) `bGVmdA==`>
                                               )
                                             ),
-                                            <rparen (line 11 col 14) `)`>
+                                            <rparen (line 11 col 14) `KQ==`>
                                           )
                                         ),
                                         <expr_rule_hint (line 11 col 16) ``>,
-                                        <nonterminal (line 11 col 17) `e`>,
-                                        <equals (line 11 col 19) `=`>,
+                                        <nonterminal (line 11 col 17) `ZQ==`>,
+                                        <equals (line 11 col 19) `PQ==`>,
                                         (expression_rule_production:
                                           <infix_rule_hint (line 11 col 16) ``>,
                                           (_gen13:
                                             (morpheme:
-                                              <nonterminal (line 11 col 17) `e`>
+                                              <nonterminal (line 11 col 17) `ZQ==`>
                                             ),
                                             (_gen13:
                                               (morpheme:
-                                                <terminal (line 11 col 25) `mul`>
+                                                <terminal (line 11 col 25) `bXVs`>
                                               ),
                                               (_gen13:
                                                 (morpheme:
-                                                  <nonterminal (line 11 col 17) `e`>
+                                                  <nonterminal (line 11 col 17) `ZQ==`>
                                                 ),
                                                 (_gen13: )
                                               )
@@ -358,27 +358,27 @@
                                           ),
                                           (_gen14:
                                             (ast_transform:
-                                              <arrow (line 11 col 32) `->`>,
+                                              <arrow (line 11 col 32) `LT4=`>,
                                               (ast_transform_sub:
-                                                <identifier (line 11 col 35) `Multiply`>,
-                                                <lparen (line 11 col 43) `(`>,
+                                                <identifier (line 11 col 35) `TXVsdGlwbHk=`>,
+                                                <lparen (line 11 col 43) `KA==`>,
                                                 (_gen18:
                                                   (ast_parameter:
-                                                    <identifier (line 11 col 45) `lhs`>,
-                                                    <equals (line 11 col 48) `=`>,
-                                                    <nonterminal_reference (line 11 col 50) `0`>
+                                                    <identifier (line 11 col 45) `bGhz`>,
+                                                    <equals (line 11 col 48) `PQ==`>,
+                                                    <nonterminal_reference (line 11 col 50) `MA==`>
                                                   ),
                                                   (_gen19:
-                                                    <comma (line 11 col 51) `,`>,
+                                                    <comma (line 11 col 51) `LA==`>,
                                                     (ast_parameter:
-                                                      <identifier (line 11 col 53) `rhs`>,
-                                                      <equals (line 11 col 56) `=`>,
-                                                      <nonterminal_reference (line 11 col 58) `2`>
+                                                      <identifier (line 11 col 53) `cmhz`>,
+                                                      <equals (line 11 col 56) `PQ==`>,
+                                                      <nonterminal_reference (line 11 col 58) `Mg==`>
                                                     ),
                                                     (_gen19: )
                                                   )
                                                 ),
-                                                <rparen (line 11 col 60) `)`>
+                                                <rparen (line 11 col 60) `KQ==`>
                                               )
                                             )
                                           )
@@ -388,35 +388,35 @@
                                         (expression_rule:
                                           (_gen16:
                                             (binding_power:
-                                              <lparen (line 12 col 7) `(`>,
+                                              <lparen (line 12 col 7) `KA==`>,
                                               (precedence:
                                                 (binding_power_marker:
-                                                  <dash (line 12 col 8) `-`>
+                                                  <dash (line 12 col 8) `LQ==`>
                                                 ),
-                                                <colon (line 12 col 9) `:`>,
+                                                <colon (line 12 col 9) `Og==`>,
                                                 (associativity:
-                                                  <left (line 12 col 10) `left`>
+                                                  <left (line 12 col 10) `bGVmdA==`>
                                                 )
                                               ),
-                                              <rparen (line 12 col 14) `)`>
+                                              <rparen (line 12 col 14) `KQ==`>
                                             )
                                           ),
                                           <expr_rule_hint (line 12 col 16) ``>,
-                                          <nonterminal (line 12 col 17) `e`>,
-                                          <equals (line 12 col 19) `=`>,
+                                          <nonterminal (line 12 col 17) `ZQ==`>,
+                                          <equals (line 12 col 19) `PQ==`>,
                                           (expression_rule_production:
                                             <infix_rule_hint (line 12 col 16) ``>,
                                             (_gen13:
                                               (morpheme:
-                                                <nonterminal (line 12 col 17) `e`>
+                                                <nonterminal (line 12 col 17) `ZQ==`>
                                               ),
                                               (_gen13:
                                                 (morpheme:
-                                                  <terminal (line 12 col 25) `div`>
+                                                  <terminal (line 12 col 25) `ZGl2`>
                                                 ),
                                                 (_gen13:
                                                   (morpheme:
-                                                    <nonterminal (line 12 col 17) `e`>
+                                                    <nonterminal (line 12 col 17) `ZQ==`>
                                                   ),
                                                   (_gen13: )
                                                 )
@@ -424,27 +424,27 @@
                                             ),
                                             (_gen14:
                                               (ast_transform:
-                                                <arrow (line 12 col 32) `->`>,
+                                                <arrow (line 12 col 32) `LT4=`>,
                                                 (ast_transform_sub:
-                                                  <identifier (line 12 col 35) `Divide`>,
-                                                  <lparen (line 12 col 41) `(`>,
+                                                  <identifier (line 12 col 35) `RGl2aWRl`>,
+                                                  <lparen (line 12 col 41) `KA==`>,
                                                   (_gen18:
                                                     (ast_parameter:
-                                                      <identifier (line 12 col 43) `lhs`>,
-                                                      <equals (line 12 col 46) `=`>,
-                                                      <nonterminal_reference (line 12 col 48) `0`>
+                                                      <identifier (line 12 col 43) `bGhz`>,
+                                                      <equals (line 12 col 46) `PQ==`>,
+                                                      <nonterminal_reference (line 12 col 48) `MA==`>
                                                     ),
                                                     (_gen19:
-                                                      <comma (line 12 col 49) `,`>,
+                                                      <comma (line 12 col 49) `LA==`>,
                                                       (ast_parameter:
-                                                        <identifier (line 12 col 51) `rhs`>,
-                                                        <equals (line 12 col 54) `=`>,
-                                                        <nonterminal_reference (line 12 col 56) `2`>
+                                                        <identifier (line 12 col 51) `cmhz`>,
+                                                        <equals (line 12 col 54) `PQ==`>,
+                                                        <nonterminal_reference (line 12 col 56) `Mg==`>
                                                       ),
                                                       (_gen19: )
                                                     )
                                                   ),
-                                                  <rparen (line 12 col 58) `)`>
+                                                  <rparen (line 12 col 58) `KQ==`>
                                                 )
                                               )
                                             )
@@ -454,50 +454,50 @@
                                           (expression_rule:
                                             (_gen16:
                                               (binding_power:
-                                                <lparen (line 13 col 7) `(`>,
+                                                <lparen (line 13 col 7) `KA==`>,
                                                 (precedence:
                                                   (binding_power_marker:
-                                                    <asterisk (line 13 col 8) `*`>
+                                                    <asterisk (line 13 col 8) `Kg==`>
                                                   ),
-                                                  <colon (line 13 col 9) `:`>,
+                                                  <colon (line 13 col 9) `Og==`>,
                                                   (associativity:
-                                                    <unary (line 13 col 10) `unary`>
+                                                    <unary (line 13 col 10) `dW5hcnk=`>
                                                   )
                                                 ),
-                                                <rparen (line 13 col 15) `)`>
+                                                <rparen (line 13 col 15) `KQ==`>
                                               )
                                             ),
                                             <expr_rule_hint (line 13 col 17) ``>,
-                                            <nonterminal (line 13 col 18) `e`>,
-                                            <equals (line 13 col 20) `=`>,
+                                            <nonterminal (line 13 col 18) `ZQ==`>,
+                                            <equals (line 13 col 20) `PQ==`>,
                                             (expression_rule_production:
                                               <prefix_rule_hint (line 13 col 17) ``>,
                                               (_gen13:
                                                 (morpheme:
-                                                  <terminal (line 13 col 23) `sub`>
+                                                  <terminal (line 13 col 23) `c3Vi`>
                                                 ),
                                                 (_gen13:
                                                   (morpheme:
-                                                    <nonterminal (line 13 col 18) `e`>
+                                                    <nonterminal (line 13 col 18) `ZQ==`>
                                                   ),
                                                   (_gen13: )
                                                 )
                                               ),
                                               (_gen14:
                                                 (ast_transform:
-                                                  <arrow (line 13 col 30) `->`>,
+                                                  <arrow (line 13 col 30) `LT4=`>,
                                                   (ast_transform_sub:
-                                                    <identifier (line 13 col 33) `Uminus`>,
-                                                    <lparen (line 13 col 39) `(`>,
+                                                    <identifier (line 13 col 33) `VW1pbnVz`>,
+                                                    <lparen (line 13 col 39) `KA==`>,
                                                     (_gen18:
                                                       (ast_parameter:
-                                                        <identifier (line 13 col 41) `arg`>,
-                                                        <equals (line 13 col 44) `=`>,
-                                                        <nonterminal_reference (line 13 col 46) `1`>
+                                                        <identifier (line 13 col 41) `YXJn`>,
+                                                        <equals (line 13 col 44) `PQ==`>,
+                                                        <nonterminal_reference (line 13 col 46) `MQ==`>
                                                       ),
                                                       (_gen19: )
                                                     ),
-                                                    <rparen (line 13 col 48) `)`>
+                                                    <rparen (line 13 col 48) `KQ==`>
                                                   )
                                                 )
                                               )
@@ -507,14 +507,14 @@
                                             (expression_rule:
                                               (_gen16: ),
                                               <expr_rule_hint (line 14 col 7) ``>,
-                                              <nonterminal (line 14 col 8) `e`>,
-                                              <equals (line 14 col 10) `=`>,
+                                              <nonterminal (line 14 col 8) `ZQ==`>,
+                                              <equals (line 14 col 10) `PQ==`>,
                                               (expression_rule_production:
                                                 <mixfix_rule_hint (line 14 col 7) ``>,
                                                 (nud:
                                                   (_gen13:
                                                     (morpheme:
-                                                      <terminal (line 14 col 13) `a`>
+                                                      <terminal (line 14 col 13) `YQ==`>
                                                     ),
                                                     (_gen13: )
                                                   )
@@ -528,14 +528,14 @@
                                               (expression_rule:
                                                 (_gen16: ),
                                                 <expr_rule_hint (line 15 col 7) ``>,
-                                                <nonterminal (line 15 col 8) `e`>,
-                                                <equals (line 15 col 10) `=`>,
+                                                <nonterminal (line 15 col 8) `ZQ==`>,
+                                                <equals (line 15 col 10) `PQ==`>,
                                                 (expression_rule_production:
                                                   <mixfix_rule_hint (line 15 col 7) ``>,
                                                   (nud:
                                                     (_gen13:
                                                       (morpheme:
-                                                        <terminal (line 15 col 13) `b`>
+                                                        <terminal (line 15 col 13) `Yg==`>
                                                       ),
                                                       (_gen13: )
                                                     )
@@ -553,7 +553,7 @@
                                     )
                                   )
                                 ),
-                                <rbrace (line 16 col 5) `}`>
+                                <rbrace (line 16 col 5) `fQ==`>
                               )
                             )
                           )
@@ -565,12 +565,12 @@
                 )
               )
             ),
-            <rbrace (line 17 col 3) `}`>
+            <rbrace (line 17 col 3) `fQ==`>
           )
         )
       )
     ),
     (_gen0: )
   ),
-  <rbrace (line 18 col 1) `}`>
+  <rbrace (line 18 col 1) `fQ==`>
 )

@@ -14,36 +14,36 @@ grammar {
       r'{%_ws%}' -> null
       r'{%_comment%}' -> null
       r'}' -> :rbrace %pop
-      r'(lexer)\s*(<)\s*({%_identifier%})\s*(>)\s*({)'
-          -> :lexer[1] :langle[2] :identifier[3] :rangle[4] :lbrace[5] @lexer
-      r'(parser\s*<\s*ll1\s*>)\s*({)'
-          -> :parser_ll1[1] :lbrace[2] @parser_ll1
+      r'lexer' -> :lexer @lexer
+      r'parser' -> :parser @parser
     }
 
     mode<lexer> {
       r'{%_ws%}' -> null
       r'{%_comment%}' -> null
+      r'<code>(.*?)</code>' {DOTALL} -> :code[1]
       r'}' -> :rbrace %pop
-      r'null' -> :null
+      r'{' -> :lbrace
+      r'<' -> :langle
+      r'>' -> :rangle
       r'\(' -> :lparen
       r'\)' -> :rparen
       r'\[\]' -> :no_group
       r'\[' -> :lsquare
       r'\]' -> :rsquare
       r'[0-9]+' -> :integer
-      r'r\'(\\\'|[^\'])*\'' -> :regex
-      r'"(\\\"|[^\"])*"' -> :regex
+      r'r\'(\\\'|[^\'])*\'' -> :regex @regex_options
+      r'"(\\\"|[^\"])*"' -> :regex @regex_options
       r'->' -> :arrow
+      r',' -> :comma
       r'@({%_identifier%})' -> :stack_push[1]
       r'%({%_identifier%})' -> :action[1]
       r':({%_identifier%}|_empty)' -> :terminal[1]
-      r'(mode)\s*(<)\s*({%_identifier%})\s*(>)\s*({)'
-          -> :mode[1] :langle[2] :identifier[3] :rangle[4] :lbrace[5] @lexer
-      r'(partials)\s*({)'
-          -> :partials[1] :lbrace[2] @partials
+      r'_{%_identifier%}' -> :regex_partial
+      r'null' -> :null
+      r'mode' -> :mode @lexer
+      r'partials' -> :partials @lexer
       r'{%_identifier%}' -> :identifier
-      r'{' -> :lbrace @regex_options
-      r'<code>(.*?)</code>' {DOTALL} -> :code[1]
     }
 
     mode<regex_options> {
@@ -51,22 +51,15 @@ grammar {
       r'{%_comment%}' -> null
       r'{%_identifier%}' -> :identifier
       r',' -> :comma
-      r'}' -> :rbrace %pop
+      r'{' -> :lbrace
+      r'}' -> :rbrace
+      r'->' -> :arrow %pop
     }
 
-    mode<partials> {
+    mode<parser> {
       r'{%_ws%}' -> null
       r'{%_comment%}' -> null
-      r'r\'(\\\'|[^\'])*\'' -> :regex
-      r'"(\\\"|[^\"])*"' -> :regex
-      r'->' -> :arrow
-      r'_({%_identifier%})' -> :regex_partial
-      r'}' -> :rbrace %pop
-    }
-
-    mode<parser_ll1> {
-      r'{%_ws%}' -> null
-      r'{%_comment%}' -> null
+      r'{' -> :lbrace
       r'}' -> :rbrace %pop
       r'\|' -> :pipe
       r'=' -> :equals
@@ -92,6 +85,7 @@ grammar {
       r'<=>' -> :expression_divider
       r'\|' -> :pipe
       r'=' -> :equals
+      r'{' -> :lbrace
       r'}' -> :rbrace %pop
       r'\(' -> :lparen
       r'\)' -> :rparen
@@ -122,7 +116,7 @@ grammar {
     }
   }
 
-  parser<ll1> {
+  parser {
     $grammar = :grammar :lbrace list($body_element) :rbrace -> Grammar(body=$2)
     $body_element = $body_element_sub -> $0
     $body_element_sub = $lexer | $parser
@@ -140,7 +134,7 @@ grammar {
     $lexer_target = :null -> Null()
     $lexer_mode = :mode :langle :identifier :rangle :lbrace list($lexer_atom) :rbrace -> Mode(name=$2, atoms=$5)
     $parser = $parser_ll1 | $parser_expression
-    $parser_ll1 = :parser_ll1 :lbrace list($ll1_rule) :rbrace -> Parser(rules=$2)
+    $parser_ll1 = :parser :lbrace list($ll1_rule) :rbrace -> Parser(rules=$2)
     $ll1_rule = :ll1_rule_hint :nonterminal :equals $ll1_rule_rhs -> Rule(nonterminal=$1, production=$3)
     $ll1_rule_rhs = list($rule, :pipe)
     $rule = list($morpheme) optional($ast_transform) -> Production(morphemes=$0, ast=$1)
