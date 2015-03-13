@@ -6,6 +6,7 @@ grammar {
       r'[a-zA-Z][a-zA-Z0-9_]*' -> _identifier
       r':({%_identifier%}|_empty)' -> _terminal
       r'\$({%_identifier%})' -> _nonterminal
+      r'(r\'(\\\'|[^\'])*\'|"(\\\"|[^\"])*")' -> _regex
     }
 
     r'(grammar)\s*({)' -> :grammar[1] :lbrace[2] @grammar
@@ -34,8 +35,9 @@ grammar {
       r'\[' -> :lsquare
       r'\]' -> :rsquare
       r'[0-9]+' -> :integer
-      r'r\'(\\\'|[^\'])*\'' -> :regex @regex_options
-      r'"(\\\"|[^\"])*"' -> :regex @regex_options
+      #r'r\'(\\\'|[^\'])*\'' -> :regex @regex_options
+      #r'"(\\\"|[^\"])*"' -> :regex @regex_options
+      r'{%_regex%}' -> :regex @regex_options
       r'->' -> :arrow
       r',' -> :comma
       r'@({%_identifier%})' -> :stack_push[1]
@@ -45,7 +47,18 @@ grammar {
       r'null' -> :null
       r'mode' -> :mode @lexer
       r'partials' -> :partials @lexer
+      r'enum' -> :regex_enum @regex_enum
       r'{%_identifier%}' -> :identifier
+    }
+
+    mode<regex_enum> {
+      r'{%_ws%}' -> null
+      r'{%_comment%}' -> null
+      r'}' -> :rbrace %pop
+      r'{' -> :lbrace
+      r'{%_regex%}' -> :regex
+      r'{%_identifier%}' -> :identifier
+      r':' -> :colon
     }
 
     mode<regex_options> {
@@ -127,7 +140,9 @@ grammar {
     $lexer_atom = $lexer_regex | $lexer_mode | $lexer_partials
     $lexer_partials = :partials :lbrace list($regex_partial) :rbrace -> RegexPartials(list=$2)
     $regex_partial = :regex :arrow :regex_partial -> RegexPartial(regex=$0, name=$2)
-    $lexer_regex = :regex optional($regex_options) :arrow list($lexer_target) -> Regex(regex=$0, options=$1, onmatch=$3)
+    $lexer_regex = $enumerated_regex | :regex optional($regex_options) :arrow list($lexer_target) -> Regex(regex=$0, options=$1, onmatch=$3)
+    $enumerated_regex = :regex_enum :lbrace list($regex_enumeration) :rbrace :arrow list($lexer_target) -> EnumeratedRegex(enums=$2, onmatch=$5)
+    $regex_enumeration = :identifier :colon :regex -> RegexEnum(language=$0, regex=$2)
     $regex_options = :lbrace list(:identifier, :comma) :rbrace -> $1
     $lexer_target = $terminal | :identifier :lparen optional($terminal) :rparen -> LexerFunctionCall(name=$0, terminal=$2)
     $lexer_target = $terminal | :stack_push | :action

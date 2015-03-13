@@ -8,6 +8,10 @@ grammar {
     r'a' -> :a
     r'b' -> :b
     r'\{' -> :lbrace @blah
+    #enum {
+    #  java: r'\{'
+    #  python: r'{'
+    #} -> :lbrace @blah
     r'\n+' -> :newline
     r' ' -> :space
     mode<blah> {
