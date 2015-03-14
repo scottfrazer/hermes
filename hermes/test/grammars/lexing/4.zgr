@@ -1,42 +1,30 @@
 grammar {
-  lexer<python> {
+  lexer {
     r'(a)(b)(c)' -> :a[1] :b[2] :c[3] :abc[0]
     r'(x)\s*(y)\s*(z)' -> :hint[] f(:x[1]) :all
     r'\s+' -> null
-    <code>
-def f(ctx, terminal, source_string, line, col):
-    default_action(ctx, terminal, source_string, line, col)
-    </code>
-  }
-  lexer<c> {
-    "(a)(b)(c)" -> :a[1] :b[2] :c[3] :abc[0]
-    "(x)\\s*(y)\\s*(z)" -> :hint[] f(:x[1]) :all
-    "\\s+" -> null
-    <code>
-static void f(LEXER_CONTEXT_T * ctx, TERMINAL_T * terminal, char * source_string, int line, int col)
-{
-    default_action(ctx, terminal, source_string, line, col);
-}
-    </code>
-  }
-  lexer<java> {
-    "(a)(b)(c)" -> :a[1] :b[2] :c[3] :abc[0]
-    "(x)\\s*(y)\\s*(z)" -> :hint[] f(:x[1]) :all
-    "\\s+" -> null
-    <code>
-public void f(LexerContext ctx, TerminalIdentifier terminal, String source_string, int line, int col) {
-    default_action(ctx, terminal, source_string, line, col);
-}
-    </code>
-  }
-  lexer<javascript> {
-    "(a)(b)(c)" -> :a[1] :b[2] :c[3] :abc[0]
-    "(x)\\s*(y)\\s*(z)" -> :hint[] f(:x[1]) :all
-    "\\s+" -> null
-    <code>
-function f(ctx, terminal, source_string, line, col) {
-    default_action(ctx, terminal, source_string, line, col);
-}
-    </code>
+
+    code<python> << PYTHON
+    def f(ctx, terminal, source_string, line, col):
+        default_action(ctx, terminal, source_string, line, col)
+    PYTHON
+
+    code<c> << C_CODE
+    static void f(LEXER_CONTEXT_T * ctx, TERMINAL_T * terminal, char * source_string, int line, int col) {
+        default_action(ctx, terminal, source_string, line, col);
+    }
+    C_CODE
+
+    code<java> << JAVA
+    public void f(LexerContext ctx, TerminalIdentifier terminal, String source_string, int line, int col) {
+        default_action(ctx, terminal, source_string, line, col);
+    }
+    JAVA
+
+    code<javascript> << JAVASCRIPT
+    function f(ctx, terminal, source_string, line, col) {
+        default_action(ctx, terminal, source_string, line, col);
+    }
+    JAVASCRIPT
   }
 }

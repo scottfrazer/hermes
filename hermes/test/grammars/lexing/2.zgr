@@ -1,49 +1,13 @@
 grammar {
-  lexer<python> {
+  lexer {
     r'[a-z]' -> :letter
-    r'{' -> :lbrace @numbers
+    r'\{' -> :lbrace @numbers
     r'\s+' -> null
 
     mode<numbers> {
       r'[0-9]' -> :number
-      r'}' -> :rbrace %pop
+      r'\}' -> :rbrace %pop
       r'\s+' -> null
-    }
-  }
-
-  lexer<c> {
-    "[a-z]" -> :letter
-    "{" -> :lbrace @numbers
-    "\\s+" -> null
-
-    mode<numbers> {
-      "[0-9]" -> :number
-      "}" -> :rbrace %pop
-      "\\s+" -> null
-    }
-  }
-
-  lexer<java> {
-    "[a-z]" -> :letter
-    "\\{" -> :lbrace @numbers
-    "\\s+" -> null
-
-    mode<numbers> {
-      "[0-9]" -> :number
-      "\\}" -> :rbrace %pop
-      "\\s+" -> null
-    }
-  }
-
-  lexer<javascript> {
-    "[a-z]" -> :letter
-    "{" -> :lbrace @numbers
-    "\\s+" -> null
-
-    mode<numbers> {
-      "[0-9]" -> :number
-      "}" -> :rbrace %pop
-      "\\s+" -> null
     }
   }
 }

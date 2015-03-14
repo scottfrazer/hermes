@@ -8,81 +8,81 @@
           (parser_ll1:
             <parser (line 2 col 3) `cGFyc2Vy`>,
             <lbrace (line 2 col 10) `ew==`>,
-            (_gen12:
+            (_gen11:
               (ll1_rule:
                 <ll1_rule_hint (line 3 col 5) ``>,
                 <nonterminal (line 3 col 6) `c3RhcnQ=`>,
                 <equals (line 3 col 12) `PQ==`>,
                 (ll1_rule_rhs:
-                  (_gen13:
+                  (_gen12:
                     (rule:
-                      (_gen15:
+                      (_gen14:
                         (morpheme:
                           (macro:
                             <identifier (line 3 col 14) `bXNsaXN0`>,
                             <lparen (line 3 col 20) `KA==`>,
-                            (_gen22:
+                            (_gen21:
                               (macro_parameter:
                                 <nonterminal (line 3 col 22) `aXRlbQ==`>
                               ),
-                              (_gen23:
+                              (_gen22:
                                 <comma (line 3 col 26) `LA==`>,
                                 (macro_parameter:
                                   <terminal (line 3 col 29) `c2Vw`>
                                 ),
-                                (_gen23:
+                                (_gen22:
                                   <comma (line 3 col 32) `LA==`>,
                                   (macro_parameter:
                                     <integer (line 3 col 34) `NA==`>
                                   ),
-                                  (_gen23: )
+                                  (_gen22: )
                                 )
                               )
                             ),
                             <rparen (line 3 col 35) `KQ==`>
                           )
                         ),
-                        (_gen15: )
+                        (_gen14: )
                       ),
-                      (_gen16: )
+                      (_gen15: )
                     ),
-                    (_gen14: )
+                    (_gen13: )
                   )
                 )
               ),
-              (_gen12:
+              (_gen11:
                 (ll1_rule:
                   <ll1_rule_hint (line 4 col 5) ``>,
                   <nonterminal (line 4 col 6) `aXRlbQ==`>,
                   <equals (line 4 col 11) `PQ==`>,
                   (ll1_rule_rhs:
-                    (_gen13:
+                    (_gen12:
                       (rule:
-                        (_gen15:
+                        (_gen14:
                           (morpheme:
                             <terminal (line 4 col 14) `YQ==`>
                           ),
-                          (_gen15: )
+                          (_gen14: )
                         ),
-                        (_gen16: )
+                        (_gen15: )
                       ),
-                      (_gen14:
+                      (_gen13:
                         <pipe (line 4 col 16) `fA==`>,
                         (rule:
-                          (_gen15:
+                          (_gen14:
                             (morpheme:
                               <terminal (line 4 col 19) `Yg==`>
                             ),
-                            (_gen15: )
+                            (_gen14: )
                           ),
-                          (_gen16: )
+                          (_gen15: )
                         ),
-                        (_gen14: )
+                        (_gen13: )
                       )
                     )
                   )
                 ),
-                (_gen12: )
+                (_gen11: )
               )
             ),
             <rbrace (line 5 col 3) `fQ==`>

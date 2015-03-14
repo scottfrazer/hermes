@@ -1,5 +1,5 @@
 grammar {
-  lexer<python> {
+  lexer {
     partials {
       r'\#.*' -> _comment
       r'\s+' -> _ws
@@ -24,7 +24,9 @@ grammar {
     mode<lexer> {
       r'{%_ws%}' -> null
       r'{%_comment%}' -> null
-      r'<code>(.*?)</code>' {DOTALL} -> :code[1]
+      enum {
+        python: r'code<([a-z]+)>\s*<<\s*([a-zA-Z_]+)(?=\s)(.*?)(\2)' (DOTALL)
+      } -> :code_start[2] :language[1] :code[3]
       r'}' -> :rbrace %pop
       r'{' -> :lbrace
       r'<' -> :langle
@@ -35,8 +37,6 @@ grammar {
       r'\[' -> :lsquare
       r'\]' -> :rsquare
       r'[0-9]+' -> :integer
-      #r'r\'(\\\'|[^\'])*\'' -> :regex @regex_options
-      #r'"(\\\"|[^\"])*"' -> :regex @regex_options
       r'{%_regex%}' -> :regex @regex_options
       r'->' -> :arrow
       r',' -> :comma
@@ -56,11 +56,15 @@ grammar {
       r'{%_comment%}' -> null
       r'}' -> :rbrace %pop
       r'{' -> :lbrace
+      r'\(' -> :lparen
+      r'\)' -> :rparen
+      r':' -> :colon
+      r',' -> :comma
       r'{%_regex%}' -> :regex
       r'{%_identifier%}' -> :identifier
-      r':' -> :colon
     }
 
+    # TODO: Remove this
     mode<regex_options> {
       r'{%_ws%}' -> null
       r'{%_comment%}' -> null
@@ -135,14 +139,15 @@ grammar {
     $grammar = :grammar :lbrace list($body_element) :rbrace -> Grammar(body=$2)
     $body_element = $body_element_sub -> $0
     $body_element_sub = $lexer | $parser
-    $lexer = :lexer optional($lexer_languages) :lbrace list($lexer_atom) optional(:code) :rbrace -> Lexer(languages=$1, atoms=$3, code=$4)
-    $lexer_languages = :langle list(:identifier, :comma) :rangle -> $1
-    $lexer_atom = $lexer_regex | $lexer_mode | $lexer_partials
+    $lexer = :lexer :lbrace list($lexer_atom) :rbrace -> Lexer(atoms=$2)
+    $lexer_atom = $lexer_regex | $lexer_mode | $lexer_partials | $lexer_code
+    $lexer_code = :code_start :language :code -> LexerCode(language=$1, code=$2)
     $lexer_partials = :partials :lbrace list($regex_partial) :rbrace -> RegexPartials(list=$2)
     $regex_partial = :regex :arrow :regex_partial -> RegexPartial(regex=$0, name=$2)
     $lexer_regex = $enumerated_regex | :regex optional($regex_options) :arrow list($lexer_target) -> Regex(regex=$0, options=$1, onmatch=$3)
     $enumerated_regex = :regex_enum :lbrace list($regex_enumeration) :rbrace :arrow list($lexer_target) -> EnumeratedRegex(enums=$2, onmatch=$5)
-    $regex_enumeration = :identifier :colon :regex -> RegexEnum(language=$0, regex=$2)
+    $regex_enumeration = :identifier :colon :regex optional($regex_enumeration_options) -> RegexEnum(language=$0, regex=$2, options=$3)
+    $regex_enumeration_options = :lparen list(:identifier, :comma) :rparen -> $1
     $regex_options = :lbrace list(:identifier, :comma) :rbrace -> $1
     $lexer_target = $terminal | :identifier :lparen optional($terminal) :rparen -> LexerFunctionCall(name=$0, terminal=$2)
     $lexer_target = $terminal | :stack_push | :action

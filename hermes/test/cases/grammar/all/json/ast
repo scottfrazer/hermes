@@ -1,9 +1,6 @@
 (Grammar:
   body=[
     (Lexer:
-      languages=[
-        <identifier (line 2 col 9) `cHl0aG9u`>
-      ],
       atoms=[
         (Regex:
           regex=<regex (line 3 col 5) `cidccysn`>,
@@ -15,21 +12,21 @@
           ]
         ),
         (Regex:
-          regex=<regex (line 4 col 5) `cid7Jw==`>,
+          regex=<regex (line 4 col 5) `cidceyc=`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 4 col 14) `bGJyYWNl`>,
+              name=<terminal (line 4 col 15) `bGJyYWNl`>,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 5 col 5) `cid9Jw==`>,
+          regex=<regex (line 5 col 5) `cidcfSc=`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 5 col 14) `cmJyYWNl`>,
+              name=<terminal (line 5 col 15) `cmJyYWNl`>,
               group=None
             )
           ]
@@ -124,460 +121,78 @@
             )
           ]
         )
-      ],
-      code=None
-    ),
-    (Lexer:
-      languages=[
-        <identifier (line 16 col 9) `Yw==`>
-      ],
-      atoms=[
-        (Regex:
-          regex=<regex (line 17 col 5) `Ilxccysi`>,
-          options=None,
-          onmatch=[
-            (Null:
-
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 18 col 5) `IlxceyI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 18 col 15) `bGJyYWNl`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 19 col 5) `IlxcfSI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 19 col 15) `cmJyYWNl`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 20 col 5) `IlxcWyI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 20 col 15) `bHNxdWFyZQ==`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 21 col 5) `IlxcXSI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 21 col 15) `cnNxdWFyZQ==`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 22 col 5) `Ijoi`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 22 col 13) `Y29sb24=`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 23 col 5) `Iiwi`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 23 col 13) `Y29tbWE=`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 24 col 5) `InRydWUi`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 24 col 16) `dHJ1ZQ==`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 25 col 5) `ImZhbHNlIg==`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 25 col 17) `ZmFsc2U=`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 26 col 5) `Im51bGwi`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 26 col 16) `bnVsbA==`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 27 col 5) `IlwiKChbXlwiXFxcXF18XFxcXFtcIlxcL2JmbnJ0XXxcXFxcdVswLTlBLUZhLWZdezR9KSopXCIi`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 27 col 67) `c3RyaW5n`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 28 col 5) `Ii0/KDB8WzEtOV1bMC05XSopKFxcLlswLTldKyk/KFtlRV1bXFwrLV0/WzAtOV0rKT8i`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 28 col 61) `bnVtYmVy`>,
-              group=None
-            )
-          ]
-        )
-      ],
-      code=None
-    ),
-    (Lexer:
-      languages=[
-        <identifier (line 30 col 9) `amF2YQ==`>
-      ],
-      atoms=[
-        (Regex:
-          regex=<regex (line 31 col 5) `Ilxccysi`>,
-          options=None,
-          onmatch=[
-            (Null:
-
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 32 col 5) `IlxceyI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 32 col 15) `bGJyYWNl`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 33 col 5) `IlxcfSI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 33 col 15) `cmJyYWNl`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 34 col 5) `IlxcWyI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 34 col 15) `bHNxdWFyZQ==`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 35 col 5) `IlxcXSI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 35 col 15) `cnNxdWFyZQ==`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 36 col 5) `Ijoi`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 36 col 13) `Y29sb24=`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 37 col 5) `Iiwi`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 37 col 13) `Y29tbWE=`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 38 col 5) `InRydWUi`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 38 col 16) `dHJ1ZQ==`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 39 col 5) `ImZhbHNlIg==`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 39 col 17) `ZmFsc2U=`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 40 col 5) `Im51bGwi`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 40 col 16) `bnVsbA==`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 41 col 5) `IlxcXCIoKFteXCJcXFxcXXxcXFxcW1wiXFwvYmZucnRdfFxcXFx1WzAtOUEtRmEtZl17NH0pKilcXFwiIg==`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 41 col 71) `c3RyaW5n`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 42 col 5) `Ii0/KDB8WzEtOV1bMC05XSopKFxcLlswLTldKyk/KFtlRV1bXFwrLV0/WzAtOV0rKT8i`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 42 col 61) `bnVtYmVy`>,
-              group=None
-            )
-          ]
-        )
-      ],
-      code=None
-    ),
-    (Lexer:
-      languages=[
-        <identifier (line 44 col 9) `amF2YXNjcmlwdA==`>
-      ],
-      atoms=[
-        (Regex:
-          regex=<regex (line 45 col 5) `Ilxccysi`>,
-          options=None,
-          onmatch=[
-            (Null:
-
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 46 col 5) `IlxceyI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 46 col 15) `bGJyYWNl`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 47 col 5) `IlxcfSI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 47 col 15) `cmJyYWNl`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 48 col 5) `IlxcWyI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 48 col 15) `bHNxdWFyZQ==`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 49 col 5) `IlxcXSI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 49 col 15) `cnNxdWFyZQ==`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 50 col 5) `Ijoi`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 50 col 13) `Y29sb24=`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 51 col 5) `Iiwi`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 51 col 13) `Y29tbWE=`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 52 col 5) `InRydWUi`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 52 col 16) `dHJ1ZQ==`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 53 col 5) `ImZhbHNlIg==`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 53 col 17) `ZmFsc2U=`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 54 col 5) `Im51bGwi`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 54 col 16) `bnVsbA==`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 55 col 5) `IlxcXCIoKFteXCJcXFxcXXxcXFxcW1wiXFwvYmZucnRdfFxcXFx1WzAtOUEtRmEtZl17NH0pKilcXFwiIg==`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 55 col 71) `c3RyaW5n`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 56 col 5) `Ii0/KDB8WzEtOV1bMC05XSopKFxcLlswLTldKyk/KFtlRV1bXFwrLV0/WzAtOV0rKT8i`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 56 col 61) `bnVtYmVy`>,
-              group=None
-            )
-          ]
-        )
-      ],
-      code=None
+      ]
     ),
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 59 col 6) `dmFsdWU=`>,
+          nonterminal=<nonterminal (line 17 col 6) `dmFsdWU=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 59 col 15) `c3RyaW5n`>
+                <terminal (line 17 col 15) `c3RyaW5n`>
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 59 col 25) `bnVtYmVy`>
+                <terminal (line 17 col 25) `bnVtYmVy`>
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <nonterminal (line 59 col 35) `b2JqZWN0`>
+                <nonterminal (line 17 col 35) `b2JqZWN0`>
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <nonterminal (line 59 col 45) `YXJyYXk=`>
+                <nonterminal (line 17 col 45) `YXJyYXk=`>
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 59 col 54) `dHJ1ZQ==`>
+                <terminal (line 17 col 54) `dHJ1ZQ==`>
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 59 col 62) `ZmFsc2U=`>
+                <terminal (line 17 col 62) `ZmFsc2U=`>
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 59 col 71) `bnVsbA==`>
+                <terminal (line 17 col 71) `bnVsbA==`>
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 60 col 6) `b2JqZWN0`>,
+          nonterminal=<nonterminal (line 18 col 6) `b2JqZWN0`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 60 col 16) `bGJyYWNl`>,
+                <terminal (line 18 col 16) `bGJyYWNl`>,
                 (Macro:
-                  name=<identifier (line 60 col 23) `bGlzdA==`>,
+                  name=<identifier (line 18 col 23) `bGlzdA==`>,
                   parameters=[
-                    <nonterminal (line 60 col 29) `a2V5X3ZhbHVlX3BhaXI=`>,
-                    <terminal (line 60 col 46) `Y29tbWE=`>
+                    <nonterminal (line 18 col 29) `a2V5X3ZhbHVlX3BhaXI=`>,
+                    <terminal (line 18 col 46) `Y29tbWE=`>
                   ]
                 ),
-                <terminal (line 60 col 54) `cmJyYWNl`>
+                <terminal (line 18 col 54) `cmJyYWNl`>
               ],
               ast=(AstTransformation:
-                name=<identifier (line 60 col 64) `T2JqZWN0`>,
+                name=<identifier (line 18 col 64) `T2JqZWN0`>,
                 parameters=[
                   (AstParameter:
-                    name=<identifier (line 60 col 71) `dmFsdWVz`>,
-                    index=<nonterminal_reference (line 60 col 79) `MQ==`>
+                    name=<identifier (line 18 col 71) `dmFsdWVz`>,
+                    index=<nonterminal_reference (line 18 col 79) `MQ==`>
                   )
                 ]
               )
@@ -585,24 +200,24 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 61 col 6) `a2V5X3ZhbHVlX3BhaXI=`>,
+          nonterminal=<nonterminal (line 19 col 6) `a2V5X3ZhbHVlX3BhaXI=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 61 col 24) `c3RyaW5n`>,
-                <terminal (line 61 col 32) `Y29sb24=`>,
-                <nonterminal (line 61 col 39) `dmFsdWU=`>
+                <terminal (line 19 col 24) `c3RyaW5n`>,
+                <terminal (line 19 col 32) `Y29sb24=`>,
+                <nonterminal (line 19 col 39) `dmFsdWU=`>
               ],
               ast=(AstTransformation:
-                name=<identifier (line 61 col 48) `S2V5VmFsdWU=`>,
+                name=<identifier (line 19 col 48) `S2V5VmFsdWU=`>,
                 parameters=[
                   (AstParameter:
-                    name=<identifier (line 61 col 57) `a2V5`>,
-                    index=<nonterminal_reference (line 61 col 62) `MA==`>
+                    name=<identifier (line 19 col 57) `a2V5`>,
+                    index=<nonterminal_reference (line 19 col 62) `MA==`>
                   ),
                   (AstParameter:
-                    name=<identifier (line 61 col 65) `dmFsdWU=`>,
-                    index=<nonterminal_reference (line 61 col 72) `Mg==`>
+                    name=<identifier (line 19 col 65) `dmFsdWU=`>,
+                    index=<nonterminal_reference (line 19 col 72) `Mg==`>
                   )
                 ]
               )
@@ -610,26 +225,26 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 62 col 6) `YXJyYXk=`>,
+          nonterminal=<nonterminal (line 20 col 6) `YXJyYXk=`>,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 62 col 15) `bHNxdWFyZQ==`>,
+                <terminal (line 20 col 15) `bHNxdWFyZQ==`>,
                 (Macro:
-                  name=<identifier (line 62 col 23) `bGlzdA==`>,
+                  name=<identifier (line 20 col 23) `bGlzdA==`>,
                   parameters=[
-                    <nonterminal (line 62 col 29) `dmFsdWU=`>,
-                    <terminal (line 62 col 37) `Y29tbWE=`>
+                    <nonterminal (line 20 col 29) `dmFsdWU=`>,
+                    <terminal (line 20 col 37) `Y29tbWE=`>
                   ]
                 ),
-                <terminal (line 62 col 45) `cnNxdWFyZQ==`>
+                <terminal (line 20 col 45) `cnNxdWFyZQ==`>
               ],
               ast=(AstTransformation:
-                name=<identifier (line 62 col 56) `QXJyYXk=`>,
+                name=<identifier (line 20 col 56) `QXJyYXk=`>,
                 parameters=[
                   (AstParameter:
-                    name=<identifier (line 62 col 62) `dmFsdWVz`>,
-                    index=<nonterminal_reference (line 62 col 70) `MQ==`>
+                    name=<identifier (line 20 col 62) `dmFsdWVz`>,
+                    index=<nonterminal_reference (line 20 col 70) `MQ==`>
                   )
                 ]
               )

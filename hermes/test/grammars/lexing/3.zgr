@@ -1,5 +1,5 @@
 grammar {
-  lexer<python> {
+  lexer {
     partials {
       r'abc' -> _abc
       r'xyz' -> _xyz
@@ -11,44 +11,5 @@ grammar {
     r'{%_num%}' -> :num
     r'{%_xyz%}{%_num%}[jkl]+' -> :xyz
     r'{%_xyz_abc%}' -> :xyz_abc
-  }
-  lexer<c> {
-    partials {
-      "abc" -> _abc
-      "xyz" -> _xyz
-      "[0-9]+" -> _num
-      "{%_xyz%}{%_abc%}" -> _xyz_abc
-    }
-    "\\s+" -> null
-    "{%_abc%}" -> :abc
-    "{%_num%}" -> :num
-    "{%_xyz%}{%_num%}[jkl]+" -> :xyz
-    "{%_xyz_abc%}" -> :xyz_abc
-  }
-  lexer<java> {
-    partials {
-      "abc" -> _abc
-      "xyz" -> _xyz
-      "[0-9]+" -> _num
-      "{%_xyz%}{%_abc%}" -> _xyz_abc
-    }
-    "\\s+" -> null
-    "{%_abc%}" -> :abc
-    "{%_num%}" -> :num
-    "{%_xyz%}{%_num%}[jkl]+" -> :xyz
-    "{%_xyz_abc%}" -> :xyz_abc
-  }
-  lexer<javascript> {
-    partials {
-      "abc" -> _abc
-      "xyz" -> _xyz
-      "[0-9]+" -> _num
-      "{%_xyz%}{%_abc%}" -> _xyz_abc
-    }
-    "\\s+" -> null
-    "{%_abc%}" -> :abc
-    "{%_num%}" -> :num
-    "{%_xyz%}{%_num%}[jkl]+" -> :xyz
-    "{%_xyz_abc%}" -> :xyz_abc
   }
 }

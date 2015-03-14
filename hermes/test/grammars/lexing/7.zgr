@@ -1,26 +1,13 @@
 grammar {
-  lexer<python> {
+  lexer {
     r'\s+' -> null
     r'a' -> :a
     r'b' -> :b
-    r'.' {DOTALL, IGNORECASE} -> :char
-  }
-  lexer<c> {
-    "\\s+" -> null
-    "a" -> :a
-    "b" -> :b
-    "." {PCRE_DOTALL, PCRE_CASELESS} -> :char
-  }
-  lexer<java> {
-    "\\s+" -> null
-    "a" -> :a
-    "b" -> :b
-    "." {DOTALL, CASE_INSENSITIVE} -> :char
-  }
-  lexer<javascript> {
-    "\\s+" -> null
-    "a" -> :a
-    "b" -> :b
-    "." {m, i} -> :char
+    enum {
+      java: "." (DOTALL, CASE_INSENSITIVE)
+      python: r'.' (DOTALL, IGNORECASE)
+      c: "." (PCRE_DOTALL, PCRE_CASELESS)
+      javascript: "." (m, i)
+    } -> :char
   }
 }

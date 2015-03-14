@@ -1,9 +1,6 @@
 (Grammar:
   body=[
     (Lexer:
-      languages=[
-        <identifier (line 2 col 9) `cHl0aG9u`>
-      ],
       atoms=[
         (Regex:
           regex=<regex (line 3 col 5) `cidccysn`>,
@@ -15,14 +12,14 @@
           ]
         ),
         (Regex:
-          regex=<regex (line 4 col 5) `cid7Jw==`>,
+          regex=<regex (line 4 col 5) `cidceyc=`>,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 4 col 14) `bGJyYWNl`>,
+              name=<terminal (line 4 col 15) `bGJyYWNl`>,
               group=None
             ),
-            <stack_push (line 4 col 22) `bGV0dGVycw==`>
+            <stack_push (line 4 col 23) `bGV0dGVycw==`>
           ]
         ),
         (Regex:
@@ -59,14 +56,14 @@
               ]
             ),
             (Regex:
-              regex=<regex (line 9 col 7) `cid7Jw==`>,
+              regex=<regex (line 9 col 7) `cidceyc=`>,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 9 col 16) `bGJyYWNl`>,
+                  name=<terminal (line 9 col 17) `bGJyYWNl`>,
                   group=None
                 ),
-                <stack_push (line 9 col 24) `bGV0dGVycw==`>
+                <stack_push (line 9 col 25) `bGV0dGVycw==`>
               ]
             ),
             (Regex:
@@ -81,14 +78,14 @@
               ]
             ),
             (Regex:
-              regex=<regex (line 11 col 7) `cid9Jw==`>,
+              regex=<regex (line 11 col 7) `cidcfSc=`>,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 11 col 16) `cmJyYWNl`>,
+                  name=<terminal (line 11 col 17) `cmJyYWNl`>,
                   group=None
                 ),
-                <action (line 11 col 24) `cG9w`>
+                <action (line 11 col 25) `cG9w`>
               ]
             )
           ]
@@ -116,14 +113,14 @@
               ]
             ),
             (Regex:
-              regex=<regex (line 16 col 7) `cid7Jw==`>,
+              regex=<regex (line 16 col 7) `cidceyc=`>,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 16 col 16) `bGJyYWNl`>,
+                  name=<terminal (line 16 col 17) `bGJyYWNl`>,
                   group=None
                 ),
-                <stack_push (line 16 col 24) `bGV0dGVycw==`>
+                <stack_push (line 16 col 25) `bGV0dGVycw==`>
               ]
             ),
             (Regex:
@@ -150,467 +147,7 @@
             )
           ]
         )
-      ],
-      code=None
-    ),
-    (Lexer:
-      languages=[
-        <identifier (line 21 col 9) `Yw==`>
-      ],
-      atoms=[
-        (Regex:
-          regex=<regex (line 22 col 5) `Ilxccysi`>,
-          options=None,
-          onmatch=[
-            (Null:
-
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 23 col 5) `IlxceyI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 23 col 15) `bGJyYWNl`>,
-              group=None
-            ),
-            <stack_push (line 23 col 23) `bGV0dGVycw==`>
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 24 col 5) `IlxcKCI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 24 col 15) `bHBhcmVu`>,
-              group=None
-            ),
-            <stack_push (line 24 col 23) `bnVtYmVycw==`>
-          ]
-        ),
-        (Mode:
-          name=<identifier (line 25 col 10) `bGV0dGVycw==`>,
-          atoms=[
-            (Regex:
-              regex=<regex (line 26 col 7) `Ilxccysi`>,
-              options=None,
-              onmatch=[
-                (Null:
-
-                )
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 27 col 7) `IlthLXpdIg==`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 27 col 19) `bGV0dGVy`>,
-                  group=None
-                )
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 28 col 7) `IlxceyI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 28 col 17) `bGJyYWNl`>,
-                  group=None
-                ),
-                <stack_push (line 28 col 25) `bGV0dGVycw==`>
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 29 col 7) `IlxcKCI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 29 col 17) `bHBhcmVu`>,
-                  group=None
-                ),
-                <stack_push (line 29 col 25) `bnVtYmVycw==`>
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 30 col 7) `IlxcfSI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 30 col 17) `cmJyYWNl`>,
-                  group=None
-                ),
-                <action (line 30 col 25) `cG9w`>
-              ]
-            )
-          ]
-        ),
-        (Mode:
-          name=<identifier (line 32 col 10) `bnVtYmVycw==`>,
-          atoms=[
-            (Regex:
-              regex=<regex (line 33 col 7) `Ilxccysi`>,
-              options=None,
-              onmatch=[
-                (Null:
-
-                )
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 34 col 7) `IlswLTldIg==`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 34 col 19) `bnVtYmVy`>,
-                  group=None
-                )
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 35 col 7) `IlxceyI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 35 col 17) `bGJyYWNl`>,
-                  group=None
-                ),
-                <stack_push (line 35 col 25) `bGV0dGVycw==`>
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 36 col 7) `IlxcKCI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 36 col 17) `bHBhcmVu`>,
-                  group=None
-                ),
-                <stack_push (line 36 col 25) `bnVtYmVycw==`>
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 37 col 7) `IlxcKSI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 37 col 17) `cnBhcmVu`>,
-                  group=None
-                ),
-                <action (line 37 col 25) `cG9w`>
-              ]
-            )
-          ]
-        )
-      ],
-      code=None
-    ),
-    (Lexer:
-      languages=[
-        <identifier (line 40 col 9) `amF2YQ==`>
-      ],
-      atoms=[
-        (Regex:
-          regex=<regex (line 41 col 5) `Ilxccysi`>,
-          options=None,
-          onmatch=[
-            (Null:
-
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 42 col 5) `IlxceyI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 42 col 15) `bGJyYWNl`>,
-              group=None
-            ),
-            <stack_push (line 42 col 23) `bGV0dGVycw==`>
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 43 col 5) `IlxcKCI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 43 col 15) `bHBhcmVu`>,
-              group=None
-            ),
-            <stack_push (line 43 col 23) `bnVtYmVycw==`>
-          ]
-        ),
-        (Mode:
-          name=<identifier (line 44 col 10) `bGV0dGVycw==`>,
-          atoms=[
-            (Regex:
-              regex=<regex (line 45 col 7) `Ilxccysi`>,
-              options=None,
-              onmatch=[
-                (Null:
-
-                )
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 46 col 7) `IlthLXpdIg==`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 46 col 19) `bGV0dGVy`>,
-                  group=None
-                )
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 47 col 7) `IlxceyI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 47 col 17) `bGJyYWNl`>,
-                  group=None
-                ),
-                <stack_push (line 47 col 25) `bGV0dGVycw==`>
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 48 col 7) `IlxcKCI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 48 col 17) `bHBhcmVu`>,
-                  group=None
-                ),
-                <stack_push (line 48 col 25) `bnVtYmVycw==`>
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 49 col 7) `IlxcfSI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 49 col 17) `cmJyYWNl`>,
-                  group=None
-                ),
-                <action (line 49 col 25) `cG9w`>
-              ]
-            )
-          ]
-        ),
-        (Mode:
-          name=<identifier (line 51 col 10) `bnVtYmVycw==`>,
-          atoms=[
-            (Regex:
-              regex=<regex (line 52 col 7) `Ilxccysi`>,
-              options=None,
-              onmatch=[
-                (Null:
-
-                )
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 53 col 7) `IlswLTldIg==`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 53 col 19) `bnVtYmVy`>,
-                  group=None
-                )
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 54 col 7) `IlxceyI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 54 col 17) `bGJyYWNl`>,
-                  group=None
-                ),
-                <stack_push (line 54 col 25) `bGV0dGVycw==`>
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 55 col 7) `IlxcKCI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 55 col 17) `bHBhcmVu`>,
-                  group=None
-                ),
-                <stack_push (line 55 col 25) `bnVtYmVycw==`>
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 56 col 7) `IlxcKSI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 56 col 17) `cnBhcmVu`>,
-                  group=None
-                ),
-                <action (line 56 col 25) `cG9w`>
-              ]
-            )
-          ]
-        )
-      ],
-      code=None
-    ),
-    (Lexer:
-      languages=[
-        <identifier (line 59 col 9) `amF2YXNjcmlwdA==`>
-      ],
-      atoms=[
-        (Regex:
-          regex=<regex (line 60 col 5) `Ilxccysi`>,
-          options=None,
-          onmatch=[
-            (Null:
-
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 61 col 5) `IlxceyI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 61 col 15) `bGJyYWNl`>,
-              group=None
-            ),
-            <stack_push (line 61 col 23) `bGV0dGVycw==`>
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 62 col 5) `IlxcKCI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 62 col 15) `bHBhcmVu`>,
-              group=None
-            ),
-            <stack_push (line 62 col 23) `bnVtYmVycw==`>
-          ]
-        ),
-        (Mode:
-          name=<identifier (line 63 col 10) `bGV0dGVycw==`>,
-          atoms=[
-            (Regex:
-              regex=<regex (line 64 col 7) `Ilxccysi`>,
-              options=None,
-              onmatch=[
-                (Null:
-
-                )
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 65 col 7) `IlthLXpdIg==`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 65 col 19) `bGV0dGVy`>,
-                  group=None
-                )
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 66 col 7) `IlxceyI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 66 col 17) `bGJyYWNl`>,
-                  group=None
-                ),
-                <stack_push (line 66 col 25) `bGV0dGVycw==`>
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 67 col 7) `IlxcKCI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 67 col 17) `bHBhcmVu`>,
-                  group=None
-                ),
-                <stack_push (line 67 col 25) `bnVtYmVycw==`>
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 68 col 7) `IlxcfSI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 68 col 17) `cmJyYWNl`>,
-                  group=None
-                ),
-                <action (line 68 col 25) `cG9w`>
-              ]
-            )
-          ]
-        ),
-        (Mode:
-          name=<identifier (line 70 col 10) `bnVtYmVycw==`>,
-          atoms=[
-            (Regex:
-              regex=<regex (line 71 col 7) `Ilxccysi`>,
-              options=None,
-              onmatch=[
-                (Null:
-
-                )
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 72 col 7) `IlswLTldIg==`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 72 col 19) `bnVtYmVy`>,
-                  group=None
-                )
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 73 col 7) `IlxceyI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 73 col 17) `bGJyYWNl`>,
-                  group=None
-                ),
-                <stack_push (line 73 col 25) `bGV0dGVycw==`>
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 74 col 7) `IlxcKCI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 74 col 17) `bHBhcmVu`>,
-                  group=None
-                ),
-                <stack_push (line 74 col 25) `bnVtYmVycw==`>
-              ]
-            ),
-            (Regex:
-              regex=<regex (line 75 col 7) `IlxcKSI=`>,
-              options=None,
-              onmatch=[
-                (Terminal:
-                  name=<terminal (line 75 col 17) `cnBhcmVu`>,
-                  group=None
-                ),
-                <action (line 75 col 25) `cG9w`>
-              ]
-            )
-          ]
-        )
-      ],
-      code=None
+      ]
     )
   ]
 )

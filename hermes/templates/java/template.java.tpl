@@ -1192,7 +1192,7 @@ public class {{prefix}}Parser {
         this.regex.put("{{mode}}", Arrays.asList(new HermesRegex[] {
   {% for regex in regex_list %}
             new HermesRegex(
-                Pattern.compile({{regex.regex}}),
+                Pattern.compile({{regex.regex}}{{', {0}'.format(' | '.join(['Pattern.'+x for x in regex.options])) if len(regex.options) else ''}}),
                 Arrays.asList(new LexerOutput[] {
     {% for output in regex.outputs %}
        {% if isinstance(output, RegexOutput) %}

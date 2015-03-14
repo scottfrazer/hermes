@@ -1,9 +1,6 @@
 (Grammar:
   body=[
     (Lexer:
-      languages=[
-        <identifier (line 2 col 9) `cHl0aG9u`>
-      ],
       atoms=[
         (Regex:
           regex=<regex (line 3 col 5) `cicoYSkoYikoYykn`>,
@@ -56,189 +53,24 @@
 
             )
           ]
+        ),
+        (LexerCode:
+          language=<language (line 7 col 10) `cHl0aG9u`>,
+          code=<code (line 7 col 27) `CiAgICBkZWYgZihjdHgsIHRlcm1pbmFsLCBzb3VyY2Vfc3RyaW5nLCBsaW5lLCBjb2wpOgogICAgICAgIGRlZmF1bHRfYWN0aW9uKGN0eCwgdGVybWluYWwsIHNvdXJjZV9zdHJpbmcsIGxpbmUsIGNvbCkKICAgIA==`>
+        ),
+        (LexerCode:
+          language=<language (line 12 col 10) `Yw==`>,
+          code=<code (line 12 col 22) `CiAgICBzdGF0aWMgdm9pZCBmKExFWEVSX0NPTlRFWFRfVCAqIGN0eCwgVEVSTUlOQUxfVCAqIHRlcm1pbmFsLCBjaGFyICogc291cmNlX3N0cmluZywgaW50IGxpbmUsIGludCBjb2wpIHsKICAgICAgICBkZWZhdWx0X2FjdGlvbihjdHgsIHRlcm1pbmFsLCBzb3VyY2Vfc3RyaW5nLCBsaW5lLCBjb2wpOwogICAgfQogICAg`>
+        ),
+        (LexerCode:
+          language=<language (line 18 col 10) `amF2YQ==`>,
+          code=<code (line 18 col 23) `CiAgICBwdWJsaWMgdm9pZCBmKExleGVyQ29udGV4dCBjdHgsIFRlcm1pbmFsSWRlbnRpZmllciB0ZXJtaW5hbCwgU3RyaW5nIHNvdXJjZV9zdHJpbmcsIGludCBsaW5lLCBpbnQgY29sKSB7CiAgICAgICAgZGVmYXVsdF9hY3Rpb24oY3R4LCB0ZXJtaW5hbCwgc291cmNlX3N0cmluZywgbGluZSwgY29sKTsKICAgIH0KICAgIA==`>
+        ),
+        (LexerCode:
+          language=<language (line 24 col 10) `amF2YXNjcmlwdA==`>,
+          code=<code (line 24 col 35) `CiAgICBmdW5jdGlvbiBmKGN0eCwgdGVybWluYWwsIHNvdXJjZV9zdHJpbmcsIGxpbmUsIGNvbCkgewogICAgICAgIGRlZmF1bHRfYWN0aW9uKGN0eCwgdGVybWluYWwsIHNvdXJjZV9zdHJpbmcsIGxpbmUsIGNvbCk7CiAgICB9CiAgICA=`>
         )
-      ],
-      code=<code (line 6 col 11) `CmRlZiBmKGN0eCwgdGVybWluYWwsIHNvdXJjZV9zdHJpbmcsIGxpbmUsIGNvbCk6CiAgICBkZWZhdWx0X2FjdGlvbihjdHgsIHRlcm1pbmFsLCBzb3VyY2Vfc3RyaW5nLCBsaW5lLCBjb2wpCiAgICA=`>
-    ),
-    (Lexer:
-      languages=[
-        <identifier (line 11 col 9) `Yw==`>
-      ],
-      atoms=[
-        (Regex:
-          regex=<regex (line 12 col 5) `IihhKShiKShjKSI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 12 col 21) `YQ==`>,
-              group=<integer (line 12 col 23) `MQ==`>
-            ),
-            (Terminal:
-              name=<terminal (line 12 col 27) `Yg==`>,
-              group=<integer (line 12 col 29) `Mg==`>
-            ),
-            (Terminal:
-              name=<terminal (line 12 col 33) `Yw==`>,
-              group=<integer (line 12 col 35) `Mw==`>
-            ),
-            (Terminal:
-              name=<terminal (line 12 col 39) `YWJj`>,
-              group=<integer (line 12 col 43) `MA==`>
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 13 col 5) `Iih4KVxccyooeSlcXHMqKHopIg==`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 13 col 29) `aGludA==`>,
-              group=<no_group (line 13 col 33) `W10=`>
-            ),
-            (LexerFunctionCall:
-              name=<identifier (line 13 col 36) `Zg==`>,
-              terminal=(Terminal:
-                name=<terminal (line 13 col 39) `eA==`>,
-                group=<integer (line 13 col 41) `MQ==`>
-              )
-            ),
-            (Terminal:
-              name=<terminal (line 13 col 46) `YWxs`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 14 col 5) `Ilxccysi`>,
-          options=None,
-          onmatch=[
-            (Null:
-
-            )
-          ]
-        )
-      ],
-      code=<code (line 15 col 11) `CnN0YXRpYyB2b2lkIGYoTEVYRVJfQ09OVEVYVF9UICogY3R4LCBURVJNSU5BTF9UICogdGVybWluYWwsIGNoYXIgKiBzb3VyY2Vfc3RyaW5nLCBpbnQgbGluZSwgaW50IGNvbCkKewogICAgZGVmYXVsdF9hY3Rpb24oY3R4LCB0ZXJtaW5hbCwgc291cmNlX3N0cmluZywgbGluZSwgY29sKTsKfQogICAg`>
-    ),
-    (Lexer:
-      languages=[
-        <identifier (line 22 col 9) `amF2YQ==`>
-      ],
-      atoms=[
-        (Regex:
-          regex=<regex (line 23 col 5) `IihhKShiKShjKSI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 23 col 21) `YQ==`>,
-              group=<integer (line 23 col 23) `MQ==`>
-            ),
-            (Terminal:
-              name=<terminal (line 23 col 27) `Yg==`>,
-              group=<integer (line 23 col 29) `Mg==`>
-            ),
-            (Terminal:
-              name=<terminal (line 23 col 33) `Yw==`>,
-              group=<integer (line 23 col 35) `Mw==`>
-            ),
-            (Terminal:
-              name=<terminal (line 23 col 39) `YWJj`>,
-              group=<integer (line 23 col 43) `MA==`>
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 24 col 5) `Iih4KVxccyooeSlcXHMqKHopIg==`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 24 col 29) `aGludA==`>,
-              group=<no_group (line 24 col 33) `W10=`>
-            ),
-            (LexerFunctionCall:
-              name=<identifier (line 24 col 36) `Zg==`>,
-              terminal=(Terminal:
-                name=<terminal (line 24 col 39) `eA==`>,
-                group=<integer (line 24 col 41) `MQ==`>
-              )
-            ),
-            (Terminal:
-              name=<terminal (line 24 col 46) `YWxs`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 25 col 5) `Ilxccysi`>,
-          options=None,
-          onmatch=[
-            (Null:
-
-            )
-          ]
-        )
-      ],
-      code=<code (line 26 col 11) `CnB1YmxpYyB2b2lkIGYoTGV4ZXJDb250ZXh0IGN0eCwgVGVybWluYWxJZGVudGlmaWVyIHRlcm1pbmFsLCBTdHJpbmcgc291cmNlX3N0cmluZywgaW50IGxpbmUsIGludCBjb2wpIHsKICAgIGRlZmF1bHRfYWN0aW9uKGN0eCwgdGVybWluYWwsIHNvdXJjZV9zdHJpbmcsIGxpbmUsIGNvbCk7Cn0KICAgIA==`>
-    ),
-    (Lexer:
-      languages=[
-        <identifier (line 32 col 9) `amF2YXNjcmlwdA==`>
-      ],
-      atoms=[
-        (Regex:
-          regex=<regex (line 33 col 5) `IihhKShiKShjKSI=`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 33 col 21) `YQ==`>,
-              group=<integer (line 33 col 23) `MQ==`>
-            ),
-            (Terminal:
-              name=<terminal (line 33 col 27) `Yg==`>,
-              group=<integer (line 33 col 29) `Mg==`>
-            ),
-            (Terminal:
-              name=<terminal (line 33 col 33) `Yw==`>,
-              group=<integer (line 33 col 35) `Mw==`>
-            ),
-            (Terminal:
-              name=<terminal (line 33 col 39) `YWJj`>,
-              group=<integer (line 33 col 43) `MA==`>
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 34 col 5) `Iih4KVxccyooeSlcXHMqKHopIg==`>,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<terminal (line 34 col 29) `aGludA==`>,
-              group=<no_group (line 34 col 33) `W10=`>
-            ),
-            (LexerFunctionCall:
-              name=<identifier (line 34 col 36) `Zg==`>,
-              terminal=(Terminal:
-                name=<terminal (line 34 col 39) `eA==`>,
-                group=<integer (line 34 col 41) `MQ==`>
-              )
-            ),
-            (Terminal:
-              name=<terminal (line 34 col 46) `YWxs`>,
-              group=None
-            )
-          ]
-        ),
-        (Regex:
-          regex=<regex (line 35 col 5) `Ilxccysi`>,
-          options=None,
-          onmatch=[
-            (Null:
-
-            )
-          ]
-        )
-      ],
-      code=<code (line 36 col 11) `CmZ1bmN0aW9uIGYoY3R4LCB0ZXJtaW5hbCwgc291cmNlX3N0cmluZywgbGluZSwgY29sKSB7CiAgICBkZWZhdWx0X2FjdGlvbihjdHgsIHRlcm1pbmFsLCBzb3VyY2Vfc3RyaW5nLCBsaW5lLCBjb2wpOwp9CiAgICA=`>
+      ]
     )
   ]
 )

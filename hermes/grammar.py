@@ -263,6 +263,11 @@ class Regex:
     def __init__(self, regex, options, outputs):
         self.__dict__.update(locals())
 
+class EnumeratedRegex(OrderedDict):
+    def __init__(self):
+        super().__init__()
+        self.__dict__.update(locals())
+
 class RegexOutput:
     def __init__(self, terminal, group, function):
         self.__dict__.update(locals())
@@ -276,20 +281,15 @@ class LexerAction:
         self.__dict__.update(locals())
 
 class Lexer(OrderedDict):
+    pass
+
+class AbstractLexer(OrderedDict):
     code = ''
 
     def __init__(self):
         super().__init__()
         self.regex_partials = OrderedDict()
-
-    def replace_partials(self):
-        for partial_name, partial in self.regex_partials.items():
-            for partial_name1, partial1 in self.regex_partials.items():
-                self.regex_partials[partial_name] = self.regex_partials[partial_name].replace('{{%{0}%}}'.format(partial_name1), partial1)
-        for mode, regex_list in self.items():
-            for regex in regex_list:
-                for partial_name, partial in self.regex_partials.items():
-                    regex.regex = regex.regex.replace('{{%{0}%}}'.format(partial_name), partial)
+        self.code = OrderedDict()
 
     def convert_regex_str(self, regex_str, language):
         if regex_str[0] == "'" and language in ['c', 'java']:
@@ -305,7 +305,14 @@ class Lexer(OrderedDict):
 
         return regex_str
 
-    def convert_regex(self, regex, language):
+    def get_language_regex(self, regex, partials, language):
+        if isinstance(regex, EnumeratedRegex):
+            if language not in regex:
+                raise Exception('Regex enumeration does not contain a regex for language: ' + language)
+            regex = regex[language]
+        regex = deepcopy(regex)
+        for partial_name, partial in partials.items():
+            regex.regex = regex.regex.replace('{{%{0}%}}'.format(partial_name), partial)
         regex.regex = self.convert_regex_str(regex.regex, language)
         return regex
 
@@ -315,21 +322,24 @@ class Lexer(OrderedDict):
         if regex_str[0] in ['"', "'"]:
             return regex_str[1:-1]
 
-    def post_process(self, language):
-        # 1) String processing to make compatible for target language
-        for mode in self.keys():
-            self[mode] = [self.convert_regex(regex, language) for regex in self[mode]]
-        # 2) Regex partials replacement
-        for partial_name, partial in self.regex_partials.items():
-            self.regex_partials[partial_name] = self.strip_quotes(self.convert_regex_str(partial, language))
-        for partial_name, partial in self.regex_partials.items():
-            for partial_name1, partial1 in self.regex_partials.items():
-                self.regex_partials[partial_name] = self.regex_partials[partial_name].replace('{{%{0}%}}'.format(partial_name1), partial1)
-        for mode, regex_list in self.items():
-            for regex in regex_list:
-                for partial_name, partial in self.regex_partials.items():
-                    regex.regex = regex.regex.replace('{{%{0}%}}'.format(partial_name), partial)
+    # Return a NEW lexer specifically for this language
+    def get_language_lexer(self, language):
+        lexer = Lexer()
 
+        # 1) Build a dictionary of the partials with partials replaced within partials
+        partials = OrderedDict()
+        for partial_name, partial in self.regex_partials.items():
+            partials[partial_name] = self.strip_quotes(self.convert_regex_str(partial, language))
+        for partial_name, partial in partials.items():
+            for partial_name1, partial1 in partials.items():
+                partials[partial_name] = partials[partial_name].replace('{{%{0}%}}'.format(partial_name1), partial1)
+
+        # 2) Convert enumerated regular expressions based on language, get copies
+        for mode, regex_list in self.items():
+            lexer[mode] = [self.get_language_regex(regex, partials, language) for regex in regex_list]
+
+        lexer.code = self.code[language] if language in self.code else ''
+        return lexer
 
     def __str__(self):
         return ', '.join(self.keys())
@@ -339,7 +349,7 @@ class CompositeGrammar:
     _empty = EmptyString(-1)
     _end = EndOfStream(-1)
 
-    def __init__(self, name, rules, lexers):
+    def __init__(self, name, rules, lexer):
         self.__dict__.update(locals())
         self.start = None
         self.terminals = set()
@@ -371,12 +381,18 @@ class CompositeGrammar:
                             if morpheme.macro:
                                 self.macros.add(morpheme.macro)
 
-        for langauge, lexer in lexers.items():
-            for mode, regexps in lexer.items():
-                for regex in regexps:
-                    for output in regex.outputs:
-                        if isinstance(output, RegexOutput) and output.terminal is not None:
-                            self.terminals.add(output.terminal)
+        if lexer:
+            def iterate_outputs(outputs):
+                for output in outputs:
+                    if isinstance(output, RegexOutput) and output.terminal is not None:
+                        self.terminals.add(output.terminal)
+            for mode, regex_list in lexer.items():
+                for regex in regex_list:
+                    if isinstance(regex, Regex):
+                        iterate_outputs(regex.outputs)
+                    if isinstance(regex, EnumeratedRegex):
+                        for language, regex in regex.items():
+                            iterate_outputs(regex.outputs)
 
         self.first_sets = None
         self.follow_sets = None

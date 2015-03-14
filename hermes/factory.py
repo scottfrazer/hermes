@@ -22,31 +22,23 @@ class GrammarFactory:
         all_terminals = {'_empty': EmptyString(-1)}
         all_macros = {}
 
-        lexers = {}
+        lexer = None
         lexer_asts = self.walk_ast(ast, 'Lexer')
-        for lexer_ast in lexer_asts:
-            lexer = self.parse_lexer(lexer_ast, all_terminals)
-
-            langs_ast_list = lexer_ast.getAttr('languages')
-            langs = [t.source_string.lower() for t in langs_ast_list] if langs_ast_list else supported_languages
-
-            for lang in langs:
-                if lang in lexers:
-                    raise Exception('More than one lexer for language target: ' + lexer.language)
-                lexers[lang] = deepcopy(lexer)
-                lexers[lang].post_process(lang)
+        if lexer_asts:
+            if len(lexer_asts) > 1:
+                raise Exception("Expecting only one Lexer")
+            lexer = self.parse_lexer(lexer_asts[0], all_terminals)
 
         expression_parser_asts = []
         start = None
         parser_ast = self.walk_ast(ast, 'Parser')
 
         if len(parser_ast) == 0:
-            for language, lexer in lexers.items():
-                lexer.terminals = all_terminals.values()
+            if lexer: lexer.terminals = all_terminals.values()
             return CompositeGrammar(
                 name,
                 [Rule(NonTerminal('start', 0), Production([all_terminals['_empty']]))],
-                lexers
+                lexer
             )
         elif len(parser_ast) > 1:
             raise Exception('Expecting only one parser')
@@ -71,9 +63,8 @@ class GrammarFactory:
                                                  all_macros)
                     all_rules.extend(rules)
 
-            for language, lexer in lexers.items():
-                lexer.terminals = all_terminals.values()
-            return CompositeGrammar(name, all_rules, lexers)
+            if lexer: lexer.terminals = all_terminals.values()
+            return CompositeGrammar(name, all_rules, lexer)
 
     def get_macro_from_ast(self, ast, terminals, nonterminals):
         macro_string = self.macro_ast_to_string(ast)
@@ -98,28 +89,57 @@ class GrammarFactory:
         return self.macros[macro_string]
 
     def parse_lexer(self, lexer_ast, terminals={}, nonterminals={}):
-        lexer = Lexer()
+        lexer = AbstractLexer()
+        lexer['default'] = []
         for lexer_atom in lexer_ast.getAttr('atoms'):
             if lexer_atom.name == 'Regex':
                 regex = self.parse_regex(lexer_atom, terminals, nonterminals)
-                if 'default' not in lexer: lexer['default'] = []
                 lexer['default'].append(regex)
             if lexer_atom.name == 'Mode':
                 mode_name = lexer_atom.getAttr('name').source_string
                 if mode_name in lexer:
                     raise Exception("Lexer mode '{}' already exists".format(mode_name))
                 lexer[mode_name] = self.parse_lexer_mode(lexer_atom, terminals, nonterminals)
+            if lexer_atom.name == 'EnumeratedRegex':
+                enumerated_regex = self.parse_enumerated_regex(lexer_atom, terminals, nonterminals)
+                lexer['default'].append(enumerated_regex)
             if lexer_atom.name == 'RegexPartials':
                 for partial in lexer_atom.getAttr('list'):
                     name = partial.getAttr('name').source_string
                     regex = partial.getAttr('regex').source_string
                     lexer.regex_partials[name] = regex
-        lexer.code = lexer_ast.getAttr('code').source_string if lexer_ast.getAttr('code') else ''
+            if lexer_atom.name == 'LexerCode':
+                language = lexer_atom.getAttr('language').source_string
+                code = lexer_atom.getAttr('code').source_string.strip('\r\n')
+
+                # Get rid of blank lines, remove leading spaces or tabs common to each line
+                code_lines = [line for line in re.split(r'\r?\n', code) if len(line) > 0]
+                leading_spaces = min([len(re.match('^\s*', line).group(0)) for line in code_lines])
+                code_lines = [line[leading_spaces:] for line in code_lines]
+
+                if language in lexer.code:
+                    raise Exception('Lexer already defined code for language: ' + language)
+                lexer.code[language] = '\n'.join(code_lines)
         return lexer
 
-    def parse_regex(self, regex_ast, terminals, nonterminals):
+    def parse_enumerated_regex(self, enumerated_regex_ast, terminals, nonterminals):
+        enumerated_regex = EnumeratedRegex()
+        regex_outputs = self.parse_regex_outputs(enumerated_regex_ast.getAttr('onmatch'), terminals, nonterminals)
+        for regex_enum_ast in enumerated_regex_ast.getAttr('enums'):
+            language = regex_enum_ast.getAttr('language').source_string
+            options_ast = regex_enum_ast.getAttr('options')
+            if language not in supported_languages:
+                raise Exception("Language not supported: " + language)
+            enumerated_regex[language] = Regex(
+                regex_enum_ast.getAttr('regex').source_string,
+                [option.source_string for option in options_ast] if options_ast else [],
+                regex_outputs
+            )
+        return enumerated_regex
+
+    def parse_regex_outputs(self, outputs_ast, terminals, nonterminals):
         regex_outputs = []
-        for regex_output in regex_ast.getAttr('onmatch'):
+        for regex_output in outputs_ast:
             if isinstance(regex_output, HermesTerminal):
                 if regex_output.str == 'stack_push':
                     regex_outputs.append(LexerStackPush(regex_output.source_string))
@@ -142,7 +162,10 @@ class GrammarFactory:
             elif regex_output.name == 'Null':
                 if len(regex_outputs) != 0:
                     raise Exception('parse_regex(): "null" must be the only target of a regex')
+        return regex_outputs
 
+    def parse_regex(self, regex_ast, terminals, nonterminals):
+        regex_outputs = self.parse_regex_outputs(regex_ast.getAttr('onmatch'), terminals, nonterminals)
         options = []
         if regex_ast.getAttr('options') is not None:
             for option in regex_ast.getAttr('options'):
@@ -169,6 +192,8 @@ class GrammarFactory:
         for ast in mode_ast.getAttr('atoms'):
             if ast.name == 'Regex':
                 regex_list.append(self.parse_regex(ast, terminals, nonterminals))
+            if ast.name == 'EnumeratedRegex':
+                regex_list.append(self.parse_enumerated_regex(ast, terminals, nonterminals))
         return regex_list
 
     def parse_expr_rule(self, rule_ast, expr_nonterminal, terminals, nonterminals, macros):

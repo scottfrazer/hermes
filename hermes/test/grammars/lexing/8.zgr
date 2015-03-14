@@ -8,12 +8,14 @@ grammar {
     r'a' -> :a
     r'b' -> :b
     r'\{' -> :lbrace @blah
-    #enum {
-    #  java: r'\{'
-    #  python: r'{'
-    #} -> :lbrace @blah
     r'\n+' -> :newline
     r' ' -> :space
+    enum {
+      java: "char:(.)" (DOTALL, CASE_INSENSITIVE)
+      python: r'char:(.)' (DOTALL, IGNORECASE)
+      c: "char:(.)" (PCRE_DOTALL, PCRE_CASELESS)
+      javascript: "char:(.)" (m, i)
+    } -> :char
     mode<blah> {
       r'blah' -> :blah
       r'}' -> :rbrace %pop

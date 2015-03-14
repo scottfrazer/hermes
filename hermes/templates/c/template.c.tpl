@@ -2508,15 +2508,6 @@ exit:
 {% if lexer %}
 {% import re %}
 
-/* index with {{prefix.upper()}}TERMINAL_E */
-/*
-static char * {{prefix}}morphemes[] = {
-{% for terminal in sorted(lexer.terminals, key=lambda x: x.id) %}
-    "{{terminal.string}}", * {{terminal.id}} *
-{% endfor %}
-};
-*/
-
 {{prefix.upper()}}LEXER_MODE_E {{prefix}}lexer_mode_enum(const char * mode) {
 {% for mode, regex_list in lexer.items() %}
     if (strcmp(mode, "{{mode}}") == 0) {
@@ -2594,7 +2585,7 @@ void
     lexer[{{prefix.upper()}}LEXER_{{mode.upper()}}_MODE_E] = calloc({{len(regex_list)}} + 1, sizeof(LEXER_REGEX_T *));
   {% for i, regex in enumerate(regex_list) %}
     r = calloc(1, sizeof(LEXER_REGEX_T));
-    r->regex = pcre_compile({{regex.regex}}, PCRE_UTF8, &r->pcre_errptr, &r->pcre_erroffset, NULL);
+    r->regex = pcre_compile({{regex.regex}}, {{' | '.join(regex.options + ['PCRE_UTF8'])}}, &r->pcre_errptr, &r->pcre_erroffset, NULL);
     r->pattern = {{regex.regex}};
     {% if len(regex.outputs) %}
     r->outputs = calloc({{len(regex.outputs)}}, sizeof(LEXER_REGEX_OUTPUT_T));

@@ -114,7 +114,7 @@ def generate_internal(grammar):
     args = {
         'grammar': grammar,
         'language': 'python',
-        'lexer': grammar.lexers['python'] if 'python' in grammar.lexers else None,
+        'lexer': grammar.lexer.get_language_lexer('python') if grammar.lexer is not None else None,
         'add_main': False
     }
 
@@ -129,7 +129,7 @@ def generate(grammar, language, directory='.', add_main=False, java_package=None
     if language not in templates:
         raise Exception('Invalid language: ' + language)
     args = locals()
-    args['lexer'] = grammar.lexers[language] if language in grammar.lexers else None
+    args['lexer'] = grammar.lexer.get_language_lexer(language) if grammar.lexer is not None else None
     for template_class in templates[language]:
         template = template_class(**args)
         template.write()
