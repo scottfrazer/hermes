@@ -243,26 +243,38 @@ class TokenStream(list):
         except IndexError:
             return None
 
-class DefaultSyntaxErrorFormatter:
-    def unexpected_eof(self, nonterminal, expected_terminals, nonterminal_rules):
-        return "Error: unexpected end of file"
-    def excess_tokens(self, nonterminal, terminal):
-        return "Finished parsing without consuming all tokens."
+class DefaultSyntaxErrorHandler:
+    def __init__(self):
+        self.errors = []
+    def _error(self, string):
+        error = SyntaxError(string)
+        self.errors.append(error)
+        return error
+    def unexpected_eof(self):
+        return self._error("Error: unexpected end of file")
+    def excess_tokens(self):
+        return self._error("Finished parsing without consuming all tokens.")
     def unexpected_symbol(self, nonterminal, actual_terminal, expected_terminals, rule):
-        return "Unexpected symbol (line {line}, col {col}) when parsing parse_{nt}.  Expected {expected}, got {actual}.".format(
+        return self._error("Unexpected symbol (line {line}, col {col}) when parsing parse_{nt}.  Expected {expected}, got {actual}.".format(
             line=actual_terminal.line,
             col=actual_terminal.col,
             nt=nonterminal,
             expected=', '.join(expected_terminals),
             actual=actual_terminal
-        )
+        ))
     def no_more_tokens(self, nonterminal, expected_terminal, last_terminal):
-        return "No more tokens.  Expecting " + expected_terminal
-    def invalid_terminal(nonterminal, invalid_terminal):
-        return "Invalid symbol ID: {} ({})".format(invalid_terminal.id, invalid_terminal.string)
+        return self._error("No more tokens.  Expecting " + expected_terminal)
+    def invalid_terminal(self, nonterminal, invalid_terminal):
+        return self._error("Invalid symbol ID: {} ({})".format(invalid_terminal.id, invalid_terminal.string))
+    def unrecognized_token(self, string, line, col):
+        lines = string.split('\n')
+        bad_line = lines[line-1]
+        return self._error('Unrecognized token on line {}, column {}:\n\n{}\n{}'.format(
+            line, col, bad_line, ''.join([' ' for x in range(col-1)]) + '^'
+        ))
 
 class ParserContext:
-  def __init__(self, tokens, error_formatter):
+  def __init__(self, tokens, errors):
     self.__dict__.update(locals())
     self.nonterminal_string = None
     self.rule_string = None
@@ -327,26 +339,26 @@ rules = {
 
 def is_terminal(id): return isinstance(id, int) and 0 <= id <= {{len(grammar.standard_terminals) - 1}}
 
-def parse(tokens, error_formatter=None, start=None):
+def parse(tokens, errors=None, start=None):
+    if errors is None:
+        errors = DefaultSyntaxErrorHandler()
     if isinstance(tokens, str):
-        tokens = lex(tokens, '<string>')
-    if error_formatter is None:
-        error_formatter = DefaultSyntaxErrorFormatter()
-    ctx = ParserContext(tokens, error_formatter)
+        tokens = lex(tokens, '<string>', errors)
+    ctx = ParserContext(tokens, errors)
     tree = parse_{{grammar.start.string.lower()}}(ctx)
     if tokens.current() != None:
-        raise SyntaxError('Finished parsing without consuming all tokens.')
+        raise ctx.errors.excess_tokens()
     return tree
 
 def expect(ctx, terminal_id):
     current = ctx.tokens.current()
     if not current:
-        raise SyntaxError(ctx.error_formatter.no_more_tokens(ctx.nonterminal, terminals[terminal_id], ctx.tokens.last()))
+        raise ctx.errors.no_more_tokens(ctx.nonterminal, terminals[terminal_id], ctx.tokens.last())
     if current.id != terminal_id:
-        raise SyntaxError(ctx.error_formatter.unexpected_symbol(ctx.nonterminal, current, [terminals[terminal_id]], ctx.rule))
+        raise ctx.errors.unexpected_symbol(ctx.nonterminal, current, [terminals[terminal_id]], ctx.rule)
     next = ctx.tokens.advance()
     if next and not is_terminal(next.id):
-        raise SyntaxError(ctx.error_formatter.invalid_terminal(ctx.nonterminal, next))
+        raise ctx.errors.invalid_terminal(ctx.nonterminal, next)
     return current
 
 {% for expression_nonterminal in grammar.expression_nonterminals %}
@@ -524,7 +536,7 @@ def parse_{{name}}(ctx):
 
     if current == None:
     {% if grammar.must_consume_tokens(nonterminal) %}
-        raise SyntaxError('Error: unexpected end of file')
+        raise ctx.errors.unexpected_eof()
     {% else %}
         return tree
     {% endif %}
@@ -574,12 +586,12 @@ def parse_{{name}}(ctx):
     {% endfor %}
 
     {% if grammar.must_consume_tokens(nonterminal) %}
-    raise SyntaxError(ctx.error_formatter.unexpected_symbol(
+    raise ctx.errors.unexpected_symbol(
       ctx.nonterminal,
       ctx.tokens.current(),
-      [terminals[x] for x in nonterminal_first[{{nonterminal.id}}]],
+      [terminals[x] for x in nonterminal_first[{{nonterminal.id}}] if x >=0],
       rules[{{rule.id}}]
-    ))
+    )
     {% else %}
     return tree
     {% endif %}
@@ -624,7 +636,7 @@ class LexerAction:
         self.action = action
 
 class LexerContext:
-    def __init__(self, string, resource, user_context):
+    def __init__(self, string, resource, errors, user_context):
         self.__dict__.update(locals())
         self.stack = ['default']
         self.line = 1
@@ -667,14 +679,6 @@ class HermesLexer:
     def _advance_string(self, ctx, string):
         (ctx.line, ctx.col) = self._advance_line_col(string, len(string), ctx.line, ctx.col)
         ctx.string = ctx.string[len(string):]
-
-    def _unrecognized_token(self, string, line, col):
-        lines = string.split('\n')
-        bad_line = lines[line-1]
-        message = 'Unrecognized token on line {}, column {}:\n\n{}\n{}'.format(
-            line, col, bad_line, ''.join([' ' for x in range(col-1)]) + '^'
-        )
-        raise SyntaxError(message)
 
     def _next(self, ctx, debug=False):
         for regex, outputs in self.regex[ctx.stack[-1]].items():
@@ -728,21 +732,23 @@ class HermesLexer:
                 return len(match.group(0)) > 0
         return False
 
-    def lex(self, string, resource, debug=False):
+    def lex(self, string, resource, errors=None, debug=False):
+        if errors is None:
+            errors = DefaultSyntaxErrorHandler()
         string_copy = string
         user_context = init()
-        ctx = LexerContext(string, resource, user_context)
+        ctx = LexerContext(string, resource, errors, user_context)
 
         while len(ctx.string):
             matched = self._next(ctx, debug)
             if matched == False:
-                self._unrecognized_token(string_copy, ctx.line, ctx.col)
+                raise ctx.errors.unrecognized_token(string_copy, ctx.line, ctx.col)
 
         destroy(ctx.user_context)
         return ctx.tokens
 
-def lex(source, resource, debug=False):
-    return TokenStream(HermesLexer().lex(source, resource, debug))
+def lex(source, resource, errors=None, debug=False):
+    return TokenStream(HermesLexer().lex(source, resource, errors, debug))
 
 {% endif %}
 
