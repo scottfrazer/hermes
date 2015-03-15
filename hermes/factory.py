@@ -45,9 +45,12 @@ class GrammarFactory:
         else:
             for rule_ast in self.walk_ast(parser_ast[0], 'Rule'):
                 if start is None:
-                    start = self.get_morpheme_from_lexer_token(rule_ast.getAttr('nonterminal'), all_terminals,
-                                                               all_nonterminals)
-                production_ast = rule_ast.getAttr('production')
+                    start = self.get_morpheme_from_lexer_token(
+                        rule_ast.attr('nonterminal'),
+                        all_terminals,
+                        all_nonterminals
+                    )
+                production_ast = rule_ast.attr('production')
                 if isinstance(production_ast, Ast) and production_ast.name == 'ExpressionParser':
                     expression_parser_asts.append(rule_ast)
                 else:
@@ -56,9 +59,9 @@ class GrammarFactory:
 
             expression_grammars = []
             for expression_parser_ast in expression_parser_asts:
-                nonterminal = self.get_morpheme_from_lexer_token(expression_parser_ast.getAttr('nonterminal'),
+                nonterminal = self.get_morpheme_from_lexer_token(expression_parser_ast.attr('nonterminal'),
                                                                  all_terminals, all_nonterminals)
-                for expression_rule_ast in expression_parser_ast.getAttr('production').getAttr('rules'):
+                for expression_rule_ast in expression_parser_ast.attr('production').attr('rules'):
                     rules = self.parse_expr_rule(expression_rule_ast, nonterminal, all_terminals, all_nonterminals,
                                                  all_macros)
                     all_rules.extend(rules)
@@ -69,19 +72,19 @@ class GrammarFactory:
     def get_macro_from_ast(self, ast, terminals, nonterminals):
         macro_string = self.macro_ast_to_string(ast)
         if macro_string not in self.macros:
-            if ast.getAttr('name').source_string == 'otlist':
+            if ast.attr('name').source_string == 'otlist':
                 macro = self.otlist(ast, terminals, nonterminals)
-            elif ast.getAttr('name').source_string == 'list' and len(ast.getAttr('parameters')) == 2:
+            elif ast.attr('name').source_string == 'list' and len(ast.attr('parameters')) == 2:
                 macro = self.slist(ast, terminals, nonterminals)
-            elif ast.getAttr('name').source_string == 'list' and len(ast.getAttr('parameters')) == 1:
+            elif ast.attr('name').source_string == 'list' and len(ast.attr('parameters')) == 1:
                 macro = self.nlist(ast, terminals, nonterminals)
-            elif ast.getAttr('name').source_string == 'tlist':
+            elif ast.attr('name').source_string == 'tlist':
                 macro = self.tlist(ast, terminals, nonterminals)
-            elif ast.getAttr('name').source_string == 'mlist':
+            elif ast.attr('name').source_string == 'mlist':
                 macro = self.mlist(ast, terminals, nonterminals)
-            elif ast.getAttr('name').source_string == 'mslist':
+            elif ast.attr('name').source_string == 'mslist':
                 macro = self.mslist(ast, terminals, nonterminals)
-            elif ast.getAttr('name').source_string == 'optional':
+            elif ast.attr('name').source_string == 'optional':
                 macro = self.optional(ast, terminals, nonterminals)
             else:
                 raise Exception("Invalid macro: " + str(macro_string))
@@ -91,12 +94,12 @@ class GrammarFactory:
     def parse_lexer(self, lexer_ast, terminals={}, nonterminals={}):
         lexer = AbstractLexer()
         lexer['default'] = []
-        for lexer_atom in lexer_ast.getAttr('atoms'):
+        for lexer_atom in lexer_ast.attr('atoms'):
             if lexer_atom.name == 'Regex':
                 regex = self.parse_regex(lexer_atom, terminals, nonterminals)
                 lexer['default'].append(regex)
             if lexer_atom.name == 'Mode':
-                mode_name = lexer_atom.getAttr('name').source_string
+                mode_name = lexer_atom.attr('name').source_string
                 if mode_name in lexer:
                     raise Exception("Lexer mode '{}' already exists".format(mode_name))
                 lexer[mode_name] = self.parse_lexer_mode(lexer_atom, terminals, nonterminals)
@@ -104,13 +107,13 @@ class GrammarFactory:
                 enumerated_regex = self.parse_enumerated_regex(lexer_atom, terminals, nonterminals)
                 lexer['default'].append(enumerated_regex)
             if lexer_atom.name == 'RegexPartials':
-                for partial in lexer_atom.getAttr('list'):
-                    name = partial.getAttr('name').source_string
-                    regex = partial.getAttr('regex').source_string
+                for partial in lexer_atom.attr('list'):
+                    name = partial.attr('name').source_string
+                    regex = partial.attr('regex').source_string
                     lexer.regex_partials[name] = regex
             if lexer_atom.name == 'LexerCode':
-                language = lexer_atom.getAttr('language').source_string
-                code = lexer_atom.getAttr('code').source_string.strip('\r\n')
+                language = lexer_atom.attr('language').source_string
+                code = lexer_atom.attr('code').source_string.strip('\r\n')
 
                 # Get rid of blank lines, remove leading spaces or tabs common to each line
                 code_lines = [line for line in re.split(r'\r?\n', code) if len(line) > 0]
@@ -124,14 +127,14 @@ class GrammarFactory:
 
     def parse_enumerated_regex(self, enumerated_regex_ast, terminals, nonterminals):
         enumerated_regex = EnumeratedRegex()
-        regex_outputs = self.parse_regex_outputs(enumerated_regex_ast.getAttr('onmatch'), terminals, nonterminals)
-        for regex_enum_ast in enumerated_regex_ast.getAttr('enums'):
-            language = regex_enum_ast.getAttr('language').source_string
-            options_ast = regex_enum_ast.getAttr('options')
+        regex_outputs = self.parse_regex_outputs(enumerated_regex_ast.attr('onmatch'), terminals, nonterminals)
+        for regex_enum_ast in enumerated_regex_ast.attr('enums'):
+            language = regex_enum_ast.attr('language').source_string
+            options_ast = regex_enum_ast.attr('options')
             if language not in supported_languages:
                 raise Exception("Language not supported: " + language)
             enumerated_regex[language] = Regex(
-                regex_enum_ast.getAttr('regex').source_string,
+                regex_enum_ast.attr('regex').source_string,
                 [option.source_string for option in options_ast] if options_ast else [],
                 regex_outputs
             )
@@ -153,33 +156,33 @@ class GrammarFactory:
                     terminal, group, None
                 ))
             elif regex_output.name == 'LexerFunctionCall':
-                terminal_ast = regex_output.getAttr('terminal')
+                terminal_ast = regex_output.attr('terminal')
                 (terminal, group) = self.parse_terminal(terminal_ast, terminals, nonterminals) if terminal_ast else (None, None)
                 regex_outputs.append(RegexOutput(
-                    terminal, group, regex_output.getAttr('name').source_string
+                    terminal, group, regex_output.attr('name').source_string
                 ))
-                function = regex_output.getAttr('name').source_string
+                function = regex_output.attr('name').source_string
             elif regex_output.name == 'Null':
                 if len(regex_outputs) != 0:
                     raise Exception('parse_regex(): "null" must be the only target of a regex')
         return regex_outputs
 
     def parse_regex(self, regex_ast, terminals, nonterminals):
-        regex_outputs = self.parse_regex_outputs(regex_ast.getAttr('onmatch'), terminals, nonterminals)
+        regex_outputs = self.parse_regex_outputs(regex_ast.attr('onmatch'), terminals, nonterminals)
         options = []
-        if regex_ast.getAttr('options') is not None:
-            for option in regex_ast.getAttr('options'):
+        if regex_ast.attr('options') is not None:
+            for option in regex_ast.attr('options'):
                 options.append(option.source_string)
 
         return Regex(
-            regex_ast.getAttr('regex').source_string,
+            regex_ast.attr('regex').source_string,
             options,
             regex_outputs
         )
 
     def parse_terminal(self, terminal_ast, terminals, nonterminals):
-        terminal = self.get_morpheme_from_lexer_token(terminal_ast.getAttr('name'), terminals, nonterminals)
-        group_terminal = terminal_ast.getAttr('group')
+        terminal = self.get_morpheme_from_lexer_token(terminal_ast.attr('name'), terminals, nonterminals)
+        group_terminal = terminal_ast.attr('group')
         group = 0
         if group_terminal and group_terminal.str == 'no_group':
             group = None
@@ -189,7 +192,7 @@ class GrammarFactory:
 
     def parse_lexer_mode(self, mode_ast, terminals, nonterminals):
         regex_list = []
-        for ast in mode_ast.getAttr('atoms'):
+        for ast in mode_ast.attr('atoms'):
             if ast.name == 'Regex':
                 regex_list.append(self.parse_regex(ast, terminals, nonterminals))
             if ast.name == 'EnumeratedRegex':
@@ -200,22 +203,22 @@ class GrammarFactory:
         rules = []
         operator = None
 
-        nonterminal = self.get_morpheme_from_lexer_token(rule_ast.getAttr('nonterminal'), terminals, nonterminals)
-        production = rule_ast.getAttr('production')
-        precedence = rule_ast.getAttr('precedence')
+        nonterminal = self.get_morpheme_from_lexer_token(rule_ast.attr('nonterminal'), terminals, nonterminals)
+        production = rule_ast.attr('production')
+        precedence = rule_ast.attr('precedence')
 
         associativity = None
         if precedence is not None:
-            if precedence.getAttr('marker').str == 'asterisk':
+            if precedence.attr('marker').str == 'asterisk':
                 self.binding_power += 1000
-            associativity = precedence.getAttr('associativity').source_string
+            associativity = precedence.attr('associativity').source_string
 
         if nonterminal != expr_nonterminal:
             raise Exception('parse_expr_rule(): Expecting rule nonterminal to match parser nonterminal')
 
         if production.name == 'InfixProduction':
-            morphemes = production.getAttr('morphemes')
-            ast = production.getAttr('ast')
+            morphemes = production.attr('morphemes')
+            ast = production.attr('ast')
 
             if len(morphemes) != 3:
                 raise Exception('parse_expr_rule(): InfixProduction needs 3 morphemes')
@@ -239,10 +242,10 @@ class GrammarFactory:
             ))
 
         elif production.name == 'MixfixProduction':
-            nud_morphemes_ast = production.getAttr('nud')
-            led_morphemes_ast = production.getAttr('led')
-            led_ast = production.getAttr('ast')
-            nud_ast = production.getAttr('nud_ast')
+            nud_morphemes_ast = production.attr('nud')
+            led_morphemes_ast = production.attr('led')
+            led_ast = production.attr('ast')
+            nud_ast = production.attr('nud_ast')
 
             nud_morphemes = []
             if nud_morphemes_ast:
@@ -282,8 +285,8 @@ class GrammarFactory:
             ))
 
         elif production.name == 'PrefixProduction':
-            morphemes = production.getAttr('morphemes')
-            ast = production.getAttr('ast')
+            morphemes = production.attr('morphemes')
+            ast = production.attr('ast')
 
             if len(morphemes) != 2:
                 raise Exception('parse_expr_rule(): InfixProduction needs 2 morphemes')
@@ -311,13 +314,13 @@ class GrammarFactory:
         return rules
 
     def parse_ll1_rule(self, rule_ast, terminals, nonterminals, macros):
-        nonterminal = self.get_morpheme_from_lexer_token(rule_ast.getAttr('nonterminal'), terminals, nonterminals)
-        production_list_ast = rule_ast.getAttr('production')
+        nonterminal = self.get_morpheme_from_lexer_token(rule_ast.attr('nonterminal'), terminals, nonterminals)
+        production_list_ast = rule_ast.attr('production')
 
         rules = []
         for production_ast in production_list_ast:
-            morphemes_list_ast = production_ast.getAttr('morphemes')
-            ast_ast = production_ast.getAttr('ast')
+            morphemes_list_ast = production_ast.attr('morphemes')
+            ast_ast = production_ast.attr('ast')
             morphemes = []
             for morpheme_ast in morphemes_list_ast:
                 if isinstance(morpheme_ast, HermesTerminal):
@@ -338,11 +341,11 @@ class GrammarFactory:
         if ast_ast is None:
             return AstTranslation(0)
         elif isinstance(ast_ast, Ast) and ast_ast.name == 'AstTransformation':
-            node_name = ast_ast.getAttr('name').source_string
+            node_name = ast_ast.attr('name').source_string
             parameters = OrderedDict()
-            for parameter_ast in ast_ast.getAttr('parameters'):
-                name = parameter_ast.getAttr('name').source_string
-                index = parameter_ast.getAttr('index').source_string
+            for parameter_ast in ast_ast.attr('parameters'):
+                name = parameter_ast.attr('name').source_string
+                index = parameter_ast.attr('index').source_string
                 parameters[name] = index
             return AstSpecification(node_name, parameters)
         elif isinstance(ast_ast, HermesTerminal) and ast_ast.str == 'nonterminal_reference':
@@ -351,8 +354,8 @@ class GrammarFactory:
             raise Exception('parse_ast(): invalid AST: ' + ast_ast)
 
     def macro_ast_to_string(self, ast):
-        return '{}({})'.format(ast.getAttr('name').source_string,
-                               ','.join([self.morpheme_to_string(x) for x in ast.getAttr('parameters')]))
+        return '{}({})'.format(ast.attr('name').source_string,
+                               ','.join([self.morpheme_to_string(x) for x in ast.attr('parameters')]))
 
     def morpheme_to_string(self, morpheme):
         return ':' + morpheme.source_string if morpheme.str == 'terminal' else '$' + morpheme.source_string
@@ -377,8 +380,8 @@ class GrammarFactory:
         return nt
 
     def mlist(self, ast, terminals, nonterminals):
-        morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
-        minimum = int(ast.getAttr('parameters')[1].source_string)
+        morpheme = self.get_morpheme_from_lexer_token(ast.attr('parameters')[0], terminals, nonterminals)
+        minimum = int(ast.attr('parameters')[1].source_string)
         nt0 = self.generate_nonterminal(nonterminals)
         nt1 = self.generate_nonterminal(nonterminals)
         empty = terminals['_empty']
@@ -401,9 +404,9 @@ class GrammarFactory:
         return macro
 
     def mslist(self, ast, terminals, nonterminals):
-        morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
-        separator = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[1], terminals, nonterminals)
-        minimum = int(ast.getAttr('parameters')[2].source_string)
+        morpheme = self.get_morpheme_from_lexer_token(ast.attr('parameters')[0], terminals, nonterminals)
+        separator = self.get_morpheme_from_lexer_token(ast.attr('parameters')[1], terminals, nonterminals)
+        minimum = int(ast.attr('parameters')[2].source_string)
         nt0 = self.generate_nonterminal(nonterminals)
         nt1 = self.generate_nonterminal(nonterminals)
         empty = terminals['_empty']
@@ -426,9 +429,9 @@ class GrammarFactory:
         return macro
 
     def otlist(self, ast, terminals, nonterminals):
-        morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
-        separator = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[1], terminals, nonterminals)
-        minimum = int(ast.getAttr('parameters')[2].source_string) if len(ast.getAttr('parameters')) > 2 else 0
+        morpheme = self.get_morpheme_from_lexer_token(ast.attr('parameters')[0], terminals, nonterminals)
+        separator = self.get_morpheme_from_lexer_token(ast.attr('parameters')[1], terminals, nonterminals)
+        minimum = int(ast.attr('parameters')[2].source_string) if len(ast.attr('parameters')) > 2 else 0
         nt0 = self.generate_nonterminal(nonterminals)
         nt1 = self.generate_nonterminal(nonterminals)
         nt2 = self.generate_nonterminal(nonterminals)
@@ -459,7 +462,7 @@ class GrammarFactory:
         return macro
 
     def optional(self, ast, terminals, nonterminals):
-        morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
+        morpheme = self.get_morpheme_from_lexer_token(ast.attr('parameters')[0], terminals, nonterminals)
         nt0 = self.generate_nonterminal(nonterminals)
         empty = terminals['_empty']
         rules = [
@@ -475,7 +478,7 @@ class GrammarFactory:
         return macro
 
     def nlist(self, ast, terminals, nonterminals):
-        morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
+        morpheme = self.get_morpheme_from_lexer_token(ast.attr('parameters')[0], terminals, nonterminals)
         nt0 = self.generate_nonterminal(nonterminals)
         empty = terminals['_empty']
 
@@ -493,13 +496,13 @@ class GrammarFactory:
 
     def slist(self, ast, terminals, nonterminals):
         empty = terminals['_empty']
-        morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
-        separator = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[1], terminals, nonterminals)
+        morpheme = self.get_morpheme_from_lexer_token(ast.attr('parameters')[0], terminals, nonterminals)
+        separator = self.get_morpheme_from_lexer_token(ast.attr('parameters')[1], terminals, nonterminals)
         separator.isSeparator = True
 
         minimum = 0
-        if len(ast.getAttr('parameters')) == 3:
-            minimum = int(ast.getAttr('parameters')[2].source_string)
+        if len(ast.attr('parameters')) == 3:
+            minimum = int(ast.attr('parameters')[2].source_string)
 
         nt0 = self.generate_nonterminal(nonterminals)
         nt1 = self.generate_nonterminal(nonterminals)
@@ -531,8 +534,8 @@ class GrammarFactory:
     def tlist(self, ast, terminals, nonterminals):
         nt0 = self.generate_nonterminal(nonterminals)
         empty = terminals['_empty']
-        morpheme = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[0], terminals, nonterminals)
-        terminator = self.get_morpheme_from_lexer_token(ast.getAttr('parameters')[1], terminals, nonterminals)
+        morpheme = self.get_morpheme_from_lexer_token(ast.attr('parameters')[0], terminals, nonterminals)
+        terminator = self.get_morpheme_from_lexer_token(ast.attr('parameters')[1], terminals, nonterminals)
         rules = [
             MacroGeneratedRule(nt0, Production([morpheme, terminator, nt0])),
             MacroGeneratedRule(nt0, Production([empty]))
@@ -577,7 +580,7 @@ def get_parse_tree(source, resource='<string>'):
 
 def get_ast(source, resource='<string>'):
     tree = hermes_parse(hermes_lex(source, resource))
-    return tree.toAst()
+    return tree.ast()
 
 def parse(source, name, resource='<string>'):
     ast = get_ast(source, resource)

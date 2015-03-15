@@ -200,7 +200,7 @@ def cli():
                 input = fp.read()
 
         tree = parser.parse(input)
-        string = tree.dumps(indent=2) if cli.tree else tree.toAst().dumps(indent=2)
+        string = tree.dumps(indent=2) if cli.tree else tree.ast().dumps(indent=2)
         print(string if cli.no_color else highlight(string, lexer, formatter).strip())
 
 def analyze(grammar, format='human', color=False, file=sys.stdout):

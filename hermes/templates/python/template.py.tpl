@@ -62,7 +62,7 @@ class Terminal:
       self.__dict__.update(locals())
   def getId(self):
       return self.id
-  def toAst(self):
+  def ast(self):
       return self
   def dumps(self, b64_source=True, json=False, **kwargs):
       if not b64_source and json:
@@ -103,10 +103,10 @@ class AstTransformNodeCreator(AstTransform):
     return self.__repr__()
 
 class AstList(list):
-  def toAst(self):
+  def ast(self):
       retval = []
       for ast in self:
-          retval.append(ast.toAst())
+          retval.append(ast.ast())
       return retval
   def dumps(self, indent=None, b64_source=True):
       args = locals()
@@ -128,30 +128,30 @@ class ParseTree():
       self.list = False
   def add( self, tree ):
       self.children.append( tree )
-  def toAst( self ):
+  def ast( self ):
       if self.list == 'slist' or self.list == 'nlist':
           if len(self.children) == 0:
               return AstList()
           offset = 1 if self.children[0] == self.listSeparator else 0
-          first = self.children[offset].toAst()
+          first = self.children[offset].ast()
           r = AstList()
           if first is not None:
               r.append(first)
-          r.extend(self.children[offset+1].toAst())
+          r.extend(self.children[offset+1].ast())
           return r
       elif self.list == 'otlist':
           if len(self.children) == 0:
               return AstList()
           r = AstList()
           if self.children[0] != self.listSeparator:
-              r.append(self.children[0].toAst())
-          r.extend(self.children[1].toAst())
+              r.append(self.children[0].ast())
+          r.extend(self.children[1].ast())
           return r
       elif self.list == 'tlist':
           if len(self.children) == 0:
               return AstList()
-          r = AstList([self.children[0].toAst()])
-          r.extend(self.children[2].toAst())
+          r = AstList([self.children[0].ast()])
+          r.extend(self.children[2].ast())
           return r
       elif self.list == 'mlist':
           r = AstList()
@@ -159,12 +159,12 @@ class ParseTree():
               return r
           lastElement = len(self.children) - 1
           for i in range(lastElement):
-              r.append(self.children[i].toAst())
-          r.extend(self.children[lastElement].toAst())
+              r.append(self.children[i].ast())
+          r.extend(self.children[lastElement].ast())
           return r
       elif self.isExpr:
           if isinstance(self.astTransform, AstTransformSubstitution):
-              return self.children[self.astTransform.idx].toAst()
+              return self.children[self.astTransform.idx].ast()
           elif isinstance(self.astTransform, AstTransformNodeCreator):
               parameters = OrderedDict()
               for name, idx in self.astTransform.parameters.items():
@@ -184,18 +184,18 @@ class ParseTree():
                       return self.children[0]
                   else:
                       child = self.children[idx]
-                  parameters[name] = child.toAst()
+                  parameters[name] = child.ast()
               return Ast(self.astTransform.name, parameters)
       else:
           if isinstance(self.astTransform, AstTransformSubstitution):
-              return self.children[self.astTransform.idx].toAst()
+              return self.children[self.astTransform.idx].ast()
           elif isinstance(self.astTransform, AstTransformNodeCreator):
               parameters = OrderedDict()
               for name, idx in self.astTransform.parameters.items():
-                  parameters[name] = self.children[idx].toAst()
+                  parameters[name] = self.children[idx].ast()
               return Ast(self.astTransform.name, parameters)
           elif len(self.children):
-              return self.children[0].toAst()
+              return self.children[0].ast()
           else:
               return None
 
@@ -207,7 +207,7 @@ class ParseTree():
 class Ast():
     def __init__(self, name, attributes):
         self.__dict__.update(locals())
-    def getAttr(self, attr):
+    def attr(self, attr):
         return self.attributes[attr]
     def dumps(self, indent=None, b64_source=True):
         args = locals()
@@ -790,7 +790,7 @@ def cli():
             if sys.argv[1] == 'parsetree':
                 print(tree.dumps(indent=2))
             else:
-                ast = tree.toAst()
+                ast = tree.ast()
                 print(ast.dumps(indent=2) if ast else ast)
         except SyntaxError as error:
             print(error)

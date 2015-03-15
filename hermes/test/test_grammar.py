@@ -97,7 +97,7 @@ def ast(test_dir):
     grammar_file = os.path.join(test_dir, 'grammar.zgr')
     with open(grammar_file) as fp:
         tree = parse(lex(fp.read(), 'grammar.zgr'))
-    actual = str(tree.toAst().dumps(indent=2))
+    actual = str(tree.ast().dumps(indent=2))
     compare(test_dir, 'ast', actual)
 
 def first_sets(test_dir, nonterminal, terminals):
