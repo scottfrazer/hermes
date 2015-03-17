@@ -1,0 +1,102 @@
+(start:
+  (_gen0:
+    (statement:
+      (assignstatement:
+        <identifier (line 1 col 1) `aQ==`>,
+        <eq (line 1 col 2) `PQ==`>,
+        (assignstatementsub:
+          (assignstatement:
+            <identifier (line 1 col 3) `ag==`>,
+            <eq (line 1 col 4) `PQ==`>,
+            (assignstatementsub:
+              (e:
+                <n (line 1 col 5) `MA==`>
+              )
+            )
+          )
+        )
+      )
+    ),
+    (_gen1:
+      <comma (line 1 col 6) `LA==`>,
+      (statement:
+        (forstatement:
+          <for (line 3 col 1) `Zm9y`>,
+          <lparen (line 3 col 4) `KA==`>,
+          (fordeclstatement:
+            (complexexpression:
+              (assignstatement:
+                <identifier (line 3 col 5) `aQ==`>,
+                <eq (line 3 col 7) `PQ==`>,
+                (assignstatementsub:
+                  (e:
+                    <n (line 3 col 9) `MA==`>
+                  )
+                )
+              )
+            )
+          ),
+          <semi (line 3 col 11) `Ow==`>,
+          (forcondstatement: ),
+          <semi (line 3 col 12) `Ow==`>,
+          (foriterstatement:
+            (complexexpression:
+              (assignstatement:
+                <identifier (line 3 col 14) `ag==`>,
+                <eq (line 3 col 16) `PQ==`>,
+                (assignstatementsub:
+                  (e:
+                    (e:
+                      <s (line 3 col 18) `InN0ciI=`>
+                    ),
+                    <add (line 3 col 24) `Kw==`>,
+                    (e:
+                      <n (line 3 col 26) `NQ==`>
+                    )
+                  )
+                )
+              )
+            )
+          ),
+          <rparen (line 3 col 27) `KQ==`>,
+          <lbrace (line 3 col 29) `ew==`>,
+          (forbody:
+            (statement:
+              (assignstatement:
+                <identifier (line 4 col 3) `aw==`>,
+                <eq (line 4 col 5) `PQ==`>,
+                (assignstatementsub:
+                  (e:
+                    (e:
+                      <n (line 4 col 7) `Ng==`>
+                    ),
+                    <add (line 4 col 9) `Kw==`>,
+                    (e:
+                      (e:
+                        (e:
+                          <s (line 4 col 11) `ImEi`>
+                        ),
+                        <mul (line 4 col 15) `Kg==`>,
+                        (e:
+                          <n (line 4 col 17) `Nw==`>
+                        )
+                      ),
+                      <div (line 4 col 19) `Lw==`>,
+                      (e:
+                        <s (line 4 col 21) `ImMi`>
+                      )
+                    )
+                  )
+                )
+              )
+            ),
+            <semi (line 4 col 24) `Ow==`>,
+            (forbody: )
+          ),
+          <rbrace (line 5 col 1) `fQ==`>
+        )
+      ),
+      (_gen1: )
+    )
+  )
+)

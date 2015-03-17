@@ -1,7 +1,0 @@
-grammar {
-  parser {
-    $start = :lparen list($item) :rparen
-    $item = :a
-    $item = :b
-  }
-}

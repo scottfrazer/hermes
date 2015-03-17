@@ -1,0 +1,33 @@
+(program:
+  (block:
+    (block_const: ),
+    (block_var:
+      <var (line 1 col 1) `dmFy`>,
+      (ident:
+        <ident (line 1 col 5) `aQ==`>
+      ),
+      (block_var1: ),
+      <semi (line 1 col 6) `Ow==`>
+    ),
+    (block_proc: ),
+    (statement:
+      (ident:
+        <ident (line 2 col 1) `aQ==`>
+      ),
+      <assign (line 2 col 3) `Oj0=`>,
+      (expression:
+        (unary_add_op: ),
+        (term:
+          (factor:
+            (number:
+              <number (line 2 col 6) `NTY=`>
+            )
+          ),
+          (term_sub1: )
+        ),
+        (expression_sub1: )
+      )
+    )
+  ),
+  <dot (line 2 col 8) `Lg==`>
+)

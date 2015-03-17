@@ -1,6 +1,0 @@
-grammar {
-  parser {
-    $start = mslist($item, :sep, 1)
-    $item = :a | :b
-  }
-}

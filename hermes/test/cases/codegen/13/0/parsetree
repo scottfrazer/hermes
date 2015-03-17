@@ -1,0 +1,112 @@
+(start:
+  (_gen0:
+    (statement:
+      (e:
+        (e:
+          <identifier (line 1 col 1) `aQ==`>
+        ),
+        <eq (line 1 col 2) `PQ==`>,
+        (e:
+          (e:
+            <identifier (line 1 col 3) `ag==`>
+          ),
+          <eq (line 1 col 4) `PQ==`>,
+          (e:
+            <n (line 1 col 5) `MA==`>
+          )
+        )
+      )
+    ),
+    (_gen1:
+      <semi (line 1 col 6) `Ow==`>,
+      (statement:
+        (for:
+          <for (line 3 col 1) `Zm9y`>,
+          <lparen (line 3 col 5) `KA==`>,
+          (forsub:
+            (e:
+              (e:
+                <identifier (line 3 col 7) `aw==`>
+              ),
+              <eq (line 3 col 9) `PQ==`>,
+              (e:
+                <n (line 3 col 11) `MQ==`>
+              )
+            )
+          ),
+          <semi (line 3 col 13) `Ow==`>,
+          (forsub: ),
+          <semi (line 3 col 14) `Ow==`>,
+          (forsub:
+            (e:
+              (e:
+                <identifier (line 3 col 16) `ag==`>
+              ),
+              <eq (line 3 col 17) `PQ==`>,
+              (e:
+                (e:
+                  <s (line 3 col 18) `ImEi`>
+                ),
+                <add (line 3 col 22) `Kw==`>,
+                (e:
+                  <n (line 3 col 24) `OQ==`>
+                )
+              )
+            )
+          ),
+          <rparen (line 3 col 26) `KQ==`>,
+          <lbrace (line 3 col 28) `ew==`>,
+          (forbody:
+            (statement:
+              (e:
+                (e:
+                  <identifier (line 4 col 3) `aQ==`>
+                ),
+                <eq (line 4 col 5) `PQ==`>,
+                (e:
+                  (e:
+                    <n (line 4 col 7) `OA==`>
+                  ),
+                  <add (line 4 col 9) `Kw==`>,
+                  (e:
+                    (e:
+                      <identifier (line 4 col 11) `ag==`>
+                    ),
+                    <mul (line 4 col 13) `Kg==`>,
+                    (e:
+                      (e:
+                        <n (line 4 col 15) `Nw==`>
+                      ),
+                      <power (line 4 col 17) `Xg==`>,
+                      (e:
+                        <s (line 4 col 19) `Inki`>
+                      )
+                    )
+                  )
+                )
+              )
+            ),
+            <semi (line 4 col 22) `Ow==`>,
+            (forbody: )
+          ),
+          <rbrace (line 5 col 1) `fQ==`>
+        )
+      ),
+      (_gen1:
+        <semi (line 5 col 2) `Ow==`>,
+        (statement:
+          (e:
+            (e:
+              <n (line 7 col 1) `NQ==`>
+            ),
+            <add (line 7 col 2) `Kw==`>,
+            (e:
+              <n (line 7 col 3) `Ng==`>
+            )
+          )
+        ),
+        (_gen1: )
+      )
+    )
+  )
+)

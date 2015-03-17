@@ -1,0 +1,98 @@
+(start:
+  (_gen0:
+    (sub:
+      (item:
+        <a (line 1 col 1) `YQ==`>
+      )
+    ),
+    (_gen1:
+      <comma (line 1 col 2) `LA==`>,
+      (sub:
+        (e:
+          (e:
+            <identifier (line 2 col 1) `aQ==`>
+          ),
+          <lparen (line 2 col 2) `KA==`>,
+          (_gen5: ),
+          <rparen (line 2 col 3) `KQ==`>
+        )
+      ),
+      (_gen1:
+        <comma (line 2 col 4) `LA==`>,
+        (sub:
+          (e:
+            (e:
+              <lparen_cast (line 3 col 1) `KA==`>,
+              (type_name:
+                <int (line 3 col 2) `aW50`>
+              ),
+              <rparen (line 3 col 5) `KQ==`>
+            ),
+            <lbrace (line 3 col 6) `ew==`>,
+            (_gen2:
+              <item (line 3 col 7) `aXRlbQ==`>,
+              (_gen3:
+                <comma (line 3 col 11) `LA==`>,
+                (_gen4:
+                  <item (line 3 col 12) `aXRlbQ==`>,
+                  (_gen3:
+                    <comma (line 3 col 16) `LA==`>,
+                    (_gen4:
+                      <item (line 3 col 17) `aXRlbQ==`>,
+                      (_gen3: )
+                    )
+                  )
+                )
+              )
+            ),
+            <rbrace (line 3 col 21) `fQ==`>
+          )
+        ),
+        (_gen1:
+          <comma (line 3 col 22) `LA==`>,
+          (sub:
+            (e:
+              (e:
+                <number (line 4 col 1) `MA==`>
+              ),
+              <lsquare (line 4 col 2) `Ww==`>,
+              (_gen7: ),
+              <rsquare (line 4 col 3) `XQ==`>
+            )
+          ),
+          (_gen1:
+            <comma (line 4 col 4) `LA==`>,
+            (sub:
+              (e:
+                (e:
+                  <number (line 5 col 1) `MQ==`>
+                ),
+                <lsquare (line 5 col 2) `Ww==`>,
+                (_gen7:
+                  <item (line 5 col 3) `aXRlbQ==`>,
+                  (_gen8:
+                    <comma (line 5 col 7) `LA==`>,
+                    <item (line 5 col 8) `aXRlbQ==`>,
+                    (_gen8: )
+                  )
+                ),
+                <rsquare (line 5 col 12) `XQ==`>
+              )
+            ),
+            (_gen1:
+              <comma (line 5 col 13) `LA==`>,
+              (sub:
+                (e:
+                  <lsquare (line 6 col 1) `Ww==`>,
+                  (_gen5: ),
+                  <rsquare (line 6 col 2) `XQ==`>
+                )
+              ),
+              (_gen1: )
+            )
+          )
+        )
+      )
+    )
+  )
+)

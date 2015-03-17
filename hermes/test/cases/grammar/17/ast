@@ -1,0 +1,540 @@
+(Grammar:
+  body=[
+    (Lexer:
+      atoms=[
+        (Regex:
+          regex=<regex (line 3 col 5) `cidccysn`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 4 col 5) `cicsJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 4 col 14) `Y29tbWE=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 5 col 5) `cidhJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 5 col 14) `YQ==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 6 col 5) `cidiJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 6 col 14) `Yg==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 7 col 5) `cidpbnQn`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 7 col 16) `aW50`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 8 col 5) `cidjaGFyJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 8 col 17) `Y2hhcg==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 9 col 5) `cidpdGVtJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 9 col 17) `aXRlbQ==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 10 col 5) `cidcKyc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 10 col 15) `YWRk`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 11 col 5) `cictJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 11 col 14) `c3VidHJhY3Q=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 12 col 5) `cidcKic=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 12 col 15) `bXVsdGlwbHk=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 13 col 5) `cicvJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 13 col 14) `ZGl2aWRl`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 14 col 5) `cidcKCg/PVxzKihpbnR8Y2hhcikpJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 14 col 32) `bHBhcmVuX2Nhc3Q=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 15 col 5) `cidcKCc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 15 col 15) `bHBhcmVu`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 16 col 5) `cidcKSc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 16 col 15) `cnBhcmVu`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 17 col 5) `cidceyc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 17 col 15) `bGJyYWNl`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 18 col 5) `cidcfSc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 18 col 15) `cmJyYWNl`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 19 col 5) `cidcWyc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 19 col 15) `bHNxdWFyZQ==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 20 col 5) `cidcXSc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 20 col 15) `cnNxdWFyZQ==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 21 col 5) `cidbYS16QS1aXSsn`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 21 col 22) `aWRlbnRpZmllcg==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 22 col 5) `cidbMC05XSsn`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 22 col 19) `bnVtYmVy`>,
+              group=None
+            )
+          ]
+        )
+      ]
+    ),
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<nonterminal (line 25 col 6) `c3RhcnQ=`>,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<identifier (line 25 col 14) `bGlzdA==`>,
+                  parameters=[
+                    <nonterminal (line 25 col 20) `c3Vi`>,
+                    <terminal (line 25 col 26) `Y29tbWE=`>
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 26 col 6) `c3Vi`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 26 col 13) `aXRlbQ==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 27 col 6) `c3Vi`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 27 col 13) `ZQ==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 28 col 6) `aXRlbQ==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 28 col 14) `Yg==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 29 col 6) `aXRlbQ==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 29 col 14) `YQ==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 30 col 6) `dHlwZV9uYW1l`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 30 col 19) `aW50`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 31 col 6) `dHlwZV9uYW1l`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 31 col 19) `Y2hhcg==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 32 col 6) `aW5pdGlhbGl6ZXJfbGlzdF9pdGVt`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 32 col 31) `aXRlbQ==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 33 col 6) `ZQ==`>,
+          production=(ExpressionParser:
+            rules=[
+              (ExpressionRule:
+                precedence=(Precedence:
+                  marker=<asterisk (line 34 col 8) `Kg==`>,
+                  associativity=<left (line 34 col 10) `bGVmdA==`>
+                ),
+                nonterminal=<nonterminal (line 34 col 17) `ZQ==`>,
+                production=(InfixProduction:
+                  morphemes=[
+                    <nonterminal (line 34 col 17) `ZQ==`>,
+                    <terminal (line 34 col 25) `YWRk`>,
+                    <nonterminal (line 34 col 17) `ZQ==`>
+                  ],
+                  ast=None
+                )
+              ),
+              (ExpressionRule:
+                precedence=(Precedence:
+                  marker=<dash (line 35 col 8) `LQ==`>,
+                  associativity=<left (line 35 col 10) `bGVmdA==`>
+                ),
+                nonterminal=<nonterminal (line 35 col 17) `ZQ==`>,
+                production=(InfixProduction:
+                  morphemes=[
+                    <nonterminal (line 35 col 17) `ZQ==`>,
+                    <terminal (line 35 col 25) `c3VidHJhY3Q=`>,
+                    <nonterminal (line 35 col 17) `ZQ==`>
+                  ],
+                  ast=None
+                )
+              ),
+              (ExpressionRule:
+                precedence=(Precedence:
+                  marker=<asterisk (line 36 col 8) `Kg==`>,
+                  associativity=<left (line 36 col 10) `bGVmdA==`>
+                ),
+                nonterminal=<nonterminal (line 36 col 17) `ZQ==`>,
+                production=(InfixProduction:
+                  morphemes=[
+                    <nonterminal (line 36 col 17) `ZQ==`>,
+                    <terminal (line 36 col 25) `bXVsdGlwbHk=`>,
+                    <nonterminal (line 36 col 17) `ZQ==`>
+                  ],
+                  ast=None
+                )
+              ),
+              (ExpressionRule:
+                precedence=(Precedence:
+                  marker=<dash (line 37 col 8) `LQ==`>,
+                  associativity=<left (line 37 col 10) `bGVmdA==`>
+                ),
+                nonterminal=<nonterminal (line 37 col 17) `ZQ==`>,
+                production=(InfixProduction:
+                  morphemes=[
+                    <nonterminal (line 37 col 17) `ZQ==`>,
+                    <terminal (line 37 col 25) `ZGl2aWRl`>,
+                    <nonterminal (line 37 col 17) `ZQ==`>
+                  ],
+                  ast=None
+                )
+              ),
+              (ExpressionRule:
+                precedence=(Precedence:
+                  marker=<asterisk (line 38 col 8) `Kg==`>,
+                  associativity=<left (line 38 col 10) `bGVmdA==`>
+                ),
+                nonterminal=<nonterminal (line 38 col 17) `ZQ==`>,
+                production=(MixfixProduction:
+                  nud=[
+                    <terminal (line 38 col 22) `bHBhcmVuX2Nhc3Q=`>,
+                    <nonterminal (line 38 col 35) `dHlwZV9uYW1l`>,
+                    <terminal (line 38 col 46) `cnBhcmVu`>
+                  ],
+                  nud_ast=None,
+                  led=[
+                    <terminal (line 38 col 58) `bGJyYWNl`>,
+                    (Macro:
+                      name=<identifier (line 38 col 65) `b3RsaXN0`>,
+                      parameters=[
+                        <nonterminal (line 38 col 73) `aW5pdGlhbGl6ZXJfbGlzdF9pdGVt`>,
+                        <terminal (line 38 col 97) `Y29tbWE=`>
+                      ]
+                    ),
+                    <terminal (line 38 col 105) `cmJyYWNl`>
+                  ],
+                  ast=(AstTransformation:
+                    name=<identifier (line 38 col 115) `VHlwZUluaXRpYWxpemlvbg==`>,
+                    parameters=[
+                      (AstParameter:
+                        name=<identifier (line 38 col 133) `dHlwZQ==`>,
+                        index=<nonterminal_reference (line 38 col 139) `MQ==`>
+                      ),
+                      (AstParameter:
+                        name=<identifier (line 38 col 142) `aW5pdGlhbGl6ZXI=`>,
+                        index=<nonterminal_reference (line 38 col 155) `NA==`>
+                      )
+                    ]
+                  )
+                )
+              ),
+              (ExpressionRule:
+                precedence=(Precedence:
+                  marker=<dash (line 39 col 8) `LQ==`>,
+                  associativity=<left (line 39 col 10) `bGVmdA==`>
+                ),
+                nonterminal=<nonterminal (line 39 col 17) `ZQ==`>,
+                production=(MixfixProduction:
+                  nud=[
+                    <terminal (line 39 col 22) `aWRlbnRpZmllcg==`>
+                  ],
+                  nud_ast=None,
+                  led=[
+                    <terminal (line 39 col 38) `bHBhcmVu`>,
+                    (Macro:
+                      name=<identifier (line 39 col 45) `bGlzdA==`>,
+                      parameters=[
+                        <nonterminal (line 39 col 51) `ZQ==`>,
+                        <terminal (line 39 col 55) `Y29tbWE=`>
+                      ]
+                    ),
+                    <terminal (line 39 col 63) `cnBhcmVu`>
+                  ],
+                  ast=(AstTransformation:
+                    name=<identifier (line 39 col 73) `RnVuY3Rpb25DYWxs`>,
+                    parameters=[
+                      (AstParameter:
+                        name=<identifier (line 39 col 87) `bmFtZQ==`>,
+                        index=<nonterminal_reference (line 39 col 93) `JA==`>
+                      ),
+                      (AstParameter:
+                        name=<identifier (line 39 col 96) `cGFyYW1z`>,
+                        index=<nonterminal_reference (line 39 col 104) `Mg==`>
+                      )
+                    ]
+                  )
+                )
+              ),
+              (ExpressionRule:
+                precedence=(Precedence:
+                  marker=<asterisk (line 40 col 8) `Kg==`>,
+                  associativity=<unary (line 40 col 10) `dW5hcnk=`>
+                ),
+                nonterminal=<nonterminal (line 40 col 18) `ZQ==`>,
+                production=(PrefixProduction:
+                  morphemes=[
+                    <terminal (line 40 col 23) `c3VidHJhY3Q=`>,
+                    <nonterminal (line 40 col 18) `ZQ==`>
+                  ],
+                  ast=None
+                )
+              ),
+              (ExpressionRule:
+                precedence=None,
+                nonterminal=<nonterminal (line 41 col 8) `ZQ==`>,
+                production=(MixfixProduction:
+                  nud=[
+                    <terminal (line 41 col 13) `bHNxdWFyZQ==`>,
+                    (Macro:
+                      name=<identifier (line 41 col 21) `bGlzdA==`>,
+                      parameters=[
+                        <nonterminal (line 41 col 27) `ZQ==`>,
+                        <terminal (line 41 col 31) `Y29tbWE=`>
+                      ]
+                    ),
+                    <terminal (line 41 col 39) `cnNxdWFyZQ==`>
+                  ],
+                  nud_ast=None,
+                  led=None,
+                  ast=None
+                )
+              ),
+              (ExpressionRule:
+                precedence=None,
+                nonterminal=<nonterminal (line 42 col 8) `ZQ==`>,
+                production=(MixfixProduction:
+                  nud=[
+                    <terminal (line 42 col 13) `bGJyYWNl`>,
+                    (Macro:
+                      name=<identifier (line 42 col 20) `bGlzdA==`>,
+                      parameters=[
+                        <nonterminal (line 42 col 26) `ZQ==`>,
+                        <terminal (line 42 col 30) `Y29tbWE=`>
+                      ]
+                    ),
+                    <terminal (line 42 col 38) `cmJyYWNl`>
+                  ],
+                  nud_ast=None,
+                  led=None,
+                  ast=None
+                )
+              ),
+              (ExpressionRule:
+                precedence=None,
+                nonterminal=<nonterminal (line 43 col 8) `ZQ==`>,
+                production=(MixfixProduction:
+                  nud=[
+                    <terminal (line 43 col 13) `bHBhcmVu`>,
+                    <nonterminal (line 43 col 21) `ZQ==`>,
+                    <terminal (line 43 col 24) `cnBhcmVu`>
+                  ],
+                  nud_ast=None,
+                  led=None,
+                  ast=None
+                )
+              ),
+              (ExpressionRule:
+                precedence=None,
+                nonterminal=<nonterminal (line 44 col 8) `ZQ==`>,
+                production=(MixfixProduction:
+                  nud=[
+                    <terminal (line 44 col 13) `aWRlbnRpZmllcg==`>
+                  ],
+                  nud_ast=None,
+                  led=None,
+                  ast=None
+                )
+              ),
+              (ExpressionRule:
+                precedence=None,
+                nonterminal=<nonterminal (line 45 col 8) `ZQ==`>,
+                production=(MixfixProduction:
+                  nud=[
+                    <terminal (line 45 col 13) `bnVtYmVy`>
+                  ],
+                  nud_ast=None,
+                  led=None,
+                  ast=None
+                )
+              )
+            ]
+          )
+        )
+      ]
+    )
+  ]
+)

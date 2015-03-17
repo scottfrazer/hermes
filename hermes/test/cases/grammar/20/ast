@@ -1,0 +1,413 @@
+(Grammar:
+  body=[
+    (Lexer:
+      atoms=[
+        (Regex:
+          regex=<regex (line 3 col 5) `cidccysn`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 4 col 5) `cicsJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 4 col 14) `Y29tbWE=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 5 col 5) `cidmdW5jJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 5 col 17) `ZnVuY3Rpb24=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 6 col 5) `cidjbGFzcyc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 6 col 18) `Y2xhc3M=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 7 col 5) `cidwcml2YXRlJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 7 col 20) `cHJpdmF0ZQ==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 8 col 5) `cidwdWJsaWMn`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 8 col 19) `cHVibGlj`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 9 col 5) `cidhJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 9 col 14) `YQ==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 10 col 5) `cidiJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 10 col 14) `Yg==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 11 col 5) `cid4Jw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 11 col 14) `eA==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 12 col 5) `cid5Jw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 12 col 14) `eQ==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 13 col 5) `cidwMSc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 13 col 15) `cGFyYW0x`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 14 col 5) `cidwMic=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 14 col 15) `cGFyYW0y`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 15 col 5) `cidbYS16QS1aXSsn`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 15 col 22) `aWRlbnRpZmllcg==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 16 col 5) `cidcKCc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 16 col 15) `bHBhcmVu`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 17 col 5) `cidcKSc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 17 col 15) `cnBhcmVu`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 18 col 5) `cidceyc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 18 col 15) `bGJyYWNl`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 19 col 5) `cidcfSc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 19 col 15) `cmJyYWNl`>,
+              group=None
+            )
+          ]
+        )
+      ]
+    ),
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<nonterminal (line 22 col 6) `c3RhcnQ=`>,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<identifier (line 22 col 14) `bGlzdA==`>,
+                  parameters=[
+                    <nonterminal (line 22 col 20) `c3RhdGVtZW50`>
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 23 col 6) `c3RhdGVtZW50`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 23 col 19) `ZnVuY2RlZg==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 24 col 6) `c3RhdGVtZW50`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 24 col 19) `Y2xhc3NkZWY=`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 25 col 6) `c3RhdGVtZW50`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 25 col 19) `YQ==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 26 col 6) `c3RhdGVtZW50`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 26 col 19) `Yg==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 27 col 6) `ZnVuY2RlZg==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 27 col 17) `ZnVuY3Rpb24=`>,
+                <terminal (line 27 col 27) `aWRlbnRpZmllcg==`>,
+                <terminal (line 27 col 39) `bHBhcmVu`>,
+                (Macro:
+                  name=<identifier (line 27 col 46) `bGlzdA==`>,
+                  parameters=[
+                    <nonterminal (line 27 col 52) `cGFyYW0=`>,
+                    <terminal (line 27 col 60) `Y29tbWE=`>
+                  ]
+                ),
+                <terminal (line 27 col 68) `cnBhcmVu`>,
+                <terminal (line 27 col 76) `bGJyYWNl`>,
+                (Macro:
+                  name=<identifier (line 27 col 83) `bGlzdA==`>,
+                  parameters=[
+                    <nonterminal (line 27 col 89) `c3RhdGVtZW50`>
+                  ]
+                ),
+                <terminal (line 27 col 101) `cmJyYWNl`>
+              ],
+              ast=(AstTransformation:
+                name=<identifier (line 28 col 12) `RnVuY3Rpb24=`>,
+                parameters=[
+                  (AstParameter:
+                    name=<identifier (line 28 col 21) `bmFtZQ==`>,
+                    index=<nonterminal_reference (line 28 col 27) `MQ==`>
+                  ),
+                  (AstParameter:
+                    name=<identifier (line 28 col 30) `cGFyYW1z`>,
+                    index=<nonterminal_reference (line 28 col 38) `Mw==`>
+                  ),
+                  (AstParameter:
+                    name=<identifier (line 28 col 41) `Ym9keQ==`>,
+                    index=<nonterminal_reference (line 28 col 47) `Ng==`>
+                  )
+                ]
+              )
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 29 col 6) `cGFyYW0=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 29 col 15) `cGFyYW0x`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 30 col 6) `cGFyYW0=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 30 col 15) `cGFyYW0y`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 31 col 6) `Y2xhc3NkZWY=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 31 col 18) `Y2xhc3M=`>,
+                <terminal (line 31 col 25) `aWRlbnRpZmllcg==`>,
+                <terminal (line 31 col 37) `bGJyYWNl`>,
+                (Macro:
+                  name=<identifier (line 31 col 44) `bGlzdA==`>,
+                  parameters=[
+                    <nonterminal (line 31 col 50) `Y2xhc3Nfc3RhdGVtZW50`>
+                  ]
+                ),
+                <terminal (line 31 col 68) `cmJyYWNl`>
+              ],
+              ast=(AstTransformation:
+                name=<identifier (line 32 col 12) `Q2xhc3M=`>,
+                parameters=[
+                  (AstParameter:
+                    name=<identifier (line 32 col 18) `bmFtZQ==`>,
+                    index=<nonterminal_reference (line 32 col 24) `MQ==`>
+                  ),
+                  (AstParameter:
+                    name=<identifier (line 32 col 27) `Ym9keQ==`>,
+                    index=<nonterminal_reference (line 32 col 33) `Mw==`>
+                  )
+                ]
+              )
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 33 col 6) `Y2xhc3Nfc3RhdGVtZW50`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 33 col 25) `cHJpdmF0ZQ==`>,
+                <nonterminal (line 33 col 34) `Y2xhc3NfYXRvbQ==`>
+              ],
+              ast=(AstTransformation:
+                name=<identifier (line 33 col 48) `UHJpdmF0ZQ==`>,
+                parameters=[
+                  (AstParameter:
+                    name=<identifier (line 33 col 56) `bmFtZQ==`>,
+                    index=<nonterminal_reference (line 33 col 62) `MQ==`>
+                  )
+                ]
+              )
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 34 col 6) `Y2xhc3Nfc3RhdGVtZW50`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 34 col 25) `cHVibGlj`>,
+                <nonterminal (line 34 col 33) `Y2xhc3NfYXRvbQ==`>
+              ],
+              ast=(AstTransformation:
+                name=<identifier (line 34 col 47) `UHVibGlj`>,
+                parameters=[
+                  (AstParameter:
+                    name=<identifier (line 34 col 54) `bmFtZQ==`>,
+                    index=<nonterminal_reference (line 34 col 60) `MQ==`>
+                  )
+                ]
+              )
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 35 col 6) `Y2xhc3NfYXRvbQ==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 35 col 20) `ZnVuY2RlZg==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 36 col 6) `Y2xhc3NfYXRvbQ==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 36 col 20) `eA==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 37 col 6) `Y2xhc3NfYXRvbQ==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 37 col 20) `eQ==`>
+              ],
+              ast=None
+            )
+          ]
+        )
+      ]
+    )
+  ]
+)

@@ -1,0 +1,56 @@
+(start:
+  (_gen0:
+    (sub:
+      (item:
+        <a (line 1 col 1) `YQ==`>
+      )
+    ),
+    (_gen1:
+      <comma (line 1 col 2) `LA==`>,
+      (sub:
+        (item:
+          <b (line 1 col 3) `Yg==`>
+        )
+      ),
+      (_gen1:
+        <comma (line 1 col 4) `LA==`>,
+        (sub:
+          (e:
+            <lparen (line 3 col 1) `KA==`>,
+            (e:
+              <lparen (line 3 col 2) `KA==`>,
+              (e:
+                (e:
+                  <number (line 3 col 3) `Ng==`>
+                ),
+                <multiply (line 3 col 4) `Kg==`>,
+                (e:
+                  (e:
+                    <identifier (line 3 col 5) `ag==`>
+                  ),
+                  <lparen (line 3 col 6) `KA==`>,
+                  (_gen2:
+                    (e:
+                      (e:
+                        <number (line 3 col 7) `Nw==`>
+                      ),
+                      <add (line 3 col 8) `Kw==`>,
+                      (e:
+                        <number (line 3 col 9) `OA==`>
+                      )
+                    ),
+                    (_gen3: )
+                  ),
+                  <rparen (line 3 col 10) `KQ==`>
+                )
+              ),
+              <rparen (line 3 col 11) `KQ==`>
+            ),
+            <rparen (line 3 col 12) `KQ==`>
+          )
+        ),
+        (_gen1: )
+      )
+    )
+  )
+)

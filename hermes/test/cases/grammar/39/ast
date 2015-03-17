@@ -1,0 +1,86 @@
+(Grammar:
+  body=[
+    (Lexer:
+      atoms=[
+        (Regex:
+          regex=<regex (line 3 col 5) `cidccysn`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 4 col 5) `cidzJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 4 col 14) `c2Vw`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 5 col 5) `cidhJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 5 col 14) `YQ==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 6 col 5) `cidiJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 6 col 14) `Yg==`>,
+              group=None
+            )
+          ]
+        )
+      ]
+    ),
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<nonterminal (line 9 col 6) `c3RhcnQ=`>,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<identifier (line 9 col 14) `bXNsaXN0`>,
+                  parameters=[
+                    <nonterminal (line 9 col 22) `aXRlbQ==`>,
+                    <terminal (line 9 col 29) `c2Vw`>,
+                    <integer (line 9 col 34) `MQ==`>
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 10 col 6) `aXRlbQ==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 10 col 14) `YQ==`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 10 col 19) `Yg==`>
+              ],
+              ast=None
+            )
+          ]
+        )
+      ]
+    )
+  ]
+)

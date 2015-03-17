@@ -1,0 +1,61 @@
+(start:
+  (_gen0:
+    (sub:
+      (item:
+        <a (line 1 col 1) `YQ==`>
+      )
+    ),
+    (_gen1:
+      <comma (line 1 col 2) `LA==`>,
+      (sub:
+        (e:
+          (e:
+            <identifier (line 1 col 3) `aQ==`>
+          ),
+          <lparen (line 1 col 4) `KA==`>,
+          (_gen5: ),
+          <rparen (line 1 col 5) `KQ==`>
+        )
+      ),
+      (_gen1:
+        <comma (line 1 col 6) `LA==`>,
+        (sub:
+          (e:
+            (e:
+              <lparen_cast (line 1 col 7) `KA==`>,
+              (type_name:
+                <int (line 1 col 8) `aW50`>
+              ),
+              <rparen (line 1 col 11) `KQ==`>
+            ),
+            <lbrace (line 1 col 12) `ew==`>,
+            (_gen2:
+              (initializer_list_item:
+                <item (line 1 col 13) `aXRlbQ==`>
+              ),
+              (_gen3:
+                <comma (line 1 col 17) `LA==`>,
+                (_gen4:
+                  (initializer_list_item:
+                    <item (line 1 col 18) `aXRlbQ==`>
+                  ),
+                  (_gen3:
+                    <comma (line 1 col 22) `LA==`>,
+                    (_gen4:
+                      (initializer_list_item:
+                        <item (line 1 col 23) `aXRlbQ==`>
+                      ),
+                      (_gen3: )
+                    )
+                  )
+                )
+              )
+            ),
+            <rbrace (line 1 col 27) `fQ==`>
+          )
+        ),
+        (_gen1: )
+      )
+    )
+  )
+)

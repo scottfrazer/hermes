@@ -9,24 +9,24 @@ from hermes.hermes_parser import parse, lex
 base_dir = os.path.join(os.path.dirname(__file__), 'cases/grammar/')
 grammars_dir = os.path.join(os.path.dirname(__file__), 'grammars/')
 
-def get_grammar(directory, name='grammar.zgr'):
+def get_grammar(directory, name='grammar.hgr'):
     with open(os.path.join(directory, name)) as fp:
         return hermes.factory.parse(fp.read(), 'grammar')
 
 def test_all():
     for root, _, files in os.walk(grammars_dir):
         for filename in files:
-            if filename.endswith('.zgr'):
-                subdir = os.path.join(base_dir, root.replace(grammars_dir, ''), re.match(r'(.*?)\.zgr$', filename).group(1))
+            if filename.endswith('.hgr'):
+                subdir = os.path.join(base_dir, root.replace(grammars_dir, ''), re.match(r'(.*?)\.hgr$', filename).group(1))
                 if not os.path.exists(subdir):
                     os.makedirs(subdir)
-                grammar_symlink = os.path.join(subdir, 'grammar.zgr')
+                grammar_symlink = os.path.join(subdir, 'grammar.hgr')
                 if not os.path.exists(grammar_symlink):
                     os.symlink(os.path.relpath(os.path.join(root, filename), subdir), grammar_symlink)
     for test_dir, dirs, files in os.walk(base_dir):
-        if 'grammar.zgr' not in files:
+        if 'grammar.hgr' not in files:
             continue
-        grammar_path = os.path.join(test_dir, 'grammar.zgr')
+        grammar_path = os.path.join(test_dir, 'grammar.hgr')
         first_sets_path = os.path.join(test_dir, 'first.json')
         follow_sets_path = os.path.join(test_dir, 'follow.json')
         conflicts_path = os.path.join(test_dir, 'conflicts')
@@ -71,7 +71,7 @@ def write_sets(sets, output_path):
         fp.write(json.dumps(json_sets, indent=4))
 
 def compare(test_dir, filename, actual):
-    grammar_file = os.path.join(test_dir, 'grammar.zgr')
+    grammar_file = os.path.join(test_dir, 'grammar.hgr')
     expected_file = os.path.join(test_dir, filename)
     if not os.path.isfile(expected_file):
       with open(expected_file, 'w') as fp:
@@ -81,22 +81,22 @@ def compare(test_dir, filename, actual):
     assert expected == actual
 
 def tokens(test_dir):
-    grammar_file = os.path.join(test_dir, 'grammar.zgr')
+    grammar_file = os.path.join(test_dir, 'grammar.hgr')
     with open(grammar_file) as fp:
-        actual = lex(fp.read(), 'grammar.zgr').json()
+        actual = lex(fp.read(), 'grammar.hgr').json()
     compare(test_dir, 'tokens', actual)
 
 def parse_tree(test_dir):
-    grammar_file = os.path.join(test_dir, 'grammar.zgr')
+    grammar_file = os.path.join(test_dir, 'grammar.hgr')
     with open(grammar_file) as fp:
-        tree = parse(lex(fp.read(), 'grammar.zgr'))
+        tree = parse(lex(fp.read(), 'grammar.hgr'))
     actual = str(tree.dumps(indent=2))
     compare(test_dir, 'parse_tree', actual)
 
 def ast(test_dir):
-    grammar_file = os.path.join(test_dir, 'grammar.zgr')
+    grammar_file = os.path.join(test_dir, 'grammar.hgr')
     with open(grammar_file) as fp:
-        tree = parse(lex(fp.read(), 'grammar.zgr'))
+        tree = parse(lex(fp.read(), 'grammar.hgr'))
     actual = str(tree.ast().dumps(indent=2))
     compare(test_dir, 'ast', actual)
 

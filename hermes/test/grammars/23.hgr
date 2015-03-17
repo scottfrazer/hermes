@@ -1,0 +1,10 @@
+grammar {
+  lexer {
+    r'\s+' -> null
+    r'x' -> :x
+  }
+  parser {
+    $s = optional($t)
+    $t = :x
+  }
+}

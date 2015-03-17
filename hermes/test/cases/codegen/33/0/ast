@@ -1,0 +1,26 @@
+[
+  <a (line 1 col 1) `YQ==`>,
+  (FunctionCall:
+    name=<identifier (line 1 col 3) `aQ==`>,
+    params=[]
+  ),
+  (TypeInitializion:
+    type=<int (line 1 col 8) `aW50`>,
+    initializer=[
+      <item (line 1 col 13) `aXRlbQ==`>,
+      <item (line 1 col 18) `aXRlbQ==`>,
+      <item (line 1 col 23) `aXRlbQ==`>
+    ]
+  ),
+  (ExprPlusList:
+    expr=<number (line 1 col 29) `MA==`>,
+    params=[]
+  ),
+  (ExprPlusList:
+    expr=<number (line 1 col 33) `MQ==`>,
+    params=[
+      <item (line 1 col 35) `aXRlbQ==`>,
+      <item (line 1 col 40) `aXRlbQ==`>
+    ]
+  )
+]

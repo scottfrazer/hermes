@@ -16,7 +16,7 @@ def javascript_tokens(test_dir): return _lex_javascript(test_dir)
 def javascript_parsetree(test_dir): return _parse_javascript(test_dir, 'parsetree')
 def javascript_ast(test_dir): return _parse_javascript(test_dir, 'ast')
 
-def _get_grammar(directory, name='grammar.zgr'):
+def _get_grammar(directory, name='grammar.hgr'):
     with open(os.path.join(directory, name)) as fp:
         return hermes.factory.parse(fp.read(), 'grammar')
 

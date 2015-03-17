@@ -1,0 +1,32 @@
+(start:
+  (_gen0:
+    (sub:
+      (item:
+        <a (line 1 col 1) `YQ==`>
+      )
+    ),
+    (_gen1:
+      <comma (line 1 col 2) `LA==`>,
+      (sub:
+        (item:
+          <b (line 1 col 3) `Yg==`>
+        )
+      ),
+      (_gen1:
+        <comma (line 1 col 4) `LA==`>,
+        (sub:
+          (e:
+            (e:
+              <number (line 1 col 5) `NA==`>
+            ),
+            <add (line 1 col 6) `Kw==`>,
+            (e:
+              <number (line 1 col 7) `NQ==`>
+            )
+          )
+        ),
+        (_gen1: )
+      )
+    )
+  )
+)

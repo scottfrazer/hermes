@@ -1,7 +1,0 @@
-grammar {
-  parser {
-    $start = $sub :semi
-    $sub = :a $sub :b
-    $sub = :_empty
-  }
-}

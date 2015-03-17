@@ -1,0 +1,38 @@
+(Program:
+  statements=[
+    (Assign:
+      var=<identifier (line 1 col 1) `aQ==`>,
+      val=(Assign:
+        var=<identifier (line 1 col 3) `ag==`>,
+        val=<n (line 1 col 5) `MA==`>
+      )
+    ),
+    (For:
+      decl=(Assign:
+        var=<identifier (line 3 col 5) `aQ==`>,
+        val=<n (line 3 col 9) `MA==`>
+      ),
+      cond=None,
+      iter=(Assign:
+        var=<identifier (line 3 col 14) `ag==`>,
+        val=(Add:
+          lhs=<s (line 3 col 18) `InN0ciI=`>,
+          rhs=<n (line 3 col 26) `NQ==`>
+        )
+      ),
+      body=(Assign:
+        var=<identifier (line 4 col 3) `aw==`>,
+        val=(Add:
+          lhs=<n (line 4 col 7) `Ng==`>,
+          rhs=(Divide:
+            lhs=(Multiply:
+              lhs=<s (line 4 col 11) `ImEi`>,
+              rhs=<n (line 4 col 17) `Nw==`>
+            ),
+            rhs=<s (line 4 col 21) `ImMi`>
+          )
+        )
+      )
+    )
+  ]
+)

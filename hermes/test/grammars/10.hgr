@@ -1,0 +1,13 @@
+grammar {
+  lexer {
+    r'a' -> :a
+    r'b' -> :b
+    r';' -> :semi
+    r'\s+' -> null
+  }
+  parser {
+    $start = $sub :semi
+    $sub = :a $sub :b
+    $sub = :_empty
+  }
+}

@@ -1,0 +1,12 @@
+grammar {
+  lexer {
+    r'\s+' -> null
+    r's' -> :sep
+    r'a' -> :a
+    r'b' -> :b
+  }
+  parser {
+    $start = mslist($item, :sep, 4)
+    $item = :a | :b
+  }
+}

@@ -1,0 +1,11 @@
+grammar {
+  lexer {
+    r'\s+' -> null
+    r'item' -> :item
+    r',' -> :comma
+    r'next' -> :next
+  }
+  parser {
+    $start = otlist(:item, :comma, 1) :next -> Thing(x=$0, y=$1)
+  }
+}

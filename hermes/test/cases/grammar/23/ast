@@ -1,0 +1,58 @@
+(Grammar:
+  body=[
+    (Lexer:
+      atoms=[
+        (Regex:
+          regex=<regex (line 3 col 5) `cidccysn`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 4 col 5) `cid4Jw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 4 col 14) `eA==`>,
+              group=None
+            )
+          ]
+        )
+      ]
+    ),
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<nonterminal (line 7 col 6) `cw==`>,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<identifier (line 7 col 10) `b3B0aW9uYWw=`>,
+                  parameters=[
+                    <nonterminal (line 7 col 20) `dA==`>
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 8 col 6) `dA==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 8 col 11) `eA==`>
+              ],
+              ast=None
+            )
+          ]
+        )
+      ]
+    )
+  ]
+)

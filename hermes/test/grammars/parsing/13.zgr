@@ -1,6 +1,0 @@
-grammar {
-  parser {
-    $s = optional($t)
-    $t = :x
-  }
-}

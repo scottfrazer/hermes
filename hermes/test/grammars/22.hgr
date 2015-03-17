@@ -1,0 +1,10 @@
+grammar {
+  lexer {
+    r'\s+' -> null
+    r'nt' -> :nt
+  }
+  parser {
+    $s = mlist($t, 2)
+    $t = :nt
+  }
+}

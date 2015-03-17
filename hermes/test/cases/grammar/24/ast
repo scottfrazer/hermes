@@ -1,0 +1,753 @@
+(Grammar:
+  body=[
+    (Lexer:
+      atoms=[
+        (Regex:
+          regex=<regex (line 3 col 5) `cidccysn`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 4 col 5) `cidjYWxsJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 4 col 17) `Y2FsbA==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 5 col 5) `cidiZWdpbic=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 5 col 18) `YmVnaW4=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 6 col 5) `cidpZic=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 6 col 15) `aWY=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 7 col 5) `cid3aGlsZSc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 7 col 18) `d2hpbGU=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 8 col 5) `cidkbyc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 8 col 15) `ZG8=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 9 col 5) `cidjb25zdCc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 9 col 18) `Y29uc3Q=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 10 col 5) `cid2YXIn`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 10 col 16) `dmFy`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 11 col 5) `cidwcm9jZWR1cmUn`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 11 col 22) `cHJvY2VkdXJl`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 12 col 5) `cic9Jw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 12 col 14) `ZXF1YWw=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 13 col 5) `cic6PSc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 13 col 15) `YXNzaWdu`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 14 col 5) `cicjJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 14 col 14) `cG91bmQ=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 15 col 5) `cic8PSc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 15 col 15) `bHRlcQ==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 16 col 5) `cic8Jw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 16 col 14) `bHQ=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 17 col 5) `cic+PSc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 17 col 15) `Z3RlcQ==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 18 col 5) `cic+Jw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 18 col 14) `Z3Q=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 19 col 5) `cidcLic=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 19 col 15) `ZG90`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 20 col 5) `cicsJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 20 col 14) `Y29tbWE=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 21 col 5) `cic7Jw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 21 col 14) `c2VtaQ==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 22 col 5) `cidcISc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 22 col 15) `b2Rk`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 23 col 5) `cidcKyc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 23 col 15) `cGx1cw==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 24 col 5) `cictJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 24 col 14) `bWludXM=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 25 col 5) `cidcKic=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 25 col 15) `dGltZXM=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 26 col 5) `cicvJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 26 col 14) `ZGl2aWRl`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 27 col 5) `cidbYS16QS1aXSsn`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 27 col 22) `aWRlbnQ=`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 28 col 5) `cidbMC05XSsn`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 28 col 19) `bnVtYmVy`>,
+              group=None
+            )
+          ]
+        )
+      ]
+    ),
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<nonterminal (line 31 col 6) `cHJvZ3JhbQ==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 31 col 17) `YmxvY2s=`>,
+                <terminal (line 31 col 24) `ZG90`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 32 col 6) `YmxvY2s=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 32 col 15) `YmxvY2tfY29uc3Q=`>,
+                <nonterminal (line 32 col 28) `YmxvY2tfdmFy`>,
+                <nonterminal (line 32 col 39) `YmxvY2tfcHJvYw==`>,
+                <nonterminal (line 32 col 51) `c3RhdGVtZW50`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 33 col 6) `YmxvY2tfY29uc3Q=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 33 col 21) `Y29uc3Q=`>,
+                <nonterminal (line 33 col 28) `aWRlbnQ=`>,
+                <terminal (line 33 col 35) `ZXF1YWw=`>,
+                <nonterminal (line 33 col 42) `bnVtYmVy`>,
+                <nonterminal (line 33 col 50) `YmxvY2tfY29uc3Qx`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 33 col 66) `X2VtcHR5`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 34 col 6) `YmxvY2tfY29uc3Qx`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 34 col 22) `Y29tbWE=`>,
+                <nonterminal (line 34 col 29) `aWRlbnQ=`>,
+                <terminal (line 34 col 36) `ZXF1YWw=`>,
+                <nonterminal (line 34 col 43) `bnVtYmVy`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 34 col 53) `X2VtcHR5`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 35 col 6) `YmxvY2tfdmFy`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 35 col 19) `dmFy`>,
+                <nonterminal (line 35 col 24) `aWRlbnQ=`>,
+                <nonterminal (line 35 col 31) `YmxvY2tfdmFyMQ==`>,
+                <terminal (line 35 col 43) `c2VtaQ==`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 35 col 51) `X2VtcHR5`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 36 col 6) `YmxvY2tfdmFyMQ==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 36 col 20) `Y29tbWE=`>,
+                <nonterminal (line 36 col 27) `aWRlbnQ=`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 36 col 36) `X2VtcHR5`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 37 col 6) `YmxvY2tfcHJvYw==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 37 col 20) `cHJvY2VkdXJl`>,
+                <nonterminal (line 37 col 31) `aWRlbnQ=`>,
+                <terminal (line 37 col 38) `c2VtaQ==`>,
+                <nonterminal (line 37 col 44) `YmxvY2s=`>,
+                <terminal (line 37 col 51) `c2VtaQ==`>,
+                <nonterminal (line 37 col 57) `YmxvY2tfcHJvYw==`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 37 col 71) `X2VtcHR5`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 38 col 6) `c3RhdGVtZW50`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 38 col 19) `aWRlbnQ=`>,
+                <terminal (line 38 col 26) `YXNzaWdu`>,
+                <nonterminal (line 38 col 34) `ZXhwcmVzc2lvbg==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 39 col 6) `c3RhdGVtZW50`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 39 col 19) `Y2FsbA==`>,
+                <nonterminal (line 39 col 25) `aWRlbnQ=`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 40 col 6) `c3RhdGVtZW50`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 40 col 19) `YmVnaW4=`>,
+                <nonterminal (line 40 col 26) `c3RhdGVtZW50`>,
+                <nonterminal (line 40 col 37) `c3RhdGVtZW50X3N1YjE=`>,
+                <terminal (line 40 col 53) `ZW5k`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 41 col 6) `c3RhdGVtZW50`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 41 col 19) `aWY=`>,
+                <nonterminal (line 41 col 23) `Y29uZGl0aW9u`>,
+                <terminal (line 41 col 34) `dGhlbg==`>,
+                <nonterminal (line 41 col 40) `c3RhdGVtZW50`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 42 col 6) `c3RhdGVtZW50`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 42 col 19) `d2hpbGU=`>,
+                <nonterminal (line 42 col 26) `Y29uZGl0aW9u`>,
+                <terminal (line 42 col 37) `ZG8=`>,
+                <nonterminal (line 42 col 41) `c3RhdGVtZW50`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 43 col 6) `c3RhdGVtZW50X3N1YjE=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 43 col 24) `c2VtaQ==`>,
+                <nonterminal (line 43 col 30) `c3RhdGVtZW50`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 43 col 43) `X2VtcHR5`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 44 col 6) `Y29uZGl0aW9u`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 44 col 19) `b2Rk`>,
+                <nonterminal (line 44 col 24) `ZXhwcmVzc2lvbg==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 45 col 6) `Y29uZGl0aW9u`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 45 col 19) `ZXhwcmVzc2lvbg==`>,
+                <nonterminal (line 45 col 31) `b3A=`>,
+                <nonterminal (line 45 col 35) `ZXhwcmVzc2lvbg==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 46 col 6) `b3A=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 46 col 12) `ZXF1YWw=`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 47 col 6) `b3A=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 47 col 12) `cG91bmQ=`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 48 col 6) `b3A=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 48 col 12) `bHQ=`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 49 col 6) `b3A=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 49 col 12) `bHRlcQ==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 50 col 6) `b3A=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 50 col 12) `Z3Q=`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 51 col 6) `b3A=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 51 col 12) `Z3RlcQ==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 52 col 6) `ZXhwcmVzc2lvbg==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 52 col 20) `dW5hcnlfYWRkX29w`>,
+                <nonterminal (line 52 col 34) `dGVybQ==`>,
+                <nonterminal (line 52 col 40) `ZXhwcmVzc2lvbl9zdWIx`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 53 col 6) `dW5hcnlfYWRkX29w`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 53 col 22) `YWRkX29w`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 53 col 32) `X2VtcHR5`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 54 col 6) `ZXhwcmVzc2lvbl9zdWIx`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 54 col 25) `YWRkX29w`>,
+                <nonterminal (line 54 col 33) `ZXhwcmVzc2lvbl9zdWIx`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 54 col 52) `X2VtcHR5`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 55 col 6) `YWRkX29w`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 55 col 16) `cGx1cw==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 56 col 6) `YWRkX29w`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 56 col 16) `bWludXM=`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 57 col 6) `bXVsX29w`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 57 col 16) `dGltZXM=`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 58 col 6) `bXVsX29w`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 58 col 16) `ZGl2aWRl`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 59 col 6) `dGVybQ==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 59 col 14) `ZmFjdG9y`>,
+                <nonterminal (line 59 col 22) `dGVybV9zdWIx`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 60 col 6) `dGVybV9zdWIx`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 60 col 19) `bXVsX29w`>,
+                <nonterminal (line 60 col 27) `dGVybV9zdWIx`>
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <terminal (line 60 col 40) `X2VtcHR5`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 61 col 6) `ZmFjdG9y`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 61 col 16) `aWRlbnQ=`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 62 col 6) `ZmFjdG9y`>,
+          production=[
+            (Production:
+              morphemes=[
+                <nonterminal (line 62 col 16) `bnVtYmVy`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 63 col 6) `ZmFjdG9y`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 63 col 16) `bHBhcmVu`>,
+                <nonterminal (line 63 col 24) `ZXhwcmVzc2lvbg==`>,
+                <terminal (line 63 col 36) `cnBhcmVu`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 64 col 6) `aWRlbnQ=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 64 col 15) `aWRlbnQ=`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 65 col 6) `bnVtYmVy`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 65 col 16) `bnVtYmVy`>
+              ],
+              ast=None
+            )
+          ]
+        )
+      ]
+    )
+  ]
+)

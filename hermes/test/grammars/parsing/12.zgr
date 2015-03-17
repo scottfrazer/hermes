@@ -1,6 +1,0 @@
-grammar {
-  parser {
-    $s = mlist($t, 2)
-    $t = :nt
-  }
-}

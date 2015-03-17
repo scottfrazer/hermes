@@ -1,0 +1,22 @@
+(Statements:
+  list=[
+    (Item:
+      name=<a (line 1 col 1) `YQ==`>
+    ),
+    (Item:
+      name=<b (line 1 col 3) `Yg==`>
+    ),
+    (Mul:
+      l=<number (line 3 col 3) `Ng==`>,
+      r=(FuncCall:
+        name=<identifier (line 3 col 5) `ag==`>,
+        params=[
+          (Add:
+            l=<number (line 3 col 7) `Nw==`>,
+            r=<number (line 3 col 9) `OA==`>
+          )
+        ]
+      )
+    )
+  ]
+)

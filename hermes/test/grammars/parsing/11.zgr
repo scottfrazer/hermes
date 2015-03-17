@@ -1,8 +1,0 @@
-grammar {
-  parser {
-    $s = list($t)
-    $s = :_empty
-    $t = :x
-    $t = :y
-  }
-}

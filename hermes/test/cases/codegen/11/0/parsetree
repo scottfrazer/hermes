@@ -1,0 +1,40 @@
+(start:
+  (_gen0:
+    (statements:
+      (e:
+        (e:
+          <a (line 1 col 1) `YQ==`>
+        ),
+        <add (line 1 col 2) `Kw==`>,
+        (e:
+          <b (line 1 col 3) `Yg==`>
+        )
+      )
+    ),
+    (_gen1:
+      <comma (line 1 col 4) `LA==`>,
+      (statements:
+        (assignstatement:
+          <identifier (line 1 col 5) `aQ==`>,
+          <eq (line 1 col 6) `PQ==`>,
+          (e:
+            (e:
+              <a (line 1 col 7) `YQ==`>
+            ),
+            <sub (line 1 col 8) `LQ==`>,
+            (e:
+              (e:
+                <b (line 1 col 9) `Yg==`>
+              ),
+              <mul (line 1 col 10) `Kg==`>,
+              (e:
+                <a (line 1 col 11) `YQ==`>
+              )
+            )
+          )
+        )
+      ),
+      (_gen1: )
+    )
+  )
+)

@@ -1,0 +1,11 @@
+grammar {
+  lexer {
+    r'\n' -> :newline
+    r'a' -> :a
+    r'b' -> :b
+  }
+  parser {
+    $start = tlist($item, :newline)
+    $item = list(:a) | list(:b)
+  }
+}

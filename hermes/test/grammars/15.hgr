@@ -1,0 +1,41 @@
+grammar {
+  lexer {
+    r'\s+' -> null
+    r';' -> :semi
+    r'a' -> :a
+    r'b' -> :b
+    r',' -> :comma
+    r'\(' -> :lparen
+    r'\)' -> :rparen
+    r'\{' -> :lbrace
+    r'\}' -> :rbrace
+    r'\[' -> :lsquare
+    r'\]' -> :rsquare
+    r'[0-9]+' -> :number
+    r'[a-zA-Z]+' -> :identifier
+    r'\+' -> :add
+    r'-' -> :subtract
+    r'\*' -> :multiply
+    r'/' -> :divide
+  }
+  parser {
+    $start = list($sub, :comma) -> Statements( list=$0 )
+    $sub = $item -> Item( name=$0 )
+    $sub = $e
+    $item = :b
+    $item = :a
+    $e = parser<expression> {
+      (*:left) $e = $e :add $e -> Add( l=$0, r=$2 )
+      (-:left) $e = $e :subtract $e -> Sub( l=$0, r=$2 )
+      (*:left) $e = $e :multiply $e -> Mul( l=$0, r=$2 )
+      (-:left) $e = $e :divide $e -> Div( l=$0, r=$2 )
+      (*:unary) $e = :subtract $e -> UMinus( arg=$1 )
+      (*:left) $e = :identifier <=> :lparen list($e, :comma) :rparen -> FuncCall( name=$0, params=$2 )
+      $e = :lsquare list($e, :comma) :rsquare -> ListDecl( items=$1 )
+      $e = :lbrace list($e, :comma) :rbrace -> SetDecl( items=$1 )
+      $e = :lparen $e :rparen -> $1
+      $e = :identifier
+      $e = :number
+    }
+  }
+}

@@ -1,0 +1,101 @@
+(Grammar:
+  body=[
+    (Lexer:
+      atoms=[
+        (Regex:
+          regex=<regex (line 3 col 5) `cidccysn`>,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 4 col 5) `cidcKCc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 4 col 15) `bHBhcmVu`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 5 col 5) `cidcKSc=`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 5 col 15) `cnBhcmVu`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 6 col 5) `cidhJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 6 col 14) `YQ==`>,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<regex (line 7 col 5) `cidiJw==`>,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<terminal (line 7 col 14) `Yg==`>,
+              group=None
+            )
+          ]
+        )
+      ]
+    ),
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<nonterminal (line 10 col 6) `c3RhcnQ=`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 10 col 15) `bHBhcmVu`>,
+                (Macro:
+                  name=<identifier (line 10 col 22) `bGlzdA==`>,
+                  parameters=[
+                    <nonterminal (line 10 col 28) `aXRlbQ==`>
+                  ]
+                ),
+                <terminal (line 10 col 35) `cnBhcmVu`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 11 col 6) `aXRlbQ==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 11 col 14) `YQ==`>
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<nonterminal (line 12 col 6) `aXRlbQ==`>,
+          production=[
+            (Production:
+              morphemes=[
+                <terminal (line 12 col 14) `Yg==`>
+              ],
+              ast=None
+            )
+          ]
+        )
+      ]
+    )
+  ]
+)

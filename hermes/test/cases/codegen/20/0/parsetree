@@ -1,0 +1,75 @@
+(start:
+  (_gen0:
+    (statement:
+      (funcdef:
+        <function (line 1 col 1) `ZnVuYw==`>,
+        <identifier (line 1 col 6) `Zm5hbWU=`>,
+        <lparen (line 1 col 11) `KA==`>,
+        (_gen1:
+          (param:
+            <param1 (line 1 col 12) `cDE=`>
+          ),
+          (_gen2:
+            <comma (line 1 col 14) `LA==`>,
+            (param:
+              <param2 (line 1 col 16) `cDI=`>
+            ),
+            (_gen2: )
+          )
+        ),
+        <rparen (line 1 col 18) `KQ==`>,
+        <lbrace (line 1 col 20) `ew==`>,
+        (_gen0:
+          (statement:
+            <a (line 2 col 3) `YQ==`>
+          ),
+          (_gen0:
+            (statement:
+              <b (line 2 col 4) `Yg==`>
+            ),
+            (_gen0:
+              (statement:
+                <a (line 2 col 5) `YQ==`>
+              ),
+              (_gen0:
+                (statement:
+                  <b (line 2 col 6) `Yg==`>
+                ),
+                (_gen0: )
+              )
+            )
+          )
+        ),
+        <rbrace (line 3 col 1) `fQ==`>
+      )
+    ),
+    (_gen0:
+      (statement:
+        (classdef:
+          <class (line 5 col 1) `Y2xhc3M=`>,
+          <identifier (line 5 col 7) `Y25hbWU=`>,
+          <lbrace (line 5 col 13) `ew==`>,
+          (_gen3:
+            (class_statement:
+              <private (line 6 col 3) `cHJpdmF0ZQ==`>,
+              (class_atom:
+                <x (line 6 col 11) `eA==`>
+              )
+            ),
+            (_gen3:
+              (class_statement:
+                <public (line 7 col 3) `cHVibGlj`>,
+                (class_atom:
+                  <y (line 7 col 10) `eQ==`>
+                )
+              ),
+              (_gen3: )
+            )
+          ),
+          <rbrace (line 8 col 1) `fQ==`>
+        )
+      ),
+      (_gen0: )
+    )
+  )
+)

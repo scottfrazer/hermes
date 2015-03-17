@@ -1,0 +1,13 @@
+grammar {
+  lexer {
+    r'\s+' -> null
+    r'x' -> :x
+    r'y' -> :y
+  }
+  parser {
+    $s = list($t)
+    $s = :_empty
+    $t = :x
+    $t = :y
+  }
+}

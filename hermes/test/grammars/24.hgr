@@ -1,0 +1,67 @@
+grammar {
+  lexer {
+    r'\s+' -> null
+    r'call' -> :call
+    r'begin' -> :begin
+    r'if' -> :if
+    r'while' -> :while
+    r'do' -> :do
+    r'const' -> :const
+    r'var' -> :var
+    r'procedure' -> :procedure
+    r'=' -> :equal
+    r':=' -> :assign
+    r'#' -> :pound
+    r'<=' -> :lteq
+    r'<' -> :lt
+    r'>=' -> :gteq
+    r'>' -> :gt
+    r'\.' -> :dot
+    r',' -> :comma
+    r';' -> :semi
+    r'\!' -> :odd
+    r'\+' -> :plus
+    r'-' -> :minus
+    r'\*' -> :times
+    r'/' -> :divide
+    r'[a-zA-Z]+' -> :ident
+    r'[0-9]+' -> :number
+  }
+  parser {
+    $program = $block :dot
+    $block = $block_const $block_var $block_proc $statement
+    $block_const = :const $ident :equal $number $block_const1 | :_empty
+    $block_const1 = :comma $ident :equal $number | :_empty
+    $block_var = :var $ident $block_var1 :semi | :_empty
+    $block_var1 = :comma $ident | :_empty
+    $block_proc = :procedure $ident :semi $block :semi $block_proc | :_empty
+    $statement = $ident :assign $expression
+    $statement = :call $ident
+    $statement = :begin $statement $statement_sub1 :end
+    $statement = :if $condition :then $statement
+    $statement = :while $condition :do $statement
+    $statement_sub1 = :semi $statement | :_empty
+    $condition = :odd $expression
+    $condition = $expression $op $expression
+    $op = :equal
+    $op = :pound
+    $op = :lt
+    $op = :lteq
+    $op = :gt
+    $op = :gteq
+    $expression = $unary_add_op $term $expression_sub1
+    $unary_add_op = $add_op | :_empty
+    $expression_sub1 = $add_op $expression_sub1 | :_empty
+    $add_op = :plus
+    $add_op = :minus
+    $mul_op = :times
+    $mul_op = :divide
+    $term = $factor $term_sub1
+    $term_sub1 = $mul_op $term_sub1 | :_empty
+    $factor = $ident
+    $factor = $number
+    $factor = :lparen $expression :rparen
+    $ident = :ident
+    $number = :number
+  }
+}

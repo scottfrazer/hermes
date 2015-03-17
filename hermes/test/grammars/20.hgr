@@ -1,0 +1,39 @@
+grammar {
+  lexer {
+    r'\s+' -> null
+    r',' -> :comma
+    r'func' -> :function
+    r'class' -> :class
+    r'private' -> :private
+    r'public' -> :public
+    r'a' -> :a
+    r'b' -> :b
+    r'x' -> :x
+    r'y' -> :y
+    r'p1' -> :param1
+    r'p2' -> :param2
+    r'[a-zA-Z]+' -> :identifier
+    r'\(' -> :lparen
+    r'\)' -> :rparen
+    r'\{' -> :lbrace
+    r'\}' -> :rbrace
+  }
+  parser {
+    $start = list($statement)
+    $statement = $funcdef
+    $statement = $classdef
+    $statement = :a
+    $statement = :b
+    $funcdef = :function :identifier :lparen list($param, :comma) :rparen :lbrace list($statement) :rbrace
+        -> Function(name=$1, params=$3, body=$6)
+    $param = :param1
+    $param = :param2
+    $classdef = :class :identifier :lbrace list($class_statement) :rbrace
+        -> Class(name=$1, body=$3)
+    $class_statement = :private $class_atom -> Private(name=$1)
+    $class_statement = :public $class_atom -> Public(name=$1)
+    $class_atom = $funcdef
+    $class_atom = :x
+    $class_atom = :y
+  }
+}

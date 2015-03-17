@@ -1,0 +1,18 @@
+(Program:
+  statements=[
+    (Add:
+      lhs=<a (line 1 col 1) `YQ==`>,
+      rhs=<b (line 1 col 3) `Yg==`>
+    ),
+    (Assign:
+      var=<identifier (line 1 col 5) `aQ==`>,
+      val=(Subtract:
+        lhs=<a (line 1 col 7) `YQ==`>,
+        rhs=(Multiply:
+          lhs=<b (line 1 col 9) `Yg==`>,
+          rhs=<a (line 1 col 11) `YQ==`>
+        )
+      )
+    )
+  ]
+)

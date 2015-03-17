@@ -1,0 +1,50 @@
+grammar {
+  lexer {
+    r'\s+' -> null
+    r'for' -> :for
+    r',' -> :comma
+    r'[0-9]+' -> :n
+    r'"[^"]*"' -> :s
+    r'[a-zA-Z]+' -> :identifier
+    r'=' -> :eq
+    r'\(' -> :lparen
+    r'\)' -> :rparen
+    r';' -> :semi
+    r'\{' -> :lbrace
+    r'\}' -> :rbrace
+    r'\+' -> :add
+    r'-' -> :sub
+    r'\*' -> :mul
+    r'/' -> :div
+  }
+  parser {
+    $start = list($statement, :comma) -> Program( statements=$0 )
+    $start = :_empty
+    $statement = $e
+    $statement = $assignstatement
+    $statement = $forstatement
+    $assignstatement = :identifier :eq $assignstatementsub -> Assign( var=$0, val=$2 )
+    $assignstatementsub = $assignstatement
+    $assignstatementsub = $e
+    $complexexpression = $e
+    $complexexpression = $assignstatement
+    $forstatement = :for :lparen $fordeclstatement :semi $forcondstatement :semi $foriterstatement :rparen :lbrace $forbody :rbrace -> For( decl=$2, cond=$4, iter=$6, body=$9 )
+    $fordeclstatement = $complexexpression
+    $fordeclstatement = :_empty
+    $forcondstatement = $e
+    $forcondstatement = :_empty
+    $foriterstatement = $complexexpression
+    $foriterstatement = :_empty
+    $forbody = $statement :semi $forbody
+    $forbody = :_empty
+    $e = parser<expression> {
+      (*:left) $e = $e :add $e -> Add( lhs=$0, rhs=$2 )
+      (-:left) $e = $e :sub $e -> Subtract( lhs=$0, rhs=$2 )
+      (*:left) $e = $e :mul $e -> Multiply( lhs=$0, rhs=$2 )
+      (-:left) $e = $e :div $e -> Divide( lhs=$0, rhs=$2 )
+      (*:unary) $e = :sub $e -> UMinus( arg=$1 )
+      $e = :n
+      $e = :s
+    }
+  }
+}

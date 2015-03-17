@@ -1,0 +1,48 @@
+grammar {
+  lexer {
+    r'\s+' -> null
+    r',' -> :comma
+    r'a' -> :a
+    r'b' -> :b
+    r'int' -> :int
+    r'char' -> :char
+    r'item' -> :item
+    r'\+' -> :add
+    r'-' -> :subtract
+    r'\*' -> :multiply
+    r'/' -> :divide
+    r'\((?=\s*(int|char))' -> :lparen_cast
+    r'\(' -> :lparen
+    r'\)' -> :rparen
+    r'\{' -> :lbrace
+    r'\}' -> :rbrace
+    r'\[' -> :lsquare
+    r'\]' -> :rsquare
+    r'[a-zA-Z]+' -> :identifier
+    r'[0-9]+' -> :number
+  }
+  parser {
+    $start = list($sub, :comma)
+    $sub = $item
+    $sub = $e
+    $item = :b
+    $item = :a
+    $type_name = :int
+    $type_name = :char
+    $initializer_list_item = :item
+    $e = parser<expression> {
+      (*:left) $e = $e :add $e
+      (-:left) $e = $e :subtract $e
+      (*:left) $e = $e :multiply $e
+      (-:left) $e = $e :divide $e
+      (*:left) $e = :lparen_cast $type_name :rparen <=> :lbrace otlist($initializer_list_item, :comma) :rbrace -> TypeInitializion( type=$1, initializer=$4 )
+      (-:left) $e = :identifier <=> :lparen list($e, :comma) :rparen -> FunctionCall( name=$$, params=$2 )
+      (*:unary) $e = :subtract $e
+      $e = :lsquare list($e, :comma) :rsquare
+      $e = :lbrace list($e, :comma) :rbrace
+      $e = :lparen $e :rparen
+      $e = :identifier
+      $e = :number
+    }
+  }
+}
