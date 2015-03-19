@@ -339,7 +339,7 @@ function DefaultSyntaxErrorFormatter() {
           actual_terminal.col,
           nonterminal,
           expected_terminals.join(', '),
-          actual_terminal.to_string()
+          actual_terminal.to_string(true)
         );
     }
     this.no_more_tokens = function(nonterminal, expected_terminal, last_terminal) {
@@ -1228,15 +1228,15 @@ var main = function() {
 
     fs.readFile(file, 'utf-8', function (err, data) {
         if (err) throw err;
+
+        try {
+            var tokens = lex(data, 'source');
+        } catch(err) {
+            console.log(err.to_string());
+            process.exit(0);
+        }
+
         if (output == 'tokens') {
-
-          try {
-              var tokens = lex(data, 'source');
-          } catch(err) {
-              console.log(err.to_string());
-              process.exit(0);
-          }
-
           if (tokens.list.length == 0) {
               console.log('[]');
           } else {
@@ -1256,33 +1256,12 @@ var main = function() {
           }
           process.exit(0);
         }
-
-        var file_tokens;
-
         try {
-            file_tokens = JSON.parse(data);
-        } catch(err) {
-            console.log("Invalid JSON input");
-            process.exit(-1);
-        }
-        var tokens = [];
-        for (i in file_tokens) {
-            token = new Terminal(
-                terminals[file_tokens[i].terminal],
-                file_tokens[i].terminal,
-                file_tokens[i].source_string,
-                file_tokens[i].resource,
-                file_tokens[i].line,
-                file_tokens[i].col
-            );
-            tokens.push(token);
-        }
-        try {
-            tree = parse(new TokenStream(tokens));
+            tree = parse(tokens);
             if (output == 'parsetree') {
-                console.log(parse_tree_string(tree, 2));
+                console.log(parse_tree_string(tree, 2, true));
             } else if (output == 'ast') {
-                console.log(ast_string(tree.to_ast(), 2));
+                console.log(ast_string(tree.to_ast(), 2, true));
             }
         } catch (err) {
             console.log(err.message);
