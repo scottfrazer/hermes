@@ -1,9 +1,7 @@
-[
-    {"terminal": "var", "resource": "source", "line": 1, "col": 1, "source_string": "dmFy"},
-    {"terminal": "ident", "resource": "source", "line": 1, "col": 5, "source_string": "aQ=="},
-    {"terminal": "semi", "resource": "source", "line": 1, "col": 6, "source_string": "Ow=="},
-    {"terminal": "ident", "resource": "source", "line": 2, "col": 1, "source_string": "aQ=="},
-    {"terminal": "assign", "resource": "source", "line": 2, "col": 3, "source_string": "Oj0="},
-    {"terminal": "number", "resource": "source", "line": 2, "col": 6, "source_string": "NTY="},
-    {"terminal": "dot", "resource": "source", "line": 2, "col": 8, "source_string": "Lg=="}
-]
+<source:1:1 var "dmFy">
+<source:1:5 ident "aQ==">
+<source:1:6 semi "Ow==">
+<source:2:1 ident "aQ==">
+<source:2:3 assign "Oj0=">
+<source:2:6 number "NTY=">
+<source:2:8 dot "Lg==">

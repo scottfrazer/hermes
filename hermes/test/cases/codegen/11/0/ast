@@ -1,16 +1,16 @@
 (Program:
   statements=[
     (Add:
-      lhs=<a (line 1 col 1) `YQ==`>,
-      rhs=<b (line 1 col 3) `Yg==`>
+      lhs=<source:1:1 a "YQ==">,
+      rhs=<source:1:3 b "Yg==">
     ),
     (Assign:
-      var=<identifier (line 1 col 5) `aQ==`>,
+      var=<source:1:5 identifier "aQ==">,
       val=(Subtract:
-        lhs=<a (line 1 col 7) `YQ==`>,
+        lhs=<source:1:7 a "YQ==">,
         rhs=(Multiply:
-          lhs=<b (line 1 col 9) `Yg==`>,
-          rhs=<a (line 1 col 11) `YQ==`>
+          lhs=<source:1:9 b "Yg==">,
+          rhs=<source:1:11 a "YQ==">
         )
       )
     )

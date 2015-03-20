@@ -1,15 +1,15 @@
 (start:
-  <lparen (line 1 col 1) `KA==`>,
+  <source:1:1 lparen "KA==">,
   (_gen0:
     (item:
-      <a (line 1 col 2) `YQ==`>
+      <source:1:2 a "YQ==">
     ),
     (_gen0:
       (item:
-        <b (line 1 col 3) `Yg==`>
+        <source:1:3 b "Yg==">
       ),
       (_gen0: )
     )
   ),
-  <rparen (line 1 col 4) `KQ==`>
+  <source:1:4 rparen "KQ==">
 )

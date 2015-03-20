@@ -1,8 +1,8 @@
 (start:
   (sub:
-    <a (line 1 col 1) `YQ==`>,
+    <source:1:1 a "YQ==">,
     (sub: ),
-    <b (line 1 col 2) `Yg==`>
+    <source:1:2 b "Yg==">
   ),
-  <semi (line 1 col 3) `Ow==`>
+  <source:1:3 semi "Ow==">
 )

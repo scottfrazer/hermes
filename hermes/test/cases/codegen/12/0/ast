@@ -1,35 +1,35 @@
 (Program:
   statements=[
     (Assign:
-      var=<identifier (line 1 col 1) `aQ==`>,
+      var=<source:1:1 identifier "aQ==">,
       val=(Assign:
-        var=<identifier (line 1 col 3) `ag==`>,
-        val=<n (line 1 col 5) `MA==`>
+        var=<source:1:3 identifier "ag==">,
+        val=<source:1:5 n "MA==">
       )
     ),
     (For:
       decl=(Assign:
-        var=<identifier (line 3 col 5) `aQ==`>,
-        val=<n (line 3 col 9) `MA==`>
+        var=<source:3:5 identifier "aQ==">,
+        val=<source:3:9 n "MA==">
       ),
       cond=None,
       iter=(Assign:
-        var=<identifier (line 3 col 14) `ag==`>,
+        var=<source:3:14 identifier "ag==">,
         val=(Add:
-          lhs=<s (line 3 col 18) `InN0ciI=`>,
-          rhs=<n (line 3 col 26) `NQ==`>
+          lhs=<source:3:18 s "InN0ciI=">,
+          rhs=<source:3:26 n "NQ==">
         )
       ),
       body=(Assign:
-        var=<identifier (line 4 col 3) `aw==`>,
+        var=<source:4:3 identifier "aw==">,
         val=(Add:
-          lhs=<n (line 4 col 7) `Ng==`>,
+          lhs=<source:4:7 n "Ng==">,
           rhs=(Divide:
             lhs=(Multiply:
-              lhs=<s (line 4 col 11) `ImEi`>,
-              rhs=<n (line 4 col 17) `Nw==`>
+              lhs=<source:4:11 s "ImEi">,
+              rhs=<source:4:17 n "Nw==">
             ),
-            rhs=<s (line 4 col 21) `ImMi`>
+            rhs=<source:4:21 s "ImMi">
           )
         )
       )

@@ -1,16 +1,14 @@
-[
-    {"terminal": "music", "resource": "source", "line": 1, "col": 3, "source_string": "4pmt"},
-    {"terminal": "music", "resource": "source", "line": 1, "col": 6, "source_string": "4pmu"},
-    {"terminal": "music", "resource": "source", "line": 1, "col": 9, "source_string": "4pmv"},
-    {"terminal": "a", "resource": "source", "line": 1, "col": 10, "source_string": "YQ=="},
-    {"terminal": "b", "resource": "source", "line": 1, "col": 11, "source_string": "Yg=="},
-    {"terminal": "newline", "resource": "source", "line": 1, "col": 12, "source_string": "Cg=="},
-    {"terminal": "lbrace", "resource": "source", "line": 2, "col": 1, "source_string": "ew=="},
-    {"terminal": "blah", "resource": "source", "line": 2, "col": 2, "source_string": "YmxhaA=="},
-    {"terminal": "rbrace", "resource": "source", "line": 2, "col": 6, "source_string": "fQ=="},
-    {"terminal": "newline", "resource": "source", "line": 2, "col": 7, "source_string": "Cg=="},
-    {"terminal": "char", "resource": "source", "line": 3, "col": 1, "source_string": "Y2hhcjp4"},
-    {"terminal": "newline", "resource": "source", "line": 3, "col": 7, "source_string": "Cg=="},
-    {"terminal": "char", "resource": "source", "line": 4, "col": 1, "source_string": "Q2hBcjp5"},
-    {"terminal": "newline", "resource": "source", "line": 4, "col": 7, "source_string": "Cg=="}
-]
+<source:1:3 music "4pmt">
+<source:1:6 music "4pmu">
+<source:1:9 music "4pmv">
+<source:1:10 a "YQ==">
+<source:1:11 b "Yg==">
+<source:1:12 newline "Cg==">
+<source:2:1 lbrace "ew==">
+<source:2:2 blah "YmxhaA==">
+<source:2:6 rbrace "fQ==">
+<source:2:7 newline "Cg==">
+<source:3:1 char "Y2hhcjp4">
+<source:3:7 newline "Cg==">
+<source:4:1 char "Q2hBcjp5">
+<source:4:7 newline "Cg==">

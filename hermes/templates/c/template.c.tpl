@@ -394,9 +394,9 @@ __parsetree_node_to_ast_normal( PARSE_TREE_NODE_T * node )
 static int
 token_to_string_bytes(TOKEN_T * token)
 {
-  /* format: "<identifier (line 0 col 0) `source (base64)`>" */
+  /* format: "<resource:line:col terminal \"b64_source\">" */
   int source_string_len = token->source_string ? (strlen(token->source_string)*4/3) : 5;
-  return 1 + strlen({{prefix}}morpheme_to_str(token->terminal->id)) + 7 + 5 + 5 + 5 + 3 + source_string_len + 2;
+  return 1 + strlen({{prefix}}morpheme_to_str(token->terminal->id)) + strlen(token->resource) + 7 + 5 + 5 + 5 + 3 + source_string_len + 2;
 }
 
 static int
@@ -732,8 +732,12 @@ char *
 
     sprintf(
         str,
-        "<%s (line %d col %d) `%s`>",
-        {{prefix}}morpheme_to_str(token->terminal->id), token->lineno, token->colno, b64
+        "<%s:%d:%d %s \"%s\">",
+        token->resource,
+        token->lineno,
+        token->colno,
+        {{prefix}}morpheme_to_str(token->terminal->id),
+        b64
     );
 
     return str;
@@ -1586,74 +1590,40 @@ main(int argc, char * argv[])
 
   {% if lexer %}
   if (!strcmp(argv[1], "tokens")) {
-
-    if (lexer_tokens->tokens[0]->terminal->id == {{prefix.upper()}}TERMINAL_END_OF_STREAM) {
-        printf("[]\n");
-        exit(0);
-    }
-
-    printf("[\n");
     for (i = 0; lexer_tokens->tokens[i]->terminal->id != {{prefix.upper()}}TERMINAL_END_OF_STREAM; i++) {
-        while(1) {
-            rc = base64_encode(
-                (const char *) lexer_tokens->tokens[i]->source_string,
-                strlen(lexer_tokens->tokens[i]->source_string),
-                b64, b64_size
-            );
-            if (rc == 0) break;
-            else if (rc == BASE64_OUTPUT_TOO_SMALL) {
-                b64_size *= 2;
-                b64 = realloc(b64, b64_size);
-                continue;
-            }
-            else {
-                printf("Error\n");
-                exit(-1);
-            }
-        }
-
-        printf(
-          "    %c\"terminal\": \"%s\", \"resource\": \"%s\", \"line\": %d, \"col\": %d, \"source_string\": \"%s\"%c%s\n",
-          '{',
-          lexer_tokens->tokens[i]->terminal->string,
-          lexer_tokens->tokens[i]->resource,
-          lexer_tokens->tokens[i]->lineno,
-          lexer_tokens->tokens[i]->colno,
-          b64,
-          '}',
-          lexer_tokens->tokens[i+1]->terminal->id == {{prefix.upper()}}TERMINAL_END_OF_STREAM ? "" : ","
-        );
+        printf("%s\n", {{prefix}}token_to_string(lexer_tokens->tokens[i]));
     }
-    printf("]\n");
     return 0;
   }
   {% endif %}
 
-  ctx = {{prefix}}parser_init(lexer_tokens);
-  parse_tree = {{prefix}}parse(ctx, -1);
-  abstract_syntax_tree = {{grammar.name}}_ast(parse_tree);
+  if (!strcmp(argv[1], "parsetree") || !strcmp(argv[1], "ast")) {
+      ctx = {{prefix}}parser_init(lexer_tokens);
+      parse_tree = {{prefix}}parse(ctx, -1);
+      abstract_syntax_tree = {{grammar.name}}_ast(parse_tree);
 
-  if ( ctx->syntax_errors ) {
-    rval = 1;
-    printf("%s\n", ctx->syntax_errors->message);
-    goto exit;
-    /*for ( error = ctx->syntax_errors; error; error = error->next )
-    {
-      printf("%s\n", error->message);
-    }*/
+      if ( ctx->syntax_errors ) {
+        rval = 1;
+        printf("%s\n", ctx->syntax_errors->message);
+        goto exit;
+        /*for ( error = ctx->syntax_errors; error; error = error->next )
+        {
+          printf("%s\n", error->message);
+        }*/
+      }
+
+      if ( argc >= 3 && !strcmp(argv[1], "ast") ) {
+        str = {{prefix}}ast_to_string(abstract_syntax_tree, ctx);
+      } else {
+        str = {{prefix}}parsetree_to_string(parse_tree, ctx);
+      }
+
+      printf("%s", str);
+
+      {{grammar.name}}_parser_exit(ctx);
+      {{prefix}}free_parse_tree(parse_tree);
+      {{prefix}}free_ast(abstract_syntax_tree);
   }
-
-  if ( argc >= 3 && !strcmp(argv[1], "ast") ) {
-    str = {{prefix}}ast_to_string(abstract_syntax_tree, ctx);
-  } else {
-    str = {{prefix}}parsetree_to_string(parse_tree, ctx);
-  }
-
-  printf("%s", str);
-
-  {{grammar.name}}_parser_exit(ctx);
-  {{prefix}}free_parse_tree(parse_tree);
-  {{prefix}}free_ast(abstract_syntax_tree);
 
 exit:
   {{prefix}}lexer_destroy();

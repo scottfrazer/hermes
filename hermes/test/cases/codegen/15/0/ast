@@ -1,19 +1,19 @@
 (Statements:
   list=[
     (Item:
-      name=<a (line 1 col 1) `YQ==`>
+      name=<source:1:1 a "YQ==">
     ),
     (Item:
-      name=<b (line 1 col 3) `Yg==`>
+      name=<source:1:3 b "Yg==">
     ),
     (Mul:
-      l=<number (line 3 col 3) `Ng==`>,
+      l=<source:3:3 number "Ng==">,
       r=(FuncCall:
-        name=<identifier (line 3 col 5) `ag==`>,
+        name=<source:3:5 identifier "ag==">,
         params=[
           (Add:
-            l=<number (line 3 col 7) `Nw==`>,
-            r=<number (line 3 col 9) `OA==`>
+            l=<source:3:7 number "Nw==">,
+            r=<source:3:9 number "OA==">
           )
         ]
       )

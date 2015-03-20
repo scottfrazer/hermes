@@ -1,47 +1,47 @@
 (value:
   (object:
-    <lbrace (line 1 col 1) `ew==`>,
+    <source:1:1 lbrace "ew==">,
     (_gen0:
       (key_value_pair:
-        <string (line 2 col 5) `ImFiYyI=`>,
-        <colon (line 2 col 10) `Og==`>,
+        <source:2:5 string "ImFiYyI=">,
+        <source:2:10 colon "Og==">,
         (value:
-          <number (line 2 col 14) `MC4xMjNlMg==`>
+          <source:2:14 number "MC4xMjNlMg==">
         )
       ),
       (_gen1:
-        <comma (line 2 col 21) `LA==`>,
+        <source:2:21 comma "LA==">,
         (key_value_pair:
-          <string (line 3 col 5) `InRoaXMgaXMgYSBrZXki`>,
-          <colon (line 3 col 20) `Og==`>,
+          <source:3:5 string "InRoaXMgaXMgYSBrZXki">,
+          <source:3:20 colon "Og==">,
           (value:
             (array:
-              <lsquare (line 3 col 22) `Ww==`>,
+              <source:3:22 lsquare "Ww==">,
               (_gen2:
                 (value:
-                  <true (line 3 col 23) `dHJ1ZQ==`>
+                  <source:3:23 true "dHJ1ZQ==">
                 ),
                 (_gen3:
-                  <comma (line 3 col 27) `LA==`>,
+                  <source:3:27 comma "LA==">,
                   (value:
-                    <null (line 3 col 28) `bnVsbA==`>
+                    <source:3:28 null "bnVsbA==">
                   ),
                   (_gen3:
-                    <comma (line 3 col 32) `LA==`>,
+                    <source:3:32 comma "LA==">,
                     (value:
-                      <false (line 3 col 33) `ZmFsc2U=`>
+                      <source:3:33 false "ZmFsc2U=">
                     ),
                     (_gen3: )
                   )
                 )
               ),
-              <rsquare (line 3 col 38) `XQ==`>
+              <source:3:38 rsquare "XQ==">
             )
           )
         ),
         (_gen1: )
       )
     ),
-    <rbrace (line 4 col 1) `fQ==`>
+    <source:4:1 rbrace "fQ==">
   )
 )

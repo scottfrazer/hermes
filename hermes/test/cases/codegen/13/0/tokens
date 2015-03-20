@@ -1,37 +1,35 @@
-[
-    {"terminal": "identifier", "resource": "source", "line": 1, "col": 1, "source_string": "aQ=="},
-    {"terminal": "eq", "resource": "source", "line": 1, "col": 2, "source_string": "PQ=="},
-    {"terminal": "identifier", "resource": "source", "line": 1, "col": 3, "source_string": "ag=="},
-    {"terminal": "eq", "resource": "source", "line": 1, "col": 4, "source_string": "PQ=="},
-    {"terminal": "n", "resource": "source", "line": 1, "col": 5, "source_string": "MA=="},
-    {"terminal": "semi", "resource": "source", "line": 1, "col": 6, "source_string": "Ow=="},
-    {"terminal": "for", "resource": "source", "line": 3, "col": 1, "source_string": "Zm9y"},
-    {"terminal": "lparen", "resource": "source", "line": 3, "col": 5, "source_string": "KA=="},
-    {"terminal": "identifier", "resource": "source", "line": 3, "col": 7, "source_string": "aw=="},
-    {"terminal": "eq", "resource": "source", "line": 3, "col": 9, "source_string": "PQ=="},
-    {"terminal": "n", "resource": "source", "line": 3, "col": 11, "source_string": "MQ=="},
-    {"terminal": "semi", "resource": "source", "line": 3, "col": 13, "source_string": "Ow=="},
-    {"terminal": "semi", "resource": "source", "line": 3, "col": 14, "source_string": "Ow=="},
-    {"terminal": "identifier", "resource": "source", "line": 3, "col": 16, "source_string": "ag=="},
-    {"terminal": "eq", "resource": "source", "line": 3, "col": 17, "source_string": "PQ=="},
-    {"terminal": "s", "resource": "source", "line": 3, "col": 18, "source_string": "ImEi"},
-    {"terminal": "add", "resource": "source", "line": 3, "col": 22, "source_string": "Kw=="},
-    {"terminal": "n", "resource": "source", "line": 3, "col": 24, "source_string": "OQ=="},
-    {"terminal": "rparen", "resource": "source", "line": 3, "col": 26, "source_string": "KQ=="},
-    {"terminal": "lbrace", "resource": "source", "line": 3, "col": 28, "source_string": "ew=="},
-    {"terminal": "identifier", "resource": "source", "line": 4, "col": 3, "source_string": "aQ=="},
-    {"terminal": "eq", "resource": "source", "line": 4, "col": 5, "source_string": "PQ=="},
-    {"terminal": "n", "resource": "source", "line": 4, "col": 7, "source_string": "OA=="},
-    {"terminal": "add", "resource": "source", "line": 4, "col": 9, "source_string": "Kw=="},
-    {"terminal": "identifier", "resource": "source", "line": 4, "col": 11, "source_string": "ag=="},
-    {"terminal": "mul", "resource": "source", "line": 4, "col": 13, "source_string": "Kg=="},
-    {"terminal": "n", "resource": "source", "line": 4, "col": 15, "source_string": "Nw=="},
-    {"terminal": "power", "resource": "source", "line": 4, "col": 17, "source_string": "Xg=="},
-    {"terminal": "s", "resource": "source", "line": 4, "col": 19, "source_string": "Inki"},
-    {"terminal": "semi", "resource": "source", "line": 4, "col": 22, "source_string": "Ow=="},
-    {"terminal": "rbrace", "resource": "source", "line": 5, "col": 1, "source_string": "fQ=="},
-    {"terminal": "semi", "resource": "source", "line": 5, "col": 2, "source_string": "Ow=="},
-    {"terminal": "n", "resource": "source", "line": 7, "col": 1, "source_string": "NQ=="},
-    {"terminal": "add", "resource": "source", "line": 7, "col": 2, "source_string": "Kw=="},
-    {"terminal": "n", "resource": "source", "line": 7, "col": 3, "source_string": "Ng=="}
-]
+<source:1:1 identifier "aQ==">
+<source:1:2 eq "PQ==">
+<source:1:3 identifier "ag==">
+<source:1:4 eq "PQ==">
+<source:1:5 n "MA==">
+<source:1:6 semi "Ow==">
+<source:3:1 for "Zm9y">
+<source:3:5 lparen "KA==">
+<source:3:7 identifier "aw==">
+<source:3:9 eq "PQ==">
+<source:3:11 n "MQ==">
+<source:3:13 semi "Ow==">
+<source:3:14 semi "Ow==">
+<source:3:16 identifier "ag==">
+<source:3:17 eq "PQ==">
+<source:3:18 s "ImEi">
+<source:3:22 add "Kw==">
+<source:3:24 n "OQ==">
+<source:3:26 rparen "KQ==">
+<source:3:28 lbrace "ew==">
+<source:4:3 identifier "aQ==">
+<source:4:5 eq "PQ==">
+<source:4:7 n "OA==">
+<source:4:9 add "Kw==">
+<source:4:11 identifier "ag==">
+<source:4:13 mul "Kg==">
+<source:4:15 n "Nw==">
+<source:4:17 power "Xg==">
+<source:4:19 s "Inki">
+<source:4:22 semi "Ow==">
+<source:5:1 rbrace "fQ==">
+<source:5:2 semi "Ow==">
+<source:7:1 n "NQ==">
+<source:7:2 add "Kw==">
+<source:7:3 n "Ng==">

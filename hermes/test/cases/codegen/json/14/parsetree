@@ -1,54 +1,54 @@
 (value:
   (array:
-    <lsquare (line 1 col 1) `Ww==`>,
+    <source:1:1 lsquare "Ww==">,
     (_gen2:
       (value:
-        <number (line 1 col 2) `MA==`>
+        <source:1:2 number "MA==">
       ),
       (_gen3:
-        <comma (line 1 col 3) `LA==`>,
+        <source:1:3 comma "LA==">,
         (value:
-          <number (line 1 col 5) `MQ==`>
+          <source:1:5 number "MQ==">
         ),
         (_gen3:
-          <comma (line 1 col 6) `LA==`>,
+          <source:1:6 comma "LA==">,
           (value:
-            <number (line 1 col 8) `MWU0`>
+            <source:1:8 number "MWU0">
           ),
           (_gen3:
-            <comma (line 1 col 11) `LA==`>,
+            <source:1:11 comma "LA==">,
             (value:
-              <number (line 1 col 13) `MS4w`>
+              <source:1:13 number "MS4w">
             ),
             (_gen3:
-              <comma (line 1 col 16) `LA==`>,
+              <source:1:16 comma "LA==">,
               (value:
-                <number (line 1 col 18) `MS4xMjM0NTY3ODk=`>
+                <source:1:18 number "MS4xMjM0NTY3ODk=">
               ),
               (_gen3:
-                <comma (line 1 col 29) `LA==`>,
+                <source:1:29 comma "LA==">,
                 (value:
-                  <number (line 1 col 31) `MTIzNDU2Nzg5MA==`>
+                  <source:1:31 number "MTIzNDU2Nzg5MA==">
                 ),
                 (_gen3:
-                  <comma (line 1 col 41) `LA==`>,
+                  <source:1:41 comma "LA==">,
                   (value:
-                    <number (line 1 col 43) `MTAwMDAwMDAw`>
+                    <source:1:43 number "MTAwMDAwMDAw">
                   ),
                   (_gen3:
-                    <comma (line 1 col 52) `LA==`>,
+                    <source:1:52 comma "LA==">,
                     (value:
-                      <number (line 1 col 54) `MC4x`>
+                      <source:1:54 number "MC4x">
                     ),
                     (_gen3:
-                      <comma (line 1 col 57) `LA==`>,
+                      <source:1:57 comma "LA==">,
                       (value:
-                        <number (line 1 col 59) `MC4xRTU=`>
+                        <source:1:59 number "MC4xRTU=">
                       ),
                       (_gen3:
-                        <comma (line 1 col 64) `LA==`>,
+                        <source:1:64 comma "LA==">,
                         (value:
-                          <number (line 1 col 66) `MC4xZS00`>
+                          <source:1:66 number "MC4xZS00">
                         ),
                         (_gen3: )
                       )
@@ -61,6 +61,6 @@
         )
       )
     ),
-    <rsquare (line 1 col 72) `XQ==`>
+    <source:1:72 rsquare "XQ==">
   )
 )

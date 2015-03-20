@@ -1,16 +1,16 @@
 (value:
   (object:
-    <lbrace (line 1 col 1) `ew==`>,
+    <source:1:1 lbrace "ew==">,
     (_gen0:
       (key_value_pair:
-        <string (line 2 col 5) `IuKZreKZreKZrSI=`>,
-        <colon (line 2 col 10) `Og==`>,
+        <source:2:5 string "IuKZreKZreKZrSI=">,
+        <source:2:10 colon "Og==">,
         (value:
-          <string (line 2 col 12) `IuKZr+KZr+KZryI=`>
+          <source:2:12 string "IuKZr+KZr+KZryI=">
         )
       ),
       (_gen1: )
     ),
-    <rbrace (line 3 col 1) `fQ==`>
+    <source:3:1 rbrace "fQ==">
   )
 )

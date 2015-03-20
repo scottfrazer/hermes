@@ -1,6 +1,4 @@
-[
-    {"terminal": "abc", "resource": "source", "line": 1, "col": 1, "source_string": "YWJj"},
-    {"terminal": "num", "resource": "source", "line": 2, "col": 1, "source_string": "MTIz"},
-    {"terminal": "xyz", "resource": "source", "line": 3, "col": 1, "source_string": "eHl6MTExampq"},
-    {"terminal": "xyz_abc", "resource": "source", "line": 4, "col": 1, "source_string": "eHl6YWJj"}
-]
+<source:1:1 abc "YWJj">
+<source:2:1 num "MTIz">
+<source:3:1 xyz "eHl6MTExampq">
+<source:4:1 xyz_abc "eHl6YWJj">

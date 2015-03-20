@@ -1,67 +1,67 @@
 (value:
   (object:
-    <lbrace (line 1 col 1) `ew==`>,
+    <source:1:1 lbrace "ew==">,
     (_gen0:
       (key_value_pair:
-        <string (line 2 col 5) `ImFiYyI=`>,
-        <colon (line 2 col 10) `Og==`>,
+        <source:2:5 string "ImFiYyI=">,
+        <source:2:10 colon "Og==">,
         (value:
-          <number (line 2 col 14) `MC4xMjNlMg==`>
+          <source:2:14 number "MC4xMjNlMg==">
         )
       ),
       (_gen1:
-        <comma (line 2 col 21) `LA==`>,
+        <source:2:21 comma "LA==">,
         (key_value_pair:
-          <string (line 3 col 5) `InRoaXMgaXMgYSBrZXki`>,
-          <colon (line 3 col 20) `Og==`>,
+          <source:3:5 string "InRoaXMgaXMgYSBrZXki">,
+          <source:3:20 colon "Og==">,
           (value:
             (array:
-              <lsquare (line 3 col 22) `Ww==`>,
+              <source:3:22 lsquare "Ww==">,
               (_gen2:
                 (value:
                   (object:
-                    <lbrace (line 4 col 9) `ew==`>,
+                    <source:4:9 lbrace "ew==">,
                     (_gen0:
                       (key_value_pair:
-                        <string (line 4 col 10) `ImRlZiI=`>,
-                        <colon (line 4 col 15) `Og==`>,
+                        <source:4:10 string "ImRlZiI=">,
+                        <source:4:15 colon "Og==">,
                         (value:
-                          <number (line 4 col 17) `MmU0`>
+                          <source:4:17 number "MmU0">
                         )
                       ),
                       (_gen1: )
                     ),
-                    <rbrace (line 4 col 20) `fQ==`>
+                    <source:4:20 rbrace "fQ==">
                   )
                 ),
                 (_gen3:
-                  <comma (line 4 col 21) `LA==`>,
+                  <source:4:21 comma "LA==">,
                   (value:
                     (object:
-                      <lbrace (line 4 col 22) `ew==`>,
+                      <source:4:22 lbrace "ew==">,
                       (_gen0:
                         (key_value_pair:
-                          <string (line 4 col 23) `IiAgIGdoaSAgICI=`>,
-                          <colon (line 4 col 34) `Og==`>,
+                          <source:4:23 string "IiAgIGdoaSAgICI=">,
+                          <source:4:34 colon "Og==">,
                           (value:
-                            <false (line 4 col 36) `ZmFsc2U=`>
+                            <source:4:36 false "ZmFsc2U=">
                           )
                         ),
                         (_gen1: )
                       ),
-                      <rbrace (line 4 col 41) `fQ==`>
+                      <source:4:41 rbrace "fQ==">
                     )
                   ),
                   (_gen3: )
                 )
               ),
-              <rsquare (line 5 col 5) `XQ==`>
+              <source:5:5 rsquare "XQ==">
             )
           )
         ),
         (_gen1: )
       )
     ),
-    <rbrace (line 6 col 1) `fQ==`>
+    <source:6:1 rbrace "fQ==">
   )
 )

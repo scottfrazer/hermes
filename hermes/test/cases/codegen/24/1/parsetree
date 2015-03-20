@@ -2,25 +2,25 @@
   (block:
     (block_const: ),
     (block_var:
-      <var (line 1 col 1) `dmFy`>,
+      <source:1:1 var "dmFy">,
       (ident:
-        <ident (line 1 col 5) `aQ==`>
+        <source:1:5 ident "aQ==">
       ),
       (block_var1: ),
-      <semi (line 1 col 6) `Ow==`>
+      <source:1:6 semi "Ow==">
     ),
     (block_proc: ),
     (statement:
       (ident:
-        <ident (line 2 col 1) `aQ==`>
+        <source:2:1 ident "aQ==">
       ),
-      <assign (line 2 col 3) `Oj0=`>,
+      <source:2:3 assign "Oj0=">,
       (expression:
         (unary_add_op: ),
         (term:
           (factor:
             (number:
-              <number (line 2 col 6) `NTY=`>
+              <source:2:6 number "NTY=">
             )
           ),
           (term_sub1: )
@@ -29,5 +29,5 @@
       )
     )
   ),
-  <dot (line 2 col 8) `Lg==`>
+  <source:2:8 dot "Lg==">
 )

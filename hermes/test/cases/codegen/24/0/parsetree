@@ -1,45 +1,45 @@
 (program:
   (block:
     (block_const:
-      <const (line 1 col 1) `Y29uc3Q=`>,
+      <source:1:1 const "Y29uc3Q=">,
       (ident:
-        <ident (line 1 col 7) `aQ==`>
+        <source:1:7 ident "aQ==">
       ),
-      <equal (line 1 col 9) `PQ==`>,
+      <source:1:9 equal "PQ==">,
       (number:
-        <number (line 1 col 11) `MQ==`>
+        <source:1:11 number "MQ==">
       ),
       (block_const1:
-        <comma (line 1 col 12) `LA==`>,
+        <source:1:12 comma "LA==">,
         (ident:
-          <ident (line 1 col 14) `ag==`>
+          <source:1:14 ident "ag==">
         ),
-        <equal (line 1 col 16) `PQ==`>,
+        <source:1:16 equal "PQ==">,
         (number:
-          <number (line 1 col 18) `Mg==`>
+          <source:1:18 number "Mg==">
         )
       )
     ),
     (block_var:
-      <var (line 2 col 1) `dmFy`>,
+      <source:2:1 var "dmFy">,
       (ident:
-        <ident (line 2 col 5) `aw==`>
+        <source:2:5 ident "aw==">
       ),
       (block_var1:
-        <comma (line 2 col 6) `LA==`>,
+        <source:2:6 comma "LA==">,
         (ident:
-          <ident (line 2 col 8) `bA==`>
+          <source:2:8 ident "bA==">
         )
       ),
-      <semi (line 2 col 9) `Ow==`>
+      <source:2:9 semi "Ow==">
     ),
     (block_proc: ),
     (statement:
-      <call (line 3 col 1) `Y2FsbA==`>,
+      <source:3:1 call "Y2FsbA==">,
       (ident:
-        <ident (line 3 col 6) `Zg==`>
+        <source:3:6 ident "Zg==">
       )
     )
   ),
-  <dot (line 3 col 7) `Lg==`>
+  <source:3:7 dot "Lg==">
 )

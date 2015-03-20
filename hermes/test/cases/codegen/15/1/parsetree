@@ -2,26 +2,26 @@
   (_gen0:
     (sub:
       (item:
-        <a (line 1 col 1) `YQ==`>
+        <source:1:1 a "YQ==">
       )
     ),
     (_gen1:
-      <comma (line 1 col 2) `LA==`>,
+      <source:1:2 comma "LA==">,
       (sub:
         (item:
-          <b (line 1 col 3) `Yg==`>
+          <source:1:3 b "Yg==">
         )
       ),
       (_gen1:
-        <comma (line 1 col 4) `LA==`>,
+        <source:1:4 comma "LA==">,
         (sub:
           (e:
             (e:
-              <number (line 1 col 5) `NA==`>
+              <source:1:5 number "NA==">
             ),
-            <add (line 1 col 6) `Kw==`>,
+            <source:1:6 add "Kw==">,
             (e:
-              <number (line 1 col 7) `NQ==`>
+              <source:1:7 number "NQ==">
             )
           )
         ),

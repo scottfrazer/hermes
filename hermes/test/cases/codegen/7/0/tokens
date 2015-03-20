@@ -1,14 +1,12 @@
-[
-    {"terminal": "a", "resource": "source", "line": 1, "col": 1, "source_string": "YQ=="},
-    {"terminal": "b", "resource": "source", "line": 1, "col": 2, "source_string": "Yg=="},
-    {"terminal": "char", "resource": "source", "line": 1, "col": 3, "source_string": "Yw=="},
-    {"terminal": "char", "resource": "source", "line": 1, "col": 4, "source_string": "ZA=="},
-    {"terminal": "char", "resource": "source", "line": 1, "col": 5, "source_string": "ZQ=="},
-    {"terminal": "char", "resource": "source", "line": 1, "col": 6, "source_string": "Zg=="},
-    {"terminal": "char", "resource": "source", "line": 4, "col": 1, "source_string": "eA=="},
-    {"terminal": "char", "resource": "source", "line": 4, "col": 2, "source_string": "eA=="},
-    {"terminal": "char", "resource": "source", "line": 4, "col": 3, "source_string": "eA=="},
-    {"terminal": "char", "resource": "source", "line": 4, "col": 4, "source_string": "eA=="},
-    {"terminal": "a", "resource": "source", "line": 4, "col": 5, "source_string": "YQ=="},
-    {"terminal": "b", "resource": "source", "line": 4, "col": 6, "source_string": "Yg=="}
-]
+<source:1:1 a "YQ==">
+<source:1:2 b "Yg==">
+<source:1:3 char "Yw==">
+<source:1:4 char "ZA==">
+<source:1:5 char "ZQ==">
+<source:1:6 char "Zg==">
+<source:4:1 char "eA==">
+<source:4:2 char "eA==">
+<source:4:3 char "eA==">
+<source:4:4 char "eA==">
+<source:4:5 a "YQ==">
+<source:4:6 b "Yg==">

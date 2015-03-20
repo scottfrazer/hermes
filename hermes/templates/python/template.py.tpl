@@ -3,7 +3,6 @@ import os
 import re
 import base64
 import argparse
-import json
 from collections import OrderedDict
 
 {% import re %}
@@ -64,15 +63,15 @@ class Terminal:
       return self.id
   def ast(self):
       return self
-  def dumps(self, b64_source=True, json=False, **kwargs):
-      if not b64_source and json:
-          raise Exception('b64_source must be set to True if json=True')
+  def dumps(self, b64_source=True, **kwargs):
       source_string = base64.b64encode(self.source_string.encode('utf-8')).decode('utf-8') if b64_source else self.source_string
-      if json:
-          json_fmt = '"terminal": "{0}", "resource": "{1}", "line": {2}, "col": {3}, "source_string": "{4}"'
-          return '{' + json_fmt.format(self.str, self.resource, self.line, self.col, source_string) + '}'
-      else:
-          return '<{} (line {} col {}) `{}`>'.format(self.str, self.line, self.col, source_string)
+      return '<{resource}:{line}:{col} {terminal} "{source}">'.format(
+          resource=self.resource,
+          line=self.line,
+          col=self.col,
+          terminal=self.str,
+          source=source_string
+      )
   def __str__(self):
       return self.dumps()
 
@@ -229,14 +228,6 @@ class TokenStream(list):
         return self.current()
     def last(self):
         return self[-1]
-    def json(self):
-        if len(self) == 0:
-            return '[]'
-        tokens_json = []
-        json_fmt = '"terminal": "{terminal}", "resource": "{resource}", "line": {line}, "col": {col}, "source_string": "{source_string}"'
-        for token in self:
-            tokens_json.append(token.dumps(json=True, b64_source=True))
-        return '[\n    ' + ',\n    '.join(tokens_json) + '\n]'
     def current(self):
         try:
             return self[self.index]
@@ -364,7 +355,7 @@ def expect(ctx, terminal_id):
 {% for expression_nonterminal in grammar.expression_nonterminals %}
     {% py name = expression_nonterminal.string %}
 
-# START definitions for expression parser `{{name}}`
+# START definitions for expression parser: {{name}}
 infix_binding_power_{{name}} = {
     {% for rule in grammar.get_rules(expression_nonterminal) %}
         {% if rule.operator and rule.operator.associativity in ['left', 'right'] %}
@@ -504,7 +495,7 @@ def led_{{name}}(left, ctx):
 
     return tree
 
-# END definitions for expression parser `{{name}}`
+# END definitions for expression parser: {{name}}
 {% endfor %}
 
 {% for nonterminal in grammar.ll1_nonterminals %}
@@ -785,7 +776,8 @@ def cli():
             print(error)
 
     if sys.argv[1] == 'tokens':
-        print(tokens.json())
+        for token in tokens:
+            print(token)
 
 if __name__ == '__main__':
     cli()

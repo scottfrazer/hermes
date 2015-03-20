@@ -2,71 +2,71 @@
   (_gen0:
     (statement:
       (funcdef:
-        <function (line 1 col 1) `ZnVuYw==`>,
-        <identifier (line 1 col 6) `Zm5hbWU=`>,
-        <lparen (line 1 col 11) `KA==`>,
+        <source:1:1 function "ZnVuYw==">,
+        <source:1:6 identifier "Zm5hbWU=">,
+        <source:1:11 lparen "KA==">,
         (_gen1:
           (param:
-            <param1 (line 1 col 12) `cDE=`>
+            <source:1:12 param1 "cDE=">
           ),
           (_gen2:
-            <comma (line 1 col 14) `LA==`>,
+            <source:1:14 comma "LA==">,
             (param:
-              <param2 (line 1 col 16) `cDI=`>
+              <source:1:16 param2 "cDI=">
             ),
             (_gen2: )
           )
         ),
-        <rparen (line 1 col 18) `KQ==`>,
-        <lbrace (line 1 col 20) `ew==`>,
+        <source:1:18 rparen "KQ==">,
+        <source:1:20 lbrace "ew==">,
         (_gen0:
           (statement:
-            <a (line 2 col 3) `YQ==`>
+            <source:2:3 a "YQ==">
           ),
           (_gen0:
             (statement:
-              <b (line 2 col 4) `Yg==`>
+              <source:2:4 b "Yg==">
             ),
             (_gen0:
               (statement:
-                <a (line 2 col 5) `YQ==`>
+                <source:2:5 a "YQ==">
               ),
               (_gen0:
                 (statement:
-                  <b (line 2 col 6) `Yg==`>
+                  <source:2:6 b "Yg==">
                 ),
                 (_gen0: )
               )
             )
           )
         ),
-        <rbrace (line 3 col 1) `fQ==`>
+        <source:3:1 rbrace "fQ==">
       )
     ),
     (_gen0:
       (statement:
         (classdef:
-          <class (line 5 col 1) `Y2xhc3M=`>,
-          <identifier (line 5 col 7) `Y25hbWU=`>,
-          <lbrace (line 5 col 13) `ew==`>,
+          <source:5:1 class "Y2xhc3M=">,
+          <source:5:7 identifier "Y25hbWU=">,
+          <source:5:13 lbrace "ew==">,
           (_gen3:
             (class_statement:
-              <private (line 6 col 3) `cHJpdmF0ZQ==`>,
+              <source:6:3 private "cHJpdmF0ZQ==">,
               (class_atom:
-                <x (line 6 col 11) `eA==`>
+                <source:6:11 x "eA==">
               )
             ),
             (_gen3:
               (class_statement:
-                <public (line 7 col 3) `cHVibGlj`>,
+                <source:7:3 public "cHVibGlj">,
                 (class_atom:
-                  <y (line 7 col 10) `eQ==`>
+                  <source:7:10 y "eQ==">
                 )
               ),
               (_gen3: )
             )
           ),
-          <rbrace (line 8 col 1) `fQ==`>
+          <source:8:1 rbrace "fQ==">
         )
       ),
       (_gen0: )

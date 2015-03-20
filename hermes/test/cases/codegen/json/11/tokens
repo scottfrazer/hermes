@@ -1,67 +1,65 @@
-[
-    {"terminal": "lbrace", "resource": "source", "line": 1, "col": 1, "source_string": "ew=="},
-    {"terminal": "string", "resource": "source", "line": 2, "col": 5, "source_string": "Imdsb3NzYXJ5Ig=="},
-    {"terminal": "colon", "resource": "source", "line": 2, "col": 15, "source_string": "Og=="},
-    {"terminal": "lbrace", "resource": "source", "line": 2, "col": 17, "source_string": "ew=="},
-    {"terminal": "string", "resource": "source", "line": 3, "col": 9, "source_string": "InRpdGxlIg=="},
-    {"terminal": "colon", "resource": "source", "line": 3, "col": 16, "source_string": "Og=="},
-    {"terminal": "string", "resource": "source", "line": 3, "col": 18, "source_string": "ImV4YW1wbGUgZ2xvc3Nhcnki"},
-    {"terminal": "comma", "resource": "source", "line": 3, "col": 36, "source_string": "LA=="},
-    {"terminal": "string", "resource": "source", "line": 4, "col": 5, "source_string": "Ikdsb3NzRGl2Ig=="},
-    {"terminal": "colon", "resource": "source", "line": 4, "col": 15, "source_string": "Og=="},
-    {"terminal": "lbrace", "resource": "source", "line": 4, "col": 17, "source_string": "ew=="},
-    {"terminal": "string", "resource": "source", "line": 5, "col": 13, "source_string": "InRpdGxlIg=="},
-    {"terminal": "colon", "resource": "source", "line": 5, "col": 20, "source_string": "Og=="},
-    {"terminal": "string", "resource": "source", "line": 5, "col": 22, "source_string": "IlMi"},
-    {"terminal": "comma", "resource": "source", "line": 5, "col": 25, "source_string": "LA=="},
-    {"terminal": "string", "resource": "source", "line": 6, "col": 7, "source_string": "Ikdsb3NzTGlzdCI="},
-    {"terminal": "colon", "resource": "source", "line": 6, "col": 18, "source_string": "Og=="},
-    {"terminal": "lbrace", "resource": "source", "line": 6, "col": 20, "source_string": "ew=="},
-    {"terminal": "string", "resource": "source", "line": 7, "col": 17, "source_string": "Ikdsb3NzRW50cnki"},
-    {"terminal": "colon", "resource": "source", "line": 7, "col": 29, "source_string": "Og=="},
-    {"terminal": "lbrace", "resource": "source", "line": 7, "col": 31, "source_string": "ew=="},
-    {"terminal": "string", "resource": "source", "line": 8, "col": 21, "source_string": "IklEIg=="},
-    {"terminal": "colon", "resource": "source", "line": 8, "col": 25, "source_string": "Og=="},
-    {"terminal": "string", "resource": "source", "line": 8, "col": 27, "source_string": "IlNHTUwi"},
-    {"terminal": "comma", "resource": "source", "line": 8, "col": 33, "source_string": "LA=="},
-    {"terminal": "string", "resource": "source", "line": 9, "col": 11, "source_string": "IlNvcnRBcyI="},
-    {"terminal": "colon", "resource": "source", "line": 9, "col": 19, "source_string": "Og=="},
-    {"terminal": "string", "resource": "source", "line": 9, "col": 21, "source_string": "IlNHTUwi"},
-    {"terminal": "comma", "resource": "source", "line": 9, "col": 27, "source_string": "LA=="},
-    {"terminal": "string", "resource": "source", "line": 10, "col": 11, "source_string": "Ikdsb3NzVGVybSI="},
-    {"terminal": "colon", "resource": "source", "line": 10, "col": 22, "source_string": "Og=="},
-    {"terminal": "string", "resource": "source", "line": 10, "col": 24, "source_string": "IlN0YW5kYXJkIEdlbmVyYWxpemVkIE1hcmt1cCBMYW5ndWFnZSI="},
-    {"terminal": "comma", "resource": "source", "line": 10, "col": 62, "source_string": "LA=="},
-    {"terminal": "string", "resource": "source", "line": 11, "col": 11, "source_string": "IkFjcm9ueW0i"},
-    {"terminal": "colon", "resource": "source", "line": 11, "col": 20, "source_string": "Og=="},
-    {"terminal": "string", "resource": "source", "line": 11, "col": 22, "source_string": "IlNHTUwi"},
-    {"terminal": "comma", "resource": "source", "line": 11, "col": 28, "source_string": "LA=="},
-    {"terminal": "string", "resource": "source", "line": 12, "col": 11, "source_string": "IkFiYnJldiI="},
-    {"terminal": "colon", "resource": "source", "line": 12, "col": 19, "source_string": "Og=="},
-    {"terminal": "string", "resource": "source", "line": 12, "col": 21, "source_string": "IklTTyA4ODc5OjE5ODYi"},
-    {"terminal": "comma", "resource": "source", "line": 12, "col": 36, "source_string": "LA=="},
-    {"terminal": "string", "resource": "source", "line": 13, "col": 11, "source_string": "Ikdsb3NzRGVmIg=="},
-    {"terminal": "colon", "resource": "source", "line": 13, "col": 21, "source_string": "Og=="},
-    {"terminal": "lbrace", "resource": "source", "line": 13, "col": 23, "source_string": "ew=="},
-    {"terminal": "string", "resource": "source", "line": 14, "col": 25, "source_string": "InBhcmEi"},
-    {"terminal": "colon", "resource": "source", "line": 14, "col": 31, "source_string": "Og=="},
-    {"terminal": "string", "resource": "source", "line": 14, "col": 33, "source_string": "IkEgbWV0YS1tYXJrdXAgbGFuZ3VhZ2UsIHVzZWQgdG8gY3JlYXRlIG1hcmt1cCBsYW5ndWFnZXMgc3VjaCBhcyBEb2NCb29rLiI="},
-    {"terminal": "comma", "resource": "source", "line": 14, "col": 107, "source_string": "LA=="},
-    {"terminal": "string", "resource": "source", "line": 15, "col": 13, "source_string": "Ikdsb3NzU2VlQWxzbyI="},
-    {"terminal": "colon", "resource": "source", "line": 15, "col": 27, "source_string": "Og=="},
-    {"terminal": "lsquare", "resource": "source", "line": 15, "col": 29, "source_string": "Ww=="},
-    {"terminal": "string", "resource": "source", "line": 15, "col": 30, "source_string": "IkdNTCI="},
-    {"terminal": "comma", "resource": "source", "line": 15, "col": 35, "source_string": "LA=="},
-    {"terminal": "string", "resource": "source", "line": 15, "col": 37, "source_string": "IlhNTCI="},
-    {"terminal": "rsquare", "resource": "source", "line": 15, "col": 42, "source_string": "XQ=="},
-    {"terminal": "rbrace", "resource": "source", "line": 16, "col": 21, "source_string": "fQ=="},
-    {"terminal": "comma", "resource": "source", "line": 16, "col": 22, "source_string": "LA=="},
-    {"terminal": "string", "resource": "source", "line": 17, "col": 11, "source_string": "Ikdsb3NzU2VlIg=="},
-    {"terminal": "colon", "resource": "source", "line": 17, "col": 21, "source_string": "Og=="},
-    {"terminal": "string", "resource": "source", "line": 17, "col": 23, "source_string": "Im1hcmt1cCI="},
-    {"terminal": "rbrace", "resource": "source", "line": 18, "col": 17, "source_string": "fQ=="},
-    {"terminal": "rbrace", "resource": "source", "line": 19, "col": 13, "source_string": "fQ=="},
-    {"terminal": "rbrace", "resource": "source", "line": 20, "col": 9, "source_string": "fQ=="},
-    {"terminal": "rbrace", "resource": "source", "line": 21, "col": 5, "source_string": "fQ=="},
-    {"terminal": "rbrace", "resource": "source", "line": 22, "col": 1, "source_string": "fQ=="}
-]
+<source:1:1 lbrace "ew==">
+<source:2:5 string "Imdsb3NzYXJ5Ig==">
+<source:2:15 colon "Og==">
+<source:2:17 lbrace "ew==">
+<source:3:9 string "InRpdGxlIg==">
+<source:3:16 colon "Og==">
+<source:3:18 string "ImV4YW1wbGUgZ2xvc3Nhcnki">
+<source:3:36 comma "LA==">
+<source:4:5 string "Ikdsb3NzRGl2Ig==">
+<source:4:15 colon "Og==">
+<source:4:17 lbrace "ew==">
+<source:5:13 string "InRpdGxlIg==">
+<source:5:20 colon "Og==">
+<source:5:22 string "IlMi">
+<source:5:25 comma "LA==">
+<source:6:7 string "Ikdsb3NzTGlzdCI=">
+<source:6:18 colon "Og==">
+<source:6:20 lbrace "ew==">
+<source:7:17 string "Ikdsb3NzRW50cnki">
+<source:7:29 colon "Og==">
+<source:7:31 lbrace "ew==">
+<source:8:21 string "IklEIg==">
+<source:8:25 colon "Og==">
+<source:8:27 string "IlNHTUwi">
+<source:8:33 comma "LA==">
+<source:9:11 string "IlNvcnRBcyI=">
+<source:9:19 colon "Og==">
+<source:9:21 string "IlNHTUwi">
+<source:9:27 comma "LA==">
+<source:10:11 string "Ikdsb3NzVGVybSI=">
+<source:10:22 colon "Og==">
+<source:10:24 string "IlN0YW5kYXJkIEdlbmVyYWxpemVkIE1hcmt1cCBMYW5ndWFnZSI=">
+<source:10:62 comma "LA==">
+<source:11:11 string "IkFjcm9ueW0i">
+<source:11:20 colon "Og==">
+<source:11:22 string "IlNHTUwi">
+<source:11:28 comma "LA==">
+<source:12:11 string "IkFiYnJldiI=">
+<source:12:19 colon "Og==">
+<source:12:21 string "IklTTyA4ODc5OjE5ODYi">
+<source:12:36 comma "LA==">
+<source:13:11 string "Ikdsb3NzRGVmIg==">
+<source:13:21 colon "Og==">
+<source:13:23 lbrace "ew==">
+<source:14:25 string "InBhcmEi">
+<source:14:31 colon "Og==">
+<source:14:33 string "IkEgbWV0YS1tYXJrdXAgbGFuZ3VhZ2UsIHVzZWQgdG8gY3JlYXRlIG1hcmt1cCBsYW5ndWFnZXMgc3VjaCBhcyBEb2NCb29rLiI=">
+<source:14:107 comma "LA==">
+<source:15:13 string "Ikdsb3NzU2VlQWxzbyI=">
+<source:15:27 colon "Og==">
+<source:15:29 lsquare "Ww==">
+<source:15:30 string "IkdNTCI=">
+<source:15:35 comma "LA==">
+<source:15:37 string "IlhNTCI=">
+<source:15:42 rsquare "XQ==">
+<source:16:21 rbrace "fQ==">
+<source:16:22 comma "LA==">
+<source:17:11 string "Ikdsb3NzU2VlIg==">
+<source:17:21 colon "Og==">
+<source:17:23 string "Im1hcmt1cCI=">
+<source:18:17 rbrace "fQ==">
+<source:19:13 rbrace "fQ==">
+<source:20:9 rbrace "fQ==">
+<source:21:5 rbrace "fQ==">
+<source:22:1 rbrace "fQ==">

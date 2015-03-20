@@ -3,20 +3,20 @@
     (sub:
       (e:
         (e:
-          <lparen_cast (line 1 col 1) `KA==`>,
+          <source:1:1 lparen_cast "KA==">,
           (type_name:
-            <int (line 1 col 2) `aW50`>
+            <source:1:2 int "aW50">
           ),
-          <rparen (line 1 col 5) `KQ==`>
+          <source:1:5 rparen "KQ==">
         ),
-        <lbrace (line 1 col 6) `ew==`>,
+        <source:1:6 lbrace "ew==">,
         (_gen2:
           (initializer_list_item:
-            <item (line 1 col 7) `aXRlbQ==`>
+            <source:1:7 item "aXRlbQ==">
           ),
           (_gen3: )
         ),
-        <rbrace (line 1 col 11) `fQ==`>
+        <source:1:11 rbrace "fQ==">
       )
     ),
     (_gen1: )

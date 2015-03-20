@@ -1,42 +1,42 @@
 (Program:
   statements=[
     (Assign:
-      lhs=<identifier (line 1 col 1) `aQ==`>,
+      lhs=<source:1:1 identifier "aQ==">,
       rhs=(Assign:
-        lhs=<identifier (line 1 col 3) `ag==`>,
-        rhs=<n (line 1 col 5) `MA==`>
+        lhs=<source:1:3 identifier "ag==">,
+        rhs=<source:1:5 n "MA==">
       )
     ),
     (For:
       decl=(Assign:
-        lhs=<identifier (line 3 col 7) `aw==`>,
-        rhs=<n (line 3 col 11) `MQ==`>
+        lhs=<source:3:7 identifier "aw==">,
+        rhs=<source:3:11 n "MQ==">
       ),
       cond=None,
       iter=(Assign:
-        lhs=<identifier (line 3 col 16) `ag==`>,
+        lhs=<source:3:16 identifier "ag==">,
         rhs=(Add:
-          lhs=<s (line 3 col 18) `ImEi`>,
-          rhs=<n (line 3 col 24) `OQ==`>
+          lhs=<source:3:18 s "ImEi">,
+          rhs=<source:3:24 n "OQ==">
         )
       ),
       body=(Assign:
-        lhs=<identifier (line 4 col 3) `aQ==`>,
+        lhs=<source:4:3 identifier "aQ==">,
         rhs=(Add:
-          lhs=<n (line 4 col 7) `OA==`>,
+          lhs=<source:4:7 n "OA==">,
           rhs=(Multiply:
-            lhs=<identifier (line 4 col 11) `ag==`>,
+            lhs=<source:4:11 identifier "ag==">,
             rhs=(Power:
-              lhs=<n (line 4 col 15) `Nw==`>,
-              rhs=<s (line 4 col 19) `Inki`>
+              lhs=<source:4:15 n "Nw==">,
+              rhs=<source:4:19 s "Inki">
             )
           )
         )
       )
     ),
     (Add:
-      lhs=<n (line 7 col 1) `NQ==`>,
-      rhs=<n (line 7 col 3) `Ng==`>
+      lhs=<source:7:1 n "NQ==">,
+      rhs=<source:7:3 n "Ng==">
     )
   ]
 )

@@ -1,15 +1,15 @@
 [
-  <a (line 1 col 1) `YQ==`>,
+  <source:1:1 a "YQ==">,
   (FunctionCall:
-    name=<identifier (line 1 col 3) `aQ==`>,
+    name=<source:1:3 identifier "aQ==">,
     params=[]
   ),
   (TypeInitializion:
-    type=<int (line 1 col 8) `aW50`>,
+    type=<source:1:8 int "aW50">,
     initializer=[
-      <item (line 1 col 13) `aXRlbQ==`>,
-      <item (line 1 col 18) `aXRlbQ==`>,
-      <item (line 1 col 23) `aXRlbQ==`>
+      <source:1:13 item "aXRlbQ==">,
+      <source:1:18 item "aXRlbQ==">,
+      <source:1:23 item "aXRlbQ==">
     ]
   )
 ]

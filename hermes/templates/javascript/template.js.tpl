@@ -113,10 +113,13 @@ function Terminal(id, str, source_string, resource, line, col) {
         return this;
     };
     this.to_string = function(b64_source) {
-        return '<{0} (line {1} col {2}) `{3}`>'.format(
-            this.str, this.line, this.col,
+        return '<{0}:{1}:{2} {3} "{4}">'.format(
+            this.resource,
+            this.line,
+            this.col,
+            this.str,
             b64_source ? Base64.encode(this.source_string) : this.source_string
-        );
+        )
     };
 }
 
@@ -1237,22 +1240,8 @@ var main = function() {
         }
 
         if (output == 'tokens') {
-          if (tokens.list.length == 0) {
-              console.log('[]');
-          } else {
-              console.log('[');
-              for(i = 0; i < tokens.list.length; i++) {
-                  var token = tokens.list[i]
-                  console.log('    {"terminal": "{0}", "resource": "{1}", "line": {2}, "col": {3}, "source_string": "{4}"}{5}'.format(
-                      token.str,
-                      token.resource,
-                      token.line,
-                      token.col,
-                      Base64.encode(token.source_string),
-                      i == tokens.list.length-1 ? '' : ','
-                  ))
-              }
-              console.log(']');
+          for(i = 0; i < tokens.list.length; i++) {
+              console.log(tokens.list[i].to_string(true))
           }
           process.exit(0);
         }

@@ -3,105 +3,105 @@
     (statement:
       (e:
         (e:
-          <identifier (line 1 col 1) `aQ==`>
+          <source:1:1 identifier "aQ==">
         ),
-        <eq (line 1 col 2) `PQ==`>,
+        <source:1:2 eq "PQ==">,
         (e:
           (e:
-            <identifier (line 1 col 3) `ag==`>
+            <source:1:3 identifier "ag==">
           ),
-          <eq (line 1 col 4) `PQ==`>,
+          <source:1:4 eq "PQ==">,
           (e:
-            <n (line 1 col 5) `MA==`>
+            <source:1:5 n "MA==">
           )
         )
       )
     ),
     (_gen1:
-      <semi (line 1 col 6) `Ow==`>,
+      <source:1:6 semi "Ow==">,
       (statement:
         (for:
-          <for (line 3 col 1) `Zm9y`>,
-          <lparen (line 3 col 5) `KA==`>,
+          <source:3:1 for "Zm9y">,
+          <source:3:5 lparen "KA==">,
           (forsub:
             (e:
               (e:
-                <identifier (line 3 col 7) `aw==`>
+                <source:3:7 identifier "aw==">
               ),
-              <eq (line 3 col 9) `PQ==`>,
+              <source:3:9 eq "PQ==">,
               (e:
-                <n (line 3 col 11) `MQ==`>
+                <source:3:11 n "MQ==">
               )
             )
           ),
-          <semi (line 3 col 13) `Ow==`>,
+          <source:3:13 semi "Ow==">,
           (forsub: ),
-          <semi (line 3 col 14) `Ow==`>,
+          <source:3:14 semi "Ow==">,
           (forsub:
             (e:
               (e:
-                <identifier (line 3 col 16) `ag==`>
+                <source:3:16 identifier "ag==">
               ),
-              <eq (line 3 col 17) `PQ==`>,
+              <source:3:17 eq "PQ==">,
               (e:
                 (e:
-                  <s (line 3 col 18) `ImEi`>
+                  <source:3:18 s "ImEi">
                 ),
-                <add (line 3 col 22) `Kw==`>,
+                <source:3:22 add "Kw==">,
                 (e:
-                  <n (line 3 col 24) `OQ==`>
+                  <source:3:24 n "OQ==">
                 )
               )
             )
           ),
-          <rparen (line 3 col 26) `KQ==`>,
-          <lbrace (line 3 col 28) `ew==`>,
+          <source:3:26 rparen "KQ==">,
+          <source:3:28 lbrace "ew==">,
           (forbody:
             (statement:
               (e:
                 (e:
-                  <identifier (line 4 col 3) `aQ==`>
+                  <source:4:3 identifier "aQ==">
                 ),
-                <eq (line 4 col 5) `PQ==`>,
+                <source:4:5 eq "PQ==">,
                 (e:
                   (e:
-                    <n (line 4 col 7) `OA==`>
+                    <source:4:7 n "OA==">
                   ),
-                  <add (line 4 col 9) `Kw==`>,
+                  <source:4:9 add "Kw==">,
                   (e:
                     (e:
                       (e:
-                        <identifier (line 4 col 11) `ag==`>
+                        <source:4:11 identifier "ag==">
                       ),
-                      <mul (line 4 col 13) `Kg==`>,
+                      <source:4:13 mul "Kg==">,
                       (e:
-                        <n (line 4 col 15) `Nw==`>
+                        <source:4:15 n "Nw==">
                       )
                     ),
-                    <div (line 4 col 17) `Lw==`>,
+                    <source:4:17 div "Lw==">,
                     (e:
-                      <s (line 4 col 19) `Inki`>
+                      <source:4:19 s "Inki">
                     )
                   )
                 )
               )
             ),
-            <semi (line 4 col 22) `Ow==`>,
+            <source:4:22 semi "Ow==">,
             (forbody: )
           ),
-          <rbrace (line 5 col 1) `fQ==`>
+          <source:5:1 rbrace "fQ==">
         )
       ),
       (_gen1:
-        <semi (line 5 col 2) `Ow==`>,
+        <source:5:2 semi "Ow==">,
         (statement:
           (e:
             (e:
-              <n (line 7 col 1) `NQ==`>
+              <source:7:1 n "NQ==">
             ),
-            <add (line 7 col 2) `Kw==`>,
+            <source:7:2 add "Kw==">,
             (e:
-              <n (line 7 col 3) `Ng==`>
+              <source:7:3 n "Ng==">
             )
           )
         ),

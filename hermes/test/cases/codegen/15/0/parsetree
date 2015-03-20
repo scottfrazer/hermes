@@ -2,51 +2,51 @@
   (_gen0:
     (sub:
       (item:
-        <a (line 1 col 1) `YQ==`>
+        <source:1:1 a "YQ==">
       )
     ),
     (_gen1:
-      <comma (line 1 col 2) `LA==`>,
+      <source:1:2 comma "LA==">,
       (sub:
         (item:
-          <b (line 1 col 3) `Yg==`>
+          <source:1:3 b "Yg==">
         )
       ),
       (_gen1:
-        <comma (line 1 col 4) `LA==`>,
+        <source:1:4 comma "LA==">,
         (sub:
           (e:
-            <lparen (line 3 col 1) `KA==`>,
+            <source:3:1 lparen "KA==">,
             (e:
-              <lparen (line 3 col 2) `KA==`>,
+              <source:3:2 lparen "KA==">,
               (e:
                 (e:
-                  <number (line 3 col 3) `Ng==`>
+                  <source:3:3 number "Ng==">
                 ),
-                <multiply (line 3 col 4) `Kg==`>,
+                <source:3:4 multiply "Kg==">,
                 (e:
                   (e:
-                    <identifier (line 3 col 5) `ag==`>
+                    <source:3:5 identifier "ag==">
                   ),
-                  <lparen (line 3 col 6) `KA==`>,
+                  <source:3:6 lparen "KA==">,
                   (_gen2:
                     (e:
                       (e:
-                        <number (line 3 col 7) `Nw==`>
+                        <source:3:7 number "Nw==">
                       ),
-                      <add (line 3 col 8) `Kw==`>,
+                      <source:3:8 add "Kw==">,
                       (e:
-                        <number (line 3 col 9) `OA==`>
+                        <source:3:9 number "OA==">
                       )
                     ),
                     (_gen3: )
                   ),
-                  <rparen (line 3 col 10) `KQ==`>
+                  <source:3:10 rparen "KQ==">
                 )
               ),
-              <rparen (line 3 col 11) `KQ==`>
+              <source:3:11 rparen "KQ==">
             ),
-            <rparen (line 3 col 12) `KQ==`>
+            <source:3:12 rparen "KQ==">
           )
         ),
         (_gen1: )

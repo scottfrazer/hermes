@@ -3,32 +3,32 @@
     (statements:
       (e:
         (e:
-          <a (line 1 col 1) `YQ==`>
+          <source:1:1 a "YQ==">
         ),
-        <add (line 1 col 2) `Kw==`>,
+        <source:1:2 add "Kw==">,
         (e:
-          <b (line 1 col 3) `Yg==`>
+          <source:1:3 b "Yg==">
         )
       )
     ),
     (_gen1:
-      <comma (line 1 col 4) `LA==`>,
+      <source:1:4 comma "LA==">,
       (statements:
         (assignstatement:
-          <identifier (line 1 col 5) `aQ==`>,
-          <eq (line 1 col 6) `PQ==`>,
+          <source:1:5 identifier "aQ==">,
+          <source:1:6 eq "PQ==">,
           (e:
             (e:
-              <a (line 1 col 7) `YQ==`>
+              <source:1:7 a "YQ==">
             ),
-            <sub (line 1 col 8) `LQ==`>,
+            <source:1:8 sub "LQ==">,
             (e:
               (e:
-                <b (line 1 col 9) `Yg==`>
+                <source:1:9 b "Yg==">
               ),
-              <mul (line 1 col 10) `Kg==`>,
+              <source:1:10 mul "Kg==">,
               (e:
-                <a (line 1 col 11) `YQ==`>
+                <source:1:11 a "YQ==">
               )
             )
           )

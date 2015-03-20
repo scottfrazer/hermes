@@ -2,15 +2,15 @@
   (_gen0:
     (statement:
       (assignstatement:
-        <identifier (line 1 col 1) `aQ==`>,
-        <eq (line 1 col 2) `PQ==`>,
+        <source:1:1 identifier "aQ==">,
+        <source:1:2 eq "PQ==">,
         (assignstatementsub:
           (assignstatement:
-            <identifier (line 1 col 3) `ag==`>,
-            <eq (line 1 col 4) `PQ==`>,
+            <source:1:3 identifier "ag==">,
+            <source:1:4 eq "PQ==">,
             (assignstatementsub:
               (e:
-                <n (line 1 col 5) `MA==`>
+                <source:1:5 n "MA==">
               )
             )
           )
@@ -18,82 +18,82 @@
       )
     ),
     (_gen1:
-      <comma (line 1 col 6) `LA==`>,
+      <source:1:6 comma "LA==">,
       (statement:
         (forstatement:
-          <for (line 3 col 1) `Zm9y`>,
-          <lparen (line 3 col 4) `KA==`>,
+          <source:3:1 for "Zm9y">,
+          <source:3:4 lparen "KA==">,
           (fordeclstatement:
             (complexexpression:
               (assignstatement:
-                <identifier (line 3 col 5) `aQ==`>,
-                <eq (line 3 col 7) `PQ==`>,
+                <source:3:5 identifier "aQ==">,
+                <source:3:7 eq "PQ==">,
                 (assignstatementsub:
                   (e:
-                    <n (line 3 col 9) `MA==`>
+                    <source:3:9 n "MA==">
                   )
                 )
               )
             )
           ),
-          <semi (line 3 col 11) `Ow==`>,
+          <source:3:11 semi "Ow==">,
           (forcondstatement: ),
-          <semi (line 3 col 12) `Ow==`>,
+          <source:3:12 semi "Ow==">,
           (foriterstatement:
             (complexexpression:
               (assignstatement:
-                <identifier (line 3 col 14) `ag==`>,
-                <eq (line 3 col 16) `PQ==`>,
+                <source:3:14 identifier "ag==">,
+                <source:3:16 eq "PQ==">,
                 (assignstatementsub:
                   (e:
                     (e:
-                      <s (line 3 col 18) `InN0ciI=`>
+                      <source:3:18 s "InN0ciI=">
                     ),
-                    <add (line 3 col 24) `Kw==`>,
+                    <source:3:24 add "Kw==">,
                     (e:
-                      <n (line 3 col 26) `NQ==`>
+                      <source:3:26 n "NQ==">
                     )
                   )
                 )
               )
             )
           ),
-          <rparen (line 3 col 27) `KQ==`>,
-          <lbrace (line 3 col 29) `ew==`>,
+          <source:3:27 rparen "KQ==">,
+          <source:3:29 lbrace "ew==">,
           (forbody:
             (statement:
               (assignstatement:
-                <identifier (line 4 col 3) `aw==`>,
-                <eq (line 4 col 5) `PQ==`>,
+                <source:4:3 identifier "aw==">,
+                <source:4:5 eq "PQ==">,
                 (assignstatementsub:
                   (e:
                     (e:
-                      <n (line 4 col 7) `Ng==`>
+                      <source:4:7 n "Ng==">
                     ),
-                    <add (line 4 col 9) `Kw==`>,
+                    <source:4:9 add "Kw==">,
                     (e:
                       (e:
                         (e:
-                          <s (line 4 col 11) `ImEi`>
+                          <source:4:11 s "ImEi">
                         ),
-                        <mul (line 4 col 15) `Kg==`>,
+                        <source:4:15 mul "Kg==">,
                         (e:
-                          <n (line 4 col 17) `Nw==`>
+                          <source:4:17 n "Nw==">
                         )
                       ),
-                      <div (line 4 col 19) `Lw==`>,
+                      <source:4:19 div "Lw==">,
                       (e:
-                        <s (line 4 col 21) `ImMi`>
+                        <source:4:21 s "ImMi">
                       )
                     )
                   )
                 )
               )
             ),
-            <semi (line 4 col 24) `Ow==`>,
+            <source:4:24 semi "Ow==">,
             (forbody: )
           ),
-          <rbrace (line 5 col 1) `fQ==`>
+          <source:5:1 rbrace "fQ==">
         )
       ),
       (_gen1: )

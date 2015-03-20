@@ -366,16 +366,13 @@ public class {{prefix}}Parser {
             } catch (java.io.UnsupportedEncodingException e) {
                 source_string_bytes = this.getSourceString().getBytes();
             }
-            StringBuilder sb = new StringBuilder();
-            Formatter formatter = new Formatter(sb, Locale.US);
-            formatter.format("{\"terminal\": \"%s\", \"resource\": \"%s\", \"line\": %d, \"col\": %d, \"source_string\": \"%s\"}",
-                this.getTerminalStr(),
+            return String.format("<%s:%d:%d %s \"%s\">",
                 this.getResource(),
                 this.getLine(),
                 this.getColumn(),
+                this.getTerminalStr(),
                 Base64.getEncoder().encodeToString(source_string_bytes)
             );
-            return formatter.toString();
         }
 
         public String toPrettyString() {
@@ -383,20 +380,7 @@ public class {{prefix}}Parser {
         }
 
         public String toPrettyString(int indent) {
-            byte[] source_string_bytes;
-            try {
-                source_string_bytes = this.getSourceString().getBytes("UTF-8");
-            } catch (java.io.UnsupportedEncodingException e) {
-                source_string_bytes = this.getSourceString().getBytes();
-            }
-            String spaces = getIndentString(indent);
-            // <b (line 0 col 0) ``>
-            return String.format(
-                "%s<%s (line %d col %d) `%s`>",
-                spaces, this.getTerminalStr(),
-                this.getLine(), this.getColumn(),
-                Base64.getEncoder().encodeToString(source_string_bytes)
-            );
+            return getIndentString(indent) + this.toString();
         }
 
         public AstNode toAst() { return this; }
@@ -1361,10 +1345,8 @@ public class {{prefix}}Parser {
 
         {% if lexer %}
         if ("tokens".equals(args[0])) {
-            if (terminals.size() == 0) {
-                System.out.println("[]");
-            } else {
-                System.out.println(String.format("[\n    %s\n]", join(terminals, ",\n    ")));
+            for (Terminal terminal : terminals) {
+                System.out.println(terminal);
             }
         }
         {% endif %}
