@@ -334,7 +334,7 @@ def parse(tokens, errors=None, start=None):
     if errors is None:
         errors = DefaultSyntaxErrorHandler()
     if isinstance(tokens, str):
-        tokens = lex(tokens, '<string>', errors)
+        tokens = lex(tokens, 'string', errors)
     ctx = ParserContext(tokens, errors)
     tree = parse_{{grammar.start.string.lower()}}(ctx)
     if tokens.current() != None:
