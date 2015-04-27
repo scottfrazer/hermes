@@ -2,14 +2,6 @@
 package {{java_package}};
 {% endif %}
 
-/* README
- *
- * the main() function needs JSON parsing capabilities which is why
- * there's like a billion lines of code of JSON parsing which is
- * __conditionally__ included if --add-main is added, which will
- * probably not be very frequently
- */
-
 {% import re %}
 {% from hermes.grammar import * %}
 
@@ -22,6 +14,11 @@ import java.util.Arrays;
 import java.nio.*;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+
+{% if java_use_apache_commons %}
+import org.apache.commons.codec.binary.Base64;
+{% endif %}
+
 {% if lexer %}
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
@@ -29,20 +26,13 @@ import java.lang.reflect.Method;
 {% endif %}
 
 {% if add_main %}
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.lang.reflect.Field;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -371,7 +361,11 @@ public class {{prefix}}Parser {
                 this.getLine(),
                 this.getColumn(),
                 this.getTerminalStr(),
+                {% if java_use_apache_commons %}
+                Base64.encodeBase64String(source_string_bytes)
+                {% else %}
                 Base64.getEncoder().encodeToString(source_string_bytes)
+                {% endif %}
             );
         }
 

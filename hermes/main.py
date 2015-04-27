@@ -68,6 +68,9 @@ def cli():
         '--java-package', required=False, help='If generating Java code, this is the package.'
     )
     commands['generate'].add_argument(
+        '--java-use-apache-commons', required=False, action='store_true', help='This will use Apache Commons Codec for Base64 encoding instead of Base64 package in Java 8.  This option should make the generated code Java 7 compatible, but give it a dependency.'
+    )
+    commands['generate'].add_argument(
         '--python-package', required=False, help='If generating Python code, this is the package.'
     )
     commands['generate'].add_argument(
@@ -146,6 +149,7 @@ def cli():
             directory=cli.directory,
             add_main=cli.add_main,
             java_package=cli.java_package,
+            java_use_apache_commons=cli.java_use_apache_commons,
             nodejs=cli.nodejs
         )
 
