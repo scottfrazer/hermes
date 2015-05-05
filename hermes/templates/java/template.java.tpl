@@ -102,19 +102,19 @@ public class {{prefix}}Parser {
 
     public interface SyntaxErrorFormatter {
         /* Called when the parser runs out of tokens but isn't finished parsing. */
-        String unexpected_eof(String method, List<TerminalIdentifier> expected, List<String> nt_rules);
+        String unexpectedEof(String method, List<TerminalIdentifier> expected, List<String> nt_rules);
 
         /* Called when the parser finished parsing but there are still tokens left in the stream. */
-        String excess_tokens(String method, Terminal terminal);
+        String excessTokens(String method, Terminal terminal);
 
         /* Called when the parser is expecting one token and gets another. */
-        String unexpected_symbol(String method, Terminal actual, List<TerminalIdentifier> expected, String rule);
+        String unexpectedSymbol(String method, Terminal actual, List<TerminalIdentifier> expected, String rule);
 
         /* Called when the parser is expecing a tokens but there are no more tokens. */
-        String no_more_tokens(String method, TerminalIdentifier expecting, Terminal last);
+        String noMoreTokens(String method, TerminalIdentifier expecting, Terminal last);
 
         /* Invalid terminal is found in the token stream. */
-        String invalid_terminal(String method, Terminal invalid);
+        String invalidTerminal(String method, Terminal invalid);
     }
 
     public static class TokenStream extends ArrayList<Terminal> {
@@ -584,15 +584,15 @@ public class {{prefix}}Parser {
     }
 
     private static class DefaultSyntaxErrorFormatter implements SyntaxErrorFormatter {
-        public String unexpected_eof(String method, List<TerminalIdentifier> expected, List<String> nt_rules) {
+        public String unexpectedEof(String method, List<TerminalIdentifier> expected, List<String> nt_rules) {
             return "Error: unexpected end of file";
         }
 
-        public String excess_tokens(String method, Terminal terminal) {
+        public String excessTokens(String method, Terminal terminal) {
             return "Finished parsing without consuming all tokens.";
         }
 
-        public String unexpected_symbol(String method, Terminal actual, List<TerminalIdentifier> expected, String rule) {
+        public String unexpectedSymbol(String method, Terminal actual, List<TerminalIdentifier> expected, String rule) {
             ArrayList<String> expected_terminals = new ArrayList<String>();
             for ( TerminalIdentifier e : expected ) {
                 expected_terminals.add(e.string());
@@ -603,11 +603,11 @@ public class {{prefix}}Parser {
             );
         }
 
-        public String no_more_tokens(String method, TerminalIdentifier expecting, Terminal last) {
+        public String noMoreTokens(String method, TerminalIdentifier expecting, Terminal last) {
             return "No more tokens.  Expecting " + expecting.string();
         }
 
-        public String invalid_terminal(String method, Terminal invalid) {
+        public String invalidTerminal(String method, Terminal invalid) {
             return "Invalid symbol ID: "+invalid.getId()+" ("+invalid.getTerminalStr()+")";
         }
     }
@@ -740,29 +740,37 @@ public class {{prefix}}Parser {
         return parse(tokens, new DefaultSyntaxErrorFormatter());
     }
 
+    public ParseTree parse(List<Terminal> tokens) throws SyntaxError {
+        return parse(new TokenStream(tokens));
+    }
+
     public ParseTree parse(TokenStream tokens, SyntaxErrorFormatter error_formatter) throws SyntaxError {
         ParserContext ctx = new ParserContext(tokens, error_formatter);
         ParseTree tree = parse_{{grammar.start.string.lower()}}(ctx);
         if (ctx.tokens.current() != null) {
             StackTraceElement[] stack = Thread.currentThread().getStackTrace();
-            throw new SyntaxError(ctx.error_formatter.excess_tokens(stack[1].getMethodName(), ctx.tokens.current()));
+            throw new SyntaxError(ctx.error_formatter.excessTokens(stack[1].getMethodName(), ctx.tokens.current()));
         }
         return tree;
+    }
+
+    public ParseTree parse(List<Terminal> tokens, SyntaxErrorFormatter error_formatter) throws SyntaxError {
+        return parse(new TokenStream(tokens), error_formatter);
     }
 
     private static Terminal expect(ParserContext ctx, TerminalIdentifier expecting) throws SyntaxError {
         Terminal current = ctx.tokens.current();
         if (current == null) {
-            throw new SyntaxError(ctx.error_formatter.no_more_tokens(ctx.nonterminal, expecting, ctx.tokens.last()));
+            throw new SyntaxError(ctx.error_formatter.noMoreTokens(ctx.nonterminal, expecting, ctx.tokens.last()));
         }
         if (current.getId() != expecting.id()) {
             ArrayList<TerminalIdentifier> expectedList = new ArrayList<TerminalIdentifier>();
             expectedList.add(expecting);
-            throw new SyntaxError(ctx.error_formatter.unexpected_symbol(ctx.nonterminal, current, expectedList, ctx.rule));
+            throw new SyntaxError(ctx.error_formatter.unexpectedSymbol(ctx.nonterminal, current, expectedList, ctx.rule));
         }
         Terminal next = ctx.tokens.advance();
         if ( next != null && !is_terminal(next.getId()) ) {
-            throw new SyntaxError(ctx.error_formatter.invalid_terminal(ctx.nonterminal, next));
+            throw new SyntaxError(ctx.error_formatter.invalidTerminal(ctx.nonterminal, next));
         }
         return current;
     }
@@ -966,7 +974,7 @@ public class {{prefix}}Parser {
 
         if (current == null) {
   {% if grammar.must_consume_tokens(nonterminal) %}
-            throw new SyntaxError(ctx.error_formatter.unexpected_eof(
+            throw new SyntaxError(ctx.error_formatter.unexpectedEof(
                 "{{nonterminal.string.lower()}}",
                 nonterminal_first.get({{nonterminal.id}}),
                 nonterminal_rules.get({{nonterminal.id}})
@@ -1019,7 +1027,7 @@ public class {{prefix}}Parser {
   {% endfor %}
 
   {% if grammar.must_consume_tokens(nonterminal) %}
-        throw new SyntaxError(ctx.error_formatter.unexpected_symbol(
+        throw new SyntaxError(ctx.error_formatter.unexpectedSymbol(
             "{{nonterminal.string.lower()}}",
             current,
             nonterminal_first.get({{nonterminal.id}}),
@@ -1139,6 +1147,18 @@ public class {{prefix}}Parser {
     }
 
     {% if re.search(r'public\s+void\s+default_action', lexer.code) is None %}
+    /**
+     * The default function that is called on every regex match during lexical analysis.
+     * By default, this simply calls the emit() function with all of the same parameters.
+     * This can be overridden in the grammar file to provide a different default action.
+     *
+     * @param lctx The current state of the lexical analyzer
+     * @param terminal The current terminal that was matched
+     * @param source_string The source code that was matched
+     * @param line The line where the match happened
+     * @param col The column where the match happened
+     * @return void
+     */
     public void default_action(LexerContext lctx, TerminalIdentifier terminal, String source_string, int line, int col) {
         emit(lctx, terminal, source_string, line, col);
     }
@@ -1270,6 +1290,16 @@ public class {{prefix}}Parser {
         }
         return 0;
     }
+
+    /**
+     * Lexically analyze WDL source code, return a sequence of tokens.  Output of this
+     * method should be used to construct a TerminalStream and then pass that to parse()
+     *
+     * @param string The WDL source code to analyze
+     * @param resource A descriptor of where this code came from (usually a file path)
+     * @return List of Terminal objects.
+     * @throws SyntaxError If part of the source code could not lexically analyzed
+     */
 
     public List<Terminal> lex(String string, String resource) throws SyntaxError {
         LexerContext lctx = new LexerContext(string, resource);
