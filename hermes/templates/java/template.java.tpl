@@ -814,6 +814,11 @@ public class {{prefix}}Parser {
         return 0;
     }
 
+    public ParseTree parse_{{name}}(List<Terminal> tokens, SyntaxErrorFormatter error_formatter) throws SyntaxError {
+        ParserContext ctx = new ParserContext(new TokenStream(tokens), error_formatter);
+        return parse_{{name}}_internal(ctx, 0);
+    }
+
     public static ParseTree parse_{{name}}(ParserContext ctx) throws SyntaxError {
         return parse_{{name}}_internal(ctx, 0);
     }
@@ -942,6 +947,12 @@ public class {{prefix}}Parser {
 {% endfor %}
 
 {% for nonterminal in grammar.ll1_nonterminals %}
+
+    public ParseTree parse_{{nonterminal.string.lower()}}(List<Terminal> tokens, SyntaxErrorFormatter error_formatter) throws SyntaxError {
+        ParserContext ctx = new ParserContext(new TokenStream(tokens), error_formatter);
+        return parse_{{nonterminal.string.lower()}}(ctx);
+    }
+
     private static ParseTree parse_{{nonterminal.string.lower()}}(ParserContext ctx) throws SyntaxError {
         Terminal current = ctx.tokens.current();
         Terminal next;
