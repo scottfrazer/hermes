@@ -125,9 +125,9 @@ class ParseTree():
       self.isExprNud = False # true for rules like _expr := {_expr} + {...}
       self.listSeparator = None
       self.list = False
-  def add( self, tree ):
+  def add(self, tree):
       self.children.append( tree )
-  def ast( self ):
+  def ast(self):
       if self.list == 'slist' or self.list == 'nlist':
           if len(self.children) == 0:
               return AstList()
@@ -412,15 +412,16 @@ def nud_{{name}}(ctx):
     {{'if' if i == 0 else 'elif'}} current.id in rule_first[{{rule.id}}]:
         # {{rule}}
         ctx.rule = rules[{{rule.id}}]
-        {% if isinstance(rule.nudAst, AstSpecification) %}
+        {% py ast = rule.nudAst if not isinstance(rule.operator, PrefixOperator) else rule.ast %}
+        {% if isinstance(ast, AstSpecification) %}
         ast_parameters = OrderedDict([
-          {% for k,v in rule.nudAst.parameters.items() %}
+          {% for k,v in ast.parameters.items() %}
             ('{{k}}', {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %}),
           {% endfor %}
         ])
-        tree.astTransform = AstTransformNodeCreator('{{rule.nudAst.name}}', ast_parameters)
-        {% elif isinstance(rule.nudAst, AstTranslation) %}
-        tree.astTransform = AstTransformSubstitution({{rule.nudAst.idx}})
+        tree.astTransform = AstTransformNodeCreator('{{ast.name}}', ast_parameters)
+        {% elif isinstance(ast, AstTranslation) %}
+        tree.astTransform = AstTransformSubstitution({{ast.idx}})
         {% endif %}
 
         tree.nudMorphemeCount = {{len(rule.nud_production)}}

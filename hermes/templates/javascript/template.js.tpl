@@ -862,15 +862,17 @@ function nud_{{name}}(ctx) {
     {{'if' if i == 0 else 'else if'}} (rule_first[{{rule.id}}].indexOf(current.id) != -1) {
         // {{rule}}
         ctx.rule = rules[{{rule.id}}];
-        {% if isinstance(rule.nudAst, AstSpecification) %}
+
+        {% py ast = rule.nudAst if not isinstance(rule.operator, PrefixOperator) else rule.ast %}
+        {% if isinstance(ast, AstSpecification) %}
         ast_parameters = {
-          {% for k,v in rule.nudAst.parameters.items() %}
+          {% for k,v in ast.parameters.items() %}
             '{{k}}': {% if v == '$' %}'{{v}}'{% else %}{{v}}{% endif %},
           {% endfor %}
         }
-        tree.astTransform = new AstTransformNodeCreator('{{rule.nudAst.name}}', ast_parameters);
-        {% elif isinstance(rule.nudAst, AstTranslation) %}
-        tree.astTransform = new AstTransformSubstitution({{rule.nudAst.idx}});
+        tree.astTransform = new AstTransformNodeCreator('{{ast.name}}', ast_parameters);
+        {% elif isinstance(ast, AstTranslation) %}
+        tree.astTransform = new AstTransformSubstitution({{ast.idx}});
         {% endif %}
 
         tree.nudMorphemeCount = {{len(rule.nud_production)}};

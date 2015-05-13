@@ -1179,7 +1179,11 @@ nud_{{name}}(PARSER_CONTEXT_T * ctx)
   if ( {{' || '.join(['current == %d' % (x.id) for x in ruleFirstSet])}} )
   {
     // {{rule}}
+    {% if isinstance(rule.operator, PrefixOperator) %}
+    tree->ast_converter = get_ast_converter({{rule.id}});
+    {% else %}
     tree->ast_converter = get_nud_ast_converter({{rule.id}});
+    {% endif %}
     tree->nchildren = {{len(rule.nud_production)}};
     tree->children = calloc(tree->nchildren, sizeof(PARSE_TREE_NODE_T));
     tree->nudMorphemeCount = {{len(rule.nud_production)}};

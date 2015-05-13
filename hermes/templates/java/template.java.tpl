@@ -853,7 +853,7 @@ public class {{prefix}}Parser {
     {% if len(ruleFirstSet) and not ruleFirstSet.issuperset(grammar.first(expression_nonterminal))%}
         {{'if' if i == 0 else 'else if'}} (rule_first.get({{rule.id}}).contains(terminal_map.get(current.getId()))) {
 
-      {% py ast = rule.nudAst if rule.nudAst else rule.ast %}
+      {% py ast = rule.nudAst if not isinstance(rule.operator, PrefixOperator) else rule.ast %}
             /* ({{rule.id}}) {{rule}} */
             ctx.rule = rules.get({{rule.id}});
 
