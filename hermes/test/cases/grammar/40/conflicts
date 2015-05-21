@@ -1,0 +1,19 @@
+ -- FIRST/FIRST conflict --
+Two rules for nonterminal $sub have intersecting first sets.  Can't decide which rule to choose based on terminal.
+
+(Rule-1)  $sub = :a $sub :b
+(Rule-2)  $sub = :a :b
+
+first(Rule-1) = {:a}
+first(Rule-2) = {:a}
+first(Rule-1) ∩ first(Rule-2): {:a}
+
+ -- FIRST/FIRST conflict --
+Two rules for nonterminal $sub have intersecting first sets.  Can't decide which rule to choose based on terminal.
+
+(Rule-2)  $sub = :a :b
+(Rule-1)  $sub = :a $sub :b
+
+first(Rule-2) = {:a}
+first(Rule-1) = {:a}
+first(Rule-2) ∩ first(Rule-1): {:a}

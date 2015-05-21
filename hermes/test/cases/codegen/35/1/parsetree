@@ -1,0 +1,34 @@
+(start:
+  (_gen0:
+    (sub:
+      (item:
+        <source:1:1 a "YQ==">
+      )
+    ),
+    (_gen1:
+      <source:1:2 comma "LA==">,
+      (sub:
+        (e:
+          (e:
+            <source:2:1 identifier "aQ==">
+          ),
+          <source:2:2 lparen "KA==">,
+          (_gen5: ),
+          <source:2:3 rparen "KQ==">
+        )
+      ),
+      (_gen1:
+        <source:2:4 comma "LA==">,
+        (sub:
+          (e:
+            <source:3:1 subtract "LQ==">,
+            (e:
+              <source:3:2 number "MTA=">
+            )
+          )
+        ),
+        (_gen1: )
+      )
+    )
+  )
+)
