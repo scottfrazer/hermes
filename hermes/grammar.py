@@ -487,11 +487,7 @@ class CompositeGrammar:
             return self.follow_sets[element]
 
     def must_consume_tokens(self, nonterminal):
-        answer = True
-        for rule in self.get_expanded_rules(nonterminal):
-            if rule.is_empty:
-                answer = False
-        return answer
+        return self._empty not in self.first(nonterminal)
 
     def _compute_first(self, first=None):
         if first is None:

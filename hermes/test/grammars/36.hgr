@@ -6,6 +6,6 @@ grammar {
     r'next' -> :next
   }
   parser {
-    $start = otlist(:item, :comma, 1) :next -> Thing(x=$0, y=$1)
+    $start = tlist(:item, :comma) :next -> Thing(x=$0, y=$1)
   }
 }

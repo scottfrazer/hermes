@@ -1,59 +1,52 @@
 {
-    "$_gen3": [
-        ":rbrace"
-    ],
-    "$_gen7": [
-        ":rsquare"
-    ],
-    "$type_name": [
-        ":rparen"
-    ],
     "$e": [
         ":add",
-        ":rsquare",
+        ":rbrace",
         ":subtract",
         ":lsquare",
-        ":rparen",
+        ":rsquare",
+        ":comma",
         ":_eos",
-        ":divide",
+        ":rparen",
         ":multiply",
-        ":rbrace",
-        ":comma"
+        ":divide"
     ],
-    "$_gen4": [
-        ":rbrace"
+    "$item": [
+        ":comma",
+        ":_eos"
     ],
-    "$_gen0": [
+    "$_gen1": [
+        ":_eos"
+    ],
+    "$start": [
         ":_eos"
     ],
     "$sub": [
         ":comma",
         ":_eos"
     ],
-    "$item": [
-        ":comma",
+    "$_gen0": [
         ":_eos"
     ],
-    "$_gen2": [
-        ":rbrace"
-    ],
-    "$start": [
-        ":_eos"
-    ],
-    "$_gen8": [
+    "$_gen3": [
+        ":rbrace",
         ":rsquare"
-    ],
-    "$_gen6": [
-        ":rparen",
-        ":rsquare",
-        ":rbrace"
-    ],
-    "$_gen1": [
-        ":_eos"
     ],
     "$_gen5": [
         ":rparen",
-        ":rsquare",
-        ":rbrace"
+        ":rbrace",
+        ":rsquare"
+    ],
+    "$_gen2": [
+        ":rbrace",
+        ":rsquare"
+    ],
+    "$_gen4": [
+        ":rparen",
+        ":rbrace",
+        ":rsquare"
+    ],
+    "$type_name": [
+        ":rparen"
     ]
 }

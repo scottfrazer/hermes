@@ -31,7 +31,7 @@ grammar {
       (-:left) $e = $e :subtract $e -> Subtract(lhs=$0, rhs=$2)
       (*:left) $e = $e :multiply $e -> Multiply(lhs=$0, rhs=$2)
       (-:left) $e = $e :divide $e -> Divide(lhs=$0, rhs=$2)
-      (*:left) $e = :lparen_cast $type_name :rparen <=> :lbrace otlist(:item, :comma) :rbrace -> TypeInitializion( type=$1, initializer=$4 )
+      (*:left) $e = :lparen_cast $type_name :rparen <=> :lbrace list(:item, :comma) :rbrace -> TypeInitializion( type=$1, initializer=$4 )
       (-:left) $e = :identifier <=> :lparen list($e, :comma) :rparen -> FunctionCall( name=$$, params=$2 )
       (*:left) $e = optional($e) <=> :lsquare list(:item, :comma) :rsquare -> ExprPlusList( expr=$$, params=$2 )
       (*:unary) $e = :subtract $e -> UMinus(arg=$1)

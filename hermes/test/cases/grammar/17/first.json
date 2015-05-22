@@ -1,92 +1,88 @@
 {
-    "$_gen3": [
-        ":comma",
-        ":_empty"
-    ],
-    "$type_name": [
-        ":int",
-        ":char"
-    ],
-    "$e": [
-        ":identifier",
-        ":lbrace",
-        ":lparen_cast",
-        ":subtract",
-        ":lsquare",
-        ":lparen",
-        ":number",
-        ":e"
-    ],
-    "$_gen4": [
-        ":_empty",
-        ":item"
-    ],
-    "$_gen0": [
-        ":identifier",
-        ":a",
-        ":subtract",
-        ":lsquare",
-        ":_empty",
-        ":b",
-        ":lbrace",
-        ":lparen_cast",
-        ":lparen",
-        ":number",
-        ":e"
-    ],
     "$initializer_list_item": [
         ":item"
     ],
+    "$_gen3": [
+        ":_empty",
+        ":comma"
+    ],
     "$sub": [
+        ":e",
+        ":lparen_cast",
+        ":lsquare",
+        ":number",
         ":identifier",
         ":a",
-        ":subtract",
-        ":lsquare",
-        ":b",
-        ":lbrace",
-        ":lparen_cast",
         ":lparen",
-        ":number",
-        ":e"
+        ":subtract",
+        ":lbrace",
+        ":b"
     ],
-    "$item": [
+    "$_gen1": [
+        ":_empty",
+        ":comma"
+    ],
+    "$_gen4": [
+        ":e",
+        ":lparen_cast",
+        ":lsquare",
+        ":number",
+        ":_empty",
+        ":identifier",
+        ":lparen",
+        ":subtract",
+        ":lbrace"
+    ],
+    "$start": [
+        ":e",
+        ":lparen_cast",
+        ":lsquare",
+        ":number",
+        ":_empty",
+        ":identifier",
         ":a",
+        ":lparen",
+        ":subtract",
+        ":lbrace",
         ":b"
     ],
     "$_gen2": [
         ":_empty",
         ":item"
     ],
-    "$start": [
+    "$_gen5": [
+        ":_empty",
+        ":comma"
+    ],
+    "$_gen0": [
+        ":e",
+        ":lparen_cast",
+        ":lsquare",
+        ":number",
+        ":_empty",
         ":identifier",
         ":a",
+        ":lparen",
         ":subtract",
-        ":lsquare",
-        ":_empty",
-        ":b",
         ":lbrace",
+        ":b"
+    ],
+    "$e": [
+        ":e",
         ":lparen_cast",
+        ":lsquare",
         ":lparen",
         ":number",
-        ":e"
-    ],
-    "$_gen6": [
-        ":comma",
-        ":_empty"
-    ],
-    "$_gen1": [
-        ":comma",
-        ":_empty"
-    ],
-    "$_gen5": [
+        ":subtract",
         ":identifier",
-        ":subtract",
-        ":lsquare",
-        ":_empty",
-        ":lbrace",
-        ":lparen_cast",
-        ":lparen",
-        ":number",
-        ":e"
+        ":lbrace"
+    ],
+    "$item": [
+        ":a",
+        ":b"
+    ],
+    "$type_name": [
+        ":int",
+        ":char"
     ]
 }
