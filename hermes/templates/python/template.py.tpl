@@ -128,17 +128,7 @@ class ParseTree():
   def add(self, tree):
       self.children.append( tree )
   def ast(self):
-      if self.list == 'slist' or self.list == 'nlist':
-          if len(self.children) == 0:
-              return AstList()
-          offset = 1 if self.children[0] == self.listSeparator else 0
-          first = self.children[offset].ast()
-          r = AstList()
-          if first is not None:
-              r.append(first)
-          r.extend(self.children[offset+1].ast())
-          return r
-      elif self.list == 'otlist':
+      if self.list == 'otlist':
           if len(self.children) == 0:
               return AstList()
           r = AstList()
@@ -152,7 +142,7 @@ class ParseTree():
           r = AstList([self.children[0].ast()])
           r.extend(self.children[2].ast())
           return r
-      elif self.list == 'mlist':
+      elif self.list == 'list':
           r = AstList()
           if len(self.children) == 0:
               return r
@@ -509,14 +499,10 @@ def parse_{{name}}(ctx):
     tree = ParseTree(NonTerminal({{nonterminal.id}}, '{{name}}'))
     ctx.nonterminal = "{{name}}"
 
-    {% if isinstance(nonterminal.macro, SeparatedListMacro) %}
-    tree.list = 'slist'
-    {% elif isinstance(nonterminal.macro, MorphemeListMacro) %}
-    tree.list = 'nlist'
-    {% elif isinstance(nonterminal.macro, TerminatedListMacro) %}
+    {% if isinstance(nonterminal.macro, TerminatedListMacro) %}
     tree.list = 'tlist'
     {% elif isinstance(nonterminal.macro, MinimumListMacro) %}
-    tree.list = 'mlist'
+    tree.list = 'list'
     {% elif isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
     tree.list = 'otlist'
     {% else %}
@@ -563,7 +549,7 @@ def parse_{{name}}(ctx):
         {% if isinstance(morpheme, Terminal) %}
         t = expect(ctx, {{morpheme.id}}) # {{morpheme}}
         tree.add(t)
-          {% if isinstance(nonterminal.macro, SeparatedListMacro) or isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
+          {% if isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
             {% if nonterminal.macro.separator == morpheme %}
         tree.listSeparator = t
             {% endif %}

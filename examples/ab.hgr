@@ -20,7 +20,7 @@ grammar {
     "\\s+" -> null
   }
   parser {
-    $start = mslist(:a, :b, 5) | :_empty
+    $start = list(:a, :b, 5) | :_empty
     $start1 = :a $start :b | :_empty
   }
 }

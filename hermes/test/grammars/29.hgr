@@ -1,5 +1,5 @@
 grammar {
   parser {
-    $start = mlist(:a, 4)
+    $start = list(:a, null, 4)
   }
 }

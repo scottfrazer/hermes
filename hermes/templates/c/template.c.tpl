@@ -183,28 +183,7 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
   if ( tree->nchildren == 0 )
     return ast;
 
-  if ( !strcmp(tree->list, "slist") || !strcmp(tree->list, "nlist") )
-  {
-    offset = (tree->children[0].object == tree->listSeparator) ? 1 : 0;
-    this = {{prefix}}parsetree_node_to_ast(&tree->children[offset]);
-    next = {{prefix}}parsetree_node_to_ast(&tree->children[offset + 1]);
-
-    ast_list = NULL;
-    if ( this != NULL )
-    {
-      ast_list = calloc(1, sizeof(AST_LIST_T));
-      ast_list->tree = this;
-      ast_list->next = NULL;
-
-      if ( next != NULL )
-      {
-        ast_list->next = (AST_LIST_T *) next->object;
-      }
-    }
-
-    if ( next ) free(next);
-  }
-  else if ( !strcmp(tree->list, "otlist") )
+  if ( !strcmp(tree->list, "otlist") )
   {
     this = {{prefix}}parsetree_node_to_ast(&tree->children[0]);
     next = {{prefix}}parsetree_node_to_ast(&tree->children[1]);
@@ -238,7 +217,7 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
 
     if ( next ) free(next);
   }
-  else if ( !strcmp(tree->list, "mlist") )
+  else if ( !strcmp(tree->list, "list") )
   {
     int end = MAX(0, tree->nchildren - 1);
 
@@ -1302,14 +1281,10 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
   tree = calloc(1, sizeof(PARSE_TREE_T));
   tree->nonterminal = {{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}};
 
-    {% if isinstance(nonterminal.macro, SeparatedListMacro) %}
-  tree->list = "slist";
-    {% elif isinstance(nonterminal.macro, MorphemeListMacro) %}
-  tree->list = "nlist";
-    {% elif isinstance(nonterminal.macro, TerminatedListMacro) %}
+    {% if isinstance(nonterminal.macro, TerminatedListMacro) %}
   tree->list = "tlist";
     {% elif isinstance(nonterminal.macro, MinimumListMacro) %}
-  tree->list = "mlist";
+  tree->list = "list";
     {% elif isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
   tree->list = "otlist";
     {% else %}
@@ -1352,7 +1327,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
         {% if isinstance(morpheme, Terminal) %}
     tree->children[{{index}}].type = PARSE_TREE_NODE_TYPE_TERMINAL;
     tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) expect( {{prefix.upper()}}TERMINAL_{{morpheme.string.upper()}}, ctx );
-          {% if isinstance(nonterminal.macro, SeparatedListMacro) or isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
+          {% if isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
             {% if nonterminal.macro.separator == morpheme %}
     tree->listSeparator = tree->children[{{index}}].object;
             {% endif %}

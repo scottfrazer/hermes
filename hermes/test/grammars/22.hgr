@@ -4,7 +4,7 @@ grammar {
     r'nt' -> :nt
   }
   parser {
-    $s = mlist($t, 2)
+    $s = list($t, null, 2)
     $t = :nt
   }
 }

@@ -6,7 +6,7 @@ grammar {
     r'b' -> :b
   }
   parser {
-    $start = mslist($item, :sep, 1)
+    $start = list($item, :sep, 1)
     $item = :a | :b
   }
 }

@@ -441,19 +441,7 @@ public class {{prefix}}Parser {
         }
 
         public AstNode toAst() {
-            if ( this.list == "slist" || this.list == "nlist" ) {
-                int offset = (this.children.size() > 0 && this.children.get(0) == this.listSeparator) ? 1 : 0;
-                AstList astList = new AstList();
-                if ( this.children.size() == 0 ) {
-                    return astList;
-                }
-                AstNode first = this.children.get(offset).toAst();
-                if ( first != null ) {
-                    astList.add(this.children.get(offset).toAst());
-                }
-                astList.addAll((AstList) this.children.get(offset + 1).toAst());
-                return astList;
-            } else if ( this.list == "otlist" ) {
+            if ( this.list == "otlist" ) {
                 AstList astList = new AstList();
                 if ( this.children.size() == 0 ) {
                     return astList;
@@ -471,7 +459,7 @@ public class {{prefix}}Parser {
                 astList.add(this.children.get(0).toAst());
                 astList.addAll((AstList) this.children.get(2).toAst());
                 return astList;
-            } else if ( this.list == "mlist" ) {
+            } else if ( this.list == "list" ) {
                 AstList astList = new AstList();
                 int end = this.children.size() - 1;
 
@@ -963,14 +951,10 @@ public class {{prefix}}Parser {
         ParseTree tree = new ParseTree( new NonTerminal({{nonterminal.id}}, "{{nonterminal.string}}"));
         ctx.nonterminal = "{{nonterminal.string.lower()}}";
 
-  {% if isinstance(nonterminal.macro, SeparatedListMacro) %}
-        tree.setList("slist");
-  {% elif isinstance(nonterminal.macro, MorphemeListMacro) %}
-        tree.setList("nlist");
-  {% elif isinstance(nonterminal.macro, TerminatedListMacro) %}
+  {% if isinstance(nonterminal.macro, TerminatedListMacro) %}
         tree.setList("tlist");
   {% elif isinstance(nonterminal.macro, MinimumListMacro) %}
-        tree.setList("mlist");
+        tree.setList("list");
   {% elif isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
         tree.setList("otlist");
   {% else %}
@@ -1022,7 +1006,7 @@ public class {{prefix}}Parser {
       {% if isinstance(morpheme, Terminal) %}
             next = expect(ctx, {{prefix}}TerminalIdentifier.TERMINAL_{{morpheme.string.upper()}});
             tree.add(next);
-        {% if isinstance(nonterminal.macro, SeparatedListMacro) or isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
+        {% if isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
           {% if nonterminal.macro.separator == morpheme %}
             tree.setListSeparator(next);
           {% endif %}

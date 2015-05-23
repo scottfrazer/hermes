@@ -464,8 +464,6 @@ class CompositeGrammar:
             first_set = set()
             add_empty_token = True
             for morpheme in element.morphemes:
-                if isinstance(morpheme, MorphemeListMacro) or isinstance(morpheme, SeparatedListMacro):
-                    morpheme = morpheme.start_nt
                 morpheme_first_set = set([morpheme]) if isinstance(morpheme, Terminal) else self.first_sets[morpheme]
                 toks = morpheme_first_set.difference({self._empty})
                 if len(toks) > 0:
@@ -818,26 +816,6 @@ class TerminatedListMacro(LL1ListMacro):
 
     def __repr__(self):
         return 'tlist({0}, {1})'.format(str(self.nonterminal), str(self.terminator))
-
-
-class MorphemeListMacro(LL1ListMacro):
-    def __init__(self, morpheme, start_nt, rules):
-        self.__dict__.update(locals())
-        if start_nt:
-            self.start_nt.setMacro(self)
-
-    def __repr__(self):
-        return 'list({0})'.format(str(self.morpheme))
-
-
-class SeparatedListMacro(LL1ListMacro):
-    def __init__(self, nonterminal, separator, start_nt, rules):
-        self.__dict__.update(locals())
-        if start_nt:
-            self.start_nt.setMacro(self)
-
-    def __repr__(self):
-        return 'list({0}, {1})'.format(str(self.nonterminal), str(self.separator))
 
 
 class OptionallyTerminatedListMacro(LL1ListMacro):
