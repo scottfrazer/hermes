@@ -3,15 +3,15 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 3 col 6) `c3RhcnQ=`>,
+          nonterminal=<grammar.hgr:3:6 nonterminal "c3RhcnQ=">,
           production=[
             (Production:
               morphemes=[
                 (Macro:
-                  name=<identifier (line 3 col 14) `dGxpc3Q=`>,
+                  name=<grammar.hgr:3:14 identifier "dGxpc3Q=">,
                   parameters=[
-                    <terminal (line 3 col 21) `YQ==`>,
-                    <terminal (line 3 col 25) `c2VtaWNvbG9u`>
+                    <grammar.hgr:3:21 terminal "YQ==">,
+                    <grammar.hgr:3:25 terminal "c2VtaWNvbG9u">
                   ]
                 )
               ],

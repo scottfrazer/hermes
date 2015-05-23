@@ -60,7 +60,7 @@ def test_all():
                         yield follow_sets, test_dir, nonterminal, terminals
 
 def conflicts_to_string(conflicts):
-    return '\n'.join(map(str, conflicts))
+    return '\n'.join(sorted(map(str, conflicts)))
 
 def write_sets(sets, output_path):
     json_sets = dict()
@@ -83,7 +83,7 @@ def compare(test_dir, filename, actual):
 def tokens(test_dir):
     grammar_file = os.path.join(test_dir, 'grammar.hgr')
     with open(grammar_file) as fp:
-        actual = lex(fp.read(), 'grammar.hgr').json()
+        actual = '\n'.join([str(t) for t in lex(fp.read(), 'grammar.hgr')])
     compare(test_dir, 'tokens', actual)
 
 def parse_tree(test_dir):

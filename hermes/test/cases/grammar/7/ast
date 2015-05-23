@@ -3,7 +3,7 @@
     (Lexer:
       atoms=[
         (Regex:
-          regex=<regex (line 3 col 5) `cidccysn`>,
+          regex=<grammar.hgr:3:5 regex "cidccysn">,
           options=None,
           onmatch=[
             (Null:
@@ -12,21 +12,21 @@
           ]
         ),
         (Regex:
-          regex=<regex (line 4 col 5) `cidhJw==`>,
+          regex=<grammar.hgr:4:5 regex "cidhJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 4 col 14) `YQ==`>,
+              name=<grammar.hgr:4:14 terminal "YQ==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 5 col 5) `cidiJw==`>,
+          regex=<grammar.hgr:5:5 regex "cidiJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 5 col 14) `Yg==`>,
+              name=<grammar.hgr:5:14 terminal "Yg==">,
               group=None
             )
           ]
@@ -34,41 +34,41 @@
         (EnumeratedRegex:
           enums=[
             (RegexEnum:
-              language=<identifier (line 7 col 7) `amF2YQ==`>,
-              regex=<regex (line 7 col 13) `Ii4i`>,
+              language=<grammar.hgr:7:7 identifier "amF2YQ==">,
+              regex=<grammar.hgr:7:13 regex "Ii4i">,
               options=[
-                <identifier (line 7 col 18) `RE9UQUxM`>,
-                <identifier (line 7 col 26) `Q0FTRV9JTlNFTlNJVElWRQ==`>
+                <grammar.hgr:7:18 identifier "RE9UQUxM">,
+                <grammar.hgr:7:26 identifier "Q0FTRV9JTlNFTlNJVElWRQ==">
               ]
             ),
             (RegexEnum:
-              language=<identifier (line 8 col 7) `cHl0aG9u`>,
-              regex=<regex (line 8 col 15) `cicuJw==`>,
+              language=<grammar.hgr:8:7 identifier "cHl0aG9u">,
+              regex=<grammar.hgr:8:15 regex "cicuJw==">,
               options=[
-                <identifier (line 8 col 21) `RE9UQUxM`>,
-                <identifier (line 8 col 29) `SUdOT1JFQ0FTRQ==`>
+                <grammar.hgr:8:21 identifier "RE9UQUxM">,
+                <grammar.hgr:8:29 identifier "SUdOT1JFQ0FTRQ==">
               ]
             ),
             (RegexEnum:
-              language=<identifier (line 9 col 7) `Yw==`>,
-              regex=<regex (line 9 col 10) `Ii4i`>,
+              language=<grammar.hgr:9:7 identifier "Yw==">,
+              regex=<grammar.hgr:9:10 regex "Ii4i">,
               options=[
-                <identifier (line 9 col 15) `UENSRV9ET1RBTEw=`>,
-                <identifier (line 9 col 28) `UENSRV9DQVNFTEVTUw==`>
+                <grammar.hgr:9:15 identifier "UENSRV9ET1RBTEw=">,
+                <grammar.hgr:9:28 identifier "UENSRV9DQVNFTEVTUw==">
               ]
             ),
             (RegexEnum:
-              language=<identifier (line 10 col 7) `amF2YXNjcmlwdA==`>,
-              regex=<regex (line 10 col 19) `Ii4i`>,
+              language=<grammar.hgr:10:7 identifier "amF2YXNjcmlwdA==">,
+              regex=<grammar.hgr:10:19 regex "Ii4i">,
               options=[
-                <identifier (line 10 col 24) `bQ==`>,
-                <identifier (line 10 col 27) `aQ==`>
+                <grammar.hgr:10:24 identifier "bQ==">,
+                <grammar.hgr:10:27 identifier "aQ==">
               ]
             )
           ],
           onmatch=[
             (Terminal:
-              name=<terminal (line 11 col 11) `Y2hhcg==`>,
+              name=<grammar.hgr:11:11 terminal "Y2hhcg==">,
               group=None
             )
           ]

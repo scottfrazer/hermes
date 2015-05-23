@@ -1,143 +1,143 @@
 (grammar:
-  <grammar (line 1 col 1) `Z3JhbW1hcg==`>,
-  <lbrace (line 1 col 9) `ew==`>,
+  <grammar.hgr:1:1 grammar "Z3JhbW1hcg==">,
+  <grammar.hgr:1:9 lbrace "ew==">,
   (_gen0:
     (body_element:
       (body_element_sub:
         (lexer:
-          <lexer (line 2 col 3) `bGV4ZXI=`>,
-          <lbrace (line 2 col 9) `ew==`>,
-          (_gen1:
+          <grammar.hgr:2:3 lexer "bGV4ZXI=">,
+          <grammar.hgr:2:9 lbrace "ew==">,
+          (_gen2:
             (lexer_atom:
               (lexer_partials:
-                <partials (line 3 col 5) `cGFydGlhbHM=`>,
-                <lbrace (line 3 col 14) `ew==`>,
-                (_gen2:
+                <grammar.hgr:3:5 partials "cGFydGlhbHM=">,
+                <grammar.hgr:3:14 lbrace "ew==">,
+                (_gen4:
                   (regex_partial:
-                    <regex (line 4 col 7) `cidhYmMn`>,
-                    <arrow (line 4 col 14) `LT4=`>,
-                    <regex_partial (line 4 col 17) `X2FiYw==`>
+                    <grammar.hgr:4:7 regex "cidhYmMn">,
+                    <grammar.hgr:4:14 arrow "LT4=">,
+                    <grammar.hgr:4:17 regex_partial "X2FiYw==">
                   ),
-                  (_gen2:
+                  (_gen5:
                     (regex_partial:
-                      <regex (line 5 col 7) `cid4eXon`>,
-                      <arrow (line 5 col 14) `LT4=`>,
-                      <regex_partial (line 5 col 17) `X3h5eg==`>
+                      <grammar.hgr:5:7 regex "cid4eXon">,
+                      <grammar.hgr:5:14 arrow "LT4=">,
+                      <grammar.hgr:5:17 regex_partial "X3h5eg==">
                     ),
-                    (_gen2:
+                    (_gen5:
                       (regex_partial:
-                        <regex (line 6 col 7) `cidbMC05XSsn`>,
-                        <arrow (line 6 col 17) `LT4=`>,
-                        <regex_partial (line 6 col 20) `X251bQ==`>
+                        <grammar.hgr:6:7 regex "cidbMC05XSsn">,
+                        <grammar.hgr:6:17 arrow "LT4=">,
+                        <grammar.hgr:6:20 regex_partial "X251bQ==">
                       ),
-                      (_gen2:
+                      (_gen5:
                         (regex_partial:
-                          <regex (line 7 col 7) `cid7JV94eXolfXslX2FiYyV9Jw==`>,
-                          <arrow (line 7 col 27) `LT4=`>,
-                          <regex_partial (line 7 col 30) `X3h5el9hYmM=`>
+                          <grammar.hgr:7:7 regex "cid7JV94eXolfXslX2FiYyV9Jw==">,
+                          <grammar.hgr:7:27 arrow "LT4=">,
+                          <grammar.hgr:7:30 regex_partial "X3h5el9hYmM=">
                         ),
-                        (_gen2: )
+                        (_gen5: )
                       )
                     )
                   )
                 ),
-                <rbrace (line 8 col 5) `fQ==`>
+                <grammar.hgr:8:5 rbrace "fQ==">
               )
             ),
-            (_gen1:
+            (_gen3:
               (lexer_atom:
                 (lexer_regex:
-                  <regex (line 9 col 5) `cidccysn`>,
-                  (_gen3: ),
-                  <arrow (line 9 col 12) `LT4=`>,
-                  (_gen4:
+                  <grammar.hgr:9:5 regex "cidccysn">,
+                  (_gen6: ),
+                  <grammar.hgr:9:12 arrow "LT4=">,
+                  (_gen7:
                     (lexer_target:
-                      <null (line 9 col 15) `bnVsbA==`>
+                      <grammar.hgr:9:15 null "bnVsbA==">
                     ),
-                    (_gen4: )
+                    (_gen8: )
                   )
                 )
               ),
-              (_gen1:
+              (_gen3:
                 (lexer_atom:
                   (lexer_regex:
-                    <regex (line 10 col 5) `cid7JV9hYmMlfSc=`>,
-                    (_gen3: ),
-                    <arrow (line 10 col 17) `LT4=`>,
-                    (_gen4:
+                    <grammar.hgr:10:5 regex "cid7JV9hYmMlfSc=">,
+                    (_gen6: ),
+                    <grammar.hgr:10:17 arrow "LT4=">,
+                    (_gen7:
                       (lexer_target:
                         (terminal:
-                          <terminal (line 10 col 21) `YWJj`>,
-                          (_gen10: )
+                          <grammar.hgr:10:21 terminal "YWJj">,
+                          (_gen15: )
                         )
                       ),
-                      (_gen4: )
+                      (_gen8: )
                     )
                   )
                 ),
-                (_gen1:
+                (_gen3:
                   (lexer_atom:
                     (lexer_regex:
-                      <regex (line 11 col 5) `cid7JV9udW0lfSc=`>,
-                      (_gen3: ),
-                      <arrow (line 11 col 17) `LT4=`>,
-                      (_gen4:
+                      <grammar.hgr:11:5 regex "cid7JV9udW0lfSc=">,
+                      (_gen6: ),
+                      <grammar.hgr:11:17 arrow "LT4=">,
+                      (_gen7:
                         (lexer_target:
                           (terminal:
-                            <terminal (line 11 col 21) `bnVt`>,
-                            (_gen10: )
+                            <grammar.hgr:11:21 terminal "bnVt">,
+                            (_gen15: )
                           )
                         ),
-                        (_gen4: )
+                        (_gen8: )
                       )
                     )
                   ),
-                  (_gen1:
+                  (_gen3:
                     (lexer_atom:
                       (lexer_regex:
-                        <regex (line 12 col 5) `cid7JV94eXolfXslX251bSV9W2prbF0rJw==`>,
-                        (_gen3: ),
-                        <arrow (line 12 col 31) `LT4=`>,
-                        (_gen4:
+                        <grammar.hgr:12:5 regex "cid7JV94eXolfXslX251bSV9W2prbF0rJw==">,
+                        (_gen6: ),
+                        <grammar.hgr:12:31 arrow "LT4=">,
+                        (_gen7:
                           (lexer_target:
                             (terminal:
-                              <terminal (line 12 col 35) `eHl6`>,
-                              (_gen10: )
+                              <grammar.hgr:12:35 terminal "eHl6">,
+                              (_gen15: )
                             )
                           ),
-                          (_gen4: )
+                          (_gen8: )
                         )
                       )
                     ),
-                    (_gen1:
+                    (_gen3:
                       (lexer_atom:
                         (lexer_regex:
-                          <regex (line 13 col 5) `cid7JV94eXpfYWJjJX0n`>,
-                          (_gen3: ),
-                          <arrow (line 13 col 21) `LT4=`>,
-                          (_gen4:
+                          <grammar.hgr:13:5 regex "cid7JV94eXpfYWJjJX0n">,
+                          (_gen6: ),
+                          <grammar.hgr:13:21 arrow "LT4=">,
+                          (_gen7:
                             (lexer_target:
                               (terminal:
-                                <terminal (line 13 col 25) `eHl6X2FiYw==`>,
-                                (_gen10: )
+                                <grammar.hgr:13:25 terminal "eHl6X2FiYw==">,
+                                (_gen15: )
                               )
                             ),
-                            (_gen4: )
+                            (_gen8: )
                           )
                         )
                       ),
-                      (_gen1: )
+                      (_gen3: )
                     )
                   )
                 )
               )
             )
           ),
-          <rbrace (line 14 col 3) `fQ==`>
+          <grammar.hgr:14:3 rbrace "fQ==">
         )
       )
     ),
-    (_gen0: )
+    (_gen1: )
   ),
-  <rbrace (line 15 col 1) `fQ==`>
+  <grammar.hgr:15:1 rbrace "fQ==">
 )

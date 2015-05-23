@@ -1,17 +1,15 @@
-[
-    {"terminal": "grammar", "resource": "grammar.hgr", "line": 1, "col": 1, "source_string": "Z3JhbW1hcg=="},
-    {"terminal": "lbrace", "resource": "grammar.hgr", "line": 1, "col": 9, "source_string": "ew=="},
-    {"terminal": "lexer", "resource": "grammar.hgr", "line": 2, "col": 3, "source_string": "bGV4ZXI="},
-    {"terminal": "lbrace", "resource": "grammar.hgr", "line": 2, "col": 9, "source_string": "ew=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 3, "col": 5, "source_string": "cidhJw=="},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 3, "col": 10, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 3, "col": 14, "source_string": "YQ=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 4, "col": 5, "source_string": "cidiJw=="},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 4, "col": 10, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 4, "col": 14, "source_string": "Yg=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 5, "col": 5, "source_string": "cidcbisn"},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 5, "col": 12, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 5, "col": 16, "source_string": "bmV3bGluZQ=="},
-    {"terminal": "rbrace", "resource": "grammar.hgr", "line": 6, "col": 3, "source_string": "fQ=="},
-    {"terminal": "rbrace", "resource": "grammar.hgr", "line": 7, "col": 1, "source_string": "fQ=="}
-]
+<grammar.hgr:1:1 grammar "Z3JhbW1hcg==">
+<grammar.hgr:1:9 lbrace "ew==">
+<grammar.hgr:2:3 lexer "bGV4ZXI=">
+<grammar.hgr:2:9 lbrace "ew==">
+<grammar.hgr:3:5 regex "cidhJw==">
+<grammar.hgr:3:10 arrow "LT4=">
+<grammar.hgr:3:14 terminal "YQ==">
+<grammar.hgr:4:5 regex "cidiJw==">
+<grammar.hgr:4:10 arrow "LT4=">
+<grammar.hgr:4:14 terminal "Yg==">
+<grammar.hgr:5:5 regex "cidcbisn">
+<grammar.hgr:5:12 arrow "LT4=">
+<grammar.hgr:5:16 terminal "bmV3bGluZQ==">
+<grammar.hgr:6:3 rbrace "fQ==">
+<grammar.hgr:7:1 rbrace "fQ==">

@@ -3,31 +3,31 @@
     (Lexer:
       atoms=[
         (Regex:
-          regex=<regex (line 3 col 5) `cidhJw==`>,
+          regex=<grammar.hgr:3:5 regex "cidhJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 3 col 14) `YQ==`>,
+              name=<grammar.hgr:3:14 terminal "YQ==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 4 col 5) `cidiJw==`>,
+          regex=<grammar.hgr:4:5 regex "cidiJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 4 col 14) `Yg==`>,
+              name=<grammar.hgr:4:14 terminal "Yg==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 5 col 5) `cidcbisn`>,
+          regex=<grammar.hgr:5:5 regex "cidcbisn">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 5 col 16) `bmV3bGluZQ==`>,
+              name=<grammar.hgr:5:16 terminal "bmV3bGluZQ==">,
               group=None
             )
           ]

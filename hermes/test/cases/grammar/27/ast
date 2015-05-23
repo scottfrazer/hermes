@@ -3,42 +3,42 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 3 col 6) `c3RhcnQ=`>,
+          nonterminal=<grammar.hgr:3:6 nonterminal "c3RhcnQ=">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 3 col 15) `ZQ==`>
+                <grammar.hgr:3:15 nonterminal "ZQ==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 4 col 6) `ZQ==`>,
+          nonterminal=<grammar.hgr:4:6 nonterminal "ZQ==">,
           production=(ExpressionParser:
             rules=[
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<asterisk (line 5 col 8) `Kg==`>,
-                  associativity=<left (line 5 col 10) `bGVmdA==`>
+                  marker=<grammar.hgr:5:8 asterisk "Kg==">,
+                  associativity=<grammar.hgr:5:10 left "bGVmdA==">
                 ),
-                nonterminal=<nonterminal (line 5 col 17) `ZQ==`>,
+                nonterminal=<grammar.hgr:5:17 nonterminal "ZQ==">,
                 production=(InfixProduction:
                   morphemes=[
-                    <nonterminal (line 5 col 17) `ZQ==`>,
-                    <terminal (line 5 col 25) `YWRk`>,
-                    <nonterminal (line 5 col 17) `ZQ==`>
+                    <grammar.hgr:5:17 nonterminal "ZQ==">,
+                    <grammar.hgr:5:25 terminal "YWRk">,
+                    <grammar.hgr:5:17 nonterminal "ZQ==">
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 5 col 35) `QWRk`>,
+                    name=<grammar.hgr:5:35 identifier "QWRk">,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 5 col 40) `bGVmdA==`>,
-                        index=<nonterminal_reference (line 5 col 46) `MA==`>
+                        name=<grammar.hgr:5:40 identifier "bGVmdA==">,
+                        index=<grammar.hgr:5:46 nonterminal_reference "MA==">
                       ),
                       (AstParameter:
-                        name=<identifier (line 5 col 49) `cmlnaHQ=`>,
-                        index=<nonterminal_reference (line 5 col 56) `Mg==`>
+                        name=<grammar.hgr:5:49 identifier "cmlnaHQ=">,
+                        index=<grammar.hgr:5:56 nonterminal_reference "Mg==">
                       )
                     ]
                   )
@@ -46,26 +46,26 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<dash (line 6 col 8) `LQ==`>,
-                  associativity=<left (line 6 col 10) `bGVmdA==`>
+                  marker=<grammar.hgr:6:8 dash "LQ==">,
+                  associativity=<grammar.hgr:6:10 left "bGVmdA==">
                 ),
-                nonterminal=<nonterminal (line 6 col 17) `ZQ==`>,
+                nonterminal=<grammar.hgr:6:17 nonterminal "ZQ==">,
                 production=(InfixProduction:
                   morphemes=[
-                    <nonterminal (line 6 col 17) `ZQ==`>,
-                    <terminal (line 6 col 25) `c3Vi`>,
-                    <nonterminal (line 6 col 17) `ZQ==`>
+                    <grammar.hgr:6:17 nonterminal "ZQ==">,
+                    <grammar.hgr:6:25 terminal "c3Vi">,
+                    <grammar.hgr:6:17 nonterminal "ZQ==">
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 6 col 35) `U3VidHJhY3Q=`>,
+                    name=<grammar.hgr:6:35 identifier "U3VidHJhY3Q=">,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 6 col 45) `bGVmdA==`>,
-                        index=<nonterminal_reference (line 6 col 51) `MA==`>
+                        name=<grammar.hgr:6:45 identifier "bGVmdA==">,
+                        index=<grammar.hgr:6:51 nonterminal_reference "MA==">
                       ),
                       (AstParameter:
-                        name=<identifier (line 6 col 54) `cmlnaHQ=`>,
-                        index=<nonterminal_reference (line 6 col 61) `Mg==`>
+                        name=<grammar.hgr:6:54 identifier "cmlnaHQ=">,
+                        index=<grammar.hgr:6:61 nonterminal_reference "Mg==">
                       )
                     ]
                   )
@@ -73,26 +73,26 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<asterisk (line 7 col 8) `Kg==`>,
-                  associativity=<left (line 7 col 10) `bGVmdA==`>
+                  marker=<grammar.hgr:7:8 asterisk "Kg==">,
+                  associativity=<grammar.hgr:7:10 left "bGVmdA==">
                 ),
-                nonterminal=<nonterminal (line 7 col 17) `ZQ==`>,
+                nonterminal=<grammar.hgr:7:17 nonterminal "ZQ==">,
                 production=(InfixProduction:
                   morphemes=[
-                    <nonterminal (line 7 col 17) `ZQ==`>,
-                    <terminal (line 7 col 25) `bXVs`>,
-                    <nonterminal (line 7 col 17) `ZQ==`>
+                    <grammar.hgr:7:17 nonterminal "ZQ==">,
+                    <grammar.hgr:7:25 terminal "bXVs">,
+                    <grammar.hgr:7:17 nonterminal "ZQ==">
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 7 col 35) `TXVsdGlwbHk=`>,
+                    name=<grammar.hgr:7:35 identifier "TXVsdGlwbHk=">,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 7 col 45) `bGVmdA==`>,
-                        index=<nonterminal_reference (line 7 col 51) `MA==`>
+                        name=<grammar.hgr:7:45 identifier "bGVmdA==">,
+                        index=<grammar.hgr:7:51 nonterminal_reference "MA==">
                       ),
                       (AstParameter:
-                        name=<identifier (line 7 col 54) `cmlnaHQ=`>,
-                        index=<nonterminal_reference (line 7 col 61) `Mg==`>
+                        name=<grammar.hgr:7:54 identifier "cmlnaHQ=">,
+                        index=<grammar.hgr:7:61 nonterminal_reference "Mg==">
                       )
                     ]
                   )
@@ -100,26 +100,26 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<dash (line 8 col 8) `LQ==`>,
-                  associativity=<left (line 8 col 10) `bGVmdA==`>
+                  marker=<grammar.hgr:8:8 dash "LQ==">,
+                  associativity=<grammar.hgr:8:10 left "bGVmdA==">
                 ),
-                nonterminal=<nonterminal (line 8 col 17) `ZQ==`>,
+                nonterminal=<grammar.hgr:8:17 nonterminal "ZQ==">,
                 production=(InfixProduction:
                   morphemes=[
-                    <nonterminal (line 8 col 17) `ZQ==`>,
-                    <terminal (line 8 col 25) `ZGl2`>,
-                    <nonterminal (line 8 col 17) `ZQ==`>
+                    <grammar.hgr:8:17 nonterminal "ZQ==">,
+                    <grammar.hgr:8:25 terminal "ZGl2">,
+                    <grammar.hgr:8:17 nonterminal "ZQ==">
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 8 col 35) `RGl2aWRl`>,
+                    name=<grammar.hgr:8:35 identifier "RGl2aWRl">,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 8 col 43) `bGVmdA==`>,
-                        index=<nonterminal_reference (line 8 col 49) `MA==`>
+                        name=<grammar.hgr:8:43 identifier "bGVmdA==">,
+                        index=<grammar.hgr:8:49 nonterminal_reference "MA==">
                       ),
                       (AstParameter:
-                        name=<identifier (line 8 col 52) `cmlnaHQ=`>,
-                        index=<nonterminal_reference (line 8 col 59) `Mg==`>
+                        name=<grammar.hgr:8:52 identifier "cmlnaHQ=">,
+                        index=<grammar.hgr:8:59 nonterminal_reference "Mg==">
                       )
                     ]
                   )
@@ -127,21 +127,21 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<asterisk (line 9 col 8) `Kg==`>,
-                  associativity=<unary (line 9 col 10) `dW5hcnk=`>
+                  marker=<grammar.hgr:9:8 asterisk "Kg==">,
+                  associativity=<grammar.hgr:9:10 unary "dW5hcnk=">
                 ),
-                nonterminal=<nonterminal (line 9 col 18) `ZQ==`>,
+                nonterminal=<grammar.hgr:9:18 nonterminal "ZQ==">,
                 production=(PrefixProduction:
                   morphemes=[
-                    <terminal (line 9 col 23) `c3Vi`>,
-                    <nonterminal (line 9 col 18) `ZQ==`>
+                    <grammar.hgr:9:23 terminal "c3Vi">,
+                    <grammar.hgr:9:18 nonterminal "ZQ==">
                   ],
                   ast=(AstTransformation:
-                    name=<identifier (line 9 col 33) `VU1pbnVz`>,
+                    name=<grammar.hgr:9:33 identifier "VU1pbnVz">,
                     parameters=[
                       (AstParameter:
-                        name=<identifier (line 9 col 41) `YXJn`>,
-                        index=<nonterminal_reference (line 9 col 46) `MQ==`>
+                        name=<grammar.hgr:9:41 identifier "YXJn">,
+                        index=<grammar.hgr:9:46 nonterminal_reference "MQ==">
                       )
                     ]
                   )
@@ -149,24 +149,24 @@
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<nonterminal (line 10 col 8) `ZQ==`>,
+                nonterminal=<grammar.hgr:10:8 nonterminal "ZQ==">,
                 production=(MixfixProduction:
                   nud=[
-                    <terminal (line 10 col 13) `bHBhcmVu`>,
-                    <nonterminal (line 10 col 21) `ZQ==`>,
-                    <terminal (line 10 col 24) `cnBhcmVu`>
+                    <grammar.hgr:10:13 terminal "bHBhcmVu">,
+                    <grammar.hgr:10:21 nonterminal "ZQ==">,
+                    <grammar.hgr:10:24 terminal "cnBhcmVu">
                   ],
-                  nud_ast=<nonterminal_reference (line 10 col 35) `MQ==`>,
+                  nud_ast=<grammar.hgr:10:35 nonterminal_reference "MQ==">,
                   led=None,
                   ast=None
                 )
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<nonterminal (line 11 col 8) `ZQ==`>,
+                nonterminal=<grammar.hgr:11:8 nonterminal "ZQ==">,
                 production=(MixfixProduction:
                   nud=[
-                    <terminal (line 11 col 13) `aWRlbnRpZmllcg==`>
+                    <grammar.hgr:11:13 terminal "aWRlbnRpZmllcg==">
                   ],
                   nud_ast=None,
                   led=None,
@@ -175,10 +175,10 @@
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<nonterminal (line 12 col 8) `ZQ==`>,
+                nonterminal=<grammar.hgr:12:8 nonterminal "ZQ==">,
                 production=(MixfixProduction:
                   nud=[
-                    <terminal (line 12 col 13) `bnVtYmVy`>
+                    <grammar.hgr:12:13 terminal "bnVtYmVy">
                   ],
                   nud_ast=None,
                   led=None,

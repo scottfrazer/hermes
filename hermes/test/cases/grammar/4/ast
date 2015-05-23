@@ -3,50 +3,50 @@
     (Lexer:
       atoms=[
         (Regex:
-          regex=<regex (line 3 col 5) `cicoYSkoYikoYykn`>,
+          regex=<grammar.hgr:3:5 regex "cicoYSkoYikoYykn">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 3 col 22) `YQ==`>,
-              group=<integer (line 3 col 24) `MQ==`>
+              name=<grammar.hgr:3:22 terminal "YQ==">,
+              group=<grammar.hgr:3:24 integer "MQ==">
             ),
             (Terminal:
-              name=<terminal (line 3 col 28) `Yg==`>,
-              group=<integer (line 3 col 30) `Mg==`>
+              name=<grammar.hgr:3:28 terminal "Yg==">,
+              group=<grammar.hgr:3:30 integer "Mg==">
             ),
             (Terminal:
-              name=<terminal (line 3 col 34) `Yw==`>,
-              group=<integer (line 3 col 36) `Mw==`>
+              name=<grammar.hgr:3:34 terminal "Yw==">,
+              group=<grammar.hgr:3:36 integer "Mw==">
             ),
             (Terminal:
-              name=<terminal (line 3 col 40) `YWJj`>,
-              group=<integer (line 3 col 44) `MA==`>
+              name=<grammar.hgr:3:40 terminal "YWJj">,
+              group=<grammar.hgr:3:44 integer "MA==">
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 4 col 5) `cicoeClccyooeSlccyooeikn`>,
+          regex=<grammar.hgr:4:5 regex "cicoeClccyooeSlccyooeikn">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 4 col 28) `aGludA==`>,
-              group=<no_group (line 4 col 32) `W10=`>
+              name=<grammar.hgr:4:28 terminal "aGludA==">,
+              group=<grammar.hgr:4:32 no_group "W10=">
             ),
             (LexerFunctionCall:
-              name=<identifier (line 4 col 35) `Zg==`>,
+              name=<grammar.hgr:4:35 identifier "Zg==">,
               terminal=(Terminal:
-                name=<terminal (line 4 col 38) `eA==`>,
-                group=<integer (line 4 col 40) `MQ==`>
+                name=<grammar.hgr:4:38 terminal "eA==">,
+                group=<grammar.hgr:4:40 integer "MQ==">
               )
             ),
             (Terminal:
-              name=<terminal (line 4 col 45) `YWxs`>,
+              name=<grammar.hgr:4:45 terminal "YWxs">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 5 col 5) `cidccysn`>,
+          regex=<grammar.hgr:5:5 regex "cidccysn">,
           options=None,
           onmatch=[
             (Null:
@@ -55,20 +55,20 @@
           ]
         ),
         (LexerCode:
-          language=<language (line 7 col 10) `cHl0aG9u`>,
-          code=<code (line 7 col 27) `CiAgICBkZWYgZihjdHgsIHRlcm1pbmFsLCBzb3VyY2Vfc3RyaW5nLCBsaW5lLCBjb2wpOgogICAgICAgIGRlZmF1bHRfYWN0aW9uKGN0eCwgdGVybWluYWwsIHNvdXJjZV9zdHJpbmcsIGxpbmUsIGNvbCkKICAgIA==`>
+          language=<grammar.hgr:7:10 language "cHl0aG9u">,
+          code=<grammar.hgr:7:27 code "CiAgICBkZWYgZihjdHgsIHRlcm1pbmFsLCBzb3VyY2Vfc3RyaW5nLCBsaW5lLCBjb2wpOgogICAgICAgIGRlZmF1bHRfYWN0aW9uKGN0eCwgdGVybWluYWwsIHNvdXJjZV9zdHJpbmcsIGxpbmUsIGNvbCkKICAgIA==">
         ),
         (LexerCode:
-          language=<language (line 12 col 10) `Yw==`>,
-          code=<code (line 12 col 22) `CiAgICBzdGF0aWMgdm9pZCBmKExFWEVSX0NPTlRFWFRfVCAqIGN0eCwgVEVSTUlOQUxfVCAqIHRlcm1pbmFsLCBjaGFyICogc291cmNlX3N0cmluZywgaW50IGxpbmUsIGludCBjb2wpIHsKICAgICAgICBkZWZhdWx0X2FjdGlvbihjdHgsIHRlcm1pbmFsLCBzb3VyY2Vfc3RyaW5nLCBsaW5lLCBjb2wpOwogICAgfQogICAg`>
+          language=<grammar.hgr:12:10 language "Yw==">,
+          code=<grammar.hgr:12:22 code "CiAgICBzdGF0aWMgdm9pZCBmKExFWEVSX0NPTlRFWFRfVCAqIGN0eCwgVEVSTUlOQUxfVCAqIHRlcm1pbmFsLCBjaGFyICogc291cmNlX3N0cmluZywgaW50IGxpbmUsIGludCBjb2wpIHsKICAgICAgICBkZWZhdWx0X2FjdGlvbihjdHgsIHRlcm1pbmFsLCBzb3VyY2Vfc3RyaW5nLCBsaW5lLCBjb2wpOwogICAgfQogICAg">
         ),
         (LexerCode:
-          language=<language (line 18 col 10) `amF2YQ==`>,
-          code=<code (line 18 col 23) `CiAgICBwdWJsaWMgdm9pZCBmKExleGVyQ29udGV4dCBjdHgsIFRlcm1pbmFsSWRlbnRpZmllciB0ZXJtaW5hbCwgU3RyaW5nIHNvdXJjZV9zdHJpbmcsIGludCBsaW5lLCBpbnQgY29sKSB7CiAgICAgICAgZGVmYXVsdF9hY3Rpb24oY3R4LCB0ZXJtaW5hbCwgc291cmNlX3N0cmluZywgbGluZSwgY29sKTsKICAgIH0KICAgIA==`>
+          language=<grammar.hgr:18:10 language "amF2YQ==">,
+          code=<grammar.hgr:18:23 code "CiAgICBwdWJsaWMgdm9pZCBmKExleGVyQ29udGV4dCBjdHgsIFRlcm1pbmFsSWRlbnRpZmllciB0ZXJtaW5hbCwgU3RyaW5nIHNvdXJjZV9zdHJpbmcsIGludCBsaW5lLCBpbnQgY29sKSB7CiAgICAgICAgZGVmYXVsdF9hY3Rpb24oY3R4LCB0ZXJtaW5hbCwgc291cmNlX3N0cmluZywgbGluZSwgY29sKTsKICAgIH0KICAgIA==">
         ),
         (LexerCode:
-          language=<language (line 24 col 10) `amF2YXNjcmlwdA==`>,
-          code=<code (line 24 col 35) `CiAgICBmdW5jdGlvbiBmKGN0eCwgdGVybWluYWwsIHNvdXJjZV9zdHJpbmcsIGxpbmUsIGNvbCkgewogICAgICAgIGRlZmF1bHRfYWN0aW9uKGN0eCwgdGVybWluYWwsIHNvdXJjZV9zdHJpbmcsIGxpbmUsIGNvbCk7CiAgICB9CiAgICA=`>
+          language=<grammar.hgr:24:10 language "amF2YXNjcmlwdA==">,
+          code=<grammar.hgr:24:35 code "CiAgICBmdW5jdGlvbiBmKGN0eCwgdGVybWluYWwsIHNvdXJjZV9zdHJpbmcsIGxpbmUsIGNvbCkgewogICAgICAgIGRlZmF1bHRfYWN0aW9uKGN0eCwgdGVybWluYWwsIHNvdXJjZV9zdHJpbmcsIGxpbmUsIGNvbCk7CiAgICB9CiAgICA=">
         )
       ]
     )

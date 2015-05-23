@@ -3,7 +3,7 @@
     (Lexer:
       atoms=[
         (Regex:
-          regex=<regex (line 3 col 5) `cidccysn`>,
+          regex=<grammar.hgr:3:5 regex "cidccysn">,
           options=None,
           onmatch=[
             (Null:
@@ -12,251 +12,251 @@
           ]
         ),
         (Regex:
-          regex=<regex (line 4 col 5) `cidjYWxsJw==`>,
+          regex=<grammar.hgr:4:5 regex "cidjYWxsJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 4 col 17) `Y2FsbA==`>,
+              name=<grammar.hgr:4:17 terminal "Y2FsbA==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 5 col 5) `cidiZWdpbic=`>,
+          regex=<grammar.hgr:5:5 regex "cidiZWdpbic=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 5 col 18) `YmVnaW4=`>,
+              name=<grammar.hgr:5:18 terminal "YmVnaW4=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 6 col 5) `cidpZic=`>,
+          regex=<grammar.hgr:6:5 regex "cidpZic=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 6 col 15) `aWY=`>,
+              name=<grammar.hgr:6:15 terminal "aWY=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 7 col 5) `cid3aGlsZSc=`>,
+          regex=<grammar.hgr:7:5 regex "cid3aGlsZSc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 7 col 18) `d2hpbGU=`>,
+              name=<grammar.hgr:7:18 terminal "d2hpbGU=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 8 col 5) `cidkbyc=`>,
+          regex=<grammar.hgr:8:5 regex "cidkbyc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 8 col 15) `ZG8=`>,
+              name=<grammar.hgr:8:15 terminal "ZG8=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 9 col 5) `cidjb25zdCc=`>,
+          regex=<grammar.hgr:9:5 regex "cidjb25zdCc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 9 col 18) `Y29uc3Q=`>,
+              name=<grammar.hgr:9:18 terminal "Y29uc3Q=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 10 col 5) `cid2YXIn`>,
+          regex=<grammar.hgr:10:5 regex "cid2YXIn">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 10 col 16) `dmFy`>,
+              name=<grammar.hgr:10:16 terminal "dmFy">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 11 col 5) `cidwcm9jZWR1cmUn`>,
+          regex=<grammar.hgr:11:5 regex "cidwcm9jZWR1cmUn">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 11 col 22) `cHJvY2VkdXJl`>,
+              name=<grammar.hgr:11:22 terminal "cHJvY2VkdXJl">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 12 col 5) `cic9Jw==`>,
+          regex=<grammar.hgr:12:5 regex "cic9Jw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 12 col 14) `ZXF1YWw=`>,
+              name=<grammar.hgr:12:14 terminal "ZXF1YWw=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 13 col 5) `cic6PSc=`>,
+          regex=<grammar.hgr:13:5 regex "cic6PSc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 13 col 15) `YXNzaWdu`>,
+              name=<grammar.hgr:13:15 terminal "YXNzaWdu">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 14 col 5) `cicjJw==`>,
+          regex=<grammar.hgr:14:5 regex "cicjJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 14 col 14) `cG91bmQ=`>,
+              name=<grammar.hgr:14:14 terminal "cG91bmQ=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 15 col 5) `cic8PSc=`>,
+          regex=<grammar.hgr:15:5 regex "cic8PSc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 15 col 15) `bHRlcQ==`>,
+              name=<grammar.hgr:15:15 terminal "bHRlcQ==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 16 col 5) `cic8Jw==`>,
+          regex=<grammar.hgr:16:5 regex "cic8Jw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 16 col 14) `bHQ=`>,
+              name=<grammar.hgr:16:14 terminal "bHQ=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 17 col 5) `cic+PSc=`>,
+          regex=<grammar.hgr:17:5 regex "cic+PSc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 17 col 15) `Z3RlcQ==`>,
+              name=<grammar.hgr:17:15 terminal "Z3RlcQ==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 18 col 5) `cic+Jw==`>,
+          regex=<grammar.hgr:18:5 regex "cic+Jw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 18 col 14) `Z3Q=`>,
+              name=<grammar.hgr:18:14 terminal "Z3Q=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 19 col 5) `cidcLic=`>,
+          regex=<grammar.hgr:19:5 regex "cidcLic=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 19 col 15) `ZG90`>,
+              name=<grammar.hgr:19:15 terminal "ZG90">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 20 col 5) `cicsJw==`>,
+          regex=<grammar.hgr:20:5 regex "cicsJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 20 col 14) `Y29tbWE=`>,
+              name=<grammar.hgr:20:14 terminal "Y29tbWE=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 21 col 5) `cic7Jw==`>,
+          regex=<grammar.hgr:21:5 regex "cic7Jw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 21 col 14) `c2VtaQ==`>,
+              name=<grammar.hgr:21:14 terminal "c2VtaQ==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 22 col 5) `cidcISc=`>,
+          regex=<grammar.hgr:22:5 regex "cidcISc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 22 col 15) `b2Rk`>,
+              name=<grammar.hgr:22:15 terminal "b2Rk">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 23 col 5) `cidcKyc=`>,
+          regex=<grammar.hgr:23:5 regex "cidcKyc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 23 col 15) `cGx1cw==`>,
+              name=<grammar.hgr:23:15 terminal "cGx1cw==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 24 col 5) `cictJw==`>,
+          regex=<grammar.hgr:24:5 regex "cictJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 24 col 14) `bWludXM=`>,
+              name=<grammar.hgr:24:14 terminal "bWludXM=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 25 col 5) `cidcKic=`>,
+          regex=<grammar.hgr:25:5 regex "cidcKic=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 25 col 15) `dGltZXM=`>,
+              name=<grammar.hgr:25:15 terminal "dGltZXM=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 26 col 5) `cicvJw==`>,
+          regex=<grammar.hgr:26:5 regex "cicvJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 26 col 14) `ZGl2aWRl`>,
+              name=<grammar.hgr:26:14 terminal "ZGl2aWRl">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 27 col 5) `cidbYS16QS1aXSsn`>,
+          regex=<grammar.hgr:27:5 regex "cidbYS16QS1aXSsn">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 27 col 22) `aWRlbnQ=`>,
+              name=<grammar.hgr:27:22 terminal "aWRlbnQ=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 28 col 5) `cidbMC05XSsn`>,
+          regex=<grammar.hgr:28:5 regex "cidbMC05XSsn">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 28 col 19) `bnVtYmVy`>,
+              name=<grammar.hgr:28:19 terminal "bnVtYmVy">,
               group=None
             )
           ]
@@ -266,482 +266,482 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 31 col 6) `cHJvZ3JhbQ==`>,
+          nonterminal=<grammar.hgr:31:6 nonterminal "cHJvZ3JhbQ==">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 31 col 17) `YmxvY2s=`>,
-                <terminal (line 31 col 24) `ZG90`>
+                <grammar.hgr:31:17 nonterminal "YmxvY2s=">,
+                <grammar.hgr:31:24 terminal "ZG90">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 32 col 6) `YmxvY2s=`>,
+          nonterminal=<grammar.hgr:32:6 nonterminal "YmxvY2s=">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 32 col 15) `YmxvY2tfY29uc3Q=`>,
-                <nonterminal (line 32 col 28) `YmxvY2tfdmFy`>,
-                <nonterminal (line 32 col 39) `YmxvY2tfcHJvYw==`>,
-                <nonterminal (line 32 col 51) `c3RhdGVtZW50`>
+                <grammar.hgr:32:15 nonterminal "YmxvY2tfY29uc3Q=">,
+                <grammar.hgr:32:28 nonterminal "YmxvY2tfdmFy">,
+                <grammar.hgr:32:39 nonterminal "YmxvY2tfcHJvYw==">,
+                <grammar.hgr:32:51 nonterminal "c3RhdGVtZW50">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 33 col 6) `YmxvY2tfY29uc3Q=`>,
+          nonterminal=<grammar.hgr:33:6 nonterminal "YmxvY2tfY29uc3Q=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 33 col 21) `Y29uc3Q=`>,
-                <nonterminal (line 33 col 28) `aWRlbnQ=`>,
-                <terminal (line 33 col 35) `ZXF1YWw=`>,
-                <nonterminal (line 33 col 42) `bnVtYmVy`>,
-                <nonterminal (line 33 col 50) `YmxvY2tfY29uc3Qx`>
+                <grammar.hgr:33:21 terminal "Y29uc3Q=">,
+                <grammar.hgr:33:28 nonterminal "aWRlbnQ=">,
+                <grammar.hgr:33:35 terminal "ZXF1YWw=">,
+                <grammar.hgr:33:42 nonterminal "bnVtYmVy">,
+                <grammar.hgr:33:50 nonterminal "YmxvY2tfY29uc3Qx">
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 33 col 66) `X2VtcHR5`>
+                <grammar.hgr:33:66 terminal "X2VtcHR5">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 34 col 6) `YmxvY2tfY29uc3Qx`>,
+          nonterminal=<grammar.hgr:34:6 nonterminal "YmxvY2tfY29uc3Qx">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 34 col 22) `Y29tbWE=`>,
-                <nonterminal (line 34 col 29) `aWRlbnQ=`>,
-                <terminal (line 34 col 36) `ZXF1YWw=`>,
-                <nonterminal (line 34 col 43) `bnVtYmVy`>
+                <grammar.hgr:34:22 terminal "Y29tbWE=">,
+                <grammar.hgr:34:29 nonterminal "aWRlbnQ=">,
+                <grammar.hgr:34:36 terminal "ZXF1YWw=">,
+                <grammar.hgr:34:43 nonterminal "bnVtYmVy">
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 34 col 53) `X2VtcHR5`>
+                <grammar.hgr:34:53 terminal "X2VtcHR5">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 35 col 6) `YmxvY2tfdmFy`>,
+          nonterminal=<grammar.hgr:35:6 nonterminal "YmxvY2tfdmFy">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 35 col 19) `dmFy`>,
-                <nonterminal (line 35 col 24) `aWRlbnQ=`>,
-                <nonterminal (line 35 col 31) `YmxvY2tfdmFyMQ==`>,
-                <terminal (line 35 col 43) `c2VtaQ==`>
+                <grammar.hgr:35:19 terminal "dmFy">,
+                <grammar.hgr:35:24 nonterminal "aWRlbnQ=">,
+                <grammar.hgr:35:31 nonterminal "YmxvY2tfdmFyMQ==">,
+                <grammar.hgr:35:43 terminal "c2VtaQ==">
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 35 col 51) `X2VtcHR5`>
+                <grammar.hgr:35:51 terminal "X2VtcHR5">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 36 col 6) `YmxvY2tfdmFyMQ==`>,
+          nonterminal=<grammar.hgr:36:6 nonterminal "YmxvY2tfdmFyMQ==">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 36 col 20) `Y29tbWE=`>,
-                <nonterminal (line 36 col 27) `aWRlbnQ=`>
+                <grammar.hgr:36:20 terminal "Y29tbWE=">,
+                <grammar.hgr:36:27 nonterminal "aWRlbnQ=">
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 36 col 36) `X2VtcHR5`>
+                <grammar.hgr:36:36 terminal "X2VtcHR5">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 37 col 6) `YmxvY2tfcHJvYw==`>,
+          nonterminal=<grammar.hgr:37:6 nonterminal "YmxvY2tfcHJvYw==">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 37 col 20) `cHJvY2VkdXJl`>,
-                <nonterminal (line 37 col 31) `aWRlbnQ=`>,
-                <terminal (line 37 col 38) `c2VtaQ==`>,
-                <nonterminal (line 37 col 44) `YmxvY2s=`>,
-                <terminal (line 37 col 51) `c2VtaQ==`>,
-                <nonterminal (line 37 col 57) `YmxvY2tfcHJvYw==`>
+                <grammar.hgr:37:20 terminal "cHJvY2VkdXJl">,
+                <grammar.hgr:37:31 nonterminal "aWRlbnQ=">,
+                <grammar.hgr:37:38 terminal "c2VtaQ==">,
+                <grammar.hgr:37:44 nonterminal "YmxvY2s=">,
+                <grammar.hgr:37:51 terminal "c2VtaQ==">,
+                <grammar.hgr:37:57 nonterminal "YmxvY2tfcHJvYw==">
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 37 col 71) `X2VtcHR5`>
+                <grammar.hgr:37:71 terminal "X2VtcHR5">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 38 col 6) `c3RhdGVtZW50`>,
+          nonterminal=<grammar.hgr:38:6 nonterminal "c3RhdGVtZW50">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 38 col 19) `aWRlbnQ=`>,
-                <terminal (line 38 col 26) `YXNzaWdu`>,
-                <nonterminal (line 38 col 34) `ZXhwcmVzc2lvbg==`>
+                <grammar.hgr:38:19 nonterminal "aWRlbnQ=">,
+                <grammar.hgr:38:26 terminal "YXNzaWdu">,
+                <grammar.hgr:38:34 nonterminal "ZXhwcmVzc2lvbg==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 39 col 6) `c3RhdGVtZW50`>,
+          nonterminal=<grammar.hgr:39:6 nonterminal "c3RhdGVtZW50">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 39 col 19) `Y2FsbA==`>,
-                <nonterminal (line 39 col 25) `aWRlbnQ=`>
+                <grammar.hgr:39:19 terminal "Y2FsbA==">,
+                <grammar.hgr:39:25 nonterminal "aWRlbnQ=">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 40 col 6) `c3RhdGVtZW50`>,
+          nonterminal=<grammar.hgr:40:6 nonterminal "c3RhdGVtZW50">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 40 col 19) `YmVnaW4=`>,
-                <nonterminal (line 40 col 26) `c3RhdGVtZW50`>,
-                <nonterminal (line 40 col 37) `c3RhdGVtZW50X3N1YjE=`>,
-                <terminal (line 40 col 53) `ZW5k`>
+                <grammar.hgr:40:19 terminal "YmVnaW4=">,
+                <grammar.hgr:40:26 nonterminal "c3RhdGVtZW50">,
+                <grammar.hgr:40:37 nonterminal "c3RhdGVtZW50X3N1YjE=">,
+                <grammar.hgr:40:53 terminal "ZW5k">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 41 col 6) `c3RhdGVtZW50`>,
+          nonterminal=<grammar.hgr:41:6 nonterminal "c3RhdGVtZW50">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 41 col 19) `aWY=`>,
-                <nonterminal (line 41 col 23) `Y29uZGl0aW9u`>,
-                <terminal (line 41 col 34) `dGhlbg==`>,
-                <nonterminal (line 41 col 40) `c3RhdGVtZW50`>
+                <grammar.hgr:41:19 terminal "aWY=">,
+                <grammar.hgr:41:23 nonterminal "Y29uZGl0aW9u">,
+                <grammar.hgr:41:34 terminal "dGhlbg==">,
+                <grammar.hgr:41:40 nonterminal "c3RhdGVtZW50">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 42 col 6) `c3RhdGVtZW50`>,
+          nonterminal=<grammar.hgr:42:6 nonterminal "c3RhdGVtZW50">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 42 col 19) `d2hpbGU=`>,
-                <nonterminal (line 42 col 26) `Y29uZGl0aW9u`>,
-                <terminal (line 42 col 37) `ZG8=`>,
-                <nonterminal (line 42 col 41) `c3RhdGVtZW50`>
+                <grammar.hgr:42:19 terminal "d2hpbGU=">,
+                <grammar.hgr:42:26 nonterminal "Y29uZGl0aW9u">,
+                <grammar.hgr:42:37 terminal "ZG8=">,
+                <grammar.hgr:42:41 nonterminal "c3RhdGVtZW50">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 43 col 6) `c3RhdGVtZW50X3N1YjE=`>,
+          nonterminal=<grammar.hgr:43:6 nonterminal "c3RhdGVtZW50X3N1YjE=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 43 col 24) `c2VtaQ==`>,
-                <nonterminal (line 43 col 30) `c3RhdGVtZW50`>
+                <grammar.hgr:43:24 terminal "c2VtaQ==">,
+                <grammar.hgr:43:30 nonterminal "c3RhdGVtZW50">
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 43 col 43) `X2VtcHR5`>
+                <grammar.hgr:43:43 terminal "X2VtcHR5">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 44 col 6) `Y29uZGl0aW9u`>,
+          nonterminal=<grammar.hgr:44:6 nonterminal "Y29uZGl0aW9u">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 44 col 19) `b2Rk`>,
-                <nonterminal (line 44 col 24) `ZXhwcmVzc2lvbg==`>
+                <grammar.hgr:44:19 terminal "b2Rk">,
+                <grammar.hgr:44:24 nonterminal "ZXhwcmVzc2lvbg==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 45 col 6) `Y29uZGl0aW9u`>,
+          nonterminal=<grammar.hgr:45:6 nonterminal "Y29uZGl0aW9u">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 45 col 19) `ZXhwcmVzc2lvbg==`>,
-                <nonterminal (line 45 col 31) `b3A=`>,
-                <nonterminal (line 45 col 35) `ZXhwcmVzc2lvbg==`>
+                <grammar.hgr:45:19 nonterminal "ZXhwcmVzc2lvbg==">,
+                <grammar.hgr:45:31 nonterminal "b3A=">,
+                <grammar.hgr:45:35 nonterminal "ZXhwcmVzc2lvbg==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 46 col 6) `b3A=`>,
+          nonterminal=<grammar.hgr:46:6 nonterminal "b3A=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 46 col 12) `ZXF1YWw=`>
+                <grammar.hgr:46:12 terminal "ZXF1YWw=">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 47 col 6) `b3A=`>,
+          nonterminal=<grammar.hgr:47:6 nonterminal "b3A=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 47 col 12) `cG91bmQ=`>
+                <grammar.hgr:47:12 terminal "cG91bmQ=">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 48 col 6) `b3A=`>,
+          nonterminal=<grammar.hgr:48:6 nonterminal "b3A=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 48 col 12) `bHQ=`>
+                <grammar.hgr:48:12 terminal "bHQ=">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 49 col 6) `b3A=`>,
+          nonterminal=<grammar.hgr:49:6 nonterminal "b3A=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 49 col 12) `bHRlcQ==`>
+                <grammar.hgr:49:12 terminal "bHRlcQ==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 50 col 6) `b3A=`>,
+          nonterminal=<grammar.hgr:50:6 nonterminal "b3A=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 50 col 12) `Z3Q=`>
+                <grammar.hgr:50:12 terminal "Z3Q=">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 51 col 6) `b3A=`>,
+          nonterminal=<grammar.hgr:51:6 nonterminal "b3A=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 51 col 12) `Z3RlcQ==`>
+                <grammar.hgr:51:12 terminal "Z3RlcQ==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 52 col 6) `ZXhwcmVzc2lvbg==`>,
+          nonterminal=<grammar.hgr:52:6 nonterminal "ZXhwcmVzc2lvbg==">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 52 col 20) `dW5hcnlfYWRkX29w`>,
-                <nonterminal (line 52 col 34) `dGVybQ==`>,
-                <nonterminal (line 52 col 40) `ZXhwcmVzc2lvbl9zdWIx`>
+                <grammar.hgr:52:20 nonterminal "dW5hcnlfYWRkX29w">,
+                <grammar.hgr:52:34 nonterminal "dGVybQ==">,
+                <grammar.hgr:52:40 nonterminal "ZXhwcmVzc2lvbl9zdWIx">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 53 col 6) `dW5hcnlfYWRkX29w`>,
+          nonterminal=<grammar.hgr:53:6 nonterminal "dW5hcnlfYWRkX29w">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 53 col 22) `YWRkX29w`>
+                <grammar.hgr:53:22 nonterminal "YWRkX29w">
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 53 col 32) `X2VtcHR5`>
+                <grammar.hgr:53:32 terminal "X2VtcHR5">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 54 col 6) `ZXhwcmVzc2lvbl9zdWIx`>,
+          nonterminal=<grammar.hgr:54:6 nonterminal "ZXhwcmVzc2lvbl9zdWIx">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 54 col 25) `YWRkX29w`>,
-                <nonterminal (line 54 col 33) `ZXhwcmVzc2lvbl9zdWIx`>
+                <grammar.hgr:54:25 nonterminal "YWRkX29w">,
+                <grammar.hgr:54:33 nonterminal "ZXhwcmVzc2lvbl9zdWIx">
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 54 col 52) `X2VtcHR5`>
+                <grammar.hgr:54:52 terminal "X2VtcHR5">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 55 col 6) `YWRkX29w`>,
+          nonterminal=<grammar.hgr:55:6 nonterminal "YWRkX29w">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 55 col 16) `cGx1cw==`>
+                <grammar.hgr:55:16 terminal "cGx1cw==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 56 col 6) `YWRkX29w`>,
+          nonterminal=<grammar.hgr:56:6 nonterminal "YWRkX29w">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 56 col 16) `bWludXM=`>
+                <grammar.hgr:56:16 terminal "bWludXM=">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 57 col 6) `bXVsX29w`>,
+          nonterminal=<grammar.hgr:57:6 nonterminal "bXVsX29w">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 57 col 16) `dGltZXM=`>
+                <grammar.hgr:57:16 terminal "dGltZXM=">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 58 col 6) `bXVsX29w`>,
+          nonterminal=<grammar.hgr:58:6 nonterminal "bXVsX29w">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 58 col 16) `ZGl2aWRl`>
+                <grammar.hgr:58:16 terminal "ZGl2aWRl">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 59 col 6) `dGVybQ==`>,
+          nonterminal=<grammar.hgr:59:6 nonterminal "dGVybQ==">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 59 col 14) `ZmFjdG9y`>,
-                <nonterminal (line 59 col 22) `dGVybV9zdWIx`>
+                <grammar.hgr:59:14 nonterminal "ZmFjdG9y">,
+                <grammar.hgr:59:22 nonterminal "dGVybV9zdWIx">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 60 col 6) `dGVybV9zdWIx`>,
+          nonterminal=<grammar.hgr:60:6 nonterminal "dGVybV9zdWIx">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 60 col 19) `bXVsX29w`>,
-                <nonterminal (line 60 col 27) `dGVybV9zdWIx`>
+                <grammar.hgr:60:19 nonterminal "bXVsX29w">,
+                <grammar.hgr:60:27 nonterminal "dGVybV9zdWIx">
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 60 col 40) `X2VtcHR5`>
+                <grammar.hgr:60:40 terminal "X2VtcHR5">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 61 col 6) `ZmFjdG9y`>,
+          nonterminal=<grammar.hgr:61:6 nonterminal "ZmFjdG9y">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 61 col 16) `aWRlbnQ=`>
+                <grammar.hgr:61:16 nonterminal "aWRlbnQ=">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 62 col 6) `ZmFjdG9y`>,
+          nonterminal=<grammar.hgr:62:6 nonterminal "ZmFjdG9y">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 62 col 16) `bnVtYmVy`>
+                <grammar.hgr:62:16 nonterminal "bnVtYmVy">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 63 col 6) `ZmFjdG9y`>,
+          nonterminal=<grammar.hgr:63:6 nonterminal "ZmFjdG9y">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 63 col 16) `bHBhcmVu`>,
-                <nonterminal (line 63 col 24) `ZXhwcmVzc2lvbg==`>,
-                <terminal (line 63 col 36) `cnBhcmVu`>
+                <grammar.hgr:63:16 terminal "bHBhcmVu">,
+                <grammar.hgr:63:24 nonterminal "ZXhwcmVzc2lvbg==">,
+                <grammar.hgr:63:36 terminal "cnBhcmVu">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 64 col 6) `aWRlbnQ=`>,
+          nonterminal=<grammar.hgr:64:6 nonterminal "aWRlbnQ=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 64 col 15) `aWRlbnQ=`>
+                <grammar.hgr:64:15 terminal "aWRlbnQ=">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 65 col 6) `bnVtYmVy`>,
+          nonterminal=<grammar.hgr:65:6 nonterminal "bnVtYmVy">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 65 col 16) `bnVtYmVy`>
+                <grammar.hgr:65:16 terminal "bnVtYmVy">
               ],
               ast=None
             )

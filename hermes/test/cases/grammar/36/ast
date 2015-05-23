@@ -3,7 +3,7 @@
     (Lexer:
       atoms=[
         (Regex:
-          regex=<regex (line 3 col 5) `cidccysn`>,
+          regex=<grammar.hgr:3:5 regex "cidccysn">,
           options=None,
           onmatch=[
             (Null:
@@ -12,31 +12,31 @@
           ]
         ),
         (Regex:
-          regex=<regex (line 4 col 5) `cidpdGVtJw==`>,
+          regex=<grammar.hgr:4:5 regex "cidpdGVtJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 4 col 17) `aXRlbQ==`>,
+              name=<grammar.hgr:4:17 terminal "aXRlbQ==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 5 col 5) `cicsJw==`>,
+          regex=<grammar.hgr:5:5 regex "cicsJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 5 col 14) `Y29tbWE=`>,
+              name=<grammar.hgr:5:14 terminal "Y29tbWE=">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 6 col 5) `ciduZXh0Jw==`>,
+          regex=<grammar.hgr:6:5 regex "ciduZXh0Jw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 6 col 17) `bmV4dA==`>,
+              name=<grammar.hgr:6:17 terminal "bmV4dA==">,
               group=None
             )
           ]
@@ -46,29 +46,29 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 9 col 6) `c3RhcnQ=`>,
+          nonterminal=<grammar.hgr:9:6 nonterminal "c3RhcnQ=">,
           production=[
             (Production:
               morphemes=[
                 (Macro:
-                  name=<identifier (line 9 col 14) `dGxpc3Q=`>,
+                  name=<grammar.hgr:9:14 identifier "dGxpc3Q=">,
                   parameters=[
-                    <terminal (line 9 col 21) `aXRlbQ==`>,
-                    <terminal (line 9 col 28) `Y29tbWE=`>
+                    <grammar.hgr:9:21 terminal "aXRlbQ==">,
+                    <grammar.hgr:9:28 terminal "Y29tbWE=">
                   ]
                 ),
-                <terminal (line 9 col 36) `bmV4dA==`>
+                <grammar.hgr:9:36 terminal "bmV4dA==">
               ],
               ast=(AstTransformation:
-                name=<identifier (line 9 col 44) `VGhpbmc=`>,
+                name=<grammar.hgr:9:44 identifier "VGhpbmc=">,
                 parameters=[
                   (AstParameter:
-                    name=<identifier (line 9 col 50) `eA==`>,
-                    index=<nonterminal_reference (line 9 col 53) `MA==`>
+                    name=<grammar.hgr:9:50 identifier "eA==">,
+                    index=<grammar.hgr:9:53 nonterminal_reference "MA==">
                   ),
                   (AstParameter:
-                    name=<identifier (line 9 col 56) `eQ==`>,
-                    index=<nonterminal_reference (line 9 col 59) `MQ==`>
+                    name=<grammar.hgr:9:56 identifier "eQ==">,
+                    index=<grammar.hgr:9:59 nonterminal_reference "MQ==">
                   )
                 ]
               )

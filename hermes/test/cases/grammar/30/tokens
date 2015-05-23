@@ -1,17 +1,15 @@
-[
-    {"terminal": "grammar", "resource": "grammar.hgr", "line": 1, "col": 1, "source_string": "Z3JhbW1hcg=="},
-    {"terminal": "lbrace", "resource": "grammar.hgr", "line": 1, "col": 9, "source_string": "ew=="},
-    {"terminal": "parser", "resource": "grammar.hgr", "line": 2, "col": 3, "source_string": "cGFyc2Vy"},
-    {"terminal": "lbrace", "resource": "grammar.hgr", "line": 2, "col": 10, "source_string": "ew=="},
-    {"terminal": "ll1_rule_hint", "resource": "grammar.hgr", "line": 3, "col": 5, "source_string": ""},
-    {"terminal": "nonterminal", "resource": "grammar.hgr", "line": 3, "col": 6, "source_string": "c3RhcnQ="},
-    {"terminal": "equals", "resource": "grammar.hgr", "line": 3, "col": 12, "source_string": "PQ=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 3, "col": 14, "source_string": "dGxpc3Q="},
-    {"terminal": "lparen", "resource": "grammar.hgr", "line": 3, "col": 19, "source_string": "KA=="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 3, "col": 21, "source_string": "YQ=="},
-    {"terminal": "comma", "resource": "grammar.hgr", "line": 3, "col": 22, "source_string": "LA=="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 3, "col": 25, "source_string": "c2VtaWNvbG9u"},
-    {"terminal": "rparen", "resource": "grammar.hgr", "line": 3, "col": 34, "source_string": "KQ=="},
-    {"terminal": "rbrace", "resource": "grammar.hgr", "line": 4, "col": 3, "source_string": "fQ=="},
-    {"terminal": "rbrace", "resource": "grammar.hgr", "line": 5, "col": 1, "source_string": "fQ=="}
-]
+<grammar.hgr:1:1 grammar "Z3JhbW1hcg==">
+<grammar.hgr:1:9 lbrace "ew==">
+<grammar.hgr:2:3 parser "cGFyc2Vy">
+<grammar.hgr:2:10 lbrace "ew==">
+<grammar.hgr:3:5 ll1_rule_hint "">
+<grammar.hgr:3:6 nonterminal "c3RhcnQ=">
+<grammar.hgr:3:12 equals "PQ==">
+<grammar.hgr:3:14 identifier "dGxpc3Q=">
+<grammar.hgr:3:19 lparen "KA==">
+<grammar.hgr:3:21 terminal "YQ==">
+<grammar.hgr:3:22 comma "LA==">
+<grammar.hgr:3:25 terminal "c2VtaWNvbG9u">
+<grammar.hgr:3:34 rparen "KQ==">
+<grammar.hgr:4:3 rbrace "fQ==">
+<grammar.hgr:5:1 rbrace "fQ==">

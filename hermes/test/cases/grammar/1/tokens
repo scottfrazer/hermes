@@ -1,20 +1,18 @@
-[
-    {"terminal": "grammar", "resource": "grammar.hgr", "line": 1, "col": 1, "source_string": "Z3JhbW1hcg=="},
-    {"terminal": "lbrace", "resource": "grammar.hgr", "line": 1, "col": 9, "source_string": "ew=="},
-    {"terminal": "lexer", "resource": "grammar.hgr", "line": 2, "col": 3, "source_string": "bGV4ZXI="},
-    {"terminal": "lbrace", "resource": "grammar.hgr", "line": 2, "col": 9, "source_string": "ew=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 3, "col": 5, "source_string": "cidbYS16XSsn"},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 3, "col": 15, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 3, "col": 19, "source_string": "aWRlbnRpZmllcg=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 4, "col": 5, "source_string": "cidbMC05XSsn"},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 4, "col": 15, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 4, "col": 19, "source_string": "bnVtYmVy"},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 5, "col": 5, "source_string": "cidcbisn"},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 5, "col": 12, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 5, "col": 16, "source_string": "bmV3bGluZQ=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 6, "col": 5, "source_string": "cidccysn"},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 6, "col": 12, "source_string": "LT4="},
-    {"terminal": "null", "resource": "grammar.hgr", "line": 6, "col": 15, "source_string": "bnVsbA=="},
-    {"terminal": "rbrace", "resource": "grammar.hgr", "line": 7, "col": 3, "source_string": "fQ=="},
-    {"terminal": "rbrace", "resource": "grammar.hgr", "line": 8, "col": 1, "source_string": "fQ=="}
-]
+<grammar.hgr:1:1 grammar "Z3JhbW1hcg==">
+<grammar.hgr:1:9 lbrace "ew==">
+<grammar.hgr:2:3 lexer "bGV4ZXI=">
+<grammar.hgr:2:9 lbrace "ew==">
+<grammar.hgr:3:5 regex "cidbYS16XSsn">
+<grammar.hgr:3:15 arrow "LT4=">
+<grammar.hgr:3:19 terminal "aWRlbnRpZmllcg==">
+<grammar.hgr:4:5 regex "cidbMC05XSsn">
+<grammar.hgr:4:15 arrow "LT4=">
+<grammar.hgr:4:19 terminal "bnVtYmVy">
+<grammar.hgr:5:5 regex "cidcbisn">
+<grammar.hgr:5:12 arrow "LT4=">
+<grammar.hgr:5:16 terminal "bmV3bGluZQ==">
+<grammar.hgr:6:5 regex "cidccysn">
+<grammar.hgr:6:12 arrow "LT4=">
+<grammar.hgr:6:15 null "bnVsbA==">
+<grammar.hgr:7:3 rbrace "fQ==">
+<grammar.hgr:8:1 rbrace "fQ==">

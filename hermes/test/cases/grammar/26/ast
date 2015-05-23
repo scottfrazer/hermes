@@ -3,26 +3,26 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 3 col 6) `b2JqZWN0`>,
+          nonterminal=<grammar.hgr:3:6 nonterminal "b2JqZWN0">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 3 col 16) `bGJyYWNl`>,
+                <grammar.hgr:3:16 terminal "bGJyYWNl">,
                 (Macro:
-                  name=<identifier (line 3 col 23) `bGlzdA==`>,
+                  name=<grammar.hgr:3:23 identifier "bGlzdA==">,
                   parameters=[
-                    <nonterminal (line 3 col 29) `bmFtZV92YWx1ZV9wYWly`>,
-                    <terminal (line 3 col 47) `Y29tbWE=`>
+                    <grammar.hgr:3:29 nonterminal "bmFtZV92YWx1ZV9wYWly">,
+                    <grammar.hgr:3:47 terminal "Y29tbWE=">
                   ]
                 ),
-                <terminal (line 3 col 55) `cmJyYWNl`>
+                <grammar.hgr:3:55 terminal "cmJyYWNl">
               ],
               ast=(AstTransformation:
-                name=<identifier (line 3 col 65) `T2JqZWN0`>,
+                name=<grammar.hgr:3:65 identifier "T2JqZWN0">,
                 parameters=[
                   (AstParameter:
-                    name=<identifier (line 3 col 73) `YXR0cmlidXRlcw==`>,
-                    index=<nonterminal_reference (line 3 col 85) `MQ==`>
+                    name=<grammar.hgr:3:73 identifier "YXR0cmlidXRlcw==">,
+                    index=<grammar.hgr:3:85 nonterminal_reference "MQ==">
                   )
                 ]
               )
@@ -30,26 +30,26 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 4 col 6) `YXJyYXk=`>,
+          nonterminal=<grammar.hgr:4:6 nonterminal "YXJyYXk=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 4 col 15) `bHNxdWFyZQ==`>,
+                <grammar.hgr:4:15 terminal "bHNxdWFyZQ==">,
                 (Macro:
-                  name=<identifier (line 4 col 23) `bGlzdA==`>,
+                  name=<grammar.hgr:4:23 identifier "bGlzdA==">,
                   parameters=[
-                    <nonterminal (line 4 col 29) `dmFsdWU=`>,
-                    <terminal (line 4 col 37) `Y29tbWE=`>
+                    <grammar.hgr:4:29 nonterminal "dmFsdWU=">,
+                    <grammar.hgr:4:37 terminal "Y29tbWE=">
                   ]
                 ),
-                <terminal (line 4 col 45) `cnNxdWFyZQ==`>
+                <grammar.hgr:4:45 terminal "cnNxdWFyZQ==">
               ],
               ast=(AstTransformation:
-                name=<identifier (line 4 col 56) `QXJyYXk=`>,
+                name=<grammar.hgr:4:56 identifier "QXJyYXk=">,
                 parameters=[
                   (AstParameter:
-                    name=<identifier (line 4 col 63) `aXRlbXM=`>,
-                    index=<nonterminal_reference (line 4 col 70) `MQ==`>
+                    name=<grammar.hgr:4:63 identifier "aXRlbXM=">,
+                    index=<grammar.hgr:4:70 nonterminal_reference "MQ==">
                   )
                 ]
               )
@@ -57,119 +57,119 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 5 col 6) `dmFsdWU=`>,
+          nonterminal=<grammar.hgr:5:6 nonterminal "dmFsdWU=">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 5 col 15) `b2JqZWN0`>
+                <grammar.hgr:5:15 nonterminal "b2JqZWN0">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 6 col 6) `dmFsdWU=`>,
+          nonterminal=<grammar.hgr:6:6 nonterminal "dmFsdWU=">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 6 col 15) `YXJyYXk=`>
+                <grammar.hgr:6:15 nonterminal "YXJyYXk=">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 7 col 6) `dmFsdWU=`>,
+          nonterminal=<grammar.hgr:7:6 nonterminal "dmFsdWU=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 7 col 15) `c3RyaW5n`>
+                <grammar.hgr:7:15 terminal "c3RyaW5n">
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 7 col 25) `bnVtYmVy`>
+                <grammar.hgr:7:25 terminal "bnVtYmVy">
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 7 col 35) `dHJ1ZQ==`>
+                <grammar.hgr:7:35 terminal "dHJ1ZQ==">
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 7 col 43) `ZmFsc2U=`>
+                <grammar.hgr:7:43 terminal "ZmFsc2U=">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 8 col 6) `dmFsdWU=`>,
+          nonterminal=<grammar.hgr:8:6 nonterminal "dmFsdWU=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 8 col 15) `bnVtYmVy`>
+                <grammar.hgr:8:15 terminal "bnVtYmVy">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 9 col 6) `dmFsdWU=`>,
+          nonterminal=<grammar.hgr:9:6 nonterminal "dmFsdWU=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 9 col 15) `dHJ1ZQ==`>
+                <grammar.hgr:9:15 terminal "dHJ1ZQ==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 10 col 6) `dmFsdWU=`>,
+          nonterminal=<grammar.hgr:10:6 nonterminal "dmFsdWU=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 10 col 15) `ZmFsc2U=`>
+                <grammar.hgr:10:15 terminal "ZmFsc2U=">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 11 col 6) `dmFsdWU=`>,
+          nonterminal=<grammar.hgr:11:6 nonterminal "dmFsdWU=">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 11 col 15) `bnVsbA==`>
+                <grammar.hgr:11:15 terminal "bnVsbA==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 12 col 6) `bmFtZV92YWx1ZV9wYWly`>,
+          nonterminal=<grammar.hgr:12:6 nonterminal "bmFtZV92YWx1ZV9wYWly">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 12 col 25) `c3RyaW5n`>,
-                <terminal (line 12 col 33) `Y29sb24=`>,
-                <nonterminal (line 12 col 40) `dmFsdWU=`>
+                <grammar.hgr:12:25 terminal "c3RyaW5n">,
+                <grammar.hgr:12:33 terminal "Y29sb24=">,
+                <grammar.hgr:12:40 nonterminal "dmFsdWU=">
               ],
               ast=(AstTransformation:
-                name=<identifier (line 12 col 49) `TmFtZVZhbHVlUGFpcg==`>,
+                name=<grammar.hgr:12:49 identifier "TmFtZVZhbHVlUGFpcg==">,
                 parameters=[
                   (AstParameter:
-                    name=<identifier (line 12 col 64) `bmFtZQ==`>,
-                    index=<nonterminal_reference (line 12 col 70) `MA==`>
+                    name=<grammar.hgr:12:64 identifier "bmFtZQ==">,
+                    index=<grammar.hgr:12:70 nonterminal_reference "MA==">
                   ),
                   (AstParameter:
-                    name=<identifier (line 12 col 73) `dmFsdWU=`>,
-                    index=<nonterminal_reference (line 12 col 80) `Mg==`>
+                    name=<grammar.hgr:12:73 identifier "dmFsdWU=">,
+                    index=<grammar.hgr:12:80 nonterminal_reference "Mg==">
                   )
                 ]
               )

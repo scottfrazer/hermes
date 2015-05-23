@@ -1,92 +1,90 @@
-[
-    {"terminal": "grammar", "resource": "grammar.hgr", "line": 1, "col": 1, "source_string": "Z3JhbW1hcg=="},
-    {"terminal": "lbrace", "resource": "grammar.hgr", "line": 1, "col": 9, "source_string": "ew=="},
-    {"terminal": "lexer", "resource": "grammar.hgr", "line": 2, "col": 3, "source_string": "bGV4ZXI="},
-    {"terminal": "lbrace", "resource": "grammar.hgr", "line": 2, "col": 9, "source_string": "ew=="},
-    {"terminal": "partials", "resource": "grammar.hgr", "line": 3, "col": 5, "source_string": "cGFydGlhbHM="},
-    {"terminal": "lbrace", "resource": "grammar.hgr", "line": 3, "col": 14, "source_string": "ew=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 4, "col": 7, "source_string": "cidbXHUyNjZkLVx1MjY2Zl0n"},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 4, "col": 26, "source_string": "LT4="},
-    {"terminal": "regex_partial", "resource": "grammar.hgr", "line": 4, "col": 29, "source_string": "X211c2lj"},
-    {"terminal": "rbrace", "resource": "grammar.hgr", "line": 5, "col": 5, "source_string": "fQ=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 6, "col": 5, "source_string": "cidtOih7JV9tdXNpYyV9KSc="},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 6, "col": 23, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 6, "col": 27, "source_string": "bXVzaWM="},
-    {"terminal": "lsquare", "resource": "grammar.hgr", "line": 6, "col": 32, "source_string": "Ww=="},
-    {"terminal": "integer", "resource": "grammar.hgr", "line": 6, "col": 33, "source_string": "MQ=="},
-    {"terminal": "rsquare", "resource": "grammar.hgr", "line": 6, "col": 34, "source_string": "XQ=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 7, "col": 5, "source_string": "ciciKCg/OlteIlxcXXxcXFsiXFwvYmZucnRdfFxcdVswLTlBLUZhLWZdezR9KSopIic="},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 7, "col": 56, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 7, "col": 60, "source_string": "c3RyaW5n"},
-    {"terminal": "lsquare", "resource": "grammar.hgr", "line": 7, "col": 66, "source_string": "Ww=="},
-    {"terminal": "integer", "resource": "grammar.hgr", "line": 7, "col": 67, "source_string": "MQ=="},
-    {"terminal": "rsquare", "resource": "grammar.hgr", "line": 7, "col": 68, "source_string": "XQ=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 8, "col": 5, "source_string": "cidhJw=="},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 8, "col": 10, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 8, "col": 14, "source_string": "YQ=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 9, "col": 5, "source_string": "cidiJw=="},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 9, "col": 10, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 9, "col": 14, "source_string": "Yg=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 10, "col": 5, "source_string": "cidceyc="},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 10, "col": 11, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 10, "col": 15, "source_string": "bGJyYWNl"},
-    {"terminal": "stack_push", "resource": "grammar.hgr", "line": 10, "col": 23, "source_string": "YmxhaA=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 11, "col": 5, "source_string": "cidcbisn"},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 11, "col": 12, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 11, "col": 16, "source_string": "bmV3bGluZQ=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 12, "col": 5, "source_string": "cicgJw=="},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 12, "col": 10, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 12, "col": 14, "source_string": "c3BhY2U="},
-    {"terminal": "regex_enum", "resource": "grammar.hgr", "line": 13, "col": 5, "source_string": "ZW51bQ=="},
-    {"terminal": "lbrace", "resource": "grammar.hgr", "line": 13, "col": 10, "source_string": "ew=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 14, "col": 7, "source_string": "amF2YQ=="},
-    {"terminal": "colon", "resource": "grammar.hgr", "line": 14, "col": 11, "source_string": "Og=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 14, "col": 13, "source_string": "ImNoYXI6KC4pIg=="},
-    {"terminal": "lparen", "resource": "grammar.hgr", "line": 14, "col": 24, "source_string": "KA=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 14, "col": 25, "source_string": "RE9UQUxM"},
-    {"terminal": "comma", "resource": "grammar.hgr", "line": 14, "col": 31, "source_string": "LA=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 14, "col": 33, "source_string": "Q0FTRV9JTlNFTlNJVElWRQ=="},
-    {"terminal": "rparen", "resource": "grammar.hgr", "line": 14, "col": 49, "source_string": "KQ=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 15, "col": 7, "source_string": "cHl0aG9u"},
-    {"terminal": "colon", "resource": "grammar.hgr", "line": 15, "col": 13, "source_string": "Og=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 15, "col": 15, "source_string": "cidjaGFyOiguKSc="},
-    {"terminal": "lparen", "resource": "grammar.hgr", "line": 15, "col": 27, "source_string": "KA=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 15, "col": 28, "source_string": "RE9UQUxM"},
-    {"terminal": "comma", "resource": "grammar.hgr", "line": 15, "col": 34, "source_string": "LA=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 15, "col": 36, "source_string": "SUdOT1JFQ0FTRQ=="},
-    {"terminal": "rparen", "resource": "grammar.hgr", "line": 15, "col": 46, "source_string": "KQ=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 16, "col": 7, "source_string": "Yw=="},
-    {"terminal": "colon", "resource": "grammar.hgr", "line": 16, "col": 8, "source_string": "Og=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 16, "col": 10, "source_string": "ImNoYXI6KC4pIg=="},
-    {"terminal": "lparen", "resource": "grammar.hgr", "line": 16, "col": 21, "source_string": "KA=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 16, "col": 22, "source_string": "UENSRV9ET1RBTEw="},
-    {"terminal": "comma", "resource": "grammar.hgr", "line": 16, "col": 33, "source_string": "LA=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 16, "col": 35, "source_string": "UENSRV9DQVNFTEVTUw=="},
-    {"terminal": "rparen", "resource": "grammar.hgr", "line": 16, "col": 48, "source_string": "KQ=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 17, "col": 7, "source_string": "amF2YXNjcmlwdA=="},
-    {"terminal": "colon", "resource": "grammar.hgr", "line": 17, "col": 17, "source_string": "Og=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 17, "col": 19, "source_string": "ImNoYXI6KC4pIg=="},
-    {"terminal": "lparen", "resource": "grammar.hgr", "line": 17, "col": 30, "source_string": "KA=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 17, "col": 31, "source_string": "bQ=="},
-    {"terminal": "comma", "resource": "grammar.hgr", "line": 17, "col": 32, "source_string": "LA=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 17, "col": 34, "source_string": "aQ=="},
-    {"terminal": "rparen", "resource": "grammar.hgr", "line": 17, "col": 35, "source_string": "KQ=="},
-    {"terminal": "rbrace", "resource": "grammar.hgr", "line": 18, "col": 5, "source_string": "fQ=="},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 18, "col": 7, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 18, "col": 11, "source_string": "Y2hhcg=="},
-    {"terminal": "mode", "resource": "grammar.hgr", "line": 19, "col": 5, "source_string": "bW9kZQ=="},
-    {"terminal": "langle", "resource": "grammar.hgr", "line": 19, "col": 9, "source_string": "PA=="},
-    {"terminal": "identifier", "resource": "grammar.hgr", "line": 19, "col": 10, "source_string": "YmxhaA=="},
-    {"terminal": "rangle", "resource": "grammar.hgr", "line": 19, "col": 14, "source_string": "Pg=="},
-    {"terminal": "lbrace", "resource": "grammar.hgr", "line": 19, "col": 16, "source_string": "ew=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 20, "col": 7, "source_string": "cidibGFoJw=="},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 20, "col": 15, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 20, "col": 19, "source_string": "YmxhaA=="},
-    {"terminal": "regex", "resource": "grammar.hgr", "line": 21, "col": 7, "source_string": "cid9Jw=="},
-    {"terminal": "arrow", "resource": "grammar.hgr", "line": 21, "col": 12, "source_string": "LT4="},
-    {"terminal": "terminal", "resource": "grammar.hgr", "line": 21, "col": 16, "source_string": "cmJyYWNl"},
-    {"terminal": "action", "resource": "grammar.hgr", "line": 21, "col": 24, "source_string": "cG9w"},
-    {"terminal": "rbrace", "resource": "grammar.hgr", "line": 22, "col": 5, "source_string": "fQ=="},
-    {"terminal": "rbrace", "resource": "grammar.hgr", "line": 23, "col": 3, "source_string": "fQ=="},
-    {"terminal": "rbrace", "resource": "grammar.hgr", "line": 24, "col": 1, "source_string": "fQ=="}
-]
+<grammar.hgr:1:1 grammar "Z3JhbW1hcg==">
+<grammar.hgr:1:9 lbrace "ew==">
+<grammar.hgr:2:3 lexer "bGV4ZXI=">
+<grammar.hgr:2:9 lbrace "ew==">
+<grammar.hgr:3:5 partials "cGFydGlhbHM=">
+<grammar.hgr:3:14 lbrace "ew==">
+<grammar.hgr:4:7 regex "cidbXHUyNjZkLVx1MjY2Zl0n">
+<grammar.hgr:4:26 arrow "LT4=">
+<grammar.hgr:4:29 regex_partial "X211c2lj">
+<grammar.hgr:5:5 rbrace "fQ==">
+<grammar.hgr:6:5 regex "cidtOih7JV9tdXNpYyV9KSc=">
+<grammar.hgr:6:23 arrow "LT4=">
+<grammar.hgr:6:27 terminal "bXVzaWM=">
+<grammar.hgr:6:32 lsquare "Ww==">
+<grammar.hgr:6:33 integer "MQ==">
+<grammar.hgr:6:34 rsquare "XQ==">
+<grammar.hgr:7:5 regex "ciciKCg/OlteIlxcXXxcXFsiXFwvYmZucnRdfFxcdVswLTlBLUZhLWZdezR9KSopIic=">
+<grammar.hgr:7:56 arrow "LT4=">
+<grammar.hgr:7:60 terminal "c3RyaW5n">
+<grammar.hgr:7:66 lsquare "Ww==">
+<grammar.hgr:7:67 integer "MQ==">
+<grammar.hgr:7:68 rsquare "XQ==">
+<grammar.hgr:8:5 regex "cidhJw==">
+<grammar.hgr:8:10 arrow "LT4=">
+<grammar.hgr:8:14 terminal "YQ==">
+<grammar.hgr:9:5 regex "cidiJw==">
+<grammar.hgr:9:10 arrow "LT4=">
+<grammar.hgr:9:14 terminal "Yg==">
+<grammar.hgr:10:5 regex "cidceyc=">
+<grammar.hgr:10:11 arrow "LT4=">
+<grammar.hgr:10:15 terminal "bGJyYWNl">
+<grammar.hgr:10:23 stack_push "YmxhaA==">
+<grammar.hgr:11:5 regex "cidcbisn">
+<grammar.hgr:11:12 arrow "LT4=">
+<grammar.hgr:11:16 terminal "bmV3bGluZQ==">
+<grammar.hgr:12:5 regex "cicgJw==">
+<grammar.hgr:12:10 arrow "LT4=">
+<grammar.hgr:12:14 terminal "c3BhY2U=">
+<grammar.hgr:13:5 regex_enum "ZW51bQ==">
+<grammar.hgr:13:10 lbrace "ew==">
+<grammar.hgr:14:7 identifier "amF2YQ==">
+<grammar.hgr:14:11 colon "Og==">
+<grammar.hgr:14:13 regex "ImNoYXI6KC4pIg==">
+<grammar.hgr:14:24 lparen "KA==">
+<grammar.hgr:14:25 identifier "RE9UQUxM">
+<grammar.hgr:14:31 comma "LA==">
+<grammar.hgr:14:33 identifier "Q0FTRV9JTlNFTlNJVElWRQ==">
+<grammar.hgr:14:49 rparen "KQ==">
+<grammar.hgr:15:7 identifier "cHl0aG9u">
+<grammar.hgr:15:13 colon "Og==">
+<grammar.hgr:15:15 regex "cidjaGFyOiguKSc=">
+<grammar.hgr:15:27 lparen "KA==">
+<grammar.hgr:15:28 identifier "RE9UQUxM">
+<grammar.hgr:15:34 comma "LA==">
+<grammar.hgr:15:36 identifier "SUdOT1JFQ0FTRQ==">
+<grammar.hgr:15:46 rparen "KQ==">
+<grammar.hgr:16:7 identifier "Yw==">
+<grammar.hgr:16:8 colon "Og==">
+<grammar.hgr:16:10 regex "ImNoYXI6KC4pIg==">
+<grammar.hgr:16:21 lparen "KA==">
+<grammar.hgr:16:22 identifier "UENSRV9ET1RBTEw=">
+<grammar.hgr:16:33 comma "LA==">
+<grammar.hgr:16:35 identifier "UENSRV9DQVNFTEVTUw==">
+<grammar.hgr:16:48 rparen "KQ==">
+<grammar.hgr:17:7 identifier "amF2YXNjcmlwdA==">
+<grammar.hgr:17:17 colon "Og==">
+<grammar.hgr:17:19 regex "ImNoYXI6KC4pIg==">
+<grammar.hgr:17:30 lparen "KA==">
+<grammar.hgr:17:31 identifier "bQ==">
+<grammar.hgr:17:32 comma "LA==">
+<grammar.hgr:17:34 identifier "aQ==">
+<grammar.hgr:17:35 rparen "KQ==">
+<grammar.hgr:18:5 rbrace "fQ==">
+<grammar.hgr:18:7 arrow "LT4=">
+<grammar.hgr:18:11 terminal "Y2hhcg==">
+<grammar.hgr:19:5 mode "bW9kZQ==">
+<grammar.hgr:19:9 langle "PA==">
+<grammar.hgr:19:10 identifier "YmxhaA==">
+<grammar.hgr:19:14 rangle "Pg==">
+<grammar.hgr:19:16 lbrace "ew==">
+<grammar.hgr:20:7 regex "cidibGFoJw==">
+<grammar.hgr:20:15 arrow "LT4=">
+<grammar.hgr:20:19 terminal "YmxhaA==">
+<grammar.hgr:21:7 regex "cid9Jw==">
+<grammar.hgr:21:12 arrow "LT4=">
+<grammar.hgr:21:16 terminal "cmJyYWNl">
+<grammar.hgr:21:24 action "cG9w">
+<grammar.hgr:22:5 rbrace "fQ==">
+<grammar.hgr:23:3 rbrace "fQ==">
+<grammar.hgr:24:1 rbrace "fQ==">

@@ -3,28 +3,28 @@
     (Lexer:
       atoms=[
         (Regex:
-          regex=<regex (line 3 col 5) `cidbYS16XSc=`>,
+          regex=<grammar.hgr:3:5 regex "cidbYS16XSc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 3 col 18) `bGV0dGVy`>,
+              name=<grammar.hgr:3:18 terminal "bGV0dGVy">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 4 col 5) `cidceyc=`>,
+          regex=<grammar.hgr:4:5 regex "cidceyc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 4 col 15) `bGJyYWNl`>,
+              name=<grammar.hgr:4:15 terminal "bGJyYWNl">,
               group=None
             ),
-            <stack_push (line 4 col 23) `bnVtYmVycw==`>
+            <grammar.hgr:4:23 stack_push "bnVtYmVycw==">
           ]
         ),
         (Regex:
-          regex=<regex (line 5 col 5) `cidccysn`>,
+          regex=<grammar.hgr:5:5 regex "cidccysn">,
           options=None,
           onmatch=[
             (Null:
@@ -33,31 +33,31 @@
           ]
         ),
         (Mode:
-          name=<identifier (line 7 col 10) `bnVtYmVycw==`>,
+          name=<grammar.hgr:7:10 identifier "bnVtYmVycw==">,
           atoms=[
             (Regex:
-              regex=<regex (line 8 col 7) `cidbMC05XSc=`>,
+              regex=<grammar.hgr:8:7 regex "cidbMC05XSc=">,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 8 col 20) `bnVtYmVy`>,
+                  name=<grammar.hgr:8:20 terminal "bnVtYmVy">,
                   group=None
                 )
               ]
             ),
             (Regex:
-              regex=<regex (line 9 col 7) `cidcfSc=`>,
+              regex=<grammar.hgr:9:7 regex "cidcfSc=">,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 9 col 17) `cmJyYWNl`>,
+                  name=<grammar.hgr:9:17 terminal "cmJyYWNl">,
                   group=None
                 ),
-                <action (line 9 col 25) `cG9w`>
+                <grammar.hgr:9:25 action "cG9w">
               ]
             ),
             (Regex:
-              regex=<regex (line 10 col 7) `cidccysn`>,
+              regex=<grammar.hgr:10:7 regex "cidccysn">,
               options=None,
               onmatch=[
                 (Null:

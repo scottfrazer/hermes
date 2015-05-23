@@ -5,25 +5,25 @@
         (RegexPartials:
           list=[
             (RegexPartial:
-              regex=<regex (line 4 col 7) `cidhYmMn`>,
-              name=<regex_partial (line 4 col 17) `X2FiYw==`>
+              regex=<grammar.hgr:4:7 regex "cidhYmMn">,
+              name=<grammar.hgr:4:17 regex_partial "X2FiYw==">
             ),
             (RegexPartial:
-              regex=<regex (line 5 col 7) `cid4eXon`>,
-              name=<regex_partial (line 5 col 17) `X3h5eg==`>
+              regex=<grammar.hgr:5:7 regex "cid4eXon">,
+              name=<grammar.hgr:5:17 regex_partial "X3h5eg==">
             ),
             (RegexPartial:
-              regex=<regex (line 6 col 7) `cidbMC05XSsn`>,
-              name=<regex_partial (line 6 col 20) `X251bQ==`>
+              regex=<grammar.hgr:6:7 regex "cidbMC05XSsn">,
+              name=<grammar.hgr:6:20 regex_partial "X251bQ==">
             ),
             (RegexPartial:
-              regex=<regex (line 7 col 7) `cid7JV94eXolfXslX2FiYyV9Jw==`>,
-              name=<regex_partial (line 7 col 30) `X3h5el9hYmM=`>
+              regex=<grammar.hgr:7:7 regex "cid7JV94eXolfXslX2FiYyV9Jw==">,
+              name=<grammar.hgr:7:30 regex_partial "X3h5el9hYmM=">
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 9 col 5) `cidccysn`>,
+          regex=<grammar.hgr:9:5 regex "cidccysn">,
           options=None,
           onmatch=[
             (Null:
@@ -32,41 +32,41 @@
           ]
         ),
         (Regex:
-          regex=<regex (line 10 col 5) `cid7JV9hYmMlfSc=`>,
+          regex=<grammar.hgr:10:5 regex "cid7JV9hYmMlfSc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 10 col 21) `YWJj`>,
+              name=<grammar.hgr:10:21 terminal "YWJj">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 11 col 5) `cid7JV9udW0lfSc=`>,
+          regex=<grammar.hgr:11:5 regex "cid7JV9udW0lfSc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 11 col 21) `bnVt`>,
+              name=<grammar.hgr:11:21 terminal "bnVt">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 12 col 5) `cid7JV94eXolfXslX251bSV9W2prbF0rJw==`>,
+          regex=<grammar.hgr:12:5 regex "cid7JV94eXolfXslX251bSV9W2prbF0rJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 12 col 35) `eHl6`>,
+              name=<grammar.hgr:12:35 terminal "eHl6">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 13 col 5) `cid7JV94eXpfYWJjJX0n`>,
+          regex=<grammar.hgr:13:5 regex "cid7JV94eXpfYWJjJX0n">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 13 col 25) `eHl6X2FiYw==`>,
+              name=<grammar.hgr:13:25 terminal "eHl6X2FiYw==">,
               group=None
             )
           ]

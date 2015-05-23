@@ -3,7 +3,7 @@
     (Lexer:
       atoms=[
         (Regex:
-          regex=<regex (line 3 col 5) `cidccysn`>,
+          regex=<grammar.hgr:3:5 regex "cidccysn">,
           options=None,
           onmatch=[
             (Null:
@@ -12,31 +12,31 @@
           ]
         ),
         (Regex:
-          regex=<regex (line 4 col 5) `cidzJw==`>,
+          regex=<grammar.hgr:4:5 regex "cidzJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 4 col 14) `c2Vw`>,
+              name=<grammar.hgr:4:14 terminal "c2Vw">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 5 col 5) `cidhJw==`>,
+          regex=<grammar.hgr:5:5 regex "cidhJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 5 col 14) `YQ==`>,
+              name=<grammar.hgr:5:14 terminal "YQ==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 6 col 5) `cidiJw==`>,
+          regex=<grammar.hgr:6:5 regex "cidiJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 6 col 14) `Yg==`>,
+              name=<grammar.hgr:6:14 terminal "Yg==">,
               group=None
             )
           ]
@@ -46,16 +46,16 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 9 col 6) `c3RhcnQ=`>,
+          nonterminal=<grammar.hgr:9:6 nonterminal "c3RhcnQ=">,
           production=[
             (Production:
               morphemes=[
                 (Macro:
-                  name=<identifier (line 9 col 14) `bXNsaXN0`>,
+                  name=<grammar.hgr:9:14 identifier "bXNsaXN0">,
                   parameters=[
-                    <nonterminal (line 9 col 22) `aXRlbQ==`>,
-                    <terminal (line 9 col 29) `c2Vw`>,
-                    <integer (line 9 col 34) `MQ==`>
+                    <grammar.hgr:9:22 nonterminal "aXRlbQ==">,
+                    <grammar.hgr:9:29 terminal "c2Vw">,
+                    <grammar.hgr:9:34 integer "MQ==">
                   ]
                 )
               ],
@@ -64,17 +64,17 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 10 col 6) `aXRlbQ==`>,
+          nonterminal=<grammar.hgr:10:6 nonterminal "aXRlbQ==">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 10 col 14) `YQ==`>
+                <grammar.hgr:10:14 terminal "YQ==">
               ],
               ast=None
             ),
             (Production:
               morphemes=[
-                <terminal (line 10 col 19) `Yg==`>
+                <grammar.hgr:10:19 terminal "Yg==">
               ],
               ast=None
             )

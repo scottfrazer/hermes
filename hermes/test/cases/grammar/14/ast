@@ -3,35 +3,35 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 3 col 6) `cw==`>,
+          nonterminal=<grammar.hgr:3:6 nonterminal "cw==">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 3 col 11) `YQ==`>,
-                <terminal (line 3 col 14) `Yw==`>,
-                <terminal (line 3 col 17) `Yg==`>
+                <grammar.hgr:3:11 nonterminal "YQ==">,
+                <grammar.hgr:3:14 terminal "Yw==">,
+                <grammar.hgr:3:17 terminal "Yg==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 4 col 6) `YQ==`>,
+          nonterminal=<grammar.hgr:4:6 nonterminal "YQ==">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 4 col 11) `Yw==`>
+                <grammar.hgr:4:11 terminal "Yw==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 5 col 6) `YQ==`>,
+          nonterminal=<grammar.hgr:5:6 nonterminal "YQ==">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 5 col 11) `X2VtcHR5`>
+                <grammar.hgr:5:11 terminal "X2VtcHR5">
               ],
               ast=None
             )

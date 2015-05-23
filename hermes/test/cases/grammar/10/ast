@@ -3,37 +3,37 @@
     (Lexer:
       atoms=[
         (Regex:
-          regex=<regex (line 3 col 5) `cidhJw==`>,
+          regex=<grammar.hgr:3:5 regex "cidhJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 3 col 14) `YQ==`>,
+              name=<grammar.hgr:3:14 terminal "YQ==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 4 col 5) `cidiJw==`>,
+          regex=<grammar.hgr:4:5 regex "cidiJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 4 col 14) `Yg==`>,
+              name=<grammar.hgr:4:14 terminal "Yg==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 5 col 5) `cic7Jw==`>,
+          regex=<grammar.hgr:5:5 regex "cic7Jw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 5 col 14) `c2VtaQ==`>,
+              name=<grammar.hgr:5:14 terminal "c2VtaQ==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 6 col 5) `cidccysn`>,
+          regex=<grammar.hgr:6:5 regex "cidccysn">,
           options=None,
           onmatch=[
             (Null:
@@ -46,36 +46,36 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 9 col 6) `c3RhcnQ=`>,
+          nonterminal=<grammar.hgr:9:6 nonterminal "c3RhcnQ=">,
           production=[
             (Production:
               morphemes=[
-                <nonterminal (line 9 col 15) `c3Vi`>,
-                <terminal (line 9 col 20) `c2VtaQ==`>
+                <grammar.hgr:9:15 nonterminal "c3Vi">,
+                <grammar.hgr:9:20 terminal "c2VtaQ==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 10 col 6) `c3Vi`>,
+          nonterminal=<grammar.hgr:10:6 nonterminal "c3Vi">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 10 col 13) `YQ==`>,
-                <nonterminal (line 10 col 16) `c3Vi`>,
-                <terminal (line 10 col 21) `Yg==`>
+                <grammar.hgr:10:13 terminal "YQ==">,
+                <grammar.hgr:10:16 nonterminal "c3Vi">,
+                <grammar.hgr:10:21 terminal "Yg==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 11 col 6) `c3Vi`>,
+          nonterminal=<grammar.hgr:11:6 nonterminal "c3Vi">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 11 col 13) `X2VtcHR5`>
+                <grammar.hgr:11:13 terminal "X2VtcHR5">
               ],
               ast=None
             )

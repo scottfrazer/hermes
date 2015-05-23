@@ -3,7 +3,7 @@
     (Lexer:
       atoms=[
         (Regex:
-          regex=<regex (line 3 col 5) `cidccysn`>,
+          regex=<grammar.hgr:3:5 regex "cidccysn">,
           options=None,
           onmatch=[
             (Null:
@@ -12,11 +12,11 @@
           ]
         ),
         (Regex:
-          regex=<regex (line 4 col 5) `cid4Jw==`>,
+          regex=<grammar.hgr:4:5 regex "cid4Jw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 4 col 14) `eA==`>,
+              name=<grammar.hgr:4:14 terminal "eA==">,
               group=None
             )
           ]
@@ -26,14 +26,14 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 7 col 6) `cw==`>,
+          nonterminal=<grammar.hgr:7:6 nonterminal "cw==">,
           production=[
             (Production:
               morphemes=[
                 (Macro:
-                  name=<identifier (line 7 col 10) `b3B0aW9uYWw=`>,
+                  name=<grammar.hgr:7:10 identifier "b3B0aW9uYWw=">,
                   parameters=[
-                    <nonterminal (line 7 col 20) `dA==`>
+                    <grammar.hgr:7:20 nonterminal "dA==">
                   ]
                 )
               ],
@@ -42,11 +42,11 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 8 col 6) `dA==`>,
+          nonterminal=<grammar.hgr:8:6 nonterminal "dA==">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 8 col 11) `eA==`>
+                <grammar.hgr:8:11 terminal "eA==">
               ],
               ast=None
             )

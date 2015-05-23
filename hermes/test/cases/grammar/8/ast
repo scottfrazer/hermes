@@ -5,78 +5,78 @@
         (RegexPartials:
           list=[
             (RegexPartial:
-              regex=<regex (line 4 col 7) `cidbXHUyNjZkLVx1MjY2Zl0n`>,
-              name=<regex_partial (line 4 col 29) `X211c2lj`>
+              regex=<grammar.hgr:4:7 regex "cidbXHUyNjZkLVx1MjY2Zl0n">,
+              name=<grammar.hgr:4:29 regex_partial "X211c2lj">
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 6 col 5) `cidtOih7JV9tdXNpYyV9KSc=`>,
+          regex=<grammar.hgr:6:5 regex "cidtOih7JV9tdXNpYyV9KSc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 6 col 27) `bXVzaWM=`>,
-              group=<integer (line 6 col 33) `MQ==`>
+              name=<grammar.hgr:6:27 terminal "bXVzaWM=">,
+              group=<grammar.hgr:6:33 integer "MQ==">
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 7 col 5) `ciciKCg/OlteIlxcXXxcXFsiXFwvYmZucnRdfFxcdVswLTlBLUZhLWZdezR9KSopIic=`>,
+          regex=<grammar.hgr:7:5 regex "ciciKCg/OlteIlxcXXxcXFsiXFwvYmZucnRdfFxcdVswLTlBLUZhLWZdezR9KSopIic=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 7 col 60) `c3RyaW5n`>,
-              group=<integer (line 7 col 67) `MQ==`>
+              name=<grammar.hgr:7:60 terminal "c3RyaW5n">,
+              group=<grammar.hgr:7:67 integer "MQ==">
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 8 col 5) `cidhJw==`>,
+          regex=<grammar.hgr:8:5 regex "cidhJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 8 col 14) `YQ==`>,
+              name=<grammar.hgr:8:14 terminal "YQ==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 9 col 5) `cidiJw==`>,
+          regex=<grammar.hgr:9:5 regex "cidiJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 9 col 14) `Yg==`>,
+              name=<grammar.hgr:9:14 terminal "Yg==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 10 col 5) `cidceyc=`>,
+          regex=<grammar.hgr:10:5 regex "cidceyc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 10 col 15) `bGJyYWNl`>,
+              name=<grammar.hgr:10:15 terminal "bGJyYWNl">,
               group=None
             ),
-            <stack_push (line 10 col 23) `YmxhaA==`>
+            <grammar.hgr:10:23 stack_push "YmxhaA==">
           ]
         ),
         (Regex:
-          regex=<regex (line 11 col 5) `cidcbisn`>,
+          regex=<grammar.hgr:11:5 regex "cidcbisn">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 11 col 16) `bmV3bGluZQ==`>,
+              name=<grammar.hgr:11:16 terminal "bmV3bGluZQ==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<regex (line 12 col 5) `cicgJw==`>,
+          regex=<grammar.hgr:12:5 regex "cicgJw==">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 12 col 14) `c3BhY2U=`>,
+              name=<grammar.hgr:12:14 terminal "c3BhY2U=">,
               group=None
             )
           ]
@@ -84,67 +84,67 @@
         (EnumeratedRegex:
           enums=[
             (RegexEnum:
-              language=<identifier (line 14 col 7) `amF2YQ==`>,
-              regex=<regex (line 14 col 13) `ImNoYXI6KC4pIg==`>,
+              language=<grammar.hgr:14:7 identifier "amF2YQ==">,
+              regex=<grammar.hgr:14:13 regex "ImNoYXI6KC4pIg==">,
               options=[
-                <identifier (line 14 col 25) `RE9UQUxM`>,
-                <identifier (line 14 col 33) `Q0FTRV9JTlNFTlNJVElWRQ==`>
+                <grammar.hgr:14:25 identifier "RE9UQUxM">,
+                <grammar.hgr:14:33 identifier "Q0FTRV9JTlNFTlNJVElWRQ==">
               ]
             ),
             (RegexEnum:
-              language=<identifier (line 15 col 7) `cHl0aG9u`>,
-              regex=<regex (line 15 col 15) `cidjaGFyOiguKSc=`>,
+              language=<grammar.hgr:15:7 identifier "cHl0aG9u">,
+              regex=<grammar.hgr:15:15 regex "cidjaGFyOiguKSc=">,
               options=[
-                <identifier (line 15 col 28) `RE9UQUxM`>,
-                <identifier (line 15 col 36) `SUdOT1JFQ0FTRQ==`>
+                <grammar.hgr:15:28 identifier "RE9UQUxM">,
+                <grammar.hgr:15:36 identifier "SUdOT1JFQ0FTRQ==">
               ]
             ),
             (RegexEnum:
-              language=<identifier (line 16 col 7) `Yw==`>,
-              regex=<regex (line 16 col 10) `ImNoYXI6KC4pIg==`>,
+              language=<grammar.hgr:16:7 identifier "Yw==">,
+              regex=<grammar.hgr:16:10 regex "ImNoYXI6KC4pIg==">,
               options=[
-                <identifier (line 16 col 22) `UENSRV9ET1RBTEw=`>,
-                <identifier (line 16 col 35) `UENSRV9DQVNFTEVTUw==`>
+                <grammar.hgr:16:22 identifier "UENSRV9ET1RBTEw=">,
+                <grammar.hgr:16:35 identifier "UENSRV9DQVNFTEVTUw==">
               ]
             ),
             (RegexEnum:
-              language=<identifier (line 17 col 7) `amF2YXNjcmlwdA==`>,
-              regex=<regex (line 17 col 19) `ImNoYXI6KC4pIg==`>,
+              language=<grammar.hgr:17:7 identifier "amF2YXNjcmlwdA==">,
+              regex=<grammar.hgr:17:19 regex "ImNoYXI6KC4pIg==">,
               options=[
-                <identifier (line 17 col 31) `bQ==`>,
-                <identifier (line 17 col 34) `aQ==`>
+                <grammar.hgr:17:31 identifier "bQ==">,
+                <grammar.hgr:17:34 identifier "aQ==">
               ]
             )
           ],
           onmatch=[
             (Terminal:
-              name=<terminal (line 18 col 11) `Y2hhcg==`>,
+              name=<grammar.hgr:18:11 terminal "Y2hhcg==">,
               group=None
             )
           ]
         ),
         (Mode:
-          name=<identifier (line 19 col 10) `YmxhaA==`>,
+          name=<grammar.hgr:19:10 identifier "YmxhaA==">,
           atoms=[
             (Regex:
-              regex=<regex (line 20 col 7) `cidibGFoJw==`>,
+              regex=<grammar.hgr:20:7 regex "cidibGFoJw==">,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 20 col 19) `YmxhaA==`>,
+                  name=<grammar.hgr:20:19 terminal "YmxhaA==">,
                   group=None
                 )
               ]
             ),
             (Regex:
-              regex=<regex (line 21 col 7) `cid9Jw==`>,
+              regex=<grammar.hgr:21:7 regex "cid9Jw==">,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<terminal (line 21 col 16) `cmJyYWNl`>,
+                  name=<grammar.hgr:21:16 terminal "cmJyYWNl">,
                   group=None
                 ),
-                <action (line 21 col 24) `cG9w`>
+                <grammar.hgr:21:24 action "cG9w">
               ]
             )
           ]

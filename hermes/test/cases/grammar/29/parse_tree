@@ -1,57 +1,57 @@
 (grammar:
-  <grammar (line 1 col 1) `Z3JhbW1hcg==`>,
-  <lbrace (line 1 col 9) `ew==`>,
+  <grammar.hgr:1:1 grammar "Z3JhbW1hcg==">,
+  <grammar.hgr:1:9 lbrace "ew==">,
   (_gen0:
     (body_element:
       (body_element_sub:
         (parser:
           (parser_ll1:
-            <parser (line 2 col 3) `cGFyc2Vy`>,
-            <lbrace (line 2 col 10) `ew==`>,
-            (_gen11:
+            <grammar.hgr:2:3 parser "cGFyc2Vy">,
+            <grammar.hgr:2:10 lbrace "ew==">,
+            (_gen16:
               (ll1_rule:
-                <ll1_rule_hint (line 3 col 5) ``>,
-                <nonterminal (line 3 col 6) `c3RhcnQ=`>,
-                <equals (line 3 col 12) `PQ==`>,
+                <grammar.hgr:3:5 ll1_rule_hint "">,
+                <grammar.hgr:3:6 nonterminal "c3RhcnQ=">,
+                <grammar.hgr:3:12 equals "PQ==">,
                 (ll1_rule_rhs:
-                  (_gen12:
+                  (_gen18:
                     (rule:
-                      (_gen14:
+                      (_gen20:
                         (morpheme:
                           (macro:
-                            <identifier (line 3 col 14) `bWxpc3Q=`>,
-                            <lparen (line 3 col 19) `KA==`>,
-                            (_gen21:
+                            <grammar.hgr:3:14 identifier "bWxpc3Q=">,
+                            <grammar.hgr:3:19 lparen "KA==">,
+                            (_gen29:
                               (macro_parameter:
-                                <terminal (line 3 col 21) `YQ==`>
+                                <grammar.hgr:3:21 terminal "YQ==">
                               ),
-                              (_gen22:
-                                <comma (line 3 col 22) `LA==`>,
+                              (_gen30:
+                                <grammar.hgr:3:22 comma "LA==">,
                                 (macro_parameter:
-                                  <integer (line 3 col 24) `NA==`>
+                                  <grammar.hgr:3:24 integer "NA==">
                                 ),
-                                (_gen22: )
+                                (_gen30: )
                               )
                             ),
-                            <rparen (line 3 col 25) `KQ==`>
+                            <grammar.hgr:3:25 rparen "KQ==">
                           )
                         ),
-                        (_gen14: )
+                        (_gen21: )
                       ),
-                      (_gen15: )
+                      (_gen22: )
                     ),
-                    (_gen13: )
+                    (_gen19: )
                   )
                 )
               ),
-              (_gen11: )
+              (_gen17: )
             ),
-            <rbrace (line 4 col 3) `fQ==`>
+            <grammar.hgr:4:3 rbrace "fQ==">
           )
         )
       )
     ),
-    (_gen0: )
+    (_gen1: )
   ),
-  <rbrace (line 5 col 1) `fQ==`>
+  <grammar.hgr:5:1 rbrace "fQ==">
 )

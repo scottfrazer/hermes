@@ -3,7 +3,7 @@
     (Lexer:
       atoms=[
         (Regex:
-          regex=<regex (line 3 col 5) `cidccysn`>,
+          regex=<grammar.hgr:3:5 regex "cidccysn">,
           options=None,
           onmatch=[
             (Null:
@@ -12,11 +12,11 @@
           ]
         ),
         (Regex:
-          regex=<regex (line 4 col 5) `cidudCc=`>,
+          regex=<grammar.hgr:4:5 regex "cidudCc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<terminal (line 4 col 15) `bnQ=`>,
+              name=<grammar.hgr:4:15 terminal "bnQ=">,
               group=None
             )
           ]
@@ -26,15 +26,15 @@
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<nonterminal (line 7 col 6) `cw==`>,
+          nonterminal=<grammar.hgr:7:6 nonterminal "cw==">,
           production=[
             (Production:
               morphemes=[
                 (Macro:
-                  name=<identifier (line 7 col 10) `bWxpc3Q=`>,
+                  name=<grammar.hgr:7:10 identifier "bWxpc3Q=">,
                   parameters=[
-                    <nonterminal (line 7 col 17) `dA==`>,
-                    <integer (line 7 col 20) `Mg==`>
+                    <grammar.hgr:7:17 nonterminal "dA==">,
+                    <grammar.hgr:7:20 integer "Mg==">
                   ]
                 )
               ],
@@ -43,11 +43,11 @@
           ]
         ),
         (Rule:
-          nonterminal=<nonterminal (line 8 col 6) `dA==`>,
+          nonterminal=<grammar.hgr:8:6 nonterminal "dA==">,
           production=[
             (Production:
               morphemes=[
-                <terminal (line 8 col 11) `bnQ=`>
+                <grammar.hgr:8:11 terminal "bnQ=">
               ],
               ast=None
             )

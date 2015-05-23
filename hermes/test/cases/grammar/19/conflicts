@@ -1,15 +1,15 @@
  -- FIRST/FOLLOW conflict --
-Nonterminal $_gen1 has a first and follow set that overlap.
-
-first($_gen1) = {:_empty, :a, :b, :rparen}
-follow($_gen1) = {:rparen}
-
-first($_gen1) ∩ follow($_gen1) = {:rparen}
-
- -- FIRST/FOLLOW conflict --
 Nonterminal $_gen0 has a first and follow set that overlap.
 
 first($_gen0) = {:_empty, :a, :b, :rparen}
 follow($_gen0) = {:rparen}
 
 first($_gen0) ∩ follow($_gen0) = {:rparen}
+
+ -- FIRST/FOLLOW conflict --
+Nonterminal $_gen1 has a first and follow set that overlap.
+
+first($_gen1) = {:_empty, :a, :b, :rparen}
+follow($_gen1) = {:rparen}
+
+first($_gen1) ∩ follow($_gen1) = {:rparen}

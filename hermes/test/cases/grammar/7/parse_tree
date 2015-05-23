@@ -1,175 +1,175 @@
 (grammar:
-  <grammar (line 1 col 1) `Z3JhbW1hcg==`>,
-  <lbrace (line 1 col 9) `ew==`>,
+  <grammar.hgr:1:1 grammar "Z3JhbW1hcg==">,
+  <grammar.hgr:1:9 lbrace "ew==">,
   (_gen0:
     (body_element:
       (body_element_sub:
         (lexer:
-          <lexer (line 2 col 3) `bGV4ZXI=`>,
-          <lbrace (line 2 col 9) `ew==`>,
-          (_gen1:
+          <grammar.hgr:2:3 lexer "bGV4ZXI=">,
+          <grammar.hgr:2:9 lbrace "ew==">,
+          (_gen2:
             (lexer_atom:
               (lexer_regex:
-                <regex (line 3 col 5) `cidccysn`>,
-                (_gen3: ),
-                <arrow (line 3 col 12) `LT4=`>,
-                (_gen4:
+                <grammar.hgr:3:5 regex "cidccysn">,
+                (_gen6: ),
+                <grammar.hgr:3:12 arrow "LT4=">,
+                (_gen7:
                   (lexer_target:
-                    <null (line 3 col 15) `bnVsbA==`>
+                    <grammar.hgr:3:15 null "bnVsbA==">
                   ),
-                  (_gen4: )
+                  (_gen8: )
                 )
               )
             ),
-            (_gen1:
+            (_gen3:
               (lexer_atom:
                 (lexer_regex:
-                  <regex (line 4 col 5) `cidhJw==`>,
-                  (_gen3: ),
-                  <arrow (line 4 col 10) `LT4=`>,
-                  (_gen4:
+                  <grammar.hgr:4:5 regex "cidhJw==">,
+                  (_gen6: ),
+                  <grammar.hgr:4:10 arrow "LT4=">,
+                  (_gen7:
                     (lexer_target:
                       (terminal:
-                        <terminal (line 4 col 14) `YQ==`>,
-                        (_gen10: )
+                        <grammar.hgr:4:14 terminal "YQ==">,
+                        (_gen15: )
                       )
                     ),
-                    (_gen4: )
+                    (_gen8: )
                   )
                 )
               ),
-              (_gen1:
+              (_gen3:
                 (lexer_atom:
                   (lexer_regex:
-                    <regex (line 5 col 5) `cidiJw==`>,
-                    (_gen3: ),
-                    <arrow (line 5 col 10) `LT4=`>,
-                    (_gen4:
+                    <grammar.hgr:5:5 regex "cidiJw==">,
+                    (_gen6: ),
+                    <grammar.hgr:5:10 arrow "LT4=">,
+                    (_gen7:
                       (lexer_target:
                         (terminal:
-                          <terminal (line 5 col 14) `Yg==`>,
-                          (_gen10: )
+                          <grammar.hgr:5:14 terminal "Yg==">,
+                          (_gen15: )
                         )
                       ),
-                      (_gen4: )
+                      (_gen8: )
                     )
                   )
                 ),
-                (_gen1:
+                (_gen3:
                   (lexer_atom:
                     (lexer_regex:
                       (enumerated_regex:
-                        <regex_enum (line 6 col 5) `ZW51bQ==`>,
-                        <lbrace (line 6 col 10) `ew==`>,
-                        (_gen5:
+                        <grammar.hgr:6:5 regex_enum "ZW51bQ==">,
+                        <grammar.hgr:6:10 lbrace "ew==">,
+                        (_gen9:
                           (regex_enumeration:
-                            <identifier (line 7 col 7) `amF2YQ==`>,
-                            <colon (line 7 col 11) `Og==`>,
-                            <regex (line 7 col 13) `Ii4i`>,
-                            (_gen6:
+                            <grammar.hgr:7:7 identifier "amF2YQ==">,
+                            <grammar.hgr:7:11 colon "Og==">,
+                            <grammar.hgr:7:13 regex "Ii4i">,
+                            (_gen11:
                               (regex_enumeration_options:
-                                <lparen (line 7 col 17) `KA==`>,
-                                (_gen7:
-                                  <identifier (line 7 col 18) `RE9UQUxM`>,
-                                  (_gen8:
-                                    <comma (line 7 col 24) `LA==`>,
-                                    <identifier (line 7 col 26) `Q0FTRV9JTlNFTlNJVElWRQ==`>,
-                                    (_gen8: )
+                                <grammar.hgr:7:17 lparen "KA==">,
+                                (_gen12:
+                                  <grammar.hgr:7:18 identifier "RE9UQUxM">,
+                                  (_gen13:
+                                    <grammar.hgr:7:24 comma "LA==">,
+                                    <grammar.hgr:7:26 identifier "Q0FTRV9JTlNFTlNJVElWRQ==">,
+                                    (_gen13: )
                                   )
                                 ),
-                                <rparen (line 7 col 42) `KQ==`>
+                                <grammar.hgr:7:42 rparen "KQ==">
                               )
                             )
                           ),
-                          (_gen5:
+                          (_gen10:
                             (regex_enumeration:
-                              <identifier (line 8 col 7) `cHl0aG9u`>,
-                              <colon (line 8 col 13) `Og==`>,
-                              <regex (line 8 col 15) `cicuJw==`>,
-                              (_gen6:
+                              <grammar.hgr:8:7 identifier "cHl0aG9u">,
+                              <grammar.hgr:8:13 colon "Og==">,
+                              <grammar.hgr:8:15 regex "cicuJw==">,
+                              (_gen11:
                                 (regex_enumeration_options:
-                                  <lparen (line 8 col 20) `KA==`>,
-                                  (_gen7:
-                                    <identifier (line 8 col 21) `RE9UQUxM`>,
-                                    (_gen8:
-                                      <comma (line 8 col 27) `LA==`>,
-                                      <identifier (line 8 col 29) `SUdOT1JFQ0FTRQ==`>,
-                                      (_gen8: )
+                                  <grammar.hgr:8:20 lparen "KA==">,
+                                  (_gen12:
+                                    <grammar.hgr:8:21 identifier "RE9UQUxM">,
+                                    (_gen13:
+                                      <grammar.hgr:8:27 comma "LA==">,
+                                      <grammar.hgr:8:29 identifier "SUdOT1JFQ0FTRQ==">,
+                                      (_gen13: )
                                     )
                                   ),
-                                  <rparen (line 8 col 39) `KQ==`>
+                                  <grammar.hgr:8:39 rparen "KQ==">
                                 )
                               )
                             ),
-                            (_gen5:
+                            (_gen10:
                               (regex_enumeration:
-                                <identifier (line 9 col 7) `Yw==`>,
-                                <colon (line 9 col 8) `Og==`>,
-                                <regex (line 9 col 10) `Ii4i`>,
-                                (_gen6:
+                                <grammar.hgr:9:7 identifier "Yw==">,
+                                <grammar.hgr:9:8 colon "Og==">,
+                                <grammar.hgr:9:10 regex "Ii4i">,
+                                (_gen11:
                                   (regex_enumeration_options:
-                                    <lparen (line 9 col 14) `KA==`>,
-                                    (_gen7:
-                                      <identifier (line 9 col 15) `UENSRV9ET1RBTEw=`>,
-                                      (_gen8:
-                                        <comma (line 9 col 26) `LA==`>,
-                                        <identifier (line 9 col 28) `UENSRV9DQVNFTEVTUw==`>,
-                                        (_gen8: )
+                                    <grammar.hgr:9:14 lparen "KA==">,
+                                    (_gen12:
+                                      <grammar.hgr:9:15 identifier "UENSRV9ET1RBTEw=">,
+                                      (_gen13:
+                                        <grammar.hgr:9:26 comma "LA==">,
+                                        <grammar.hgr:9:28 identifier "UENSRV9DQVNFTEVTUw==">,
+                                        (_gen13: )
                                       )
                                     ),
-                                    <rparen (line 9 col 41) `KQ==`>
+                                    <grammar.hgr:9:41 rparen "KQ==">
                                   )
                                 )
                               ),
-                              (_gen5:
+                              (_gen10:
                                 (regex_enumeration:
-                                  <identifier (line 10 col 7) `amF2YXNjcmlwdA==`>,
-                                  <colon (line 10 col 17) `Og==`>,
-                                  <regex (line 10 col 19) `Ii4i`>,
-                                  (_gen6:
+                                  <grammar.hgr:10:7 identifier "amF2YXNjcmlwdA==">,
+                                  <grammar.hgr:10:17 colon "Og==">,
+                                  <grammar.hgr:10:19 regex "Ii4i">,
+                                  (_gen11:
                                     (regex_enumeration_options:
-                                      <lparen (line 10 col 23) `KA==`>,
-                                      (_gen7:
-                                        <identifier (line 10 col 24) `bQ==`>,
-                                        (_gen8:
-                                          <comma (line 10 col 25) `LA==`>,
-                                          <identifier (line 10 col 27) `aQ==`>,
-                                          (_gen8: )
+                                      <grammar.hgr:10:23 lparen "KA==">,
+                                      (_gen12:
+                                        <grammar.hgr:10:24 identifier "bQ==">,
+                                        (_gen13:
+                                          <grammar.hgr:10:25 comma "LA==">,
+                                          <grammar.hgr:10:27 identifier "aQ==">,
+                                          (_gen13: )
                                         )
                                       ),
-                                      <rparen (line 10 col 28) `KQ==`>
+                                      <grammar.hgr:10:28 rparen "KQ==">
                                     )
                                   )
                                 ),
-                                (_gen5: )
+                                (_gen10: )
                               )
                             )
                           )
                         ),
-                        <rbrace (line 11 col 5) `fQ==`>,
-                        <arrow (line 11 col 7) `LT4=`>,
-                        (_gen4:
+                        <grammar.hgr:11:5 rbrace "fQ==">,
+                        <grammar.hgr:11:7 arrow "LT4=">,
+                        (_gen7:
                           (lexer_target:
                             (terminal:
-                              <terminal (line 11 col 11) `Y2hhcg==`>,
-                              (_gen10: )
+                              <grammar.hgr:11:11 terminal "Y2hhcg==">,
+                              (_gen15: )
                             )
                           ),
-                          (_gen4: )
+                          (_gen8: )
                         )
                       )
                     )
                   ),
-                  (_gen1: )
+                  (_gen3: )
                 )
               )
             )
           ),
-          <rbrace (line 12 col 3) `fQ==`>
+          <grammar.hgr:12:3 rbrace "fQ==">
         )
       )
     ),
-    (_gen0: )
+    (_gen1: )
   ),
-  <rbrace (line 13 col 1) `fQ==`>
+  <grammar.hgr:13:1 rbrace "fQ==">
 )

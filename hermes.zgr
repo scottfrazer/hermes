@@ -86,6 +86,7 @@ grammar {
       r'\)' -> :rparen
       r',' -> :comma
       r'->' -> :arrow
+      r'null' -> :null
       r'parser\s*<\s*expression\s*>\s*({)' -> :parser_expression[] :lbrace[1] @parser_expr
       r'{%_terminal%}' -> :terminal[1]
       r'{%_nonterminal%}(?=\s*\=)' -> :ll1_rule_hint[] :nonterminal[1]
@@ -182,6 +183,6 @@ grammar {
     $ast_transform_sub = :nonterminal_reference
     $ast_parameter = :identifier :equals :nonterminal_reference -> AstParameter(name=$0, index=$2)
     $macro = :identifier :lparen list($macro_parameter, :comma) :rparen -> Macro(name=$0, parameters=$2)
-    $macro_parameter = :nonterminal | :terminal | :string | :integer
+    $macro_parameter = :nonterminal | :terminal | :string | :integer | :null
   }
 }
