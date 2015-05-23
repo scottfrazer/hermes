@@ -1,168 +1,191 @@
 {
+    "$_gen7": [
+        ":comma",
+        ":_empty"
+    ],
+    "$_gen5": [
+        ":public",
+        ":_empty",
+        ":private"
+    ],
+    "$if_body": [
+        ":lbrace"
+    ],
     "$classdef": [
         ":class"
     ],
     "$param": [
         ":identifier"
     ],
-    "$class_statement": [
-        ":public",
-        ":private"
-    ],
-    "$statement": [
-        ":identifier",
-        ":subtract",
-        ":lsquare",
-        ":hexadecimal_number",
-        ":class",
-        ":binary_number",
-        ":import",
-        ":e",
-        ":if",
-        ":octal_number",
-        ":decimal_number",
-        ":lbrace",
-        ":lparen",
-        ":for",
-        ":function"
-    ],
-    "$_gen2": [
-        ":comma",
-        ":_empty"
-    ],
-    "$if": [
-        ":if"
-    ],
     "$_gen1": [
-        ":identifier",
-        ":_empty"
-    ],
-    "$simple_statement": [
-        ":if",
-        ":identifier",
-        ":octal_number",
-        ":decimal_number",
         ":subtract",
-        ":lsquare",
+        ":class",
+        ":identifier",
+        ":decimal_number",
+        ":if",
         ":hexadecimal_number",
-        ":binary_number",
-        ":import",
-        ":lbrace",
-        ":lparen",
+        ":octal_number",
         ":for",
-        ":e"
+        ":function",
+        ":e",
+        ":import",
+        ":lsquare",
+        ":_empty",
+        ":lparen",
+        ":lbrace",
+        ":binary_number"
     ],
     "$e": [
-        ":identifier",
-        ":octal_number",
-        ":decimal_number",
         ":subtract",
-        ":lsquare",
-        ":hexadecimal_number",
-        ":binary_number",
-        ":lbrace",
-        ":lparen",
-        ":e"
-    ],
-    "$_gen4": [
-        ":identifier",
-        ":octal_number",
-        ":decimal_number",
-        ":subtract",
-        ":lsquare",
-        ":hexadecimal_number",
-        ":_empty",
-        ":binary_number",
-        ":lbrace",
-        ":lparen",
-        ":e"
-    ],
-    "$_gen0": [
-        ":identifier",
-        ":subtract",
-        ":lsquare",
-        ":hexadecimal_number",
-        ":class",
-        ":binary_number",
-        ":import",
         ":e",
-        ":if",
-        ":octal_number",
+        ":identifier",
         ":decimal_number",
-        ":_empty",
-        ":lbrace",
+        ":lsquare",
+        ":hexadecimal_number",
         ":lparen",
-        ":for",
-        ":function"
+        ":octal_number",
+        ":lbrace",
+        ":binary_number"
     ],
-    "$import": [
-        ":import"
+    "$statement": [
+        ":subtract",
+        ":class",
+        ":identifier",
+        ":decimal_number",
+        ":if",
+        ":hexadecimal_number",
+        ":octal_number",
+        ":for",
+        ":function",
+        ":e",
+        ":import",
+        ":lsquare",
+        ":lparen",
+        ":lbrace",
+        ":binary_number"
+    ],
+    "$_gen6": [
+        ":subtract",
+        ":e",
+        ":identifier",
+        ":decimal_number",
+        ":lsquare",
+        ":_empty",
+        ":hexadecimal_number",
+        ":lparen",
+        ":octal_number",
+        ":lbrace",
+        ":binary_number"
+    ],
+    "$simple_statement": [
+        ":subtract",
+        ":e",
+        ":import",
+        ":identifier",
+        ":decimal_number",
+        ":lsquare",
+        ":if",
+        ":hexadecimal_number",
+        ":lparen",
+        ":octal_number",
+        ":lbrace",
+        ":for",
+        ":binary_number"
     ],
     "$class_atom": [
         ":identifier",
         ":function"
     ],
-    "$_gen5": [
-        ":comma",
-        ":_empty"
-    ],
-    "$_gen3": [
-        ":_empty",
-        ":public",
-        ":private"
-    ],
-    "$token": [
-        ":less_than",
-        ":while",
-        ":semicolon",
-        ":divide",
-        ":multiply",
-        ":do",
-        ":string",
-        ":less_than_equal",
-        ":greater_than_equal",
-        ":greater_than",
-        ":minus",
-        ":function",
-        ":equals"
-    ],
-    "$terminated__expr": [
-        ":identifier",
-        ":octal_number",
-        ":decimal_number",
+    "$_gen0": [
         ":subtract",
-        ":lsquare",
-        ":hexadecimal_number",
-        ":binary_number",
-        ":lbrace",
-        ":lparen",
-        ":e"
-    ],
-    "$if_body": [
-        ":lbrace"
-    ],
-    "$program": [
-        ":identifier",
-        ":subtract",
-        ":lsquare",
-        ":hexadecimal_number",
         ":class",
-        ":binary_number",
-        ":import",
-        ":e",
-        ":if",
-        ":octal_number",
+        ":identifier",
         ":decimal_number",
-        ":_empty",
-        ":lbrace",
-        ":lparen",
+        ":if",
+        ":hexadecimal_number",
+        ":octal_number",
         ":for",
-        ":function"
+        ":function",
+        ":e",
+        ":import",
+        ":lsquare",
+        ":_empty",
+        ":lparen",
+        ":lbrace",
+        ":binary_number"
     ],
     "$for": [
         ":for"
     ],
     "$funcdef": [
         ":function"
+    ],
+    "$program": [
+        ":subtract",
+        ":class",
+        ":identifier",
+        ":decimal_number",
+        ":if",
+        ":hexadecimal_number",
+        ":octal_number",
+        ":for",
+        ":function",
+        ":e",
+        ":import",
+        ":lsquare",
+        ":_empty",
+        ":lparen",
+        ":lbrace",
+        ":binary_number"
+    ],
+    "$_gen3": [
+        ":comma",
+        ":_empty"
+    ],
+    "$_gen2": [
+        ":identifier",
+        ":_empty"
+    ],
+    "$_gen4": [
+        ":public",
+        ":_empty",
+        ":private"
+    ],
+    "$token": [
+        ":while",
+        ":equals",
+        ":semicolon",
+        ":multiply",
+        ":do",
+        ":divide",
+        ":minus",
+        ":greater_than",
+        ":less_than_equal",
+        ":less_than",
+        ":string",
+        ":function",
+        ":greater_than_equal"
+    ],
+    "$if": [
+        ":if"
+    ],
+    "$class_statement": [
+        ":public",
+        ":private"
+    ],
+    "$terminated__expr": [
+        ":subtract",
+        ":e",
+        ":identifier",
+        ":decimal_number",
+        ":lsquare",
+        ":hexadecimal_number",
+        ":lparen",
+        ":octal_number",
+        ":lbrace",
+        ":binary_number"
+    ],
+    "$import": [
+        ":import"
     ]
 }

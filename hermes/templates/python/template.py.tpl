@@ -156,10 +156,12 @@ class ParseTree():
           r = AstList()
           if len(self.children) == 0:
               return r
-          lastElement = len(self.children) - 1
-          for i in range(lastElement):
-              r.append(self.children[i].ast())
-          r.extend(self.children[lastElement].ast())
+          end = max(0, len(self.children) - 1)
+          for child in self.children[:end]:
+              if isinstance(child, Terminal) and self.listSeparator is not None and child.id == self.listSeparator.id:
+                  continue
+              r.append(child.ast())
+          r.extend(self.children[end].ast())
           return r
       elif self.isExpr:
           if isinstance(self.astTransform, AstTransformSubstitution):
@@ -561,7 +563,7 @@ def parse_{{name}}(ctx):
         {% if isinstance(morpheme, Terminal) %}
         t = expect(ctx, {{morpheme.id}}) # {{morpheme}}
         tree.add(t)
-          {% if isinstance(nonterminal.macro, SeparatedListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
+          {% if isinstance(nonterminal.macro, SeparatedListMacro) or isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
             {% if nonterminal.macro.separator == morpheme %}
         tree.listSeparator = t
             {% endif %}

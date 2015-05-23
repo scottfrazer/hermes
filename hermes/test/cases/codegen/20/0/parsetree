@@ -5,16 +5,16 @@
         <source:1:1 function "ZnVuYw==">,
         <source:1:6 identifier "Zm5hbWU=">,
         <source:1:11 lparen "KA==">,
-        (_gen1:
+        (_gen2:
           (param:
             <source:1:12 param1 "cDE=">
           ),
-          (_gen2:
+          (_gen3:
             <source:1:14 comma "LA==">,
             (param:
               <source:1:16 param2 "cDI=">
             ),
-            (_gen2: )
+            (_gen3: )
           )
         ),
         <source:1:18 rparen "KQ==">,
@@ -23,19 +23,19 @@
           (statement:
             <source:2:3 a "YQ==">
           ),
-          (_gen0:
+          (_gen1:
             (statement:
               <source:2:4 b "Yg==">
             ),
-            (_gen0:
+            (_gen1:
               (statement:
                 <source:2:5 a "YQ==">
               ),
-              (_gen0:
+              (_gen1:
                 (statement:
                   <source:2:6 b "Yg==">
                 ),
-                (_gen0: )
+                (_gen1: )
               )
             )
           )
@@ -43,33 +43,33 @@
         <source:3:1 rbrace "fQ==">
       )
     ),
-    (_gen0:
+    (_gen1:
       (statement:
         (classdef:
           <source:5:1 class "Y2xhc3M=">,
           <source:5:7 identifier "Y25hbWU=">,
           <source:5:13 lbrace "ew==">,
-          (_gen3:
+          (_gen4:
             (class_statement:
               <source:6:3 private "cHJpdmF0ZQ==">,
               (class_atom:
                 <source:6:11 x "eA==">
               )
             ),
-            (_gen3:
+            (_gen5:
               (class_statement:
                 <source:7:3 public "cHVibGlj">,
                 (class_atom:
                   <source:7:10 y "eQ==">
                 )
               ),
-              (_gen3: )
+              (_gen5: )
             )
           ),
           <source:8:1 rbrace "fQ==">
         )
       ),
-      (_gen0: )
+      (_gen1: )
     )
   )
 )

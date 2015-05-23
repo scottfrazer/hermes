@@ -473,13 +473,15 @@ public class {{prefix}}Parser {
                 return astList;
             } else if ( this.list == "mlist" ) {
                 AstList astList = new AstList();
-                int lastElement = this.children.size() - 1;
+                int end = this.children.size() - 1;
 
                 if ( this.children.size() == 0 ) {
                     return astList;
                 }
 
-                for (int i = 0; i < lastElement; i++) {
+                for (int i = 0; i < this.children.size() - 1; i++) {
+                    if (this.children.get(i) instanceof Terminal && this.listSeparator != null && ((Terminal)this.children.get(i)).id == this.listSeparator.id)
+                        continue;
                     astList.add(this.children.get(i).toAst());
                 }
 
@@ -1020,7 +1022,7 @@ public class {{prefix}}Parser {
       {% if isinstance(morpheme, Terminal) %}
             next = expect(ctx, {{prefix}}TerminalIdentifier.TERMINAL_{{morpheme.string.upper()}});
             tree.add(next);
-        {% if isinstance(nonterminal.macro, SeparatedListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
+        {% if isinstance(nonterminal.macro, SeparatedListMacro) or isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
           {% if nonterminal.macro.separator == morpheme %}
             tree.setListSeparator(next);
           {% endif %}

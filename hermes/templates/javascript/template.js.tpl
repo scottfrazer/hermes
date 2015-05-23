@@ -216,12 +216,14 @@ function ParseTree(nonterminal) {
             if (this.children.length == 0) {
                 return new AstList([]);
             }
-            var lastElement = this.children.length - 1;
+            var end = this.children.length - 1;
             var list = [];
-            for (var i = 0; i < lastElement; i++) {
+            for (var i = 0; i < end; i++) {
+                if (this.children[i] instanceof Terminal && this.listSeparator != null && this.children[i].id == this.listSeparator.id)
+                    continue;
                 list.push(this.children[i].to_ast());
             }
-            list.push.apply(list, this.children[lastElement].to_ast().list);
+            list.push.apply(list, this.children[end].to_ast().list);
             return new AstList(list);
         }
         else if (this.isExpr == true) {
@@ -1017,7 +1019,7 @@ function parse_{{name}}(ctx) {
         {% if isinstance(morpheme, Terminal) %}
         t = expect(ctx, {{morpheme.id}}); // {{morpheme}}
         tree.add(t);
-          {% if isinstance(nonterminal.macro, SeparatedListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
+          {% if isinstance(nonterminal.macro, SeparatedListMacro) or isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
             {% if nonterminal.macro.separator == morpheme %}
         tree.listSeparator = t;
             {% endif %}

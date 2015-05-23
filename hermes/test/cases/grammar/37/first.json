@@ -1,26 +1,34 @@
 {
-    "$_gen1": [
-        ":a",
+    "$_gen0": [
+        ":b",
+        ":newline",
+        ":_empty",
+        ":a"
+    ],
+    "$_gen4": [
+        ":b",
         ":_empty"
     ],
     "$start": [
-        ":a",
         ":b",
+        ":newline",
         ":_empty",
-        ":newline"
-    ],
-    "$_gen0": [
-        ":a",
-        ":b",
-        ":_empty",
-        ":newline"
-    ],
-    "$item": [
-        ":a",
-        ":b",
-        ":_empty"
+        ":a"
     ],
     "$_gen2": [
+        ":_empty",
+        ":a"
+    ],
+    "$_gen1": [
+        ":_empty",
+        ":a"
+    ],
+    "$item": [
+        ":b",
+        ":_empty",
+        ":a"
+    ],
+    "$_gen3": [
         ":b",
         ":_empty"
     ]

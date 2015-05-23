@@ -35,7 +35,6 @@ class NonTerminal(Morpheme):
 class Terminal(Morpheme):
     def __init__(self, string, id=0):
         super().__init__(string, id)
-        self.isSeparator = False
 
     def id(self):
         return self.id
@@ -792,7 +791,7 @@ class LL1ListMacro(ListMacro):
 
 
 class MinimumListMacro(LL1ListMacro):
-    def __init__(self, nonterminal, minimum, start_nt, rules):
+    def __init__(self, nonterminal, separator, minimum, start_nt, rules):
         self.__dict__.update(locals())
         if start_nt:
             self.start_nt.setMacro(self)
