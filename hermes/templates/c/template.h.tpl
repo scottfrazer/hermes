@@ -54,7 +54,7 @@ typedef struct parse_tree_t {
   int isInfix;
   int isPrefix;
   int isExprNud;
-  char * list;
+  int list; /* boolean */
   /* TODO: should be TERMINAL_E */
   union parse_tree_node_u * listSeparator;
 

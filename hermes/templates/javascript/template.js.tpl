@@ -180,21 +180,7 @@ function ParseTree(nonterminal) {
         this.children.push(tree);
     }
     this.to_ast = function() {
-        if (this.list == 'tlist') {
-            if (this.children.length == 0) {
-                return new AstList([]);
-            }
-            var end = this.children.length - 1;
-            var list = [];
-            for (var i = 0; i < end; i++) {
-                if (this.children[i] instanceof Terminal && this.listSeparator != null && this.children[i].id == this.listSeparator.id)
-                    continue;
-                list.push(this.children[i].to_ast());
-            }
-            list.push.apply(list, this.children[end].to_ast().list);
-            return new AstList(list);
-        }
-        else if (this.list == 'list') {
+        if (this.list == true) {
             if (this.children.length == 0) {
                 return new AstList([]);
             }
@@ -945,10 +931,8 @@ function parse_{{name}}(ctx) {
     var tree = new ParseTree(new NonTerminal({{nonterminal.id}}, '{{name}}'));
     ctx.nonterminal = "{{name}}";
 
-    {% if isinstance(nonterminal.macro, TerminatedListMacro) %}
-    tree.list = 'tlist';
-    {% elif isinstance(nonterminal.macro, MinimumListMacro) %}
-    tree.list = 'list';
+    {% if isinstance(nonterminal.macro, LL1ListMacro) %}
+    tree.list = true;
     {% else %}
     tree.list = false;
     {% endif %}
@@ -995,7 +979,7 @@ function parse_{{name}}(ctx) {
         {% if isinstance(morpheme, Terminal) %}
         t = expect(ctx, {{morpheme.id}}); // {{morpheme}}
         tree.add(t);
-          {% if isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, TerminatedListMacro) %}
+          {% if isinstance(nonterminal.macro, LL1ListMacro) %}
             {% if nonterminal.macro.separator == morpheme %}
         tree.listSeparator = t;
             {% endif %}

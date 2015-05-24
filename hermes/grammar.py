@@ -97,7 +97,7 @@ class Rule:
         morphemes = []
         rules = []
         for m in self.production.morphemes:
-            if isinstance(m, LL1ListMacro):
+            if isinstance(m, Macro):
                 rules.extend(m.rules)
                 morphemes.append(m.start_nt)
             else:
@@ -180,20 +180,20 @@ class ExprRule:
         ledMorphemes = []
         rules = []
         for morpheme in self.nud_production.morphemes:
-            if isinstance(morpheme, LL1ListMacro):
+            if isinstance(morpheme, Macro):
                 rules.extend(morpheme.rules)
                 nudMorphemes.append(morpheme.start_nt)
             else:
                 nudMorphemes.append(morpheme)
         for morpheme in self.ledProduction.morphemes:
-            if isinstance(morpheme, LL1ListMacro):
+            if isinstance(morpheme, Macro):
                 rules.extend(morpheme.rules)
                 ledMorphemes.append(morpheme.start_nt)
             else:
                 ledMorphemes.append(morpheme)
         rules.append(
-            ExprRule(self.nonterminal, Production(nudMorphemes), Production(ledMorphemes), self.nudAst, self.ast,
-                     self.operator))
+            ExprRule(self.nonterminal, Production(nudMorphemes), Production(ledMorphemes), self.nudAst, self.ast, self.operator)
+        )
         return rules
 
     def __str__(self):
@@ -784,20 +784,17 @@ class ListMacro(Macro):
 
 
 class LL1ListMacro(ListMacro):
-    pass
-
-
-class MinimumListMacro(LL1ListMacro):
-    def __init__(self, nonterminal, separator, minimum, start_nt, rules):
+    def __init__(self, nonterminal, separator, minimum, start_nt, sep_terminates, terminator_optional, rules):
         self.__dict__.update(locals())
         if start_nt:
             self.start_nt.setMacro(self)
 
     def __repr__(self):
-        return 'mlist({0}, {1})'.format(str(self.nonterminal), str(self.minimum))
+        return 'list(nt={0}, sep={1}, min={2}, sep_terminates={3})'.format(str(self.nonterminal), str(self.separator), str(self.minimum), self.sep_terminates)
 
+    def __str__(self): return self.__repr__()
 
-class OptionalMacro(LL1ListMacro):
+class OptionalMacro(Macro):
     def __init__(self, nonterminal, start_nt, rules):
         self.__dict__.update(locals())
         if start_nt:
@@ -805,24 +802,3 @@ class OptionalMacro(LL1ListMacro):
 
     def __repr__(self):
         return 'optional({0})'.format(str(self.nonterminal))
-
-
-class TerminatedListMacro(LL1ListMacro):
-    def __init__(self, nonterminal, separator, minimum, start_nt, rules):
-        self.__dict__.update(locals())
-        if start_nt:
-            self.start_nt.setMacro(self)
-
-    def __repr__(self):
-        return 'tlist({0}, {1}, {2})'.format(str(self.nonterminal), str(self.separator), self.minimum)
-
-
-class OptionallyTerminatedListMacro(LL1ListMacro):
-    def __init__(self, nonterminal, separator, minimum, start_nt, rules):
-        self.__dict__.update(locals())
-        if start_nt:
-            self.start_nt.setMacro(self)
-
-    def __repr__(self):
-        return 'otlist({0}, {1}, {2})'.format(str(self.nonterminal), str(self.separator), self.minimum)
-

@@ -74,10 +74,11 @@ class GrammarFactory:
         if macro_string not in self.macros:
             if ast.attr('name').source_string == 'list':
                 macro = self.list(ast, terminals, nonterminals)
-            elif ast.attr('name').source_string == 'tlist':
-                macro = self.tlist(ast, terminals, nonterminals, optional_termination=False)
-            elif ast.attr('name').source_string == 'otlist':
-                macro = self.tlist(ast, terminals, nonterminals, optional_termination=True)
+            elif ast.attr('name').source_string in ['tlist', 'otlist']:
+                macro = self.tlist(
+                    ast, terminals, nonterminals,
+                    optional_termination=(ast.attr('name').source_string == 'otlist')
+                )
             elif ast.attr('name').source_string == 'optional':
                 macro = self.optional(ast, terminals, nonterminals)
             else:
@@ -402,7 +403,7 @@ class GrammarFactory:
         if minimum == 0:
             rules.append(MacroGeneratedRule(nt0, Production([empty])))
 
-        macro = MinimumListMacro(morpheme, separator, minimum, nt0, rules)
+        macro = LL1ListMacro(morpheme, separator, minimum, nt0, False, False, rules)
 
         for rule in rules:
             rule.nonterminal.macro = macro
@@ -445,25 +446,7 @@ class GrammarFactory:
         rules.extend(termination_rules)
         if minimum == 0:
             rules.append(MacroGeneratedRule(nt0, Production([empty])))
-        macro = TerminatedListMacro(morpheme, separator, minimum, nt0, rules)
-
-        for rule in rules:
-            rule.nonterminal.macro = macro
-
-        return macro
-
-    def old_tlist(self, ast, terminals, nonterminals):
-        nt0 = self.generate_nonterminal(nonterminals)
-        empty = terminals['_empty']
-        morpheme = self.get_morpheme_from_lexer_token(ast.attr('parameters')[0], terminals, nonterminals)
-        terminator = self.get_morpheme_from_lexer_token(ast.attr('parameters')[1], terminals, nonterminals)
-        minimum = int(ast.attr('parameters')[2].source_string) if len(ast.attr('parameters')) > 2 else 0
-        rules = [
-            MacroGeneratedRule(nt0, Production([morpheme, terminator, nt0])),
-            MacroGeneratedRule(nt0, Production([empty]))
-        ]
-
-        macro = TerminatedListMacro(morpheme, terminator, nt0, rules)
+        macro = LL1ListMacro(morpheme, separator, minimum, nt0, True, optional_termination, rules)
 
         for rule in rules:
             rule.nonterminal.macro = macro

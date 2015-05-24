@@ -128,18 +128,7 @@ class ParseTree():
   def add(self, tree):
       self.children.append( tree )
   def ast(self):
-      if self.list == 'tlist':
-          if len(self.children) == 0:
-              return AstList()
-          r = AstList()
-          end = max(0, len(self.children) - 1)
-          for child in self.children[:end]:
-              if isinstance(child, Terminal) and self.listSeparator is not None and child.id == self.listSeparator.id:
-                  continue
-              r.append(child.ast())
-          r.extend(self.children[end].ast())
-          return r
-      elif self.list == 'list':
+      if self.list == True:
           r = AstList()
           if len(self.children) == 0:
               return r
@@ -496,10 +485,8 @@ def parse_{{name}}(ctx):
     tree = ParseTree(NonTerminal({{nonterminal.id}}, '{{name}}'))
     ctx.nonterminal = "{{name}}"
 
-    {% if isinstance(nonterminal.macro, TerminatedListMacro) %}
-    tree.list = 'tlist'
-    {% elif isinstance(nonterminal.macro, MinimumListMacro) %}
-    tree.list = 'list'
+    {% if isinstance(nonterminal.macro, LL1ListMacro) %}
+    tree.list = True
     {% else %}
     tree.list = False
     {% endif %}
@@ -544,7 +531,7 @@ def parse_{{name}}(ctx):
         {% if isinstance(morpheme, Terminal) %}
         t = expect(ctx, {{morpheme.id}}) # {{morpheme}}
         tree.add(t)
-          {% if isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, TerminatedListMacro) %}
+          {% if isinstance(nonterminal.macro, LL1ListMacro) %}
             {% if nonterminal.macro.separator == morpheme %}
         tree.listSeparator = t
             {% endif %}

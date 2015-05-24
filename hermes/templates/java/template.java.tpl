@@ -387,7 +387,7 @@ public class {{prefix}}Parser {
         private boolean isExpr, isNud, isPrefix, isInfix, isExprNud;
         private int nudMorphemeCount;
         private Terminal listSeparator;
-        private String list;
+        private boolean list;
         private AstTransform astTransform;
 
         ParseTree(NonTerminal nonterminal) {
@@ -401,7 +401,7 @@ public class {{prefix}}Parser {
             this.isExprNud = false;
             this.nudMorphemeCount = 0;
             this.listSeparator = null;
-            this.list = "";
+            this.list = false;
         }
 
         public void setExpr(boolean value) { this.isExpr = value; }
@@ -411,7 +411,7 @@ public class {{prefix}}Parser {
         public void setExprNud(boolean value) { this.isExprNud = value; }
         public void setAstTransformation(AstTransform value) { this.astTransform = value; }
         public void setNudMorphemeCount(int value) { this.nudMorphemeCount = value; }
-        public void setList(String value) { this.list = value; }
+        public void setList(boolean value) { this.list = value; }
         public void setListSeparator(Terminal value) { this.listSeparator = value; }
 
         public int getNudMorphemeCount() { return this.nudMorphemeCount; }
@@ -441,23 +441,7 @@ public class {{prefix}}Parser {
         }
 
         public AstNode toAst() {
-            if ( this.list == "tlist" ) {
-                AstList astList = new AstList();
-                int end = this.children.size() - 1;
-
-                if ( this.children.size() == 0 ) {
-                    return astList;
-                }
-
-                for (int i = 0; i < this.children.size() - 1; i++) {
-                    if (this.children.get(i) instanceof Terminal && this.listSeparator != null && ((Terminal)this.children.get(i)).id == this.listSeparator.id)
-                        continue;
-                    astList.add(this.children.get(i).toAst());
-                }
-
-                astList.addAll((AstList) this.children.get(this.children.size() - 1).toAst());
-                return astList;
-            } else if ( this.list == "list" ) {
+            if ( this.list == true ) {
                 AstList astList = new AstList();
                 int end = this.children.size() - 1;
 
@@ -949,12 +933,10 @@ public class {{prefix}}Parser {
         ParseTree tree = new ParseTree( new NonTerminal({{nonterminal.id}}, "{{nonterminal.string}}"));
         ctx.nonterminal = "{{nonterminal.string.lower()}}";
 
-  {% if isinstance(nonterminal.macro, TerminatedListMacro) %}
-        tree.setList("tlist");
-  {% elif isinstance(nonterminal.macro, MinimumListMacro) %}
-        tree.setList("list");
+  {% if isinstance(nonterminal.macro, LL1ListMacro) %}
+        tree.setList(true);
   {% else %}
-        tree.setList(null);
+        tree.setList(false);
   {% endif %}
 
   {% if not grammar.must_consume_tokens(nonterminal) %}
@@ -1002,7 +984,7 @@ public class {{prefix}}Parser {
       {% if isinstance(morpheme, Terminal) %}
             next = expect(ctx, {{prefix}}TerminalIdentifier.TERMINAL_{{morpheme.string.upper()}});
             tree.add(next);
-        {% if isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, TerminatedListMacro) %}
+        {% if isinstance(nonterminal.macro, LL1ListMacro) %}
           {% if nonterminal.macro.separator == morpheme %}
             tree.setListSeparator(next);
           {% endif %}
