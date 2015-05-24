@@ -72,12 +72,12 @@ class GrammarFactory:
     def get_macro_from_ast(self, ast, terminals, nonterminals):
         macro_string = self.macro_ast_to_string(ast)
         if macro_string not in self.macros:
-            if ast.attr('name').source_string == 'otlist':
-                macro = self.otlist(ast, terminals, nonterminals)
-            elif ast.attr('name').source_string == 'list':
+            if ast.attr('name').source_string == 'list':
                 macro = self.list(ast, terminals, nonterminals)
             elif ast.attr('name').source_string == 'tlist':
-                macro = self.tlist(ast, terminals, nonterminals)
+                macro = self.tlist(ast, terminals, nonterminals, optional_termination=False)
+            elif ast.attr('name').source_string == 'otlist':
+                macro = self.tlist(ast, terminals, nonterminals, optional_termination=True)
             elif ast.attr('name').source_string == 'optional':
                 macro = self.optional(ast, terminals, nonterminals)
             else:
@@ -409,13 +409,12 @@ class GrammarFactory:
 
         return macro
 
-    def otlist(self, ast, terminals, nonterminals):
+    def tlist(self, ast, terminals, nonterminals, optional_termination=False):
         morpheme = self.get_morpheme_from_lexer_token(ast.attr('parameters')[0], terminals, nonterminals)
         separator = self.get_morpheme_from_lexer_token(ast.attr('parameters')[1], terminals, nonterminals)
         minimum = int(ast.attr('parameters')[2].source_string) if len(ast.attr('parameters')) > 2 else 0
         nt0 = self.generate_nonterminal(nonterminals)
         nt1 = self.generate_nonterminal(nonterminals)
-        nt2 = self.generate_nonterminal(nonterminals)
         empty = terminals['_empty']
 
         start_production = []
@@ -426,23 +425,34 @@ class GrammarFactory:
         else:
             start_production.append(morpheme)
         start_production.append(nt1)
+
+        if optional_termination:
+            nt2 = self.generate_nonterminal(nonterminals)
+            termination_rules = [
+                MacroGeneratedRule(nt1, Production([separator, nt2])),
+                MacroGeneratedRule(nt1, Production([empty])),
+                MacroGeneratedRule(nt2, Production([morpheme, nt1])),
+                MacroGeneratedRule(nt2, Production([empty]))
+            ]
+        else:
+            termination_rules = [
+                MacroGeneratedRule(nt1, Production([separator, nt0]))
+            ]
+
         rules = [
             MacroGeneratedRule(nt0, Production(start_production)),
-            MacroGeneratedRule(nt1, Production([separator, nt2])),
-            MacroGeneratedRule(nt1, Production([empty])),
-            MacroGeneratedRule(nt2, Production([morpheme, nt1])),
-            MacroGeneratedRule(nt2, Production([empty]))
         ]
+        rules.extend(termination_rules)
         if minimum == 0:
             rules.append(MacroGeneratedRule(nt0, Production([empty])))
-        macro = OptionallyTerminatedListMacro(morpheme, separator, minimum, nt0, rules)
+        macro = TerminatedListMacro(morpheme, separator, minimum, nt0, rules)
 
         for rule in rules:
             rule.nonterminal.macro = macro
 
         return macro
 
-    def tlist(self, ast, terminals, nonterminals):
+    def old_tlist(self, ast, terminals, nonterminals):
         nt0 = self.generate_nonterminal(nonterminals)
         empty = terminals['_empty']
         morpheme = self.get_morpheme_from_lexer_token(ast.attr('parameters')[0], terminals, nonterminals)

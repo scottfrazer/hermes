@@ -183,39 +183,34 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
   if ( tree->nchildren == 0 )
     return ast;
 
-  if ( !strcmp(tree->list, "otlist") )
+  if ( !strcmp(tree->list, "tlist") )
   {
-    this = {{prefix}}parsetree_node_to_ast(&tree->children[0]);
-    next = {{prefix}}parsetree_node_to_ast(&tree->children[1]);
-    if ( tree->children[0].object == tree->listSeparator )
-    {
-      ast_list = (AST_LIST_T *) next->object;
-    }
-    else
-    {
-      ast_list = calloc(1, sizeof(AST_LIST_T));
-      ast_list->tree = this;
-      ast_list->next = (AST_LIST_T *) next->object;
-    }
-  }
-  else if ( !strcmp(tree->list, "tlist") )
-  {
-    this = {{prefix}}parsetree_node_to_ast(&tree->children[0]);
-    next = {{prefix}}parsetree_node_to_ast(&tree->children[2]);
+    int end = MAX(0, tree->nchildren - 1);
 
-    if ( this != NULL )
+    for ( i = 0; i < end; i++ )
     {
-      ast_list = calloc(1, sizeof(AST_LIST_T));
-      ast_list->tree = this;
-      ast_list->next = NULL;
-
-      if ( next != NULL )
-      {
-        ast_list->next = (AST_LIST_T *) next->object;
+      if ( tree->children[i].type == PARSE_TREE_NODE_TYPE_TERMINAL &&
+           tree->listSeparator != NULL &&
+           ((TOKEN_T *) tree->children[i].object)->terminal->id == ((TOKEN_T *) tree->listSeparator)->terminal->id ) {
+          continue;
       }
+      lnode = calloc(1, sizeof(AST_LIST_T));
+      lnode->tree = {{prefix}}parsetree_node_to_ast(&tree->children[i]);
+
+      if ( ast_list == NULL )
+      {
+        ast_list = tail = lnode;
+        continue;
+      }
+
+      tail->next = (AST_LIST_T *) lnode;
+      tail = tail->next;
     }
 
-    if ( next ) free(next);
+    next = {{prefix}}parsetree_node_to_ast(&tree->children[end]);
+    if ( ast_list == NULL ) return next;
+    if ( next == NULL ) tail->next = NULL;
+    else tail->next = (AST_LIST_T *) next->object;
   }
   else if ( !strcmp(tree->list, "list") )
   {
@@ -243,6 +238,7 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
 
     next = {{prefix}}parsetree_node_to_ast(&tree->children[tree->nchildren - 1]);
 
+    if ( ast_list == NULL ) return next;
     if ( next == NULL ) tail->next = NULL;
     else tail->next = (AST_LIST_T *) next->object;
   }
@@ -1285,8 +1281,6 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
   tree->list = "tlist";
     {% elif isinstance(nonterminal.macro, MinimumListMacro) %}
   tree->list = "list";
-    {% elif isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
-  tree->list = "otlist";
     {% else %}
   tree->list = NULL;
     {% endif %}
@@ -1327,7 +1321,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
         {% if isinstance(morpheme, Terminal) %}
     tree->children[{{index}}].type = PARSE_TREE_NODE_TYPE_TERMINAL;
     tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) expect( {{prefix.upper()}}TERMINAL_{{morpheme.string.upper()}}, ctx );
-          {% if isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
+          {% if isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, TerminatedListMacro) %}
             {% if nonterminal.macro.separator == morpheme %}
     tree->listSeparator = tree->children[{{index}}].object;
             {% endif %}

@@ -180,23 +180,18 @@ function ParseTree(nonterminal) {
         this.children.push(tree);
     }
     this.to_ast = function() {
-        if (this.list == 'otlist') {
+        if (this.list == 'tlist') {
             if (this.children.length == 0) {
                 return new AstList([]);
             }
+            var end = this.children.length - 1;
             var list = [];
-            if (this.children[0] != this.listSeparator ) {
-                list.push(this.children[0].to_ast());
+            for (var i = 0; i < end; i++) {
+                if (this.children[i] instanceof Terminal && this.listSeparator != null && this.children[i].id == this.listSeparator.id)
+                    continue;
+                list.push(this.children[i].to_ast());
             }
-            list.push.apply(list, this.children[1].to_ast().list);
-            return new AstList(list);
-        }
-        else if (this.list == 'tlist') {
-            if (this.children.length == 0) {
-                return new AstList([]);
-            }
-            var list = [this.children[0].to_ast()];
-            list.push.apply(list, this.children[2].to_ast().list);
+            list.push.apply(list, this.children[end].to_ast().list);
             return new AstList(list);
         }
         else if (this.list == 'list') {
@@ -954,8 +949,6 @@ function parse_{{name}}(ctx) {
     tree.list = 'tlist';
     {% elif isinstance(nonterminal.macro, MinimumListMacro) %}
     tree.list = 'list';
-    {% elif isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
-    tree.list = 'otlist';
     {% else %}
     tree.list = false;
     {% endif %}
@@ -1002,7 +995,7 @@ function parse_{{name}}(ctx) {
         {% if isinstance(morpheme, Terminal) %}
         t = expect(ctx, {{morpheme.id}}); // {{morpheme}}
         tree.add(t);
-          {% if isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, OptionallyTerminatedListMacro) %}
+          {% if isinstance(nonterminal.macro, MinimumListMacro) or isinstance(nonterminal.macro, TerminatedListMacro) %}
             {% if nonterminal.macro.separator == morpheme %}
         tree.listSeparator = t;
             {% endif %}

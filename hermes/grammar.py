@@ -502,8 +502,7 @@ class CompositeGrammar:
                     continue
 
                 # TODO: filter out extraneous _empty's in grammar files (e.g. x := _empty + 'a' + _empty)
-                if (isinstance(morpheme, Terminal) or isinstance(morpheme, EmptyString)) and morpheme not in first[
-                    rule.nonterminal]:
+                if (isinstance(morpheme, Terminal) or isinstance(morpheme, EmptyString)) and morpheme not in first[rule.nonterminal]:
                     progress = changed = True
                     first[rule.nonterminal] = first[rule.nonterminal].union({morpheme})
 
@@ -809,13 +808,13 @@ class OptionalMacro(LL1ListMacro):
 
 
 class TerminatedListMacro(LL1ListMacro):
-    def __init__(self, nonterminal, terminator, start_nt, rules):
+    def __init__(self, nonterminal, separator, minimum, start_nt, rules):
         self.__dict__.update(locals())
         if start_nt:
             self.start_nt.setMacro(self)
 
     def __repr__(self):
-        return 'tlist({0}, {1})'.format(str(self.nonterminal), str(self.terminator))
+        return 'tlist({0}, {1}, {2})'.format(str(self.nonterminal), str(self.separator), self.minimum)
 
 
 class OptionallyTerminatedListMacro(LL1ListMacro):
