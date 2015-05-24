@@ -1,235 +1,235 @@
 {
-    "$_gen7": [
-        ":rbrace",
-        ":rsquare",
-        ":rparen"
-    ],
-    "$_gen5": [
-        ":rbrace"
-    ],
-    "$if_body": [
-        ":decimal_number",
-        ":hexadecimal_number",
-        ":octal_number",
-        ":for",
-        ":lsquare",
-        ":_eos",
-        ":lbrace",
-        ":binary_number",
-        ":subtract",
-        ":class",
-        ":identifier",
-        ":if",
-        ":rbrace",
-        ":function",
-        ":e",
-        ":import",
-        ":lparen"
-    ],
-    "$classdef": [
-        ":decimal_number",
-        ":hexadecimal_number",
-        ":octal_number",
-        ":for",
-        ":lsquare",
-        ":_eos",
-        ":lbrace",
-        ":binary_number",
-        ":subtract",
-        ":class",
-        ":identifier",
-        ":if",
-        ":rbrace",
-        ":function",
-        ":e",
-        ":import",
-        ":lparen"
-    ],
-    "$param": [
-        ":comma",
-        ":rparen"
-    ],
-    "$_gen1": [
-        ":rbrace",
-        ":_eos"
-    ],
-    "$e": [
-        ":subtract",
-        ":rparen",
-        ":semicolon",
-        ":add",
-        ":multiply",
-        ":union",
-        ":divide",
-        ":rbrace",
-        ":rsquare",
-        ":comma"
-    ],
-    "$statement": [
-        ":subtract",
-        ":class",
-        ":identifier",
-        ":e",
-        ":decimal_number",
-        ":import",
-        ":lsquare",
-        ":_eos",
-        ":if",
-        ":hexadecimal_number",
-        ":octal_number",
-        ":lparen",
-        ":lbrace",
-        ":for",
-        ":rbrace",
-        ":binary_number",
-        ":function"
-    ],
-    "$_gen6": [
-        ":rbrace",
-        ":rsquare",
+    "$_gen2": [
         ":rparen"
     ],
     "$simple_statement": [
-        ":decimal_number",
+        ":import",
+        ":class",
+        ":_eos",
+        ":rbrace",
+        ":identifier",
+        ":lsquare",
+        ":for",
         ":hexadecimal_number",
         ":octal_number",
-        ":for",
-        ":lsquare",
-        ":_eos",
-        ":lbrace",
         ":binary_number",
-        ":subtract",
-        ":class",
-        ":identifier",
         ":if",
-        ":rbrace",
-        ":function",
-        ":e",
-        ":import",
-        ":lparen"
-    ],
-    "$class_atom": [
-        ":rbrace",
-        ":public",
-        ":private"
-    ],
-    "$_gen0": [
-        ":rbrace",
-        ":_eos"
-    ],
-    "$for": [
-        ":decimal_number",
-        ":hexadecimal_number",
-        ":octal_number",
-        ":for",
-        ":lsquare",
-        ":_eos",
-        ":lbrace",
-        ":binary_number",
-        ":subtract",
-        ":class",
-        ":identifier",
-        ":if",
-        ":rbrace",
-        ":function",
-        ":e",
-        ":import",
-        ":lparen"
-    ],
-    "$funcdef": [
-        ":subtract",
-        ":class",
-        ":identifier",
-        ":public",
-        ":decimal_number",
-        ":private",
-        ":if",
-        ":hexadecimal_number",
-        ":octal_number",
-        ":for",
-        ":rbrace",
-        ":function",
-        ":e",
-        ":import",
-        ":lsquare",
-        ":_eos",
         ":lparen",
+        ":decimal_number",
+        ":subtract",
+        ":function",
         ":lbrace",
-        ":binary_number"
+        ":e"
     ],
-    "$program": [
-        ":_eos"
+    "$param": [
+        ":rparen",
+        ":comma"
     ],
-    "$_gen3": [
-        ":rparen"
+    "$token": [],
+    "$class_statement": [
+        ":rbrace",
+        ":private",
+        ":public"
     ],
-    "$_gen2": [
-        ":rparen"
+    "$if": [
+        ":import",
+        ":class",
+        ":_eos",
+        ":rbrace",
+        ":identifier",
+        ":lsquare",
+        ":for",
+        ":hexadecimal_number",
+        ":octal_number",
+        ":binary_number",
+        ":if",
+        ":lparen",
+        ":decimal_number",
+        ":subtract",
+        ":function",
+        ":lbrace",
+        ":e"
+    ],
+    "$if_body": [
+        ":import",
+        ":class",
+        ":_eos",
+        ":rbrace",
+        ":identifier",
+        ":lsquare",
+        ":for",
+        ":hexadecimal_number",
+        ":octal_number",
+        ":binary_number",
+        ":if",
+        ":lparen",
+        ":decimal_number",
+        ":subtract",
+        ":function",
+        ":lbrace",
+        ":e"
     ],
     "$_gen4": [
         ":rbrace"
     ],
-    "$token": [],
-    "$if": [
-        ":decimal_number",
-        ":hexadecimal_number",
+    "$funcdef": [
         ":octal_number",
-        ":for",
-        ":lsquare",
-        ":_eos",
-        ":lbrace",
         ":binary_number",
-        ":subtract",
-        ":class",
-        ":identifier",
-        ":if",
-        ":rbrace",
-        ":function",
-        ":e",
         ":import",
-        ":lparen"
-    ],
-    "$class_statement": [
-        ":rbrace",
         ":public",
-        ":private"
-    ],
-    "$terminated__expr": [
+        ":if",
+        ":private",
+        ":class",
+        ":lparen",
         ":decimal_number",
+        ":_eos",
+        ":rbrace",
+        ":identifier",
+        ":subtract",
+        ":lsquare",
+        ":function",
+        ":for",
+        ":lbrace",
+        ":e",
+        ":hexadecimal_number"
+    ],
+    "$_gen7": [
+        ":rbrace",
+        ":rparen",
+        ":rsquare"
+    ],
+    "$_gen3": [
+        ":rparen"
+    ],
+    "$for": [
+        ":import",
+        ":class",
+        ":_eos",
+        ":rbrace",
+        ":identifier",
+        ":lsquare",
+        ":for",
         ":hexadecimal_number",
         ":octal_number",
-        ":for",
-        ":lsquare",
-        ":_eos",
-        ":lbrace",
         ":binary_number",
-        ":subtract",
-        ":class",
-        ":identifier",
         ":if",
-        ":rbrace",
+        ":lparen",
+        ":decimal_number",
+        ":subtract",
         ":function",
-        ":e",
-        ":import",
-        ":lparen"
+        ":lbrace",
+        ":e"
+    ],
+    "$_gen1": [
+        ":_eos",
+        ":rbrace"
     ],
     "$import": [
-        ":decimal_number",
+        ":import",
+        ":class",
+        ":_eos",
+        ":rbrace",
+        ":identifier",
+        ":lsquare",
+        ":for",
         ":hexadecimal_number",
         ":octal_number",
-        ":for",
-        ":lsquare",
-        ":_eos",
-        ":lbrace",
         ":binary_number",
+        ":if",
+        ":lparen",
+        ":decimal_number",
         ":subtract",
+        ":function",
+        ":lbrace",
+        ":e"
+    ],
+    "$terminated__expr": [
+        ":import",
         ":class",
+        ":_eos",
+        ":rbrace",
+        ":identifier",
+        ":lsquare",
+        ":for",
+        ":hexadecimal_number",
+        ":octal_number",
+        ":binary_number",
+        ":if",
+        ":lparen",
+        ":decimal_number",
+        ":subtract",
+        ":function",
+        ":lbrace",
+        ":e"
+    ],
+    "$_gen5": [
+        ":rbrace"
+    ],
+    "$class_atom": [
+        ":rbrace",
+        ":private",
+        ":public"
+    ],
+    "$_gen6": [
+        ":rbrace",
+        ":rparen",
+        ":rsquare"
+    ],
+    "$program": [
+        ":_eos"
+    ],
+    "$e": [
+        ":rbrace",
+        ":rparen",
+        ":multiply",
+        ":add",
+        ":subtract",
+        ":rsquare",
+        ":union",
+        ":semicolon",
+        ":divide",
+        ":comma"
+    ],
+    "$classdef": [
+        ":import",
+        ":class",
+        ":_eos",
+        ":rbrace",
+        ":identifier",
+        ":lsquare",
+        ":for",
+        ":hexadecimal_number",
+        ":octal_number",
+        ":binary_number",
+        ":if",
+        ":lparen",
+        ":decimal_number",
+        ":subtract",
+        ":function",
+        ":lbrace",
+        ":e"
+    ],
+    "$statement": [
+        ":_eos",
+        ":rbrace",
+        ":octal_number",
+        ":binary_number",
+        ":import",
         ":identifier",
         ":if",
-        ":rbrace",
+        ":subtract",
+        ":lsquare",
         ":function",
+        ":class",
+        ":lparen",
+        ":for",
+        ":decimal_number",
+        ":lbrace",
         ":e",
-        ":import",
-        ":lparen"
+        ":hexadecimal_number"
+    ],
+    "$_gen0": [
+        ":_eos",
+        ":rbrace"
     ]
 }
