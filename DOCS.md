@@ -907,12 +907,110 @@ $sub = :a
 $sub = :b
 ```
 
-### list
+List macros also have special meaning for abstract tree conversions.  As you can see from the parse tree above, even though all the information is present, it's in an awkward tree-structure.  If we were to convert that parse tree to an abstract syntax tree, it would look a little more workable:
+
+```
+[
+  <string:1:1 a "YQ==">,
+  <string:1:2 b "Yg==">,
+  <string:1:3 a "YQ==">,
+  <string:1:4 b "Yg==">,
+  <string:1:5 b "Yg==">
+]
+```
+
+Abstract syntax trees support lists as native data types, which is much more intuitive than tree representation.
+
 ### optional
-### mlist
+
+This macro signifies that a particular terminal/nonterminal is optional.  `$start = optional($sub)` expands to:
+
+```
+$start = $_gen0
+$_gen0 = $sub
+$_gen0 = :_empty
+```
+
+### list
+
+The `list` macro can take 1, 2, or 3 parameters:
+
+1.  List elements, as either nonterminal or terminal
+2.  Separator terminal (or null)
+3.  Minimum number of elements in the list (default 0)
+
+`$start = list($sub)` expands to:
+
+```
+$start = $_gen0
+$_gen0 = $sub $_gen1
+$_gen0 = :_empty
+$_gen1 = $sub $_gen1
+$_gen1 = :_empty
+```
+
+`$start = list($sub, :sep)` expands to:
+
+```
+$start = $_gen0
+$_gen0 = $sub $_gen1
+$_gen0 = :_empty
+$_gen1 = :_empty
+$_gen1 = :sep $sub $_gen1
+```
+
+`$start = list($sub, :sep, 4)` expands to:
+
+```
+$start = $_gen0
+$_gen0 = $sub :sep $sub :sep $sub :sep $sub $_gen1
+$_gen1 = :_empty
+$_gen1 = :sep $sub $_gen1
+```
+
+`$start = list($sub, null, 4)` expands to:
+
+```
+$start = $_gen0
+$_gen0 = $sub $sub $sub $sub $_gen1
+$_gen1 = $sub $_gen1
+$_gen1 = :_empty
+```
+
 ### tlist
-### mslist
-### ...
+
+The `tlist` macro is similar to the `list` macro.  It can take 1, 2, or 3 parameters:
+
+1.  List elements, as either nonterminal or terminal
+2.  Terminator terminal (or null).  This terminator must exist after each element specified in parameter 1
+3.  Minimum number of elements in the list (default 0)
+
+Similar to the `list` macro, `tlist` creates a list of elements.  However this is slightly different from a list in that the second parameter is considered a terminator character, so it must appear after each list element.  In the example below, the list is 0-or-more list of `$sub :t`
+
+`$start = tlist($sub, :t)` expands to:
+
+```
+$start = $_gen0
+$_gen0 = $sub $_gen1
+$_gen0 = :_empty
+$_gen1 = :t $_gen0
+```
+
+### otlist
+
+Same as tlist except the terminator terminal (second parameter) can be optional after the last element
+
+`$start = otlist($sub, :t)` expands to:
+
+```
+$start = $_gen0
+$_gen0 = $sub $_gen1
+$_gen0 = :_empty
+$_gen1 = :_empty
+$_gen1 = :t $_gen2
+$_gen2 = $sub $_gen1
+$_gen2 = :_empty
+```
 
 ## Abstract Syntax Tree (AST) Transformations
 ### Why Bother With ASTs?
