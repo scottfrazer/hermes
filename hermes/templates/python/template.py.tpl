@@ -12,16 +12,18 @@ from collections import OrderedDict
 # Common Code #
 ###############
 
-def parse_tree_string(parsetree, indent=None, b64_source=True, indent_level=0):
+def parse_tree_string(parsetree, indent=None, b64_source=True, indent_level=0, debug=False):
     indent_str = (' ' * indent * indent_level) if indent else ''
     if isinstance(parsetree, ParseTree):
-        children = [parse_tree_string(child, indent, b64_source, indent_level+1) for child in parsetree.children]
+        children = [parse_tree_string(child, indent, b64_source, indent_level+1, debug) for child in parsetree.children]
+        debug_str = parsetree.debug_str() if debug else ''
         if indent is None or len(children) == 0:
-            return '{0}({1}: {2})'.format(indent_str, parsetree.nonterminal, ', '.join(children))
+            return '{0}({1}: {2}{3})'.format(indent_str, parsetree.nonterminal, debug_str, ', '.join(children))
         else:
-            return '{0}({1}:\n{2}\n{3})'.format(
+            return '{0}({1}:{2}\n{3}\n{4})'.format(
                 indent_str,
                 parsetree.nonterminal,
+                debug_str,
                 ',\n'.join(children),
                 indent_str
             )
@@ -125,6 +127,18 @@ class ParseTree():
       self.isExprNud = False # true for rules like _expr := {_expr} + {...}
       self.listSeparator = None
       self.list = False
+  def debug_str(self):
+      from copy import deepcopy
+      def h(v):
+          if v == False or v is None:
+              return str(v)
+          from xtermcolor import colorize
+          return colorize(str(v), ansi=190)
+      d = deepcopy(self.__dict__)
+      for key in ['self', 'nonterminal', 'children']:
+          del d[key]
+      f = {k: v for k, v in d.items() if v != False and v is not None}
+      return '[{}]'.format(', '.join(['{}={}'.format(k,h(v)) for k,v in f.items()]))
   def add(self, tree):
       self.children.append( tree )
   def ast(self):
@@ -176,7 +190,7 @@ class ParseTree():
           else:
               return None
 
-  def dumps(self, indent=None, b64_source=True):
+  def dumps(self, indent=None, b64_source=True, debug=False):
       args = locals()
       del args['self']
       return parse_tree_string(self, **args)

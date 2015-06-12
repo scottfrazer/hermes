@@ -1,6 +1,33 @@
 2.0 TODO
 ========
 
+ParseTree Optimization
+----------------------
+
+$ hermes --debug --no-color parse grammar.hgr source --tree
+
+This will get an "annotated parse tree" with a lot of the extra bits attached that are used in the generated code.
+
+Syntax Error Unification
+------------------------
+
+0/2/ast:Unrecognized token on line 1, column 3:
+1/3/ast:Unrecognized token on line 1, column 11:
+10/2/ast:No more tokens.  Expecting b
+10/3/ast:Error: unexpected end of file
+10/5/ast:Unexpected symbol (line 1, col 5) when parsing parse_sub.  Expected b, got <source:1:5 semi "Ow==">.
+2/2/ast:Unrecognized token on line 4, column 1:
+2/3/ast:Unrecognized token on line 3, column 2:
+23/1/ast:Error: unexpected end of file
+38/0/ast:No more tokens.  Expecting sep
+4/1/ast:Unrecognized token on line 1, column 1:
+6/1/ast:Unrecognized token on line 1, column 12:
+6/2/ast:Unrecognized token on line 1, column 9:
+json/0/ast:Error: unexpected end of file
+json/5/ast:Unexpected symbol (line 3, col 5) when parsing parse__gen1.  Expected rbrace, got <source:3:5 string "ImRlZiI=">.
+json/6/ast:Unrecognized token on line 2, column 5:
+json/8/ast:No more tokens.  Expecting rsquare
+
 Document public interface for all targets
 -----------------------------------------
 
