@@ -49,6 +49,12 @@ public class {{prefix}}Parser {
     private static Map<Integer, String> rules;
     public static {{prefix}}TerminalMap terminal_map = new {{prefix}}TerminalMap({{prefix}}TerminalIdentifier.values());
 
+    public {{prefix}}Parser() {
+        try {
+            lexer_init();
+        } catch(Exception e) {}
+    }
+
     public static String join(Collection<?> s, String delimiter) {
         StringBuilder builder = new StringBuilder();
         Iterator iter = s.iterator();
