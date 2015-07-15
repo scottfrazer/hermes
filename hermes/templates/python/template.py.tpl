@@ -235,8 +235,8 @@ class DefaultSyntaxErrorHandler:
         return error
     def unexpected_eof(self):
         return self._error("Error: unexpected end of file")
-    def excess_tokens(self):
-        return self._error("Finished parsing without consuming all tokens.")
+    def excess_tokens(self, next_token):
+        return self._error("Finished parsing without consuming all tokens.  Next token was {next}".format(next=next_token))
     def unexpected_symbol(self, nonterminal, actual_terminal, expected_terminals, rule):
         return self._error("Unexpected symbol (line {line}, col {col}) when parsing parse_{nt}.  Expected {expected}, got {actual}.".format(
             line=actual_terminal.line,
@@ -330,7 +330,7 @@ def parse(tokens, errors=None, start=None):
     ctx = ParserContext(tokens, errors)
     tree = parse_{{grammar.start.string.lower()}}(ctx)
     if tokens.current() != None:
-        raise ctx.errors.excess_tokens()
+        raise ctx.errors.excess_tokens(tokens.current())
     return tree
 
 def expect(ctx, terminal_id):
