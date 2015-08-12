@@ -1285,6 +1285,7 @@ public class {{prefix}}Parser {
     public List<Terminal> lex(String string, String resource) throws SyntaxError {
         LexerContext lctx = new LexerContext(string, resource);
         Object context = this.init();
+        lctx.context = context;
         String string_copy = new String(string);
         if (this.regex == null) {
             lexer_init();
