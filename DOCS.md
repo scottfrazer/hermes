@@ -1,3 +1,78 @@
+# Hermes Parser Generator
+
+<!---toc start-->
+
+* [Hermes Parser Generator](#hermes-parser-generator)
+* [Introduction](#introduction)
+* [Quick Start](#quick-start)
+* [Installation](#installation)
+* [Hermes Grammar File Format](#hermes-grammar-file-format)
+* [Lexical Analyzer](#lexical-analyzer)
+  * [Example](#example)
+  * [Lexer Algorithm](#lexer-algorithm)
+  * [Specifying Lexer Rules](#specifying-lexer-rules)
+  * [Cross-Language Regexes](#cross-language-regexes)
+  * [Regex Enumerations & Regex Flags](#regex-enumerations--regex-flags)
+  * [Lexer Stack](#lexer-stack)
+  * [Regex Partials](#regex-partials)
+  * [Custom Functions](#custom-functions)
+    * [Python](#python)
+      * [init() function](#init-function)
+      * [destroy() function](#destroy-function)
+      * [Token Match Function](#token-match-function)
+      * [LexerContext object](#lexercontext-object)
+    * [Java](#java)
+      * [init() function](#init-function)
+      * [destroy() function](#destroy-function)
+      * [Token Match Function](#token-match-function)
+      * [LexerContext Object](#lexercontext-object)
+    * [C](#c)
+      * [init() function](#init-function)
+      * [destroy() function](#destroy-function)
+      * [Token Match Function](#token-match-function)
+      * [LEXER_CONTEXT_T Object](#lexer_context_t-object)
+    * [JavaScript](#javascript)
+      * [init() function](#init-function)
+      * [destroy() function](#destroy-function)
+      * [Token Match Function](#token-match-function)
+      * [ctx Object](#ctx-object)
+* [Parser](#parser)
+  * [Introduction](#introduction)
+  * [Parsing Algorithm(s)](#parsing-algorithms)
+  * [Analyzing Grammars to Find Conflicts](#analyzing-grammars-to-find-conflicts)
+    * [First/First Conflicts](#firstfirst-conflicts)
+    * [First/Follow Conflicts](#firstfollow-conflicts)
+  * [Macros](#macros)
+    * [optional](#optional)
+    * [list](#list)
+    * [tlist](#tlist)
+    * [otlist](#otlist)
+  * [Abstract Syntax Tree (AST) Transformations](#abstract-syntax-tree-ast-transformations)
+    * [Why Bother With ASTs?](#why-bother-with-asts)
+    * [Specifying AST Transformations](#specifying-ast-transformations)
+  * [Expression Parser](#expression-parser)
+    * [Introduction (Pratt parsing)](#introduction-pratt-parsing)
+    * [Specifying Expression Parsers](#specifying-expression-parsers)
+      * [Example: Arithmetic Expressions](#example-arithmetic-expressions)
+      * [Example: Function Calls & Parenthesized Statements](#example-function-calls--parenthesized-statements)
+  * [Language Targets](#language-targets)
+    * [Python](#python)
+    * [C](#c)
+    * [Java 8](#java-8)
+    * [JavaScript](#javascript)
+* [Parsing Techniques](#parsing-techniques)
+  * [Lexical Hints](#lexical-hints)
+  * [Balancing Between Lexer and Parser](#balancing-between-lexer-and-parser)
+* [Python Module Usage](#python-module-usage)
+* [Cookbook](#cookbook)
+  * [Parsing JSON](#parsing-json)
+  * [Parsing XML](#parsing-xml)
+* [Resources](#resources)
+  * [Vim Syntax Highlighting](#vim-syntax-highlighting)
+  * [Pygments Plugin](#pygments-plugin)
+
+<!---toc end-->
+
 # Introduction
 
 Hermes is a lexer and parser generator.  Hermes attempts to make parsing easy and fun by simplifying some of the difficult aspects of parsing.
@@ -495,7 +570,7 @@ The `init` function is called exactly once before lexing begins.  The parameter 
 
 The return value of `init` is set as the `context` field on the `LexerContext` object.  This will be available to all other functions defined.
 
-# destroy() function
+#### destroy() function
 
 ```java
 public void destroy(Object context) {
@@ -558,7 +633,7 @@ The `init` function is called exactly once before lexing begins.
 
 The return value of `init` is set as the `user_context` field on the `LEXER_CONTEXT_T *` object.  This will be available to all other functions defined.
 
-# destroy() function
+#### destroy() function
 
 ```c
 static void
@@ -625,7 +700,7 @@ The `init` function is called exactly once before lexing begins.
 
 The return value of `init` is set as the `user_context` field on the `ctx` object.  This will be available to all other functions defined.
 
-# destroy() function
+#### destroy() function
 
 ```javascript
 function destroy(context) {
