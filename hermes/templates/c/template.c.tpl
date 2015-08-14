@@ -1,3 +1,9 @@
+{% if len(header)%}
+/*
+{{'\n'.join([' * ' + s for s in header.split('\n')])}}
+ */
+{% endif %}
+
 {% from hermes.grammar import * %}
 
 #include <stdlib.h>

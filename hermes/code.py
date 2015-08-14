@@ -125,7 +125,7 @@ def generate_internal(grammar):
         code += '\n'
     return code
 
-def generate(grammar, language, directory='.', add_main=False, java_package=None, java_use_apache_commons=False, nodejs=False):
+def generate(grammar, language, directory='.', add_main=False, java_package=None, java_use_apache_commons=False, nodejs=False, header=""):
     if language not in templates:
         raise Exception('Invalid language: ' + language)
     args = locals()

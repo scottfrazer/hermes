@@ -1,3 +1,6 @@
+{% if len(header)%}
+{{'\n'.join(['# ' + s for s in header.split('\n')])}}
+{% endif %}
 import sys
 import os
 import re

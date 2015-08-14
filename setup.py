@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = '2.0'
+version = '2.0rc1'
 long_description = 'LL(1) parser generator with expression parsing support'
 
 setup(
@@ -10,11 +10,11 @@ setup(
   author='Scott Frazer',
   author_email='scott.d.frazer@gmail.com',
   packages=['hermes'],
-  #package_dir={'hermes': 'hermes'},
   package_data={
       'hermes': [
           'templates/python/*.tpl',
           'templates/java/*.tpl',
+          'templates/javascript/*.tpl',
           'templates/c/*.tpl'
       ]
   },

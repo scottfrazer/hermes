@@ -1,3 +1,8 @@
+{% if len(header)%}
+/*
+{{'\n'.join([' * ' + s for s in header.split('\n')])}}
+ */
+{% endif %}
 {% import re %}
 {% from hermes.grammar import * %}
 

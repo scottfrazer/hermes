@@ -1,3 +1,9 @@
+{% if len(header)%}
+/*
+{{'\n'.join([' * ' + s for s in header.split('\n')])}}
+ */
+{% endif %}
+
 {% if java_package %}
 package {{java_package}};
 {% endif %}
