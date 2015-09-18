@@ -25,6 +25,12 @@ import java.nio.charset.Charset;
 import org.apache.commons.codec.binary.Base64;
 {% endif %}
 
+{% if java_imports %}
+  {% for java_import in java_imports%}
+import {{java_import}};
+  {% endfor %}
+{% endif %}
+
 {% if lexer %}
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;

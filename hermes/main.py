@@ -72,7 +72,10 @@ def cli():
         '--java-package', required=False, help='If generating Java code, this is the package.'
     )
     commands['generate'].add_argument(
-        '--java-use-apache-commons', required=False, action='store_true', help='This will use Apache Commons Codec for Base64 encoding instead of Base64 package in Java 8.  This option should make the generated code Java 7 compatible, but give it a dependency.'
+        '--java-use-apache-commons', required=False, action='store_true', help='This will use Apache Commons Codec for Base64 encoding instead of Base64 package in Java 8.  This option should make the generated code Java 7 compatible, but give it a dependency.  Only applies if --language=java'
+    )
+    commands['generate'].add_argument(
+        '--java-imports', required=False, nargs='+', help='These will be added as "import" statements at the top of the generated Java code.  Only applies if --language=java'
     )
     commands['generate'].add_argument(
         '--python-package', required=False, help='If generating Python code, this is the package.'
@@ -161,8 +164,8 @@ Hermes version: {ver}
 !!! DO NOT CHANGE THIS FILE DIRECTLY !!!
 
 If you wish to change something in this file, either change the grammar and
-re-generate this file, or change the templates in Hermes.  See the Hermes
-repository: http://github.com/scottfrazer/hermes""".format(time=time.strftime("%c"), cmd=command, path=rel, ver=version)
+re-generate this file, or change the templates in Hermes and regenerate.
+See the Hermes repository: http://github.com/scottfrazer/hermes""".format(time=time.strftime("%c"), cmd=command, path=rel, ver=version)
 
         hermes.code.generate(
             grammar,
@@ -171,6 +174,7 @@ repository: http://github.com/scottfrazer/hermes""".format(time=time.strftime("%
             add_main=cli.add_main,
             java_package=cli.java_package,
             java_use_apache_commons=cli.java_use_apache_commons,
+            java_imports=cli.java_imports,
             nodejs=cli.nodejs,
             header=header
         )
