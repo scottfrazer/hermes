@@ -115,7 +115,8 @@ def generate_internal(grammar):
         'grammar': grammar,
         'language': 'python',
         'lexer': grammar.lexer.get_language_lexer('python') if grammar.lexer is not None else None,
-        'add_main': False
+        'add_main': False,
+        'header': ''
     }
 
     code = ''
@@ -125,7 +126,7 @@ def generate_internal(grammar):
         code += '\n'
     return code
 
-def generate(grammar, language, directory='.', add_main=False, java_package=None, java_use_apache_commons=False, nodejs=False, header=""):
+def generate(grammar, language, directory='.', add_main=False, java_package=None, java_use_apache_commons=False, java_imports=False, nodejs=False, header=""):
     if language not in templates:
         raise Exception('Invalid language: ' + language)
     args = locals()
