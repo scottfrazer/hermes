@@ -40,6 +40,7 @@ def cli():
     )
 
     subparsers = parser.add_subparsers(help='Parser Generator Actions', dest='action')
+    subparsers.required = True
     commands = {}
     commands['bootstrap'] = subparsers.add_parser(
         'bootstrap', description=command_help['bootstrap'], help=command_help['bootstrap']
