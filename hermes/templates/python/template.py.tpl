@@ -216,7 +216,7 @@ class SyntaxError(Exception):
 
 class TokenStream(list):
     def __init__(self, arg=[]):
-        super().__init__(arg)
+        super(TokenStream, self).__init__(arg)
         self.index = 0
     def advance(self):
         self.index += 1
