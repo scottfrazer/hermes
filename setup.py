@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = '2.0rc4'
+version = '2.0rc5'
 long_description = 'LL(1) parser generator with expression parsing support'
 
 setup(
@@ -22,7 +22,8 @@ setup(
       "moody-templates",
       "xtermcolor",
       "nose",
-      "pygments"
+      "pygments",
+      "pygments_hermes"
   ],
   scripts={
       'scripts/hermes',
