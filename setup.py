@@ -23,7 +23,7 @@ setup(
       "xtermcolor",
       "nose",
       "pygments",
-      "pygments_hermes"
+      "hermes_pygments"
   ],
   scripts={
       'scripts/hermes',
