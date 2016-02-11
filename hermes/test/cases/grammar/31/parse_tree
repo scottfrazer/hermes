@@ -8,50 +8,43 @@
           (parser_ll1:
             <grammar.hgr:2:3 parser "cGFyc2Vy">,
             <grammar.hgr:2:10 lbrace "ew==">,
-            (_gen16:
+            (_gen10:
               (ll1_rule:
                 <grammar.hgr:3:5 ll1_rule_hint "">,
                 <grammar.hgr:3:6 nonterminal "c3RhcnQ=">,
                 <grammar.hgr:3:12 equals "PQ==">,
                 (ll1_rule_rhs:
-                  (_gen18:
+                  (_gen11:
                     (rule:
-                      (_gen20:
+                      (_gen12:
                         (morpheme:
                           (macro:
                             <grammar.hgr:3:14 identifier "bGlzdA==">,
                             <grammar.hgr:3:18 lparen "KA==">,
-                            (_gen29:
+                            (_gen18:
                               (macro_parameter:
                                 <grammar.hgr:3:20 terminal "YQ==">
                               ),
-                              (_gen30:
-                                <grammar.hgr:3:21 comma "LA==">,
-                                (macro_parameter:
-                                  <grammar.hgr:3:24 terminal "Y29tbWE=">
-                                ),
-                                (_gen30: )
+                              <grammar.hgr:3:21 comma "LA==">,
+                              (macro_parameter:
+                                <grammar.hgr:3:24 terminal "Y29tbWE=">
                               )
                             ),
                             <grammar.hgr:3:29 rparen "KQ==">
                           )
-                        ),
-                        (_gen21: )
+                        )
                       ),
-                      (_gen22: )
-                    ),
-                    (_gen19: )
+                      (_gen13: )
+                    )
                   )
                 )
-              ),
-              (_gen17: )
+              )
             ),
             <grammar.hgr:4:3 rbrace "fQ==">
           )
         )
       )
-    ),
-    (_gen1: )
+    )
   ),
   <grammar.hgr:5:1 rbrace "fQ==">
 )

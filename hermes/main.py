@@ -51,6 +51,9 @@ def cli():
     commands['analyze'].add_argument(
         'grammar', metavar='GRAMMAR', help='Grammar file'
     )
+    commands['analyze'].add_argument(
+        '--format', choices=['human', 'test'], help='Output strings that unit tests use'
+    )
     commands['generate'] = subparsers.add_parser(
         'generate', description=command_help['generate'], help=command_help['generate']
     )
@@ -139,7 +142,7 @@ def cli():
 
     elif cli.action == 'analyze':
         grammar = get_grammars(cli)
-        analyze(grammar, color=not cli.no_color)
+        analyze(grammar, color=not cli.no_color, format=cli.format)
 
     elif cli.action == 'generate':
         grammar = get_grammars(cli)
@@ -248,6 +251,14 @@ def analyze(grammar, format='human', color=False, file=sys.stdout):
     def no_conflicts(s): return colorize(s, ansi=2) if color else s
     def pygments_highlight(s): return highlight(s, lexer, formatter).strip() if color else s
 
+    if format == 'test':
+        from hermes.test.test_grammar import sets2string
+        file.write('FIRST\n')
+        file.write(sets2string(grammar.first_sets))
+        file.write('\nFOLLOW\n')
+        file.write(sets2string(grammar.follow_sets))
+        sys.exit(0)
+
     file.write(title('Terminals'))
     file.write(', '.join([pygments_highlight(str(x)) for x in sorted(grammar.terminals, key=lambda x: x.string)]) + "\n\n")
     file.write(title('Non-Terminals'))
@@ -258,7 +269,13 @@ def analyze(grammar, format='human', color=False, file=sys.stdout):
 
     file.write(title('Expanded LL(1) Rules'))
     file.write("\n".join(
-        [pygments_highlight(str(rule)) for rule in sorted(grammar.getExpandedLL1Rules(), key=lambda x: str(x))]
+        [pygments_highlight(str(rule)) for rule in sorted(grammar.get_expanded_ll1_rules(), key=lambda x: str(x))]
+    ))
+    file.write("\n\n")
+
+    file.write(title('Expanded List Rules'))
+    file.write("\n".join(
+        [str(rule) for rule in sorted(grammar.get_expanded_list_rules(), key=lambda x: str(x))]
     ))
     file.write("\n\n")
 

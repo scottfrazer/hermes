@@ -1,27 +1,5 @@
-{
-    "$statements": [
-        ":comma",
-        ":_eos"
-    ],
-    "$_gen1": [
-        ":_eos"
-    ],
-    "$start": [
-        ":_eos"
-    ],
-    "$e": [
-        ":sub",
-        ":comma",
-        ":add",
-        ":mul",
-        ":div",
-        ":_eos"
-    ],
-    "$assignstatement": [
-        ":comma",
-        ":_eos"
-    ],
-    "$_gen0": [
-        ":_eos"
-    ]
-}
+$_gen0 -> :_eos
+$assignstatement -> :_eos, :comma
+$e -> :_eos, :add, :comma, :div, :mul, :sub
+$start -> :_eos
+$statements -> :_eos, :comma

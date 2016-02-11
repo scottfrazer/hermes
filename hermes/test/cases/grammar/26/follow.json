@@ -1,34 +1,6 @@
-{
-    "$name_value_pair": [
-        ":comma",
-        ":rbrace"
-    ],
-    "$value": [
-        ":comma",
-        ":rsquare",
-        ":rbrace"
-    ],
-    "$_gen3": [
-        ":rsquare"
-    ],
-    "$_gen1": [
-        ":rbrace"
-    ],
-    "$_gen0": [
-        ":rbrace"
-    ],
-    "$object": [
-        ":comma",
-        ":rsquare",
-        ":_eos",
-        ":rbrace"
-    ],
-    "$_gen2": [
-        ":rsquare"
-    ],
-    "$array": [
-        ":comma",
-        ":rsquare",
-        ":rbrace"
-    ]
-}
+$_gen0 -> :rbrace
+$_gen1 -> :rsquare
+$array -> :comma, :rbrace, :rsquare
+$name_value_pair -> :comma, :rbrace
+$object -> :_eos, :comma, :rbrace, :rsquare
+$value -> :comma, :rbrace, :rsquare

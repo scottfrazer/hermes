@@ -1,115 +1,21 @@
-{
-    "$block_const": [
-        ":_empty",
-        ":const"
-    ],
-    "$expression_sub1": [
-        ":plus",
-        ":minus",
-        ":_empty"
-    ],
-    "$number": [
-        ":number"
-    ],
-    "$statement": [
-        ":if",
-        ":while",
-        ":begin",
-        ":ident",
-        ":call"
-    ],
-    "$term_sub1": [
-        ":times",
-        ":divide",
-        ":_empty"
-    ],
-    "$block_var1": [
-        ":comma",
-        ":_empty"
-    ],
-    "$block_const1": [
-        ":comma",
-        ":_empty"
-    ],
-    "$op": [
-        ":equal",
-        ":gteq",
-        ":lteq",
-        ":pound",
-        ":lt",
-        ":gt"
-    ],
-    "$add_op": [
-        ":plus",
-        ":minus"
-    ],
-    "$term": [
-        ":lparen",
-        ":ident",
-        ":number"
-    ],
-    "$block_proc": [
-        ":procedure",
-        ":_empty"
-    ],
-    "$factor": [
-        ":lparen",
-        ":ident",
-        ":number"
-    ],
-    "$expression": [
-        ":lparen",
-        ":plus",
-        ":minus",
-        ":ident",
-        ":number"
-    ],
-    "$ident": [
-        ":ident"
-    ],
-    "$condition": [
-        ":odd",
-        ":lparen",
-        ":plus",
-        ":minus",
-        ":ident",
-        ":number"
-    ],
-    "$statement_sub1": [
-        ":_empty",
-        ":semi"
-    ],
-    "$mul_op": [
-        ":times",
-        ":divide"
-    ],
-    "$unary_add_op": [
-        ":plus",
-        ":minus",
-        ":_empty"
-    ],
-    "$block": [
-        ":procedure",
-        ":if",
-        ":while",
-        ":begin",
-        ":var",
-        ":ident",
-        ":call",
-        ":const"
-    ],
-    "$program": [
-        ":procedure",
-        ":if",
-        ":while",
-        ":begin",
-        ":var",
-        ":ident",
-        ":call",
-        ":const"
-    ],
-    "$block_var": [
-        ":_empty",
-        ":var"
-    ]
-}
+$add_op -> :minus, :plus
+$block -> :begin, :call, :const, :ident, :if, :procedure, :var, :while
+$block_const -> :_empty, :const
+$block_const1 -> :_empty, :comma
+$block_proc -> :_empty, :procedure
+$block_var -> :_empty, :var
+$block_var1 -> :_empty, :comma
+$condition -> :ident, :lparen, :minus, :number, :odd, :plus
+$expression -> :ident, :lparen, :minus, :number, :plus
+$expression_sub1 -> :_empty, :minus, :plus
+$factor -> :ident, :lparen, :number
+$ident -> :ident
+$mul_op -> :divide, :times
+$number -> :number
+$op -> :equal, :gt, :gteq, :lt, :lteq, :pound
+$program -> :begin, :call, :const, :ident, :if, :procedure, :var, :while
+$statement -> :begin, :call, :ident, :if, :while
+$statement_sub1 -> :_empty, :semi
+$term -> :ident, :lparen, :number
+$term_sub1 -> :_empty, :divide, :times
+$unary_add_op -> :_empty, :minus, :plus

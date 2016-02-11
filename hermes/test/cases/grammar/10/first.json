@@ -1,10 +1,2 @@
-{
-    "$start": [
-        ":a",
-        ":semi"
-    ],
-    "$sub": [
-        ":a",
-        ":_empty"
-    ]
-}
+$start -> :a, :semi
+$sub -> :_empty, :a

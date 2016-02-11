@@ -1,12 +1,3 @@
-{
-    "$_gen0": [
-        ":rbrace"
-    ],
-    "$sub": [
-        ":number",
-        ":rbrace"
-    ],
-    "$start": [
-        ":_eos"
-    ]
-}
+$_gen0 -> :rbrace
+$start -> :_eos
+$sub -> :number, :rbrace

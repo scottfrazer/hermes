@@ -1,42 +1,6 @@
-{
-    "$name_value_pair": [
-        ":string"
-    ],
-    "$value": [
-        ":string",
-        ":lbrace",
-        ":null",
-        ":true",
-        ":lsquare",
-        ":false",
-        ":number"
-    ],
-    "$_gen3": [
-        ":comma",
-        ":_empty"
-    ],
-    "$_gen1": [
-        ":comma",
-        ":_empty"
-    ],
-    "$_gen0": [
-        ":string",
-        ":_empty"
-    ],
-    "$object": [
-        ":lbrace"
-    ],
-    "$_gen2": [
-        ":null",
-        ":false",
-        ":lsquare",
-        ":_empty",
-        ":string",
-        ":lbrace",
-        ":true",
-        ":number"
-    ],
-    "$array": [
-        ":lsquare"
-    ]
-}
+$_gen0 -> :_empty, :string
+$_gen1 -> :_empty, :false, :lbrace, :lsquare, :null, :number, :string, :true
+$array -> :lsquare
+$name_value_pair -> :string
+$object -> :lbrace
+$value -> :false, :lbrace, :lsquare, :null, :number, :string, :true

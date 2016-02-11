@@ -1,13 +1,3 @@
-{
-    "$start": [
-        ":_eos"
-    ],
-    "$_gen0": [
-        ":rparen"
-    ],
-    "$item": [
-        ":rparen",
-        ":a",
-        ":b"
-    ]
-}
+$_gen0 -> :rparen
+$item -> :a, :b, :rparen
+$start -> :_eos

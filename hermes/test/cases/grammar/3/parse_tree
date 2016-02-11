@@ -7,126 +7,103 @@
         (lexer:
           <grammar.hgr:2:3 lexer "bGV4ZXI=">,
           <grammar.hgr:2:9 lbrace "ew==">,
-          (_gen2:
+          (_gen1:
             (lexer_atom:
               (lexer_partials:
                 <grammar.hgr:3:5 partials "cGFydGlhbHM=">,
                 <grammar.hgr:3:14 lbrace "ew==">,
-                (_gen4:
+                (_gen2:
                   (regex_partial:
                     <grammar.hgr:4:7 regex "cidhYmMn">,
                     <grammar.hgr:4:14 arrow "LT4=">,
                     <grammar.hgr:4:17 regex_partial "X2FiYw==">
                   ),
-                  (_gen5:
-                    (regex_partial:
-                      <grammar.hgr:5:7 regex "cid4eXon">,
-                      <grammar.hgr:5:14 arrow "LT4=">,
-                      <grammar.hgr:5:17 regex_partial "X3h5eg==">
-                    ),
-                    (_gen5:
-                      (regex_partial:
-                        <grammar.hgr:6:7 regex "cidbMC05XSsn">,
-                        <grammar.hgr:6:17 arrow "LT4=">,
-                        <grammar.hgr:6:20 regex_partial "X251bQ==">
-                      ),
-                      (_gen5:
-                        (regex_partial:
-                          <grammar.hgr:7:7 regex "cid7JV94eXolfXslX2FiYyV9Jw==">,
-                          <grammar.hgr:7:27 arrow "LT4=">,
-                          <grammar.hgr:7:30 regex_partial "X3h5el9hYmM=">
-                        ),
-                        (_gen5: )
-                      )
-                    )
+                  (regex_partial:
+                    <grammar.hgr:5:7 regex "cid4eXon">,
+                    <grammar.hgr:5:14 arrow "LT4=">,
+                    <grammar.hgr:5:17 regex_partial "X3h5eg==">
+                  ),
+                  (regex_partial:
+                    <grammar.hgr:6:7 regex "cidbMC05XSsn">,
+                    <grammar.hgr:6:17 arrow "LT4=">,
+                    <grammar.hgr:6:20 regex_partial "X251bQ==">
+                  ),
+                  (regex_partial:
+                    <grammar.hgr:7:7 regex "cid7JV94eXolfXslX2FiYyV9Jw==">,
+                    <grammar.hgr:7:27 arrow "LT4=">,
+                    <grammar.hgr:7:30 regex_partial "X3h5el9hYmM=">
                   )
                 ),
                 <grammar.hgr:8:5 rbrace "fQ==">
               )
             ),
-            (_gen3:
-              (lexer_atom:
-                (lexer_regex:
-                  <grammar.hgr:9:5 regex "cidccysn">,
-                  (_gen6: ),
-                  <grammar.hgr:9:12 arrow "LT4=">,
-                  (_gen7:
-                    (lexer_target:
-                      <grammar.hgr:9:15 null "bnVsbA==">
-                    ),
-                    (_gen8: )
+            (lexer_atom:
+              (lexer_regex:
+                <grammar.hgr:9:5 regex "cidccysn">,
+                (_gen3: ),
+                <grammar.hgr:9:12 arrow "LT4=">,
+                (_gen4:
+                  (lexer_target:
+                    <grammar.hgr:9:15 null "bnVsbA==">
                   )
                 )
-              ),
-              (_gen3:
-                (lexer_atom:
-                  (lexer_regex:
-                    <grammar.hgr:10:5 regex "cid7JV9hYmMlfSc=">,
-                    (_gen6: ),
-                    <grammar.hgr:10:17 arrow "LT4=">,
-                    (_gen7:
-                      (lexer_target:
-                        (terminal:
-                          <grammar.hgr:10:21 terminal "YWJj">,
-                          (_gen15: )
-                        )
-                      ),
-                      (_gen8: )
+              )
+            ),
+            (lexer_atom:
+              (lexer_regex:
+                <grammar.hgr:10:5 regex "cid7JV9hYmMlfSc=">,
+                (_gen3: ),
+                <grammar.hgr:10:17 arrow "LT4=">,
+                (_gen4:
+                  (lexer_target:
+                    (terminal:
+                      <grammar.hgr:10:21 terminal "YWJj">,
+                      (_gen9: )
                     )
                   )
-                ),
-                (_gen3:
-                  (lexer_atom:
-                    (lexer_regex:
-                      <grammar.hgr:11:5 regex "cid7JV9udW0lfSc=">,
-                      (_gen6: ),
-                      <grammar.hgr:11:17 arrow "LT4=">,
-                      (_gen7:
-                        (lexer_target:
-                          (terminal:
-                            <grammar.hgr:11:21 terminal "bnVt">,
-                            (_gen15: )
-                          )
-                        ),
-                        (_gen8: )
-                      )
+                )
+              )
+            ),
+            (lexer_atom:
+              (lexer_regex:
+                <grammar.hgr:11:5 regex "cid7JV9udW0lfSc=">,
+                (_gen3: ),
+                <grammar.hgr:11:17 arrow "LT4=">,
+                (_gen4:
+                  (lexer_target:
+                    (terminal:
+                      <grammar.hgr:11:21 terminal "bnVt">,
+                      (_gen9: )
                     )
-                  ),
-                  (_gen3:
-                    (lexer_atom:
-                      (lexer_regex:
-                        <grammar.hgr:12:5 regex "cid7JV94eXolfXslX251bSV9W2prbF0rJw==">,
-                        (_gen6: ),
-                        <grammar.hgr:12:31 arrow "LT4=">,
-                        (_gen7:
-                          (lexer_target:
-                            (terminal:
-                              <grammar.hgr:12:35 terminal "eHl6">,
-                              (_gen15: )
-                            )
-                          ),
-                          (_gen8: )
-                        )
-                      )
-                    ),
-                    (_gen3:
-                      (lexer_atom:
-                        (lexer_regex:
-                          <grammar.hgr:13:5 regex "cid7JV94eXpfYWJjJX0n">,
-                          (_gen6: ),
-                          <grammar.hgr:13:21 arrow "LT4=">,
-                          (_gen7:
-                            (lexer_target:
-                              (terminal:
-                                <grammar.hgr:13:25 terminal "eHl6X2FiYw==">,
-                                (_gen15: )
-                              )
-                            ),
-                            (_gen8: )
-                          )
-                        )
-                      ),
-                      (_gen3: )
+                  )
+                )
+              )
+            ),
+            (lexer_atom:
+              (lexer_regex:
+                <grammar.hgr:12:5 regex "cid7JV94eXolfXslX251bSV9W2prbF0rJw==">,
+                (_gen3: ),
+                <grammar.hgr:12:31 arrow "LT4=">,
+                (_gen4:
+                  (lexer_target:
+                    (terminal:
+                      <grammar.hgr:12:35 terminal "eHl6">,
+                      (_gen9: )
+                    )
+                  )
+                )
+              )
+            ),
+            (lexer_atom:
+              (lexer_regex:
+                <grammar.hgr:13:5 regex "cid7JV94eXpfYWJjJX0n">,
+                (_gen3: ),
+                <grammar.hgr:13:21 arrow "LT4=">,
+                (_gen4:
+                  (lexer_target:
+                    (terminal:
+                      <grammar.hgr:13:25 terminal "eHl6X2FiYw==">,
+                      (_gen9: )
                     )
                   )
                 )
@@ -136,8 +113,7 @@
           <grammar.hgr:14:3 rbrace "fQ==">
         )
       )
-    ),
-    (_gen1: )
+    )
   ),
   <grammar.hgr:15:1 rbrace "fQ==">
 )

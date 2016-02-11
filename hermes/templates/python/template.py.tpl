@@ -128,7 +128,7 @@ class ParseTree():
       self.isInfix = False
       self.nudMorphemeCount = 0
       self.isExprNud = False # true for rules like _expr := {_expr} + {...}
-      self.listSeparator = None
+      self.list_separator_id = None
       self.list = False
   def debug_str(self):
       from copy import deepcopy
@@ -141,7 +141,7 @@ class ParseTree():
       for key in ['self', 'nonterminal', 'children']:
           del d[key]
       f = {k: v for k, v in d.items() if v != False and v is not None}
-      return '[{}]'.format(', '.join(['{}={}'.format(k,h(v)) for k,v in f.items()]))
+      return ' [{}]'.format(', '.join(['{}={}'.format(k,h(v)) for k,v in f.items()]))
   def add(self, tree):
       self.children.append( tree )
   def ast(self):
@@ -149,12 +149,10 @@ class ParseTree():
           r = AstList()
           if len(self.children) == 0:
               return r
-          end = max(0, len(self.children) - 1)
-          for child in self.children[:end]:
-              if isinstance(child, Terminal) and self.listSeparator is not None and child.id == self.listSeparator.id:
+          for child in self.children:
+              if isinstance(child, Terminal) and self.list_separator_id is not None and child.id == self.list_separator_id:
                   continue
               r.append(child.ast())
-          r.extend(self.children[end].ast())
           return r
       elif self.isExpr:
           if isinstance(self.astTransform, AstTransformSubstitution):
@@ -258,6 +256,10 @@ class DefaultSyntaxErrorHandler:
         return self._error('Unrecognized token on line {}, column {}:\n\n{}\n{}'.format(
             line, col, bad_line, ''.join([' ' for x in range(col-1)]) + '^'
         ))
+    def missing_list_items(self, method, required, found, last):
+        return self._error("List for {} requires {} items but only {} were found.".format(method, required, found))
+    def missing_terminator(self, method, terminator, last):
+        return self._error("List for "+method+" is missing a terminator")
 
 class ParserContext:
   def __init__(self, tokens, errors):
@@ -405,6 +407,8 @@ def nud_{{name}}(ctx):
       {% py first_set = grammar.first(rule.production) %}
       {% if len(first_set) and not first_set.issuperset(grammar.first(expression_nonterminal)) %}
     {{'if' if i == 0 else 'elif'}} current.id in rule_first[{{rule.id}}]:
+        # rule first == {{', '.join([x.string for x in first_set])}}
+        # e first == {{', '.join([x.string for x in grammar.first(expression_nonterminal)])}}
         # {{rule}}
         ctx.rule = rules[{{rule.id}}]
         {% py ast = rule.nudAst if not isinstance(rule.operator, PrefixOperator) else rule.ast %}
@@ -446,7 +450,7 @@ def led_{{name}}(left, ctx):
     ctx.nonterminal = "{{name}}"
 
     {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
-      {% py led = rule.ledProduction.morphemes %}
+      {% py led = rule.led_production.morphemes %}
       {% if len(led) %}
 
     if current.id == {{led[0].id}}: # {{led[0]}}
@@ -494,6 +498,72 @@ def led_{{name}}(left, ctx):
 # END definitions for expression parser: {{name}}
 {% endfor %}
 
+{% for list_nonterminal in grammar.list_nonterminals %}
+  {% py list_parser = grammar.list_parser(list_nonterminal) %}
+  {% py name = list_nonterminal.string %}
+def parse_{{name}}(ctx):
+    tree = ParseTree(NonTerminal({{list_nonterminal.id}}, '{{name}}'))
+    tree.list = True;
+  {% if list_parser.separator is not None %}
+    tree.list_separator_id = {{list_parser.separator.id}}
+  {% endif %}
+    ctx.nonterminal = "{{name}}"
+
+  {% if not grammar.must_consume_tokens(list_nonterminal) %}
+    if ctx.tokens.current() is not None and \
+       ctx.tokens.current().id not in nonterminal_first[{{nonterminal.id}}] and \
+       ctx.tokens.current().id in nonterminal_follow[{{list_nonterminal.id}}]:
+        return tree;
+  {% endif %}
+
+    if ctx.tokens.current() is None:
+  {% if grammar.must_consume_tokens(list_nonterminal) %}
+        raise SyntaxError(ctx.error_formatter.unexpected_eof())
+  {% else %}
+        return tree
+  {% endif %}
+
+    minimum = {{list_parser.minimum}};
+    while minimum > 0 or \
+           (ctx.tokens.current() is not None and \
+            ctx.tokens.current().id in nonterminal_first.get({{list_nonterminal.id}})):
+  {% if isinstance(list_parser.morpheme, NonTerminal) %}
+        tree.add(parse_{{list_parser.morpheme.string.lower()}}(ctx))
+        ctx.nonterminal = "{{name}}" # Horrible -- because parse_* can reset this
+  {% else %}
+        tree.add(expect(ctx, {{list_parser.morpheme.id}}))
+  {% endif %}
+
+  {% if list_parser.separator is not None %}
+        if ctx.tokens.current() is not None and ctx.tokens.current().id == {{list_parser.separator.id}}:
+            tree.add(expect(ctx, {{list_parser.separator.id}}));
+    {% if list_parser.sep_terminates %}
+        else:
+            raise ctx.errors.missing_terminator(
+                "{{nonterminal.string.lower()}}",
+                "{{list_parser.separator.string.upper()}}",
+                None
+            )
+    {% else %}
+        else:
+      {% if list_parser.minimum > 0 %}
+          if minimum > 1:
+              raise ctx.errors.missing_list_items(
+                  "{{list_nonterminal.string.lower()}}",
+                  {{list_parser.minimum}},
+                  {{list_parser.minimum}} - minimum + 1,
+                  None
+              )
+      {% endif %}
+          break
+    {% endif %}
+  {% endif %}
+
+        minimum = max(minimum - 1, 0)
+    return tree
+
+{% endfor %}
+
 {% for nonterminal in grammar.ll1_nonterminals %}
   {% py name = nonterminal.string %}
 def parse_{{name}}(ctx):
@@ -501,12 +571,6 @@ def parse_{{name}}(ctx):
     rule = table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.id] if current else -1
     tree = ParseTree(NonTerminal({{nonterminal.id}}, '{{name}}'))
     ctx.nonterminal = "{{name}}"
-
-    {% if isinstance(nonterminal.macro, LL1ListMacro) %}
-    tree.list = True
-    {% else %}
-    tree.list = False
-    {% endif %}
 
     {% if not grammar.must_consume_tokens(nonterminal) %}
     if current != None and current.id in nonterminal_follow[{{nonterminal.id}}] and current.id not in nonterminal_first[{{nonterminal.id}}]:
@@ -548,11 +612,6 @@ def parse_{{name}}(ctx):
         {% if isinstance(morpheme, Terminal) %}
         t = expect(ctx, {{morpheme.id}}) # {{morpheme}}
         tree.add(t)
-          {% if isinstance(nonterminal.macro, LL1ListMacro) %}
-            {% if nonterminal.macro.separator == morpheme %}
-        tree.listSeparator = t
-            {% endif %}
-          {% endif %}
         {% endif %}
 
         {% if isinstance(morpheme, NonTerminal) %}

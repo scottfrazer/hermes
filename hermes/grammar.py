@@ -1,7 +1,14 @@
 from copy import copy, deepcopy
 import re
 from collections import OrderedDict
+import itertools
 
+def pairwise(iterable):
+    i = list(range(len(iterable)))
+    c = list(iterable)
+    n = iterable[1:]
+    n.append(None)
+    return zip(i, c, n)
 
 class Morpheme:
     def __init__(self, string, id=0):
@@ -85,6 +92,33 @@ class Production:
     def __str__(self):
         return ' '.join([str(p) for p in self.morphemes])
 
+    def slice(self, start, stop=None):
+        return Production(list(itertools.islice(self.morphemes, start, stop, 1)))
+
+class ListProduction:
+    def __init__(self, list_parser):
+        self.__dict__.update(locals())
+
+    def __getattr__(self, name):
+        if name == 'is_empty':
+            return False
+        if name == 'morphemes':
+            # TODO: This is only around because Grammar.__init__() needs it for making ExprRule and Rule both able to do this
+            m = {self.list_parser.morpheme}
+            if self.list_parser.separator is not None:
+                m.add(self.list_parser.separator)
+            return m
+        return self.__dict__[name]
+
+    def __len__(self):
+        return 1
+
+    def __eq__(self, other):
+        return self.list_parser == other.list_parser
+
+    def __str__(self):
+        return str(self.list_parser)
+
 
 class Rule:
     def __init__(self, nonterminal, production, id=None, root=None, ast=None):
@@ -97,9 +131,12 @@ class Rule:
         morphemes = []
         rules = []
         for m in self.production.morphemes:
-            if isinstance(m, Macro):
+            if isinstance(m, OptionalMacro):
                 rules.extend(m.rules)
                 morphemes.append(m.start_nt)
+            elif isinstance(m, ListParser):
+                morphemes.append(m.start_nt)
+                rules.append(m.as_list_rule())
             else:
                 morphemes.append(m)
         rules.append(Rule(self.nonterminal, Production(morphemes), self.id, self.root, self.ast))
@@ -127,10 +164,6 @@ class Rule:
         return hash(str(self))
 
 
-class MacroGeneratedRule(Rule):
-    pass
-
-
 class AstSpecification:
     def __init__(self, name, parameters):
         self.name = name
@@ -148,21 +181,43 @@ class AstTranslation:
         return '$' + str(self.idx)
 
 
-class ExprRule:
-    def __init__(self, nonterminal, nud_production, ledProduction, nudAst, ast, operator, id=0):
+class ListRule:
+    def __init__(self, nonterminal, list_parser, ast=None):
         self.__dict__.update(locals())
-        self.production = Production(nud_production.morphemes + ledProduction.morphemes)
+
+    def __getattr__(self, name):
+        if name == 'morphemes':
+            # TODO: This is only around because Grammar.__init__() needs it for making ExprRule and Rule both able to do this
+            return self.production.morphemes
+        if name == 'production':
+            return ListProduction(self.list_parser)
+        return self.__dict__[name]
+
+    def __eq__(self, other):
+        return self.nonterminal == other.nonterminal and self.list_parser == other.list_parser
+
+    def must_consume_tokens(self):
+        return self.list_parser.must_consume_tokens()
+
+    def __str__(self):
+        return "{} = {}".format(self.nonterminal, self.list_parser)
+
+
+class ExprRule:
+    def __init__(self, nonterminal, nud_production, led_production, nudAst, ast, operator, id=0):
+        self.__dict__.update(locals())
+        self.production = Production(nud_production.morphemes + led_production.morphemes)
         if (not nud_production or not len(nud_production)) and \
-                (not ledProduction or not len(ledProduction)):
+                (not led_production or not len(led_production)):
             raise Exception('Rule must contain a NUD or a LED portion.')
         # TODO: this should be a conflict
-        root = self.ledProduction.morphemes[0] if self.ledProduction and len(self.ledProduction) else None
+        root = self.led_production.morphemes[0] if self.led_production and len(self.led_production) else None
         if root and not isinstance(root, Terminal):
             raise Exception('Root of expression rule must be a terminal.')
 
     def __copy__(self):
         np = Production(copy(self.nud_production.morphemes))
-        lp = Production(copy(self.ledProduction.morphemes))
+        lp = Production(copy(self.led_production.morphemes))
         return ExprRule(self.nonterminal, np, lp, self.nudAst, self.ast, self.operator)
 
     def __getattr__(self, name):
@@ -170,7 +225,7 @@ class ExprRule:
             all = []
             for morpheme in self.nud_production.morphemes:
                 all.append(morpheme)
-            for morpheme in self.ledProduction.morphemes:
+            for morpheme in self.led_production.morphemes:
                 all.append(morpheme)
             return all
         return self.__dict__[name]
@@ -179,18 +234,27 @@ class ExprRule:
         nudMorphemes = []
         ledMorphemes = []
         rules = []
+
         for morpheme in self.nud_production.morphemes:
-            if isinstance(morpheme, Macro):
+            if isinstance(morpheme, OptionalMacro):
                 rules.extend(morpheme.rules)
+                nudMorphemes.append(morpheme.start_nt)
+            elif isinstance(morpheme, ListParser):
+                rules.append(morpheme.as_list_rule())
                 nudMorphemes.append(morpheme.start_nt)
             else:
                 nudMorphemes.append(morpheme)
-        for morpheme in self.ledProduction.morphemes:
-            if isinstance(morpheme, Macro):
+
+        for morpheme in self.led_production.morphemes:
+            if isinstance(morpheme, OptionalMacro):
                 rules.extend(morpheme.rules)
+                ledMorphemes.append(morpheme.start_nt)
+            elif isinstance(morpheme, ListParser):
+                rules.append(morpheme.as_list_rule())
                 ledMorphemes.append(morpheme.start_nt)
             else:
                 ledMorphemes.append(morpheme)
+
         rules.append(
             ExprRule(self.nonterminal, Production(nudMorphemes), Production(ledMorphemes), self.nudAst, self.ast, self.operator)
         )
@@ -215,7 +279,7 @@ class ExprRule:
                 ast=ast_to_str(self.ast)
             )
         elif isinstance(self.operator, MixfixOperator):
-            led = ' <=> {}'.format(str(self.ledProduction)) if len(self.ledProduction.morphemes) else ''
+            led = ' <=> {}'.format(str(self.led_production)) if len(self.led_production.morphemes) else ''
             return '{nt} = {nud}{nud_ast}{led}{ast}'.format(
                 nt=self.nonterminal,
                 nud=self.nud_production,
@@ -356,9 +420,9 @@ class CompositeGrammar:
         self.macros = set()
         self.expression_terminals = dict()
         self.expression_nonterminals = set()
+        self.list_nonterminals = set()
         self.expanded_rules = list()
 
-        expanded_rules = OrderedDict()
         for rule in rules.copy():
             self.nonterminals.add(rule.nonterminal)
             if self.start is None:
@@ -369,9 +433,14 @@ class CompositeGrammar:
                     self.expression_nonterminals.add(rule.nonterminal)
                     self.expression_terminals[rule.nonterminal] = expression_terminal
                     self.terminals.add(expression_terminal)
+
             for expanded_rule in rule.expand():
                 if expanded_rule not in self.expanded_rules:
                     self.expanded_rules.append(expanded_rule)
+
+                    if isinstance(expanded_rule, ListRule):
+                        self.list_nonterminals.add(expanded_rule.nonterminal)
+
                     for morpheme in expanded_rule.production.morphemes:
                         if isinstance(morpheme, Terminal):
                             self.terminals.add(morpheme)
@@ -426,16 +495,10 @@ class CompositeGrammar:
 
     def __getattr__(self, name):
         if name == 'll1_nonterminals':
-            return [x for x in self.nonterminals if x not in [n for n in self.expression_nonterminals]]
+            other_nonterminals = self.expression_nonterminals | self.list_nonterminals # | is a union
+            return [x for x in self.nonterminals if x not in other_nonterminals]
         elif name == 'standard_terminals':
             return [terminal for terminal in self.terminals if terminal not in [self._empty, self._end]]
-        elif name == 'grammar_expanded_rules':
-            return self.__dict__['grammar_expanded_rules']
-        elif name == 'grammar_expanded_expr_rules':
-            grammar_rules = {}
-            for grammar, rules in self.grammar_expanded_rules.items():
-                grammar_rules[grammar] = list(filter(lambda x: isinstance(x, ExprRule), rules))
-            return grammar_rules
         elif name == 'parse_table':
             if 'parse_table' in self.__dict__:
                 return self.__dict__['parse_table']
@@ -447,7 +510,7 @@ class CompositeGrammar:
                 rules = []
                 for terminal in sort(terminals):
                     next = None
-                    for rule in self.getExpandedLL1Rules(nonterminal):
+                    for rule in self.get_expanded_ll1_rules(nonterminal):
                         Fip = self.first(rule.production)
                         if terminal in Fip or (self._empty in Fip and terminal in self.follow(nonterminal)):
                             next = rule
@@ -464,7 +527,7 @@ class CompositeGrammar:
             first_set = set()
             add_empty_token = True
             for morpheme in element.morphemes:
-                morpheme_first_set = set([morpheme]) if isinstance(morpheme, Terminal) else self.first_sets[morpheme]
+                morpheme_first_set = {morpheme} if isinstance(morpheme, Terminal) else self.first_sets[morpheme]
                 toks = morpheme_first_set.difference({self._empty})
                 if len(toks) > 0:
                     first_set = first_set.union(toks)
@@ -472,6 +535,12 @@ class CompositeGrammar:
                     add_empty_token = False
                     break
             if add_empty_token:
+                first_set.add(self._empty)
+            return first_set
+        elif isinstance(element, ListProduction):
+            morpheme = element.list_parser.morpheme
+            first_set = {morpheme} if isinstance(morpheme, Terminal) else set(self.first_sets[morpheme])
+            if not element.list_parser.must_consume_tokens():
                 first_set.add(self._empty)
             return first_set
         elif isinstance(element, Terminal):
@@ -493,37 +562,55 @@ class CompositeGrammar:
             first[nt].add(t)
         changed = False
         progress = True
+
         while progress == True:
             progress = False
             for rule in self.expanded_rules:
-                try:
-                    morpheme = rule.production.morphemes[0]
-                except IndexError:
-                    continue
+                if isinstance(rule, ListRule):
+                    morpheme = rule.list_parser.morpheme
 
-                # TODO: filter out extraneous _empty's in grammar files (e.g. x := _empty + 'a' + _empty)
-                if (isinstance(morpheme, Terminal) or isinstance(morpheme, EmptyString)) and morpheme not in first[rule.nonterminal]:
-                    progress = changed = True
-                    first[rule.nonterminal] = first[rule.nonterminal].union({morpheme})
+                    # TODO: duplicated
+                    morpheme_first = {self._empty} if not rule.must_consume_tokens() else set()
+                    if isinstance(morpheme, NonTerminal):
+                        morpheme_first = morpheme_first.union(first[morpheme])
+                    elif isinstance(morpheme, Terminal):
+                        morpheme_first.add(morpheme)
+                    else:
+                        raise Exception('Error: expected either terminal or nonterminal, got ' + morpheme)
 
-                elif isinstance(morpheme, NonTerminal):
-                    add_empty_token = True
-                    for morpheme in rule.production.morphemes:
+                    if not first[rule.nonterminal].issuperset(morpheme_first.difference({self._empty})):
+                        progress = changed = True
+                        first[rule.nonterminal] = first[rule.nonterminal].union(morpheme_first)
+                else:
+                    try:
+                        morpheme = rule.production.morphemes[0]
+                    except IndexError:
+                        continue
 
-                        if isinstance(morpheme, NonTerminal):
-                            sub = first[morpheme]
-                        elif isinstance(morpheme, Terminal):
-                            sub = {morpheme}
-                        else:
-                            raise Exception('Error: expected either terminal or nonterminal, got ' + morpheme)
-                        if not first[rule.nonterminal].issuperset(sub.difference({self._empty})):
-                            progress = changed = True
-                            first[rule.nonterminal] = first[rule.nonterminal].union(sub.difference({self._empty}))
-                        if self._empty not in sub:
-                            add_empty_token = False
-                            break
-                    if add_empty_token:
-                        first[rule.nonterminal] = first[rule.nonterminal].union({self._empty})
+                    # TODO: filter out extraneous _empty's in grammar files (e.g. $x = :_empty + $a + :_empty)
+                    if (isinstance(morpheme, Terminal) or isinstance(morpheme, EmptyString)) and morpheme not in first[rule.nonterminal]:
+                        progress = changed = True
+                        first[rule.nonterminal] = first[rule.nonterminal].union({morpheme})
+
+                    elif isinstance(morpheme, NonTerminal):
+                        add_empty_token = True
+                        for morpheme in rule.production.morphemes:
+
+                            if isinstance(morpheme, NonTerminal):
+                                sub = first[morpheme]
+                            elif isinstance(morpheme, Terminal):
+                                sub = {morpheme}
+                            else:
+                                raise Exception('Error: expected either terminal or nonterminal, got ' + morpheme)
+
+                            if not first[rule.nonterminal].issuperset(sub.difference({self._empty})):
+                                progress = changed = True
+                                first[rule.nonterminal] = first[rule.nonterminal].union(sub.difference({self._empty}))
+                            if self._empty not in sub:
+                                add_empty_token = False
+                                break
+                        if add_empty_token:
+                            first[rule.nonterminal] = first[rule.nonterminal].union({self._empty})
         return (first, changed)
 
     def _compute_follow(self, first, follow=None):
@@ -536,31 +623,43 @@ class CompositeGrammar:
             progress = False
 
             for rule in self.expanded_rules:
-                for index, morpheme in enumerate(rule.production.morphemes):
+                if isinstance(rule, ListRule):
+                    list_morpheme = rule.list_parser.morpheme
+                    list_separator = rule.list_parser.separator
 
-                    if isinstance(morpheme, Terminal) or isinstance(morpheme, EmptyString):
-                        continue
+                    if list_separator is not None:
+                        morpheme_follow = {list_separator}
+                    else:
+                        morpheme_follow = set(first[list_morpheme]) if isinstance(list_morpheme, NonTerminal) else {list_morpheme}
 
-                    try:
-                        next_morpheme = rule.production.morphemes[index + 1]
-                    except IndexError:
-                        next_morpheme = None
+                    if not rule.list_parser.sep_terminates:
+                        morpheme_follow.update(follow[rule.nonterminal])
 
-                    if next_morpheme:
-                        next_first_set = set([next_morpheme]) if isinstance(next_morpheme, Terminal) else first[
-                            next_morpheme].difference({self._empty})
-                        if not follow[morpheme].issuperset(next_first_set):
-                            progress = changed = True
-                            follow[morpheme].update(next_first_set)
+                    if isinstance(rule.list_parser.morpheme, NonTerminal) and not follow[rule.list_parser.morpheme].issuperset(morpheme_follow):
+                        progress = changed = True
+                        follow[rule.list_parser.morpheme].update(morpheme_follow)
 
-                    if not next_morpheme or self._empty in self.first(
-                            Production(rule.production.morphemes[index + 1:])):
-                        rule_follow_set = follow[rule.nonterminal]
-                        morpheme_follow_set = follow[morpheme]
+                else:
+                    for index, morpheme, next_morpheme in pairwise(rule.production.morphemes):
+                        if isinstance(morpheme, Terminal) or isinstance(morpheme, EmptyString):
+                            continue
 
-                        if not morpheme_follow_set.issuperset(rule_follow_set):
-                            progress = changed = True
-                            follow[morpheme] = morpheme_follow_set.union(rule_follow_set)
+                        if next_morpheme:
+                            if isinstance(next_morpheme, Terminal):
+                                next_first_set = {next_morpheme}
+                            else:
+                                next_first_set = first[next_morpheme].difference({self._empty})
+                            if not follow[morpheme].issuperset(next_first_set):
+                                progress = changed = True
+                                follow[morpheme].update(next_first_set)
+
+                        if not next_morpheme or self._empty in self.first(rule.production.slice(index + 1, None)):
+                            rule_follow_set = follow[rule.nonterminal]
+                            morpheme_follow_set = follow[morpheme]
+
+                            if not morpheme_follow_set.issuperset(rule_follow_set):
+                                progress = changed = True
+                                follow[morpheme] = morpheme_follow_set.union(rule_follow_set)
         return (follow, changed)
 
     def _compute_conflicts(self):
@@ -583,7 +682,7 @@ class CompositeGrammar:
                     if len(nud[morpheme]):
                         self.conflicts.append(NudConflict(morpheme, [rule] + nud[morpheme]))
                     nud[morpheme].append(rule)
-                if len(rule.ledProduction):
+                if len(rule.led_production):
                     # TODO: no test for this code path
                     morpheme = rule.nud_production.morphemes[0]
                     if morpheme not in led:
@@ -640,7 +739,7 @@ class CompositeGrammar:
                     for morpheme in rule.nud_production.morphemes:
                         if str(morpheme) in morphemes:
                             morpheme.id = morphemes[str(morpheme)]
-                    for morpheme in rule.ledProduction.morphemes:
+                    for morpheme in rule.led_production.morphemes:
                         if str(morpheme) in morphemes:
                             morpheme.id = morphemes[str(morpheme)]
 
@@ -649,26 +748,27 @@ class CompositeGrammar:
             return [rule for rule in self.expanded_rules if str(rule.nonterminal) == str(nonterminal)]
         return self.expanded_rules
 
+    def get_expanded_ll1_rules(self, nonterminal=None):
+        return [rule for rule in self.get_expanded_rules(nonterminal) if isinstance(rule, Rule)]
+
+    def get_expanded_list_rules(self, nonterminal=None):
+        return [rule for rule in self.get_expanded_rules(nonterminal) if isinstance(rule, ListRule)]
+
     def get_rules(self, nonterminal=None):
         if nonterminal:
             return [rule for rule in self.rules if str(rule.nonterminal) == str(nonterminal)]
-        return self.expanded_rules
+        return self.expanded_rule
+
+    def list_parser(self, nonterminal):
+        for rule in self.get_expanded_list_rules(nonterminal):
+            if rule.nonterminal == nonterminal:
+                return rule.list_parser
 
     def ruleFirst(self, rule):
         if isinstance(rule, ExprRule):
             if len(rule.nud_production) and rule.nud_production.morphemes[0] != rule.nonterminal:
                 return self._pfirst(rule.nud_production)
         return self._pfirst(rule.production)
-
-    def getExpressionTerminal(self):
-        # TODO: this needs to be fixed.
-        return self.expression_terminals
-
-    def getExpandedLL1Rules(self, nonterminal=None):
-        all_rules = [rule for rule in self.expanded_rules if isinstance(rule, Rule)]
-        if nonterminal:
-            return [rule for rule in all_rules if str(rule.nonterminal) == str(nonterminal)]
-        return all_rules
 
 
 class Conflict:
@@ -774,31 +874,38 @@ class FirstFollowConflict(Conflict):
         return string
 
 
-class Macro(Morpheme):
-    id = -1
-
-
-class ListMacro(Macro):
-    def setFollow(self, follow):
+class ListParser(Morpheme):
+    def __init__(self, start_nt, morpheme, separator, minimum, sep_terminates, string):
         self.__dict__.update(locals())
-
-
-class LL1ListMacro(ListMacro):
-    def __init__(self, nonterminal, separator, minimum, start_nt, sep_terminates, terminator_optional, rules):
-        self.__dict__.update(locals())
-        if start_nt:
-            self.start_nt.setMacro(self)
 
     def __repr__(self):
-        return 'list(nt={0}, sep={1}, min={2}, sep_terminates={3})'.format(str(self.nonterminal), str(self.separator), str(self.minimum), self.sep_terminates)
+        return self.string
+
+    def must_consume_tokens(self):
+        return self.minimum > 0
+
+    def as_list_rule(self):
+        return ListRule(self.start_nt, self)
+
+    def __eq__(self, other):
+        for key in 'morpheme,separator,minimum,start_nt,sep_terminates'.split(','):
+            if self.__dict__[key] != other.__dict__[key]:
+                return False
+        return True
 
     def __str__(self): return self.__repr__()
 
-class OptionalMacro(Macro):
+    def __hash__(self): return hash(str(self))
+
+
+class OptionalMacro(Morpheme):
     def __init__(self, nonterminal, start_nt, rules):
+        self.id = -1
         self.__dict__.update(locals())
         if start_nt:
             self.start_nt.setMacro(self)
 
     def __repr__(self):
         return 'optional({0})'.format(str(self.nonterminal))
+
+    def __str__(self): return self.__repr__()

@@ -1,16 +1,2 @@
-{
-    "$start": [
-        ":sub",
-        ":identifier",
-        ":lparen",
-        ":number",
-        ":e"
-    ],
-    "$e": [
-        ":lparen",
-        ":sub",
-        ":identifier",
-        ":number",
-        ":e"
-    ]
-}
+$e -> :e, :identifier, :lparen, :number, :sub
+$start -> :e, :identifier, :lparen, :number, :sub

@@ -9,37 +9,29 @@
           <source:2:14 number "MC4xMjNlMg==">
         )
       ),
-      (_gen1:
-        <source:2:21 comma "LA==">,
-        (key_value_pair:
-          <source:3:5 string "InRoaXMgaXMgYSBrZXki">,
-          <source:3:20 colon "Og==">,
-          (value:
-            (array:
-              <source:3:22 lsquare "Ww==">,
-              (_gen2:
-                (value:
-                  <source:3:23 true "dHJ1ZQ==">
-                ),
-                (_gen3:
-                  <source:3:27 comma "LA==">,
-                  (value:
-                    <source:3:28 null "bnVsbA==">
-                  ),
-                  (_gen3:
-                    <source:3:32 comma "LA==">,
-                    (value:
-                      <source:3:33 false "ZmFsc2U=">
-                    ),
-                    (_gen3: )
-                  )
-                )
+      <source:2:21 comma "LA==">,
+      (key_value_pair:
+        <source:3:5 string "InRoaXMgaXMgYSBrZXki">,
+        <source:3:20 colon "Og==">,
+        (value:
+          (array:
+            <source:3:22 lsquare "Ww==">,
+            (_gen1:
+              (value:
+                <source:3:23 true "dHJ1ZQ==">
               ),
-              <source:3:38 rsquare "XQ==">
-            )
+              <source:3:27 comma "LA==">,
+              (value:
+                <source:3:28 null "bnVsbA==">
+              ),
+              <source:3:32 comma "LA==">,
+              (value:
+                <source:3:33 false "ZmFsc2U=">
+              )
+            ),
+            <source:3:38 rsquare "XQ==">
           )
-        ),
-        (_gen1: )
+        )
       )
     ),
     <source:4:1 rbrace "fQ==">

@@ -191,12 +191,11 @@ function ParseTree(nonterminal) {
             }
             var end = this.children.length - 1;
             var list = [];
-            for (var i = 0; i < end; i++) {
-                if (this.children[i] instanceof Terminal && this.listSeparator != null && this.children[i].id == this.listSeparator.id)
+            for (var i = 0; i < this.children.length; i++) {
+                if (this.children[i] instanceof Terminal && this.children[i].id == this.listSeparator)
                     continue;
                 list.push(this.children[i].to_ast());
             }
-            list.push.apply(list, this.children[end].to_ast().list);
             return new AstList(list);
         }
         else if (this.isExpr == true) {
@@ -325,6 +324,12 @@ function DefaultSyntaxErrorFormatter() {
     }
     this.invalid_terminal = function(nonterminal, invalid_terminal) {
         return "Invalid symbol ID: {0} ({1})".format(invalid_terminal.id, invalid_terminal.string);
+    }
+    this.missing_list_items = function(method, required, found, last) {
+        return "List for "+method+" requires "+required+" items but only "+found+" were found.";
+    }
+    this.missing_terminator = function(method, terminator, last) {
+        return "List for "+method+" is missing a terminator";
     }
 }
 
@@ -879,7 +884,7 @@ function led_{{name}}(left, ctx) {
     ctx.nonterminal = "{{name}}";
 
     {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
-      {% py led = rule.ledProduction.morphemes %}
+      {% py led = rule.led_production.morphemes %}
       {% if len(led) %}
     if (current.id == {{led[0].id}}) { // {{led[0]}}
         // {{rule}}
@@ -928,6 +933,82 @@ function led_{{name}}(left, ctx) {
 // END definitions for expression parser `{{name}}`
 {% endfor %}
 
+{% for list_nonterminal in grammar.list_nonterminals %}
+  {% py list_parser = grammar.list_parser(list_nonterminal) %}
+
+function parse_{{list_nonterminal.string}}(ctx) {
+    var current = ctx.tokens.current();
+    var rule = current != null ? table[{{list_nonterminal.id - len(grammar.standard_terminals)}}][current.id] : -1;
+    var tree = new ParseTree(new NonTerminal({{list_nonterminal.id}}, '{{list_nonterminal.string}}'));
+    ctx.nonterminal = "{{list_nonterminal.string}}";
+    tree.list = true;
+  {% if list_parser.separator is not None %}
+    tree.listSeparator = {{list_parser.separator.id}};
+  {% else %}
+    tree.listSeparator = -1;
+  {% endif %}
+    tree.astTransform = new AstTransformSubstitution(0);
+
+  {% if not grammar.must_consume_tokens(list_nonterminal) %}
+    if ( ctx.tokens.current() != null &&
+         nonterminal_follow[{{list_nonterminal.id}}].indexOf(ctx.tokens.current().id) != -1 &&
+         nonterminal_first[{{list_nonterminal.id}}].indexOf(ctx.tokens.current().id) == -1 ) {
+        return tree;
+    }
+  {% endif %}
+
+    if ( ctx.tokens.current() == null) {
+  {% if grammar.must_consume_tokens(list_nonterminal) %}
+        throw new SyntaxError('Error: unexpected end of file');
+  {% else %}
+        return tree;
+  {% endif %}
+    }
+
+    var minimum = {{list_parser.minimum}};
+    while ( minimum > 0 ||
+            (ctx.tokens.current() != null &&
+             nonterminal_first[{{list_nonterminal.id}}].indexOf(ctx.tokens.current().id) != -1)) {
+  {% if isinstance(list_parser.morpheme, NonTerminal) %}
+        tree.add(parse_{{list_parser.morpheme.string.lower()}}(ctx));
+        ctx.nonterminal = "{{list_nonterminal.string}}";
+  {% else %}
+        tree.add(expect(ctx, {{list_parser.morpheme.id}}));
+  {% endif %}
+
+  {% if list_parser.separator is not None %}
+        if ( ctx.tokens.current() != null && ctx.tokens.current().id == {{list_parser.separator.id}}) {
+          tree.add(expect(ctx, {{list_parser.separator.id}}));
+    {% if list_parser.sep_terminates %}
+        } else {
+          throw new SyntaxError(ctx.error_formatter.missing_terminator(
+              "parse_{{list_nonterminal.string.lower()}}",
+              "{{list_parser.separator.string}}",
+              null
+          ));
+        }
+    {% else %}
+        } else {
+          if (minimum > 1) {
+              throw new SyntaxError(ctx.error_formatter.missing_list_items(
+                  "{{list_nonterminal.string.lower()}}",
+                  {{list_parser.minimum}},
+                  {{list_parser.minimum}} - minimum + 1,
+                  null
+              ));
+          }
+          break;
+        }
+    {% endif %}
+  {% endif %}
+
+        minimum = Math.max(minimum - 1, 0);
+    }
+    return tree;
+}
+
+{% endfor %}
+
 {% for nonterminal in grammar.ll1_nonterminals %}
   {% py name = nonterminal.string %}
 function parse_{{name}}(ctx) {
@@ -935,12 +1016,6 @@ function parse_{{name}}(ctx) {
     var rule = current != null ? table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.id] : -1;
     var tree = new ParseTree(new NonTerminal({{nonterminal.id}}, '{{name}}'));
     ctx.nonterminal = "{{name}}";
-
-    {% if isinstance(nonterminal.macro, LL1ListMacro) %}
-    tree.list = true;
-    {% else %}
-    tree.list = false;
-    {% endif %}
 
     {% if not grammar.must_consume_tokens(nonterminal) %}
     if (current != null && nonterminal_follow[{{nonterminal.id}}].indexOf(current.id) != -1 && nonterminal_first[{{nonterminal.id}}].indexOf(current.id) == -1) {
@@ -984,11 +1059,6 @@ function parse_{{name}}(ctx) {
         {% if isinstance(morpheme, Terminal) %}
         t = expect(ctx, {{morpheme.id}}); // {{morpheme}}
         tree.add(t);
-          {% if isinstance(nonterminal.macro, LL1ListMacro) %}
-            {% if nonterminal.macro.separator == morpheme %}
-        tree.listSeparator = t;
-            {% endif %}
-          {% endif %}
         {% endif %}
 
         {% if isinstance(morpheme, NonTerminal) %}

@@ -1,52 +1,8 @@
-{
-    "$e": [
-        ":add",
-        ":rbrace",
-        ":subtract",
-        ":lsquare",
-        ":rsquare",
-        ":comma",
-        ":_eos",
-        ":rparen",
-        ":multiply",
-        ":divide"
-    ],
-    "$item": [
-        ":comma",
-        ":_eos"
-    ],
-    "$_gen1": [
-        ":_eos"
-    ],
-    "$start": [
-        ":_eos"
-    ],
-    "$sub": [
-        ":comma",
-        ":_eos"
-    ],
-    "$_gen0": [
-        ":_eos"
-    ],
-    "$_gen3": [
-        ":rbrace",
-        ":rsquare"
-    ],
-    "$_gen5": [
-        ":rparen",
-        ":rbrace",
-        ":rsquare"
-    ],
-    "$_gen2": [
-        ":rbrace",
-        ":rsquare"
-    ],
-    "$_gen4": [
-        ":rparen",
-        ":rbrace",
-        ":rsquare"
-    ],
-    "$type_name": [
-        ":rparen"
-    ]
-}
+$_gen0 -> :_eos
+$_gen1 -> :rbrace, :rsquare
+$_gen2 -> :rbrace, :rparen, :rsquare
+$e -> :_eos, :add, :comma, :divide, :lsquare, :multiply, :rbrace, :rparen, :rsquare, :subtract
+$item -> :_eos, :comma
+$start -> :_eos
+$sub -> :_eos, :comma
+$type_name -> :rparen
