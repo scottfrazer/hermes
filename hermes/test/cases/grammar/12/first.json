@@ -1,90 +1,12 @@
-{
-    "$statement": [
-        ":sub",
-        ":identifier",
-        ":s",
-        ":n",
-        ":for",
-        ":e"
-    ],
-    "$foriterstatement": [
-        ":identifier",
-        ":s",
-        ":n",
-        ":_empty",
-        ":sub",
-        ":e"
-    ],
-    "$assignstatementsub": [
-        ":identifier",
-        ":sub",
-        ":s",
-        ":n",
-        ":e"
-    ],
-    "$_gen1": [
-        ":comma",
-        ":_empty"
-    ],
-    "$e": [
-        ":sub",
-        ":n",
-        ":s",
-        ":e"
-    ],
-    "$forcondstatement": [
-        ":sub",
-        ":s",
-        ":n",
-        ":_empty",
-        ":e"
-    ],
-    "$_gen0": [
-        ":identifier",
-        ":s",
-        ":n",
-        ":_empty",
-        ":sub",
-        ":for",
-        ":e"
-    ],
-    "$forbody": [
-        ":identifier",
-        ":s",
-        ":n",
-        ":_empty",
-        ":sub",
-        ":for",
-        ":e"
-    ],
-    "$complexexpression": [
-        ":identifier",
-        ":sub",
-        ":s",
-        ":n",
-        ":e"
-    ],
-    "$forstatement": [
-        ":for"
-    ],
-    "$start": [
-        ":identifier",
-        ":sub",
-        ":s",
-        ":n",
-        ":_empty",
-        ":for",
-        ":e"
-    ],
-    "$assignstatement": [
-        ":identifier"
-    ],
-    "$fordeclstatement": [
-        ":identifier",
-        ":s",
-        ":n",
-        ":_empty",
-        ":sub",
-        ":e"
-    ]
-}
+$_gen0 -> :_empty, :e, :for, :identifier, :n, :s, :sub
+$assignstatement -> :identifier
+$assignstatementsub -> :e, :identifier, :n, :s, :sub
+$complexexpression -> :e, :identifier, :n, :s, :sub
+$e -> :e, :n, :s, :sub
+$forbody -> :_empty, :e, :for, :identifier, :n, :s, :sub
+$forcondstatement -> :_empty, :e, :n, :s, :sub
+$fordeclstatement -> :_empty, :e, :identifier, :n, :s, :sub
+$foriterstatement -> :_empty, :e, :identifier, :n, :s, :sub
+$forstatement -> :for
+$start -> :_empty, :e, :for, :identifier, :n, :s, :sub
+$statement -> :e, :for, :identifier, :n, :s, :sub

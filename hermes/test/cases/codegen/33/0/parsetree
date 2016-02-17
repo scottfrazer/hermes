@@ -5,79 +5,62 @@
         <source:1:1 a "YQ==">
       )
     ),
-    (_gen1:
-      <source:1:2 comma "LA==">,
-      (sub:
+    <source:1:2 comma "LA==">,
+    (sub:
+      (e:
         (e:
-          (e:
-            <source:1:3 identifier "aQ==">
-          ),
-          <source:1:4 lparen "KA==">,
-          (_gen4: ),
-          <source:1:5 rparen "KQ==">
-        )
-      ),
-      (_gen1:
-        <source:1:6 comma "LA==">,
-        (sub:
-          (e:
-            (e:
-              <source:1:7 lparen_cast "KA==">,
-              (type_name:
-                <source:1:8 int "aW50">
-              ),
-              <source:1:11 rparen "KQ==">
-            ),
-            <source:1:12 lbrace "ew==">,
-            (_gen2:
-              <source:1:13 item "aXRlbQ==">,
-              (_gen3:
-                <source:1:17 comma "LA==">,
-                <source:1:18 item "aXRlbQ==">,
-                (_gen3:
-                  <source:1:22 comma "LA==">,
-                  <source:1:23 item "aXRlbQ==">,
-                  (_gen3: )
-                )
-              )
-            ),
-            <source:1:27 rbrace "fQ==">
-          )
+          <source:1:3 identifier "aQ==">
         ),
-        (_gen1:
-          <source:1:28 comma "LA==">,
-          (sub:
-            (e:
-              (e:
-                <source:1:29 number "MA==">
-              ),
-              <source:1:30 lsquare "Ww==">,
-              (_gen2: ),
-              <source:1:31 rsquare "XQ==">
-            )
+        <source:1:4 lparen "KA==">,
+        (_gen2: ),
+        <source:1:5 rparen "KQ==">
+      )
+    ),
+    <source:1:6 comma "LA==">,
+    (sub:
+      (e:
+        (e:
+          <source:1:7 lparen_cast "KA==">,
+          (type_name:
+            <source:1:8 int "aW50">
           ),
-          (_gen1:
-            <source:1:32 comma "LA==">,
-            (sub:
-              (e:
-                (e:
-                  <source:1:33 number "MQ==">
-                ),
-                <source:1:34 lsquare "Ww==">,
-                (_gen2:
-                  <source:1:35 item "aXRlbQ==">,
-                  (_gen3:
-                    <source:1:39 comma "LA==">,
-                    <source:1:40 item "aXRlbQ==">,
-                    (_gen3: )
-                  )
-                ),
-                <source:1:44 rsquare "XQ==">
-              )
-            ),
-            (_gen1: )
-          )
-        )
+          <source:1:11 rparen "KQ==">
+        ),
+        <source:1:12 lbrace "ew==">,
+        (_gen1:
+          <source:1:13 item "aXRlbQ==">,
+          <source:1:17 comma "LA==">,
+          <source:1:18 item "aXRlbQ==">,
+          <source:1:22 comma "LA==">,
+          <source:1:23 item "aXRlbQ==">
+        ),
+        <source:1:27 rbrace "fQ==">
+      )
+    ),
+    <source:1:28 comma "LA==">,
+    (sub:
+      (e:
+        (e:
+          <source:1:29 number "MA==">
+        ),
+        <source:1:30 lsquare "Ww==">,
+        (_gen1: ),
+        <source:1:31 rsquare "XQ==">
+      )
+    ),
+    <source:1:32 comma "LA==">,
+    (sub:
+      (e:
+        (e:
+          <source:1:33 number "MQ==">
+        ),
+        <source:1:34 lsquare "Ww==">,
+        (_gen1:
+          <source:1:35 item "aXRlbQ==">,
+          <source:1:39 comma "LA==">,
+          <source:1:40 item "aXRlbQ==">
+        ),
+        <source:1:44 rsquare "XQ==">
       )
     )
   )

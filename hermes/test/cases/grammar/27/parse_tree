@@ -8,456 +8,392 @@
           (parser_ll1:
             <grammar.hgr:2:3 parser "cGFyc2Vy">,
             <grammar.hgr:2:10 lbrace "ew==">,
-            (_gen16:
+            (_gen10:
               (ll1_rule:
                 <grammar.hgr:3:5 ll1_rule_hint "">,
                 <grammar.hgr:3:6 nonterminal "c3RhcnQ=">,
                 <grammar.hgr:3:12 equals "PQ==">,
                 (ll1_rule_rhs:
-                  (_gen18:
+                  (_gen11:
                     (rule:
-                      (_gen20:
+                      (_gen12:
                         (morpheme:
                           <grammar.hgr:3:15 nonterminal "ZQ==">
-                        ),
-                        (_gen21: )
+                        )
                       ),
-                      (_gen22: )
-                    ),
-                    (_gen19: )
+                      (_gen13: )
+                    )
                   )
                 )
               ),
-              (_gen17:
-                (ll1_rule:
-                  <grammar.hgr:4:5 ll1_rule_hint "">,
-                  <grammar.hgr:4:6 nonterminal "ZQ==">,
-                  <grammar.hgr:4:8 equals "PQ==">,
-                  (ll1_rule_rhs:
-                    (parser:
-                      (parser_expression:
-                        <grammar.hgr:4:10 parser_expression "">,
-                        <grammar.hgr:4:29 lbrace "ew==">,
-                        (_gen23:
-                          (expression_rule:
-                            (_gen25:
-                              (binding_power:
-                                <grammar.hgr:5:7 lparen "KA==">,
-                                (precedence:
-                                  (binding_power_marker:
-                                    <grammar.hgr:5:8 asterisk "Kg==">
-                                  ),
-                                  <grammar.hgr:5:9 colon "Og==">,
-                                  (associativity:
-                                    <grammar.hgr:5:10 left "bGVmdA==">
-                                  )
+              (ll1_rule:
+                <grammar.hgr:4:5 ll1_rule_hint "">,
+                <grammar.hgr:4:6 nonterminal "ZQ==">,
+                <grammar.hgr:4:8 equals "PQ==">,
+                (ll1_rule_rhs:
+                  (parser:
+                    (parser_expression:
+                      <grammar.hgr:4:10 parser_expression "">,
+                      <grammar.hgr:4:29 lbrace "ew==">,
+                      (_gen14:
+                        (expression_rule:
+                          (_gen15:
+                            (binding_power:
+                              <grammar.hgr:5:7 lparen "KA==">,
+                              (precedence:
+                                (binding_power_marker:
+                                  <grammar.hgr:5:8 asterisk "Kg==">
                                 ),
-                                <grammar.hgr:5:14 rparen "KQ==">
-                              )
-                            ),
-                            <grammar.hgr:5:16 expr_rule_hint "">,
-                            <grammar.hgr:5:17 nonterminal "ZQ==">,
-                            <grammar.hgr:5:19 equals "PQ==">,
-                            (expression_rule_production:
-                              <grammar.hgr:5:16 infix_rule_hint "">,
-                              (_gen20:
-                                (morpheme:
-                                  <grammar.hgr:5:17 nonterminal "ZQ==">
-                                ),
-                                (_gen21:
-                                  (morpheme:
-                                    <grammar.hgr:5:25 terminal "YWRk">
-                                  ),
-                                  (_gen21:
-                                    (morpheme:
-                                      <grammar.hgr:5:17 nonterminal "ZQ==">
-                                    ),
-                                    (_gen21: )
-                                  )
+                                <grammar.hgr:5:9 colon "Og==">,
+                                (associativity:
+                                  <grammar.hgr:5:10 left "bGVmdA==">
                                 )
                               ),
-                              (_gen22:
-                                (ast_transform:
-                                  <grammar.hgr:5:32 arrow "LT4=">,
-                                  (ast_transform_sub:
-                                    <grammar.hgr:5:35 identifier "QWRk">,
-                                    <grammar.hgr:5:38 lparen "KA==">,
-                                    (_gen27:
-                                      (ast_parameter:
-                                        <grammar.hgr:5:40 identifier "bGVmdA==">,
-                                        <grammar.hgr:5:44 equals "PQ==">,
-                                        <grammar.hgr:5:46 nonterminal_reference "MA==">
-                                      ),
-                                      (_gen28:
-                                        <grammar.hgr:5:47 comma "LA==">,
-                                        (ast_parameter:
-                                          <grammar.hgr:5:49 identifier "cmlnaHQ=">,
-                                          <grammar.hgr:5:54 equals "PQ==">,
-                                          <grammar.hgr:5:56 nonterminal_reference "Mg==">
-                                        ),
-                                        (_gen28: )
-                                      )
-                                    ),
-                                    <grammar.hgr:5:58 rparen "KQ==">
-                                  )
-                                )
-                              )
+                              <grammar.hgr:5:14 rparen "KQ==">
                             )
                           ),
-                          (_gen24:
-                            (expression_rule:
-                              (_gen25:
-                                (binding_power:
-                                  <grammar.hgr:6:7 lparen "KA==">,
-                                  (precedence:
-                                    (binding_power_marker:
-                                      <grammar.hgr:6:8 dash "LQ==">
-                                    ),
-                                    <grammar.hgr:6:9 colon "Og==">,
-                                    (associativity:
-                                      <grammar.hgr:6:10 left "bGVmdA==">
-                                    )
-                                  ),
-                                  <grammar.hgr:6:14 rparen "KQ==">
-                                )
+                          <grammar.hgr:5:16 expr_rule_hint "">,
+                          <grammar.hgr:5:17 nonterminal "ZQ==">,
+                          <grammar.hgr:5:19 equals "PQ==">,
+                          (expression_rule_production:
+                            <grammar.hgr:5:16 infix_rule_hint "">,
+                            (_gen12:
+                              (morpheme:
+                                <grammar.hgr:5:17 nonterminal "ZQ==">
                               ),
-                              <grammar.hgr:6:16 expr_rule_hint "">,
-                              <grammar.hgr:6:17 nonterminal "ZQ==">,
-                              <grammar.hgr:6:19 equals "PQ==">,
-                              (expression_rule_production:
-                                <grammar.hgr:6:16 infix_rule_hint "">,
-                                (_gen20:
-                                  (morpheme:
-                                    <grammar.hgr:6:17 nonterminal "ZQ==">
-                                  ),
-                                  (_gen21:
-                                    (morpheme:
-                                      <grammar.hgr:6:25 terminal "c3Vi">
-                                    ),
-                                    (_gen21:
-                                      (morpheme:
-                                        <grammar.hgr:6:17 nonterminal "ZQ==">
-                                      ),
-                                      (_gen21: )
-                                    )
-                                  )
-                                ),
-                                (_gen22:
-                                  (ast_transform:
-                                    <grammar.hgr:6:32 arrow "LT4=">,
-                                    (ast_transform_sub:
-                                      <grammar.hgr:6:35 identifier "U3VidHJhY3Q=">,
-                                      <grammar.hgr:6:43 lparen "KA==">,
-                                      (_gen27:
-                                        (ast_parameter:
-                                          <grammar.hgr:6:45 identifier "bGVmdA==">,
-                                          <grammar.hgr:6:49 equals "PQ==">,
-                                          <grammar.hgr:6:51 nonterminal_reference "MA==">
-                                        ),
-                                        (_gen28:
-                                          <grammar.hgr:6:52 comma "LA==">,
-                                          (ast_parameter:
-                                            <grammar.hgr:6:54 identifier "cmlnaHQ=">,
-                                            <grammar.hgr:6:59 equals "PQ==">,
-                                            <grammar.hgr:6:61 nonterminal_reference "Mg==">
-                                          ),
-                                          (_gen28: )
-                                        )
-                                      ),
-                                      <grammar.hgr:6:63 rparen "KQ==">
-                                    )
-                                  )
-                                )
+                              (morpheme:
+                                <grammar.hgr:5:25 terminal "YWRk">
+                              ),
+                              (morpheme:
+                                <grammar.hgr:5:17 nonterminal "ZQ==">
                               )
                             ),
-                            (_gen24:
-                              (expression_rule:
-                                (_gen25:
-                                  (binding_power:
-                                    <grammar.hgr:7:7 lparen "KA==">,
-                                    (precedence:
-                                      (binding_power_marker:
-                                        <grammar.hgr:7:8 asterisk "Kg==">
-                                      ),
-                                      <grammar.hgr:7:9 colon "Og==">,
-                                      (associativity:
-                                        <grammar.hgr:7:10 left "bGVmdA==">
-                                      )
+                            (_gen13:
+                              (ast_transform:
+                                <grammar.hgr:5:32 arrow "LT4=">,
+                                (ast_transform_sub:
+                                  <grammar.hgr:5:35 identifier "QWRk">,
+                                  <grammar.hgr:5:38 lparen "KA==">,
+                                  (_gen17:
+                                    (ast_parameter:
+                                      <grammar.hgr:5:40 identifier "bGVmdA==">,
+                                      <grammar.hgr:5:44 equals "PQ==">,
+                                      <grammar.hgr:5:46 nonterminal_reference "MA==">
                                     ),
-                                    <grammar.hgr:7:14 rparen "KQ==">
-                                  )
-                                ),
-                                <grammar.hgr:7:16 expr_rule_hint "">,
-                                <grammar.hgr:7:17 nonterminal "ZQ==">,
-                                <grammar.hgr:7:19 equals "PQ==">,
-                                (expression_rule_production:
-                                  <grammar.hgr:7:16 infix_rule_hint "">,
-                                  (_gen20:
-                                    (morpheme:
-                                      <grammar.hgr:7:17 nonterminal "ZQ==">
-                                    ),
-                                    (_gen21:
-                                      (morpheme:
-                                        <grammar.hgr:7:25 terminal "bXVs">
-                                      ),
-                                      (_gen21:
-                                        (morpheme:
-                                          <grammar.hgr:7:17 nonterminal "ZQ==">
-                                        ),
-                                        (_gen21: )
-                                      )
+                                    <grammar.hgr:5:47 comma "LA==">,
+                                    (ast_parameter:
+                                      <grammar.hgr:5:49 identifier "cmlnaHQ=">,
+                                      <grammar.hgr:5:54 equals "PQ==">,
+                                      <grammar.hgr:5:56 nonterminal_reference "Mg==">
                                     )
                                   ),
-                                  (_gen22:
-                                    (ast_transform:
-                                      <grammar.hgr:7:32 arrow "LT4=">,
-                                      (ast_transform_sub:
-                                        <grammar.hgr:7:35 identifier "TXVsdGlwbHk=">,
-                                        <grammar.hgr:7:43 lparen "KA==">,
-                                        (_gen27:
-                                          (ast_parameter:
-                                            <grammar.hgr:7:45 identifier "bGVmdA==">,
-                                            <grammar.hgr:7:49 equals "PQ==">,
-                                            <grammar.hgr:7:51 nonterminal_reference "MA==">
-                                          ),
-                                          (_gen28:
-                                            <grammar.hgr:7:52 comma "LA==">,
-                                            (ast_parameter:
-                                              <grammar.hgr:7:54 identifier "cmlnaHQ=">,
-                                              <grammar.hgr:7:59 equals "PQ==">,
-                                              <grammar.hgr:7:61 nonterminal_reference "Mg==">
-                                            ),
-                                            (_gen28: )
-                                          )
-                                        ),
-                                        <grammar.hgr:7:63 rparen "KQ==">
-                                      )
-                                    )
-                                  )
-                                )
-                              ),
-                              (_gen24:
-                                (expression_rule:
-                                  (_gen25:
-                                    (binding_power:
-                                      <grammar.hgr:8:7 lparen "KA==">,
-                                      (precedence:
-                                        (binding_power_marker:
-                                          <grammar.hgr:8:8 dash "LQ==">
-                                        ),
-                                        <grammar.hgr:8:9 colon "Og==">,
-                                        (associativity:
-                                          <grammar.hgr:8:10 left "bGVmdA==">
-                                        )
-                                      ),
-                                      <grammar.hgr:8:14 rparen "KQ==">
-                                    )
-                                  ),
-                                  <grammar.hgr:8:16 expr_rule_hint "">,
-                                  <grammar.hgr:8:17 nonterminal "ZQ==">,
-                                  <grammar.hgr:8:19 equals "PQ==">,
-                                  (expression_rule_production:
-                                    <grammar.hgr:8:16 infix_rule_hint "">,
-                                    (_gen20:
-                                      (morpheme:
-                                        <grammar.hgr:8:17 nonterminal "ZQ==">
-                                      ),
-                                      (_gen21:
-                                        (morpheme:
-                                          <grammar.hgr:8:25 terminal "ZGl2">
-                                        ),
-                                        (_gen21:
-                                          (morpheme:
-                                            <grammar.hgr:8:17 nonterminal "ZQ==">
-                                          ),
-                                          (_gen21: )
-                                        )
-                                      )
-                                    ),
-                                    (_gen22:
-                                      (ast_transform:
-                                        <grammar.hgr:8:32 arrow "LT4=">,
-                                        (ast_transform_sub:
-                                          <grammar.hgr:8:35 identifier "RGl2aWRl">,
-                                          <grammar.hgr:8:41 lparen "KA==">,
-                                          (_gen27:
-                                            (ast_parameter:
-                                              <grammar.hgr:8:43 identifier "bGVmdA==">,
-                                              <grammar.hgr:8:47 equals "PQ==">,
-                                              <grammar.hgr:8:49 nonterminal_reference "MA==">
-                                            ),
-                                            (_gen28:
-                                              <grammar.hgr:8:50 comma "LA==">,
-                                              (ast_parameter:
-                                                <grammar.hgr:8:52 identifier "cmlnaHQ=">,
-                                                <grammar.hgr:8:57 equals "PQ==">,
-                                                <grammar.hgr:8:59 nonterminal_reference "Mg==">
-                                              ),
-                                              (_gen28: )
-                                            )
-                                          ),
-                                          <grammar.hgr:8:61 rparen "KQ==">
-                                        )
-                                      )
-                                    )
-                                  )
-                                ),
-                                (_gen24:
-                                  (expression_rule:
-                                    (_gen25:
-                                      (binding_power:
-                                        <grammar.hgr:9:7 lparen "KA==">,
-                                        (precedence:
-                                          (binding_power_marker:
-                                            <grammar.hgr:9:8 asterisk "Kg==">
-                                          ),
-                                          <grammar.hgr:9:9 colon "Og==">,
-                                          (associativity:
-                                            <grammar.hgr:9:10 unary "dW5hcnk=">
-                                          )
-                                        ),
-                                        <grammar.hgr:9:15 rparen "KQ==">
-                                      )
-                                    ),
-                                    <grammar.hgr:9:17 expr_rule_hint "">,
-                                    <grammar.hgr:9:18 nonterminal "ZQ==">,
-                                    <grammar.hgr:9:20 equals "PQ==">,
-                                    (expression_rule_production:
-                                      <grammar.hgr:9:17 prefix_rule_hint "">,
-                                      (_gen20:
-                                        (morpheme:
-                                          <grammar.hgr:9:23 terminal "c3Vi">
-                                        ),
-                                        (_gen21:
-                                          (morpheme:
-                                            <grammar.hgr:9:18 nonterminal "ZQ==">
-                                          ),
-                                          (_gen21: )
-                                        )
-                                      ),
-                                      (_gen22:
-                                        (ast_transform:
-                                          <grammar.hgr:9:30 arrow "LT4=">,
-                                          (ast_transform_sub:
-                                            <grammar.hgr:9:33 identifier "VU1pbnVz">,
-                                            <grammar.hgr:9:39 lparen "KA==">,
-                                            (_gen27:
-                                              (ast_parameter:
-                                                <grammar.hgr:9:41 identifier "YXJn">,
-                                                <grammar.hgr:9:44 equals "PQ==">,
-                                                <grammar.hgr:9:46 nonterminal_reference "MQ==">
-                                              ),
-                                              (_gen28: )
-                                            ),
-                                            <grammar.hgr:9:48 rparen "KQ==">
-                                          )
-                                        )
-                                      )
-                                    )
-                                  ),
-                                  (_gen24:
-                                    (expression_rule:
-                                      (_gen25: ),
-                                      <grammar.hgr:10:7 expr_rule_hint "">,
-                                      <grammar.hgr:10:8 nonterminal "ZQ==">,
-                                      <grammar.hgr:10:10 equals "PQ==">,
-                                      (expression_rule_production:
-                                        <grammar.hgr:10:7 mixfix_rule_hint "">,
-                                        (nud:
-                                          (_gen20:
-                                            (morpheme:
-                                              <grammar.hgr:10:13 terminal "bHBhcmVu">
-                                            ),
-                                            (_gen21:
-                                              (morpheme:
-                                                <grammar.hgr:10:21 nonterminal "ZQ==">
-                                              ),
-                                              (_gen21:
-                                                (morpheme:
-                                                  <grammar.hgr:10:24 terminal "cnBhcmVu">
-                                                ),
-                                                (_gen21: )
-                                              )
-                                            )
-                                          )
-                                        ),
-                                        (_gen22:
-                                          (ast_transform:
-                                            <grammar.hgr:10:31 arrow "LT4=">,
-                                            (ast_transform_sub:
-                                              <grammar.hgr:10:35 nonterminal_reference "MQ==">
-                                            )
-                                          )
-                                        ),
-                                        (_gen26: ),
-                                        (_gen22: )
-                                      )
-                                    ),
-                                    (_gen24:
-                                      (expression_rule:
-                                        (_gen25: ),
-                                        <grammar.hgr:11:7 expr_rule_hint "">,
-                                        <grammar.hgr:11:8 nonterminal "ZQ==">,
-                                        <grammar.hgr:11:10 equals "PQ==">,
-                                        (expression_rule_production:
-                                          <grammar.hgr:11:7 mixfix_rule_hint "">,
-                                          (nud:
-                                            (_gen20:
-                                              (morpheme:
-                                                <grammar.hgr:11:13 terminal "aWRlbnRpZmllcg==">
-                                              ),
-                                              (_gen21: )
-                                            )
-                                          ),
-                                          (_gen22: ),
-                                          (_gen26: ),
-                                          (_gen22: )
-                                        )
-                                      ),
-                                      (_gen24:
-                                        (expression_rule:
-                                          (_gen25: ),
-                                          <grammar.hgr:12:7 expr_rule_hint "">,
-                                          <grammar.hgr:12:8 nonterminal "ZQ==">,
-                                          <grammar.hgr:12:10 equals "PQ==">,
-                                          (expression_rule_production:
-                                            <grammar.hgr:12:7 mixfix_rule_hint "">,
-                                            (nud:
-                                              (_gen20:
-                                                (morpheme:
-                                                  <grammar.hgr:12:13 terminal "bnVtYmVy">
-                                                ),
-                                                (_gen21: )
-                                              )
-                                            ),
-                                            (_gen22: ),
-                                            (_gen26: ),
-                                            (_gen22: )
-                                          )
-                                        ),
-                                        (_gen24: )
-                                      )
-                                    )
-                                  )
+                                  <grammar.hgr:5:58 rparen "KQ==">
                                 )
                               )
                             )
                           )
                         ),
-                        <grammar.hgr:13:5 rbrace "fQ==">
-                      )
+                        (expression_rule:
+                          (_gen15:
+                            (binding_power:
+                              <grammar.hgr:6:7 lparen "KA==">,
+                              (precedence:
+                                (binding_power_marker:
+                                  <grammar.hgr:6:8 dash "LQ==">
+                                ),
+                                <grammar.hgr:6:9 colon "Og==">,
+                                (associativity:
+                                  <grammar.hgr:6:10 left "bGVmdA==">
+                                )
+                              ),
+                              <grammar.hgr:6:14 rparen "KQ==">
+                            )
+                          ),
+                          <grammar.hgr:6:16 expr_rule_hint "">,
+                          <grammar.hgr:6:17 nonterminal "ZQ==">,
+                          <grammar.hgr:6:19 equals "PQ==">,
+                          (expression_rule_production:
+                            <grammar.hgr:6:16 infix_rule_hint "">,
+                            (_gen12:
+                              (morpheme:
+                                <grammar.hgr:6:17 nonterminal "ZQ==">
+                              ),
+                              (morpheme:
+                                <grammar.hgr:6:25 terminal "c3Vi">
+                              ),
+                              (morpheme:
+                                <grammar.hgr:6:17 nonterminal "ZQ==">
+                              )
+                            ),
+                            (_gen13:
+                              (ast_transform:
+                                <grammar.hgr:6:32 arrow "LT4=">,
+                                (ast_transform_sub:
+                                  <grammar.hgr:6:35 identifier "U3VidHJhY3Q=">,
+                                  <grammar.hgr:6:43 lparen "KA==">,
+                                  (_gen17:
+                                    (ast_parameter:
+                                      <grammar.hgr:6:45 identifier "bGVmdA==">,
+                                      <grammar.hgr:6:49 equals "PQ==">,
+                                      <grammar.hgr:6:51 nonterminal_reference "MA==">
+                                    ),
+                                    <grammar.hgr:6:52 comma "LA==">,
+                                    (ast_parameter:
+                                      <grammar.hgr:6:54 identifier "cmlnaHQ=">,
+                                      <grammar.hgr:6:59 equals "PQ==">,
+                                      <grammar.hgr:6:61 nonterminal_reference "Mg==">
+                                    )
+                                  ),
+                                  <grammar.hgr:6:63 rparen "KQ==">
+                                )
+                              )
+                            )
+                          )
+                        ),
+                        (expression_rule:
+                          (_gen15:
+                            (binding_power:
+                              <grammar.hgr:7:7 lparen "KA==">,
+                              (precedence:
+                                (binding_power_marker:
+                                  <grammar.hgr:7:8 asterisk "Kg==">
+                                ),
+                                <grammar.hgr:7:9 colon "Og==">,
+                                (associativity:
+                                  <grammar.hgr:7:10 left "bGVmdA==">
+                                )
+                              ),
+                              <grammar.hgr:7:14 rparen "KQ==">
+                            )
+                          ),
+                          <grammar.hgr:7:16 expr_rule_hint "">,
+                          <grammar.hgr:7:17 nonterminal "ZQ==">,
+                          <grammar.hgr:7:19 equals "PQ==">,
+                          (expression_rule_production:
+                            <grammar.hgr:7:16 infix_rule_hint "">,
+                            (_gen12:
+                              (morpheme:
+                                <grammar.hgr:7:17 nonterminal "ZQ==">
+                              ),
+                              (morpheme:
+                                <grammar.hgr:7:25 terminal "bXVs">
+                              ),
+                              (morpheme:
+                                <grammar.hgr:7:17 nonterminal "ZQ==">
+                              )
+                            ),
+                            (_gen13:
+                              (ast_transform:
+                                <grammar.hgr:7:32 arrow "LT4=">,
+                                (ast_transform_sub:
+                                  <grammar.hgr:7:35 identifier "TXVsdGlwbHk=">,
+                                  <grammar.hgr:7:43 lparen "KA==">,
+                                  (_gen17:
+                                    (ast_parameter:
+                                      <grammar.hgr:7:45 identifier "bGVmdA==">,
+                                      <grammar.hgr:7:49 equals "PQ==">,
+                                      <grammar.hgr:7:51 nonterminal_reference "MA==">
+                                    ),
+                                    <grammar.hgr:7:52 comma "LA==">,
+                                    (ast_parameter:
+                                      <grammar.hgr:7:54 identifier "cmlnaHQ=">,
+                                      <grammar.hgr:7:59 equals "PQ==">,
+                                      <grammar.hgr:7:61 nonterminal_reference "Mg==">
+                                    )
+                                  ),
+                                  <grammar.hgr:7:63 rparen "KQ==">
+                                )
+                              )
+                            )
+                          )
+                        ),
+                        (expression_rule:
+                          (_gen15:
+                            (binding_power:
+                              <grammar.hgr:8:7 lparen "KA==">,
+                              (precedence:
+                                (binding_power_marker:
+                                  <grammar.hgr:8:8 dash "LQ==">
+                                ),
+                                <grammar.hgr:8:9 colon "Og==">,
+                                (associativity:
+                                  <grammar.hgr:8:10 left "bGVmdA==">
+                                )
+                              ),
+                              <grammar.hgr:8:14 rparen "KQ==">
+                            )
+                          ),
+                          <grammar.hgr:8:16 expr_rule_hint "">,
+                          <grammar.hgr:8:17 nonterminal "ZQ==">,
+                          <grammar.hgr:8:19 equals "PQ==">,
+                          (expression_rule_production:
+                            <grammar.hgr:8:16 infix_rule_hint "">,
+                            (_gen12:
+                              (morpheme:
+                                <grammar.hgr:8:17 nonterminal "ZQ==">
+                              ),
+                              (morpheme:
+                                <grammar.hgr:8:25 terminal "ZGl2">
+                              ),
+                              (morpheme:
+                                <grammar.hgr:8:17 nonterminal "ZQ==">
+                              )
+                            ),
+                            (_gen13:
+                              (ast_transform:
+                                <grammar.hgr:8:32 arrow "LT4=">,
+                                (ast_transform_sub:
+                                  <grammar.hgr:8:35 identifier "RGl2aWRl">,
+                                  <grammar.hgr:8:41 lparen "KA==">,
+                                  (_gen17:
+                                    (ast_parameter:
+                                      <grammar.hgr:8:43 identifier "bGVmdA==">,
+                                      <grammar.hgr:8:47 equals "PQ==">,
+                                      <grammar.hgr:8:49 nonterminal_reference "MA==">
+                                    ),
+                                    <grammar.hgr:8:50 comma "LA==">,
+                                    (ast_parameter:
+                                      <grammar.hgr:8:52 identifier "cmlnaHQ=">,
+                                      <grammar.hgr:8:57 equals "PQ==">,
+                                      <grammar.hgr:8:59 nonterminal_reference "Mg==">
+                                    )
+                                  ),
+                                  <grammar.hgr:8:61 rparen "KQ==">
+                                )
+                              )
+                            )
+                          )
+                        ),
+                        (expression_rule:
+                          (_gen15:
+                            (binding_power:
+                              <grammar.hgr:9:7 lparen "KA==">,
+                              (precedence:
+                                (binding_power_marker:
+                                  <grammar.hgr:9:8 asterisk "Kg==">
+                                ),
+                                <grammar.hgr:9:9 colon "Og==">,
+                                (associativity:
+                                  <grammar.hgr:9:10 unary "dW5hcnk=">
+                                )
+                              ),
+                              <grammar.hgr:9:15 rparen "KQ==">
+                            )
+                          ),
+                          <grammar.hgr:9:17 expr_rule_hint "">,
+                          <grammar.hgr:9:18 nonterminal "ZQ==">,
+                          <grammar.hgr:9:20 equals "PQ==">,
+                          (expression_rule_production:
+                            <grammar.hgr:9:17 prefix_rule_hint "">,
+                            (_gen12:
+                              (morpheme:
+                                <grammar.hgr:9:23 terminal "c3Vi">
+                              ),
+                              (morpheme:
+                                <grammar.hgr:9:18 nonterminal "ZQ==">
+                              )
+                            ),
+                            (_gen13:
+                              (ast_transform:
+                                <grammar.hgr:9:30 arrow "LT4=">,
+                                (ast_transform_sub:
+                                  <grammar.hgr:9:33 identifier "VU1pbnVz">,
+                                  <grammar.hgr:9:39 lparen "KA==">,
+                                  (_gen17:
+                                    (ast_parameter:
+                                      <grammar.hgr:9:41 identifier "YXJn">,
+                                      <grammar.hgr:9:44 equals "PQ==">,
+                                      <grammar.hgr:9:46 nonterminal_reference "MQ==">
+                                    )
+                                  ),
+                                  <grammar.hgr:9:48 rparen "KQ==">
+                                )
+                              )
+                            )
+                          )
+                        ),
+                        (expression_rule:
+                          (_gen15: ),
+                          <grammar.hgr:10:7 expr_rule_hint "">,
+                          <grammar.hgr:10:8 nonterminal "ZQ==">,
+                          <grammar.hgr:10:10 equals "PQ==">,
+                          (expression_rule_production:
+                            <grammar.hgr:10:7 mixfix_rule_hint "">,
+                            (nud:
+                              (_gen12:
+                                (morpheme:
+                                  <grammar.hgr:10:13 terminal "bHBhcmVu">
+                                ),
+                                (morpheme:
+                                  <grammar.hgr:10:21 nonterminal "ZQ==">
+                                ),
+                                (morpheme:
+                                  <grammar.hgr:10:24 terminal "cnBhcmVu">
+                                )
+                              )
+                            ),
+                            (_gen13:
+                              (ast_transform:
+                                <grammar.hgr:10:31 arrow "LT4=">,
+                                (ast_transform_sub:
+                                  <grammar.hgr:10:35 nonterminal_reference "MQ==">
+                                )
+                              )
+                            ),
+                            (_gen16: ),
+                            (_gen13: )
+                          )
+                        ),
+                        (expression_rule:
+                          (_gen15: ),
+                          <grammar.hgr:11:7 expr_rule_hint "">,
+                          <grammar.hgr:11:8 nonterminal "ZQ==">,
+                          <grammar.hgr:11:10 equals "PQ==">,
+                          (expression_rule_production:
+                            <grammar.hgr:11:7 mixfix_rule_hint "">,
+                            (nud:
+                              (_gen12:
+                                (morpheme:
+                                  <grammar.hgr:11:13 terminal "aWRlbnRpZmllcg==">
+                                )
+                              )
+                            ),
+                            (_gen13: ),
+                            (_gen16: ),
+                            (_gen13: )
+                          )
+                        ),
+                        (expression_rule:
+                          (_gen15: ),
+                          <grammar.hgr:12:7 expr_rule_hint "">,
+                          <grammar.hgr:12:8 nonterminal "ZQ==">,
+                          <grammar.hgr:12:10 equals "PQ==">,
+                          (expression_rule_production:
+                            <grammar.hgr:12:7 mixfix_rule_hint "">,
+                            (nud:
+                              (_gen12:
+                                (morpheme:
+                                  <grammar.hgr:12:13 terminal "bnVtYmVy">
+                                )
+                              )
+                            ),
+                            (_gen13: ),
+                            (_gen16: ),
+                            (_gen13: )
+                          )
+                        )
+                      ),
+                      <grammar.hgr:13:5 rbrace "fQ==">
                     )
                   )
-                ),
-                (_gen17: )
+                )
               )
             ),
             <grammar.hgr:14:3 rbrace "fQ==">
           )
         )
       )
-    ),
-    (_gen1: )
+    )
   ),
   <grammar.hgr:15:1 rbrace "fQ==">
 )

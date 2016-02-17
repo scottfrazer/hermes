@@ -89,6 +89,9 @@ def c_ast(c_ctx):
     with open(ast_file) as fp:
         expected = fp.read()
     actual = c_ctx.ast()
+    if expected != actual:
+        print(expected)
+        print(actual)
     assert expected == actual
 
 def java_parse_tree(java_ctx):

@@ -1,13 +1,2 @@
-{
-    "$start": [
-        ":_eos"
-    ],
-    "$e": [
-        ":sub",
-        ":mul",
-        ":add",
-        ":div",
-        ":rparen",
-        ":_eos"
-    ]
-}
+$e -> :_eos, :add, :div, :mul, :rparen, :sub
+$start -> :_eos

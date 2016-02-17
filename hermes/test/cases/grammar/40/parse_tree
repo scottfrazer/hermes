@@ -7,72 +7,61 @@
         (lexer:
           <grammar.hgr:2:3 lexer "bGV4ZXI=">,
           <grammar.hgr:2:9 lbrace "ew==">,
-          (_gen2:
+          (_gen1:
             (lexer_atom:
               (lexer_regex:
                 <grammar.hgr:3:5 regex "cidhJw==">,
-                (_gen6: ),
+                (_gen3: ),
                 <grammar.hgr:3:10 arrow "LT4=">,
-                (_gen7:
+                (_gen4:
                   (lexer_target:
                     (terminal:
                       <grammar.hgr:3:14 terminal "YQ==">,
-                      (_gen15: )
+                      (_gen9: )
                     )
-                  ),
-                  (_gen8: )
+                  )
                 )
               )
             ),
-            (_gen3:
-              (lexer_atom:
-                (lexer_regex:
-                  <grammar.hgr:4:5 regex "cidiJw==">,
-                  (_gen6: ),
-                  <grammar.hgr:4:10 arrow "LT4=">,
-                  (_gen7:
-                    (lexer_target:
-                      (terminal:
-                        <grammar.hgr:4:14 terminal "Yg==">,
-                        (_gen15: )
-                      )
-                    ),
-                    (_gen8: )
+            (lexer_atom:
+              (lexer_regex:
+                <grammar.hgr:4:5 regex "cidiJw==">,
+                (_gen3: ),
+                <grammar.hgr:4:10 arrow "LT4=">,
+                (_gen4:
+                  (lexer_target:
+                    (terminal:
+                      <grammar.hgr:4:14 terminal "Yg==">,
+                      (_gen9: )
+                    )
                   )
                 )
-              ),
-              (_gen3:
-                (lexer_atom:
-                  (lexer_regex:
-                    <grammar.hgr:5:5 regex "cic7Jw==">,
-                    (_gen6: ),
-                    <grammar.hgr:5:10 arrow "LT4=">,
-                    (_gen7:
-                      (lexer_target:
-                        (terminal:
-                          <grammar.hgr:5:14 terminal "c2VtaQ==">,
-                          (_gen15: )
-                        )
-                      ),
-                      (_gen8: )
+              )
+            ),
+            (lexer_atom:
+              (lexer_regex:
+                <grammar.hgr:5:5 regex "cic7Jw==">,
+                (_gen3: ),
+                <grammar.hgr:5:10 arrow "LT4=">,
+                (_gen4:
+                  (lexer_target:
+                    (terminal:
+                      <grammar.hgr:5:14 terminal "c2VtaQ==">,
+                      (_gen9: )
                     )
                   )
-                ),
-                (_gen3:
-                  (lexer_atom:
-                    (lexer_regex:
-                      <grammar.hgr:6:5 regex "cidccysn">,
-                      (_gen6: ),
-                      <grammar.hgr:6:12 arrow "LT4=">,
-                      (_gen7:
-                        (lexer_target:
-                          <grammar.hgr:6:15 null "bnVsbA==">
-                        ),
-                        (_gen8: )
-                      )
-                    )
-                  ),
-                  (_gen3: )
+                )
+              )
+            ),
+            (lexer_atom:
+              (lexer_regex:
+                <grammar.hgr:6:5 regex "cidccysn">,
+                (_gen3: ),
+                <grammar.hgr:6:12 arrow "LT4=">,
+                (_gen4:
+                  (lexer_target:
+                    <grammar.hgr:6:15 null "bnVsbA==">
+                  )
                 )
               )
             )
@@ -81,124 +70,98 @@
         )
       )
     ),
-    (_gen1:
-      (body_element:
-        (body_element_sub:
-          (parser:
-            (parser_ll1:
-              <grammar.hgr:8:3 parser "cGFyc2Vy">,
-              <grammar.hgr:8:10 lbrace "ew==">,
-              (_gen16:
-                (ll1_rule:
-                  <grammar.hgr:9:5 ll1_rule_hint "">,
-                  <grammar.hgr:9:6 nonterminal "c3RhcnQ=">,
-                  <grammar.hgr:9:12 equals "PQ==">,
-                  (ll1_rule_rhs:
-                    (_gen18:
-                      (rule:
-                        (_gen20:
-                          (morpheme:
-                            <grammar.hgr:9:15 nonterminal "c3Vi">
-                          ),
-                          (_gen21:
-                            (morpheme:
-                              <grammar.hgr:9:20 terminal "c2VtaQ==">
-                            ),
-                            (_gen21: )
-                          )
+    (body_element:
+      (body_element_sub:
+        (parser:
+          (parser_ll1:
+            <grammar.hgr:8:3 parser "cGFyc2Vy">,
+            <grammar.hgr:8:10 lbrace "ew==">,
+            (_gen10:
+              (ll1_rule:
+                <grammar.hgr:9:5 ll1_rule_hint "">,
+                <grammar.hgr:9:6 nonterminal "c3RhcnQ=">,
+                <grammar.hgr:9:12 equals "PQ==">,
+                (ll1_rule_rhs:
+                  (_gen11:
+                    (rule:
+                      (_gen12:
+                        (morpheme:
+                          <grammar.hgr:9:15 nonterminal "c3Vi">
                         ),
-                        (_gen22: )
-                      ),
-                      (_gen19: )
-                    )
-                  )
-                ),
-                (_gen17:
-                  (ll1_rule:
-                    <grammar.hgr:10:5 ll1_rule_hint "">,
-                    <grammar.hgr:10:6 nonterminal "c3Vi">,
-                    <grammar.hgr:10:10 equals "PQ==">,
-                    (ll1_rule_rhs:
-                      (_gen18:
-                        (rule:
-                          (_gen20:
-                            (morpheme:
-                              <grammar.hgr:10:13 terminal "YQ==">
-                            ),
-                            (_gen21:
-                              (morpheme:
-                                <grammar.hgr:10:16 nonterminal "c3Vi">
-                              ),
-                              (_gen21:
-                                (morpheme:
-                                  <grammar.hgr:10:21 terminal "Yg==">
-                                ),
-                                (_gen21: )
-                              )
-                            )
-                          ),
-                          (_gen22: )
-                        ),
-                        (_gen19: )
-                      )
-                    )
-                  ),
-                  (_gen17:
-                    (ll1_rule:
-                      <grammar.hgr:11:5 ll1_rule_hint "">,
-                      <grammar.hgr:11:6 nonterminal "c3Vi">,
-                      <grammar.hgr:11:10 equals "PQ==">,
-                      (ll1_rule_rhs:
-                        (_gen18:
-                          (rule:
-                            (_gen20:
-                              (morpheme:
-                                <grammar.hgr:11:13 terminal "YQ==">
-                              ),
-                              (_gen21:
-                                (morpheme:
-                                  <grammar.hgr:11:16 terminal "Yg==">
-                                ),
-                                (_gen21: )
-                              )
-                            ),
-                            (_gen22: )
-                          ),
-                          (_gen19: )
-                        )
-                      )
-                    ),
-                    (_gen17:
-                      (ll1_rule:
-                        <grammar.hgr:12:5 ll1_rule_hint "">,
-                        <grammar.hgr:12:6 nonterminal "c3Vi">,
-                        <grammar.hgr:12:10 equals "PQ==">,
-                        (ll1_rule_rhs:
-                          (_gen18:
-                            (rule:
-                              (_gen20:
-                                (morpheme:
-                                  <grammar.hgr:12:13 terminal "X2VtcHR5">
-                                ),
-                                (_gen21: )
-                              ),
-                              (_gen22: )
-                            ),
-                            (_gen19: )
-                          )
+                        (morpheme:
+                          <grammar.hgr:9:20 terminal "c2VtaQ==">
                         )
                       ),
-                      (_gen17: )
+                      (_gen13: )
                     )
                   )
                 )
               ),
-              <grammar.hgr:13:3 rbrace "fQ==">
-            )
+              (ll1_rule:
+                <grammar.hgr:10:5 ll1_rule_hint "">,
+                <grammar.hgr:10:6 nonterminal "c3Vi">,
+                <grammar.hgr:10:10 equals "PQ==">,
+                (ll1_rule_rhs:
+                  (_gen11:
+                    (rule:
+                      (_gen12:
+                        (morpheme:
+                          <grammar.hgr:10:13 terminal "YQ==">
+                        ),
+                        (morpheme:
+                          <grammar.hgr:10:16 nonterminal "c3Vi">
+                        ),
+                        (morpheme:
+                          <grammar.hgr:10:21 terminal "Yg==">
+                        )
+                      ),
+                      (_gen13: )
+                    )
+                  )
+                )
+              ),
+              (ll1_rule:
+                <grammar.hgr:11:5 ll1_rule_hint "">,
+                <grammar.hgr:11:6 nonterminal "c3Vi">,
+                <grammar.hgr:11:10 equals "PQ==">,
+                (ll1_rule_rhs:
+                  (_gen11:
+                    (rule:
+                      (_gen12:
+                        (morpheme:
+                          <grammar.hgr:11:13 terminal "YQ==">
+                        ),
+                        (morpheme:
+                          <grammar.hgr:11:16 terminal "Yg==">
+                        )
+                      ),
+                      (_gen13: )
+                    )
+                  )
+                )
+              ),
+              (ll1_rule:
+                <grammar.hgr:12:5 ll1_rule_hint "">,
+                <grammar.hgr:12:6 nonterminal "c3Vi">,
+                <grammar.hgr:12:10 equals "PQ==">,
+                (ll1_rule_rhs:
+                  (_gen11:
+                    (rule:
+                      (_gen12:
+                        (morpheme:
+                          <grammar.hgr:12:13 terminal "X2VtcHR5">
+                        )
+                      ),
+                      (_gen13: )
+                    )
+                  )
+                )
+              )
+            ),
+            <grammar.hgr:13:3 rbrace "fQ==">
           )
         )
-      ),
-      (_gen1: )
+      )
     )
   ),
   <grammar.hgr:14:1 rbrace "fQ==">

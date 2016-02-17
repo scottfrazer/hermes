@@ -1,9 +1,2 @@
-{
-    "$start": [
-        ":_eos"
-    ],
-    "$sub": [
-        ":b",
-        ":semi"
-    ]
-}
+$start -> :_eos
+$sub -> :b, :semi

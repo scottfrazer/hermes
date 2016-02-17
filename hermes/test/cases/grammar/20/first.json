@@ -1,67 +1,10 @@
-{
-    "$_gen3": [
-        ":_empty",
-        ":comma"
-    ],
-    "$_gen1": [
-        ":function",
-        ":class",
-        ":a",
-        ":b",
-        ":_empty"
-    ],
-    "$_gen2": [
-        ":_empty",
-        ":param1",
-        ":param2"
-    ],
-    "$param": [
-        ":param1",
-        ":param2"
-    ],
-    "$class_statement": [
-        ":private",
-        ":public"
-    ],
-    "$_gen5": [
-        ":private",
-        ":_empty",
-        ":public"
-    ],
-    "$class_atom": [
-        ":function",
-        ":x",
-        ":y"
-    ],
-    "$_gen4": [
-        ":private",
-        ":_empty",
-        ":public"
-    ],
-    "$start": [
-        ":function",
-        ":class",
-        ":a",
-        ":b",
-        ":_empty"
-    ],
-    "$classdef": [
-        ":class"
-    ],
-    "$funcdef": [
-        ":function"
-    ],
-    "$statement": [
-        ":function",
-        ":b",
-        ":class",
-        ":a"
-    ],
-    "$_gen0": [
-        ":function",
-        ":class",
-        ":a",
-        ":b",
-        ":_empty"
-    ]
-}
+$_gen0 -> :_empty, :a, :b, :class, :function
+$_gen1 -> :_empty, :param1, :param2
+$_gen2 -> :_empty, :private, :public
+$class_atom -> :function, :x, :y
+$class_statement -> :private, :public
+$classdef -> :class
+$funcdef -> :function
+$param -> :param1, :param2
+$start -> :_empty, :a, :b, :class, :function
+$statement -> :a, :b, :class, :function

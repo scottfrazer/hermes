@@ -1,88 +1,9 @@
-{
-    "$initializer_list_item": [
-        ":item"
-    ],
-    "$_gen3": [
-        ":_empty",
-        ":comma"
-    ],
-    "$sub": [
-        ":e",
-        ":lparen_cast",
-        ":lsquare",
-        ":number",
-        ":identifier",
-        ":a",
-        ":lparen",
-        ":subtract",
-        ":lbrace",
-        ":b"
-    ],
-    "$_gen1": [
-        ":_empty",
-        ":comma"
-    ],
-    "$_gen4": [
-        ":e",
-        ":lparen_cast",
-        ":lsquare",
-        ":number",
-        ":_empty",
-        ":identifier",
-        ":lparen",
-        ":subtract",
-        ":lbrace"
-    ],
-    "$start": [
-        ":e",
-        ":lparen_cast",
-        ":lsquare",
-        ":number",
-        ":_empty",
-        ":identifier",
-        ":a",
-        ":lparen",
-        ":subtract",
-        ":lbrace",
-        ":b"
-    ],
-    "$_gen2": [
-        ":_empty",
-        ":item"
-    ],
-    "$_gen5": [
-        ":_empty",
-        ":comma"
-    ],
-    "$_gen0": [
-        ":e",
-        ":lparen_cast",
-        ":lsquare",
-        ":number",
-        ":_empty",
-        ":identifier",
-        ":a",
-        ":lparen",
-        ":subtract",
-        ":lbrace",
-        ":b"
-    ],
-    "$e": [
-        ":e",
-        ":lparen_cast",
-        ":lsquare",
-        ":lparen",
-        ":number",
-        ":subtract",
-        ":identifier",
-        ":lbrace"
-    ],
-    "$item": [
-        ":a",
-        ":b"
-    ],
-    "$type_name": [
-        ":int",
-        ":char"
-    ]
-}
+$_gen0 -> :_empty, :a, :b, :e, :identifier, :lbrace, :lparen, :lparen_cast, :lsquare, :number, :subtract
+$_gen1 -> :_empty, :item
+$_gen2 -> :_empty, :e, :identifier, :lbrace, :lparen, :lparen_cast, :lsquare, :number, :subtract
+$e -> :e, :identifier, :lbrace, :lparen, :lparen_cast, :lsquare, :number, :subtract
+$initializer_list_item -> :item
+$item -> :a, :b
+$start -> :_empty, :a, :b, :e, :identifier, :lbrace, :lparen, :lparen_cast, :lsquare, :number, :subtract
+$sub -> :a, :b, :e, :identifier, :lbrace, :lparen, :lparen_cast, :lsquare, :number, :subtract
+$type_name -> :char, :int

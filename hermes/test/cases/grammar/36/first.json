@@ -1,10 +1,2 @@
-{
-    "$_gen0": [
-        ":item",
-        ":_empty"
-    ],
-    "$start": [
-        ":item",
-        ":next"
-    ]
-}
+$_gen0 -> :_empty, :item
+$start -> :item, :next

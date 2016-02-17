@@ -1,0 +1,19 @@
+grammar {
+  lexer {
+    r'\s+' -> null
+    r'a' -> :a
+    r'b' -> :b
+    r'c' -> :c
+    r'd' -> :d
+  }
+  parser {
+    $start = list(:a, :b)
+    $alpha = list(:a)
+    $beta = list($cd)
+    $gamma = list(:a, null, 4)
+    $delta = list($cd, :a, 2)
+    $epsilon = tlist($cd, :b)
+    $zeta = otlist($cd, :b)
+    $cd = :c | :d
+  }
+}

@@ -11,7 +11,6 @@ from hermes.hermes_parser import parse as hermes_parse
 supported_languages = ['python', 'c', 'java', 'javascript']
 
 class GrammarFactory:
-    # TODO: I want to get rid of name and start parameters
     def create(self, name, ast):
         self.next_id = 0
         self.binding_power = 0
@@ -59,11 +58,9 @@ class GrammarFactory:
 
             expression_grammars = []
             for expression_parser_ast in expression_parser_asts:
-                nonterminal = self.get_morpheme_from_lexer_token(expression_parser_ast.attr('nonterminal'),
-                                                                 all_terminals, all_nonterminals)
+                nonterminal = self.get_morpheme_from_lexer_token(expression_parser_ast.attr('nonterminal'), all_terminals, all_nonterminals)
                 for expression_rule_ast in expression_parser_ast.attr('production').attr('rules'):
-                    rules = self.parse_expr_rule(expression_rule_ast, nonterminal, all_terminals, all_nonterminals,
-                                                 all_macros)
+                    rules = self.parse_expr_rule(expression_rule_ast, nonterminal, all_terminals, all_nonterminals, all_macros)
                     all_rules.extend(rules)
 
             if lexer: lexer.terminals = all_terminals.values()
@@ -75,10 +72,7 @@ class GrammarFactory:
             if ast.attr('name').source_string == 'list':
                 macro = self.list(ast, terminals, nonterminals)
             elif ast.attr('name').source_string in ['tlist', 'otlist']:
-                macro = self.tlist(
-                    ast, terminals, nonterminals,
-                    optional_termination=(ast.attr('name').source_string == 'otlist')
-                )
+                macro = self.tlist(ast, terminals, nonterminals)
             elif ast.attr('name').source_string == 'optional':
                 macro = self.optional(ast, terminals, nonterminals)
             else:
@@ -385,81 +379,30 @@ class GrammarFactory:
         if len(ast.attr('parameters')) > 2:
             minimum = int(ast.attr('parameters')[2].source_string)
 
-        nt0 = self.generate_nonterminal(nonterminals)
-        nt1 = self.generate_nonterminal(nonterminals)
-        empty = terminals['_empty']
+        return ListParser(
+            self.generate_nonterminal(nonterminals),
+            morpheme, separator, minimum,
+            False, self.macro_ast_to_string(ast)
+        )
 
-        prod = [morpheme] * max(minimum, 1)
-        if separator is not None and minimum > 0:
-            prod = [m if i % 2 == 0 else separator for i, m in enumerate([morpheme] * (minimum * 2 - 1))]
-        prod.append(nt1)
-
-        rules = [
-            MacroGeneratedRule(nt0, Production(prod)),
-            MacroGeneratedRule(nt1, Production([separator, morpheme, nt1] if separator else [morpheme, nt1])),
-            MacroGeneratedRule(nt1, Production([empty]))
-        ]
-
-        if minimum == 0:
-            rules.append(MacroGeneratedRule(nt0, Production([empty])))
-
-        macro = LL1ListMacro(morpheme, separator, minimum, nt0, False, False, rules)
-
-        for rule in rules:
-            rule.nonterminal.macro = macro
-
-        return macro
-
-    def tlist(self, ast, terminals, nonterminals, optional_termination=False):
+    def tlist(self, ast, terminals, nonterminals):
         morpheme = self.get_morpheme_from_lexer_token(ast.attr('parameters')[0], terminals, nonterminals)
         separator = self.get_morpheme_from_lexer_token(ast.attr('parameters')[1], terminals, nonterminals)
         minimum = int(ast.attr('parameters')[2].source_string) if len(ast.attr('parameters')) > 2 else 0
-        nt0 = self.generate_nonterminal(nonterminals)
-        nt1 = self.generate_nonterminal(nonterminals)
-        empty = terminals['_empty']
 
-        start_production = []
-        if minimum > 0:
-            for x in range(minimum):
-                start_production.extend([morpheme, separator])
-            start_production = start_production[:-1]
-        else:
-            start_production.append(morpheme)
-        start_production.append(nt1)
-
-        if optional_termination:
-            nt2 = self.generate_nonterminal(nonterminals)
-            termination_rules = [
-                MacroGeneratedRule(nt1, Production([separator, nt2])),
-                MacroGeneratedRule(nt1, Production([empty])),
-                MacroGeneratedRule(nt2, Production([morpheme, nt1])),
-                MacroGeneratedRule(nt2, Production([empty]))
-            ]
-        else:
-            termination_rules = [
-                MacroGeneratedRule(nt1, Production([separator, nt0]))
-            ]
-
-        rules = [
-            MacroGeneratedRule(nt0, Production(start_production)),
-        ]
-        rules.extend(termination_rules)
-        if minimum == 0:
-            rules.append(MacroGeneratedRule(nt0, Production([empty])))
-        macro = LL1ListMacro(morpheme, separator, minimum, nt0, True, optional_termination, rules)
-
-        for rule in rules:
-            rule.nonterminal.macro = macro
-
-        return macro
+        return ListParser(
+            self.generate_nonterminal(nonterminals),
+            morpheme, separator, minimum,
+            True, self.macro_ast_to_string(ast)
+        )
 
     def optional(self, ast, terminals, nonterminals):
         morpheme = self.get_morpheme_from_lexer_token(ast.attr('parameters')[0], terminals, nonterminals)
         nt0 = self.generate_nonterminal(nonterminals)
         empty = terminals['_empty']
         rules = [
-            MacroGeneratedRule(nt0, Production([morpheme])),
-            MacroGeneratedRule(nt0, Production([empty]))
+            Rule(nt0, Production([morpheme])),
+            Rule(nt0, Production([empty]))
         ]
 
         macro = OptionalMacro(morpheme, nt0, rules)

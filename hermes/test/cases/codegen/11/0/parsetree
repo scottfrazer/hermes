@@ -11,30 +11,27 @@
         )
       )
     ),
-    (_gen1:
-      <source:1:4 comma "LA==">,
-      (statements:
-        (assignstatement:
-          <source:1:5 identifier "aQ==">,
-          <source:1:6 eq "PQ==">,
+    <source:1:4 comma "LA==">,
+    (statements:
+      (assignstatement:
+        <source:1:5 identifier "aQ==">,
+        <source:1:6 eq "PQ==">,
+        (e:
+          (e:
+            <source:1:7 a "YQ==">
+          ),
+          <source:1:8 sub "LQ==">,
           (e:
             (e:
-              <source:1:7 a "YQ==">
+              <source:1:9 b "Yg==">
             ),
-            <source:1:8 sub "LQ==">,
+            <source:1:10 mul "Kg==">,
             (e:
-              (e:
-                <source:1:9 b "Yg==">
-              ),
-              <source:1:10 mul "Kg==">,
-              (e:
-                <source:1:11 a "YQ==">
-              )
+              <source:1:11 a "YQ==">
             )
           )
         )
-      ),
-      (_gen1: )
+      )
     )
   )
 )

@@ -1,65 +1,10 @@
-{
-    "$_gen3": [
-        ":rparen"
-    ],
-    "$_gen1": [
-        ":_eos",
-        ":rbrace"
-    ],
-    "$_gen2": [
-        ":rparen"
-    ],
-    "$param": [
-        ":rparen",
-        ":comma"
-    ],
-    "$class_statement": [
-        ":rbrace",
-        ":private",
-        ":public"
-    ],
-    "$_gen5": [
-        ":rbrace"
-    ],
-    "$class_atom": [
-        ":rbrace",
-        ":private",
-        ":public"
-    ],
-    "$_gen4": [
-        ":rbrace"
-    ],
-    "$start": [
-        ":_eos"
-    ],
-    "$classdef": [
-        ":_eos",
-        ":rbrace",
-        ":a",
-        ":b",
-        ":function",
-        ":class"
-    ],
-    "$funcdef": [
-        ":_eos",
-        ":rbrace",
-        ":public",
-        ":a",
-        ":b",
-        ":function",
-        ":private",
-        ":class"
-    ],
-    "$statement": [
-        ":_eos",
-        ":function",
-        ":rbrace",
-        ":class",
-        ":a",
-        ":b"
-    ],
-    "$_gen0": [
-        ":_eos",
-        ":rbrace"
-    ]
-}
+$_gen0 -> :_eos, :rbrace
+$_gen1 -> :rparen
+$_gen2 -> :rbrace
+$class_atom -> :private, :public, :rbrace
+$class_statement -> :private, :public, :rbrace
+$classdef -> :_eos, :a, :b, :class, :function, :rbrace
+$funcdef -> :_eos, :a, :b, :class, :function, :private, :public, :rbrace
+$param -> :comma, :rparen
+$start -> :_eos
+$statement -> :_eos, :a, :b, :class, :function, :rbrace

@@ -176,7 +176,6 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
 {
   ABSTRACT_SYNTAX_TREE_T * ast = NULL;
   AST_LIST_T * lnode, * tail, * ast_list;
-  ABSTRACT_SYNTAX_TREE_T * this, * next;
   PARSE_TREE_T * tree = (PARSE_TREE_T *) node->object;
   int offset, i;
 
@@ -191,13 +190,10 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
 
   if ( tree->list == TRUE )
   {
-    int end = MAX(0, tree->nchildren - 1);
-
-    for ( i = 0; i < end; i++ )
+    for ( i = 0; i < tree->nchildren; i++ )
     {
       if ( tree->children[i].type == PARSE_TREE_NODE_TYPE_TERMINAL &&
-           tree->listSeparator != NULL &&
-           ((TOKEN_T *) tree->children[i].object)->terminal->id == ((TOKEN_T *) tree->listSeparator)->terminal->id ) {
+           ((TOKEN_T *) tree->children[i].object)->terminal->id == tree->listSeparator ) {
           continue;
       }
       lnode = calloc(1, sizeof(AST_LIST_T));
@@ -212,11 +208,6 @@ __parsetree_node_to_ast_list( PARSE_TREE_NODE_T * node )
       tail->next = (AST_LIST_T *) lnode;
       tail = tail->next;
     }
-
-    next = {{prefix}}parsetree_node_to_ast(&tree->children[end]);
-    if ( ast_list == NULL ) return next;
-    if ( next == NULL ) tail->next = NULL;
-    else tail->next = (AST_LIST_T *) next->object;
   }
 
   ast->object = (AST_NODE_U *) ast_list;
@@ -830,6 +821,10 @@ void
 
 /* Section: Parser */
 
+{% for nonterminal in grammar.list_nonterminals %}
+static PARSE_TREE_T * parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T *);
+{% endfor %}
+
 {% for nonterminal in grammar.ll1_nonterminals %}
 static PARSE_TREE_T * parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T *);
 {% endfor %}
@@ -1194,7 +1189,7 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
   current = list->current;
 
   {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
-    {% py led = rule.ledProduction.morphemes %}
+    {% py led = rule.led_production.morphemes %}
     {% if len(led) %}
   if ( current == {{led[0].id}} ) /* {{led[0]}} */
   {
@@ -1237,6 +1232,100 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
 }
 {% endfor %}
 
+{% for list_nonterminal in grammar.list_nonterminals %}
+  {% py list_parser = grammar.list_parser(list_nonterminal) %}
+
+static PARSE_TREE_T *
+parse_{{list_nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
+{
+  PARSE_TREE_T * tree;
+  int minimum = {{list_parser.minimum}};
+  int children_size = 10;
+  int children_idx = 0;
+
+  ctx->current_function = "parse_{{list_nonterminal.string.lower()}}";
+
+  tree = calloc(1, sizeof(PARSE_TREE_T));
+  tree->nonterminal = {{prefix.upper()}}NONTERMINAL_{{list_nonterminal.string.upper()}};
+  {% if list_parser.separator is not None %}
+  tree->listSeparator = {{list_parser.separator.id}};
+  {% else %}
+  tree->listSeparator = -1;
+  {% endif %}
+  tree->list = TRUE;
+  tree->children = calloc(children_size, sizeof(PARSE_TREE_NODE_T));
+  tree->ast_converter = get_default_ast_converter();
+
+  {% if not grammar.must_consume_tokens(list_nonterminal) %}
+  if ( ctx->tokens->current != {{prefix.upper()}}TERMINAL_END_OF_STREAM &&
+       !in_array({{prefix}}first[{{prefix.upper()}}NONTERMINAL_{{list_nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], ctx->tokens->current) &&
+       in_array({{prefix}}follow[{{prefix.upper()}}NONTERMINAL_{{list_nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], ctx->tokens->current) )
+  {
+    return tree;
+  }
+  {% endif %}
+
+  if ( ctx->tokens->current == {{prefix.upper()}}TERMINAL_END_OF_STREAM ) {
+  {% if grammar.must_consume_tokens(list_nonterminal) %}
+    syntax_error(ctx, strdup("Error: unexpected end of file"));
+  {% else %}
+    return tree;
+  {% endif %}
+  }
+
+  while ( minimum > 0 ||
+          (ctx->tokens->current != {{prefix.upper()}}TERMINAL_END_OF_STREAM &&
+           in_array({{prefix}}first[{{prefix.upper()}}NONTERMINAL_{{list_nonterminal.string.upper()}} - {{len(grammar.standard_terminals)}}], ctx->tokens->current))) {
+
+    if (children_size - 2 == children_idx) {
+      children_size *= 2;
+      tree->children = realloc(tree->children, children_size * sizeof(PARSE_TREE_NODE_T));
+    }
+
+  {% if isinstance(list_parser.morpheme, NonTerminal) %}
+    tree->children[children_idx].type = PARSE_TREE_NODE_TYPE_PARSETREE;
+    tree->children[children_idx].object = (PARSE_TREE_NODE_U *) parse_{{list_parser.morpheme.string.lower()}}(ctx);
+    ctx->current_function = "parse_{{list_nonterminal.string.lower()}}";
+  {% else %}
+    tree->children[children_idx].type = PARSE_TREE_NODE_TYPE_TERMINAL;
+    tree->children[children_idx].object = (PARSE_TREE_NODE_U *) expect( {{prefix.upper()}}TERMINAL_{{list_parser.morpheme.string.upper()}}, ctx );
+  {% endif %}
+
+    children_idx += 1;
+
+  {% if list_parser.separator is not None %}
+    if (ctx->tokens->current != {{prefix.upper()}}TERMINAL_END_OF_STREAM &&
+        ctx->tokens->current == {{prefix.upper()}}TERMINAL_{{list_parser.separator.string.upper()}}) {
+      tree->children[children_idx].type = PARSE_TREE_NODE_TYPE_TERMINAL;
+      tree->children[children_idx].object = (PARSE_TREE_NODE_U *) expect( {{prefix.upper()}}TERMINAL_{{list_parser.separator.string.upper()}}, ctx );
+      children_idx += 1;
+    {% if list_parser.sep_terminates %}
+    } else {
+      syntax_error(ctx, strdup("List for parse_{{list_nonterminal.string.lower()}} is missing a terminator"));
+    }
+    {% else %}
+    } else {
+      if (minimum > 1) {
+          char * message, * fmt;
+          fmt = "List for {{list_nonterminal.string.lower()}} requires %d items but only %d were found.";
+          message = calloc(strlen(fmt) + 20, sizeof(char));
+          sprintf(message, fmt, {{list_parser.minimum}}, {{list_parser.minimum}} - minimum + 1);
+          syntax_error(ctx, message);
+      }
+      break;
+    }
+    {% endif %}
+  {% endif %}
+
+    minimum = MAX(0, minimum - 1);
+  }
+
+  tree->nchildren = children_idx;
+  return tree;
+}
+
+{% endfor %}
+
 {% for nonterminal in grammar.ll1_nonterminals %}
 
 static PARSE_TREE_T *
@@ -1252,12 +1341,6 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 
   tree = calloc(1, sizeof(PARSE_TREE_T));
   tree->nonterminal = {{prefix.upper()}}NONTERMINAL_{{nonterminal.string.upper()}};
-
-    {% if isinstance(nonterminal.macro, LL1ListMacro) %}
-  tree->list = TRUE;
-    {% else %}
-  tree->list = FALSE;
-    {% endif %}
 
   current = tokens->current;
 
@@ -1295,11 +1378,6 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
         {% if isinstance(morpheme, Terminal) %}
     tree->children[{{index}}].type = PARSE_TREE_NODE_TYPE_TERMINAL;
     tree->children[{{index}}].object = (PARSE_TREE_NODE_U *) expect( {{prefix.upper()}}TERMINAL_{{morpheme.string.upper()}}, ctx );
-          {% if isinstance(nonterminal.macro, LL1ListMacro) %}
-            {% if nonterminal.macro.separator == morpheme %}
-    tree->listSeparator = tree->children[{{index}}].object;
-            {% endif %}
-          {% endif %}
         {% endif %}
 
         {% if isinstance(morpheme, NonTerminal) %}

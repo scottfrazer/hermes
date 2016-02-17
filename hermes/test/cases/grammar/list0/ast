@@ -1,0 +1,197 @@
+(Grammar:
+  body=[
+    (Lexer:
+      atoms=[
+        (Regex:
+          regex=<grammar.hgr:3:5 regex "cidccysn">,
+          options=None,
+          onmatch=[
+            (Null:
+
+            )
+          ]
+        ),
+        (Regex:
+          regex=<grammar.hgr:4:5 regex "cidhJw==">,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<grammar.hgr:4:14 terminal "YQ==">,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<grammar.hgr:5:5 regex "cidiJw==">,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<grammar.hgr:5:14 terminal "Yg==">,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<grammar.hgr:6:5 regex "cidjJw==">,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<grammar.hgr:6:14 terminal "Yw==">,
+              group=None
+            )
+          ]
+        ),
+        (Regex:
+          regex=<grammar.hgr:7:5 regex "cidkJw==">,
+          options=None,
+          onmatch=[
+            (Terminal:
+              name=<grammar.hgr:7:14 terminal "ZA==">,
+              group=None
+            )
+          ]
+        )
+      ]
+    ),
+    (Parser:
+      rules=[
+        (Rule:
+          nonterminal=<grammar.hgr:10:6 nonterminal "c3RhcnQ=">,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<grammar.hgr:10:14 identifier "bGlzdA==">,
+                  parameters=[
+                    <grammar.hgr:10:20 terminal "YQ==">,
+                    <grammar.hgr:10:24 terminal "Yg==">
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<grammar.hgr:11:6 nonterminal "YWxwaGE=">,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<grammar.hgr:11:14 identifier "bGlzdA==">,
+                  parameters=[
+                    <grammar.hgr:11:20 terminal "YQ==">
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<grammar.hgr:12:6 nonterminal "YmV0YQ==">,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<grammar.hgr:12:13 identifier "bGlzdA==">,
+                  parameters=[
+                    <grammar.hgr:12:19 nonterminal "Y2Q=">
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<grammar.hgr:13:6 nonterminal "Z2FtbWE=">,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<grammar.hgr:13:14 identifier "bGlzdA==">,
+                  parameters=[
+                    <grammar.hgr:13:20 terminal "YQ==">,
+                    <grammar.hgr:13:23 null "bnVsbA==">,
+                    <grammar.hgr:13:29 integer "NA==">
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<grammar.hgr:14:6 nonterminal "ZGVsdGE=">,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<grammar.hgr:14:14 identifier "bGlzdA==">,
+                  parameters=[
+                    <grammar.hgr:14:20 nonterminal "Y2Q=">,
+                    <grammar.hgr:14:25 terminal "YQ==">,
+                    <grammar.hgr:14:28 integer "Mg==">
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<grammar.hgr:15:6 nonterminal "ZXBzaWxvbg==">,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<grammar.hgr:15:16 identifier "dGxpc3Q=">,
+                  parameters=[
+                    <grammar.hgr:15:23 nonterminal "Y2Q=">,
+                    <grammar.hgr:15:28 terminal "Yg==">
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<grammar.hgr:16:6 nonterminal "emV0YQ==">,
+          production=[
+            (Production:
+              morphemes=[
+                (Macro:
+                  name=<grammar.hgr:16:13 identifier "b3RsaXN0">,
+                  parameters=[
+                    <grammar.hgr:16:21 nonterminal "Y2Q=">,
+                    <grammar.hgr:16:26 terminal "Yg==">
+                  ]
+                )
+              ],
+              ast=None
+            )
+          ]
+        ),
+        (Rule:
+          nonterminal=<grammar.hgr:17:6 nonterminal "Y2Q=">,
+          production=[
+            (Production:
+              morphemes=[
+                <grammar.hgr:17:12 terminal "Yw==">
+              ],
+              ast=None
+            ),
+            (Production:
+              morphemes=[
+                <grammar.hgr:17:17 terminal "ZA==">
+              ],
+              ast=None
+            )
+          ]
+        )
+      ]
+    )
+  ]
+)

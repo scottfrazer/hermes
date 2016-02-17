@@ -133,6 +133,12 @@ public class {{prefix}}Parser {
 
         /* Invalid terminal is found in the token stream. */
         String invalidTerminal(String method, Terminal invalid);
+
+        /* For lists that have a minimum required size which is not met */
+        String missingListItems(String method, int required, int found, Terminal last);
+
+        /* For lists that require a terminal to terminate each element in the list */
+        String missingTerminator(String method, TerminalIdentifier terminator, Terminal last);
     }
 
     public static class TokenStream extends ArrayList<Terminal> {
@@ -404,7 +410,7 @@ public class {{prefix}}Parser {
 
         private boolean isExpr, isNud, isPrefix, isInfix, isExprNud;
         private int nudMorphemeCount;
-        private Terminal listSeparator;
+        private int listSeparatorId;
         private boolean list;
         private AstTransform astTransform;
 
@@ -418,7 +424,7 @@ public class {{prefix}}Parser {
             this.isInfix = false;
             this.isExprNud = false;
             this.nudMorphemeCount = 0;
-            this.listSeparator = null;
+            this.listSeparatorId = -1;
             this.list = false;
         }
 
@@ -430,7 +436,7 @@ public class {{prefix}}Parser {
         public void setAstTransformation(AstTransform value) { this.astTransform = value; }
         public void setNudMorphemeCount(int value) { this.nudMorphemeCount = value; }
         public void setList(boolean value) { this.list = value; }
-        public void setListSeparator(Terminal value) { this.listSeparator = value; }
+        public void setListSeparator(int value) { this.listSeparatorId = value; }
 
         public int getNudMorphemeCount() { return this.nudMorphemeCount; }
         public List<ParseTreeNode> getChildren() { return this.children; }
@@ -461,19 +467,19 @@ public class {{prefix}}Parser {
         public AstNode toAst() {
             if ( this.list == true ) {
                 AstList astList = new AstList();
-                int end = this.children.size() - 1;
 
                 if ( this.children.size() == 0 ) {
                     return astList;
                 }
 
-                for (int i = 0; i < this.children.size() - 1; i++) {
-                    if (this.children.get(i) instanceof Terminal && this.listSeparator != null && ((Terminal)this.children.get(i)).id == this.listSeparator.id)
+                for (int i = 0; i < this.children.size(); i++) {
+                    if (this.children.get(i) instanceof Terminal && this.listSeparatorId >= 0 &&
+                        ((Terminal) this.children.get(i)).id == this.listSeparatorId) {
                         continue;
+                    }
                     astList.add(this.children.get(i).toAst());
                 }
 
-                astList.addAll((AstList) this.children.get(this.children.size() - 1).toAst());
                 return astList;
             } else if ( this.isExpr ) {
                 if ( this.astTransform instanceof AstTransformSubstitution ) {
@@ -599,6 +605,14 @@ public class {{prefix}}Parser {
 
         public String invalidTerminal(String method, Terminal invalid) {
             return "Invalid symbol ID: "+invalid.getId()+" ("+invalid.getTerminalStr()+")";
+        }
+
+        public String missingListItems(String method, int required, int found, Terminal last) {
+            return "List for "+method+" requires "+required+" items but only "+found+" were found.";
+        }
+
+        public String missingTerminator(String method, TerminalIdentifier terminator, Terminal last) {
+            return "List for "+method+" is missing a terminator";
         }
     }
 
@@ -887,7 +901,7 @@ public class {{prefix}}Parser {
         int modifier;
 
   {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
-    {% py led = rule.ledProduction.morphemes %}
+    {% py led = rule.led_production.morphemes %}
     {% if len(led) %}
 
         if (current.getId() == {{led[0].id}}) {
@@ -936,6 +950,88 @@ public class {{prefix}}Parser {
     }
 {% endfor %}
 
+{% for list_nonterminal in grammar.list_nonterminals %}
+  {% py list_parser = grammar.list_parser(list_nonterminal) %}
+
+    public ParseTree parse_{{list_nonterminal.string.lower()}}(List<Terminal> tokens, SyntaxErrorFormatter error_formatter) throws SyntaxError {
+        ParserContext ctx = new ParserContext(new TokenStream(tokens), error_formatter);
+        return parse_{{list_nonterminal.string.lower()}}(ctx);
+    }
+
+    private static ParseTree parse_{{list_nonterminal.string.lower()}}(ParserContext ctx) throws SyntaxError {
+        ParseTree tree = new ParseTree(new NonTerminal({{list_nonterminal.id}}, "{{list_nonterminal.string}}"));
+        tree.setList(true);
+  {% if list_parser.separator is not None %}
+        tree.setListSeparator({{list_parser.separator.id}});
+  {% endif %}
+        ctx.nonterminal = "{{list_nonterminal.string.lower()}}";
+
+  {% if not grammar.must_consume_tokens(list_nonterminal) %}
+        if ( ctx.tokens.current() != null &&
+             !nonterminal_first.get({{list_nonterminal.id}}).contains(terminal_map.get(ctx.tokens.current().getId())) &&
+              nonterminal_follow.get({{list_nonterminal.id}}).contains(terminal_map.get(ctx.tokens.current().getId())) ) {
+            return tree;
+        }
+  {% endif %}
+
+        if (ctx.tokens.current() == null) {
+  {% if grammar.must_consume_tokens(list_nonterminal) %}
+            throw new SyntaxError(ctx.error_formatter.unexpectedEof(
+                "{{list_nonterminal.string.lower()}}",
+                nonterminal_first.get({{list_nonterminal.id}}),
+                nonterminal_rules.get({{list_nonterminal.id}})
+            ));
+  {% else %}
+            return tree;
+  {% endif %}
+        }
+
+        int minimum = {{list_parser.minimum}};
+        while (minimum > 0 ||
+               (ctx.tokens.current() != null &&
+               nonterminal_first.get({{list_nonterminal.id}}).contains(terminal_map.get(ctx.tokens.current().getId())))) {
+  {% if isinstance(list_parser.morpheme, NonTerminal) %}
+            tree.add(parse_{{list_parser.morpheme.string.lower()}}(ctx));
+            ctx.nonterminal = "{{list_nonterminal.string.lower()}}"; // because parse_* can reset this
+  {% else %}
+            tree.add(expect(ctx, {{prefix}}TerminalIdentifier.TERMINAL_{{list_parser.morpheme.string.upper()}}));
+  {% endif %}
+
+  {% if list_parser.separator is not None %}
+            if (ctx.tokens.current() != null &&
+                ctx.tokens.current().getId() == {{prefix}}TerminalIdentifier.TERMINAL_{{list_parser.separator.string.upper()}}.id()) {
+              tree.add(expect(ctx, {{prefix}}TerminalIdentifier.TERMINAL_{{list_parser.separator.string.upper()}}));
+    {% if list_parser.sep_terminates %}
+            } else {
+                throw new SyntaxError(ctx.error_formatter.missingTerminator(
+                    "{{nonterminal.string.lower()}}",
+                    {{prefix}}TerminalIdentifier.TERMINAL_{{list_parser.separator.string.upper()}},
+                    null
+                ));
+            }
+    {% else %}
+            } else {
+              if (minimum > 1) {
+                  throw new SyntaxError(ctx.error_formatter.missingListItems(
+                      "{{list_nonterminal.string.lower()}}",
+                      {{list_parser.minimum}},
+                      {{list_parser.minimum}} - minimum + 1,
+                      null
+                  ));
+              }
+              break;
+            }
+    {% endif %}
+  {% endif %}
+
+            minimum = Math.max(minimum - 1, 0);
+        }
+
+        return tree;
+    }
+
+{% endfor %}
+
 {% for nonterminal in grammar.ll1_nonterminals %}
 
     public ParseTree parse_{{nonterminal.string.lower()}}(List<Terminal> tokens, SyntaxErrorFormatter error_formatter) throws SyntaxError {
@@ -948,14 +1044,8 @@ public class {{prefix}}Parser {
         Terminal next;
         ParseTree subtree;
         int rule = (current != null) ? table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.getId()] : -1;
-        ParseTree tree = new ParseTree( new NonTerminal({{nonterminal.id}}, "{{nonterminal.string}}"));
+        ParseTree tree = new ParseTree(new NonTerminal({{nonterminal.id}}, "{{nonterminal.string}}"));
         ctx.nonterminal = "{{nonterminal.string.lower()}}";
-
-  {% if isinstance(nonterminal.macro, LL1ListMacro) %}
-        tree.setList(true);
-  {% else %}
-        tree.setList(false);
-  {% endif %}
 
   {% if not grammar.must_consume_tokens(nonterminal) %}
         if ( current != null &&
@@ -977,7 +1067,7 @@ public class {{prefix}}Parser {
   {% endif %}
         }
 
-  {% for index, rule in enumerate([rule for rule in grammar.get_expanded_rules(nonterminal) if not rule.is_empty]) %}
+  {% for index, rule in enumerate([rule for rule in grammar.get_expanded_ll1_rules(nonterminal) if not rule.is_empty]) %}
     {% if index == 0 %}
         if (rule == {{rule.id}}) {
     {% else %}
@@ -1002,11 +1092,6 @@ public class {{prefix}}Parser {
       {% if isinstance(morpheme, Terminal) %}
             next = expect(ctx, {{prefix}}TerminalIdentifier.TERMINAL_{{morpheme.string.upper()}});
             tree.add(next);
-        {% if isinstance(nonterminal.macro, LL1ListMacro) %}
-          {% if nonterminal.macro.separator == morpheme %}
-            tree.setListSeparator(next);
-          {% endif %}
-        {% endif %}
       {% endif %}
 
       {% if isinstance(morpheme, NonTerminal) %}

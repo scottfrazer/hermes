@@ -51,24 +51,35 @@ def test_all():
                 if not os.path.isfile(follow_sets_path):
                     write_sets(grammar.follow_sets, follow_sets_path)
                 with open(first_sets_path) as fp:
-                    grammar_first_sets = json.loads(fp.read())
-                    for nonterminal, terminals in grammar_first_sets.items():
+                    expected_first_sets = string2sets(fp.read())
+                    for nonterminal, terminals in expected_first_sets.items():
                         yield first_sets, test_dir, nonterminal, terminals
                 with open(follow_sets_path) as fp:
-                    grammar_follow_sets = json.loads(fp.read())
-                    for nonterminal, terminals in grammar_follow_sets.items():
+                    expected_follow_sets = string2sets(fp.read())
+                    for nonterminal, terminals in expected_follow_sets.items():
                         yield follow_sets, test_dir, nonterminal, terminals
 
 def conflicts_to_string(conflicts):
     return '\n'.join(sorted(map(str, conflicts)))
 
+def sets2string(sets):
+    string = ''
+    for k in sorted(sets.keys(), key=str):
+        string += '{} -> {}\n'.format(k, ', '.join([str(x) for x in sorted(sets[k], key=str)]))
+    return string
+
+def string2sets(string):
+    d = dict()
+    for line in string.split('\n'):
+        if len(line) == 0: continue
+        (nt, terminals) = line.split(' -> ')
+        terminals = terminals.split(', ')
+        d[nt] = [t for t in terminals if len(t)]
+    return d
+
 def write_sets(sets, output_path):
-    json_sets = dict()
-    for k,v in sets.items():
-        if isinstance(k, NonTerminal):
-            json_sets[str(k)] = list(map(lambda x: str(x), v))
     with open(output_path, 'w') as fp:
-        fp.write(json.dumps(json_sets, indent=4))
+        fp.write(sets2string(sets))
 
 def compare(test_dir, filename, actual):
     grammar_file = os.path.join(test_dir, 'grammar.hgr')
@@ -100,19 +111,27 @@ def ast(test_dir):
     actual = str(tree.ast().dumps(indent=2))
     compare(test_dir, 'ast', actual)
 
-def first_sets(test_dir, nonterminal, terminals):
+def first_sets(test_dir, nonterminal, expected_terminals):
     grammar = get_grammar(test_dir)
-    grammar_first_sets = {str(k): [str(v1) for v1 in v] for k, v in grammar.first_sets.items()}
-    assert len(grammar_first_sets[nonterminal]) == len(terminals)
-    for terminal in terminals:
-        assert str(terminal) in grammar_first_sets[nonterminal]
+    actual_first_set = None
+    for k, v in grammar.first_sets.items():
+        if str(k) == str(nonterminal):
+            actual_first_set = [str(v1) for v1 in v]
+    assert actual_first_set is not None
+    assert len(actual_first_set) == len(expected_terminals)
+    for terminal in expected_terminals:
+        assert str(terminal) in actual_first_set
 
-def follow_sets(test_dir, nonterminal, terminals):
+def follow_sets(test_dir, nonterminal, expected_terminals):
     grammar = get_grammar(test_dir)
-    grammar_follow_sets = {str(k): [str(v1) for v1 in v] for k, v in grammar.follow_sets.items()}
-    assert len(grammar_follow_sets[nonterminal]) == len(terminals)
-    for terminal in terminals:
-        assert str(terminal) in grammar_follow_sets[nonterminal]
+    actual_follow_set = None
+    for k, v in grammar.follow_sets.items():
+        if str(k) == str(nonterminal):
+            actual_follow_set = [str(v1) for v1 in v]
+    assert actual_follow_set is not None
+    assert len(actual_follow_set) == len(expected_terminals)
+    for terminal in expected_terminals:
+        assert str(terminal) in actual_follow_set
 
 def conflicts(test_dir):
     conflicts_file = os.path.join(test_dir, 'conflicts')
