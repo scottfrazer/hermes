@@ -275,7 +275,7 @@ def analyze(grammar, format='human', color=False, file=sys.stdout):
 
     file.write(title('Expanded List Rules'))
     file.write("\n".join(
-        [str(rule) for rule in sorted(grammar.get_expanded_list_rules(), key=lambda x: str(x))]
+        [pygments_highlight(str(rule)) for rule in sorted(grammar.get_expanded_list_rules(), key=lambda x: str(x))]
     ))
     file.write("\n\n")
 

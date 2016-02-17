@@ -349,7 +349,7 @@ def expect(ctx, terminal_id):
         raise ctx.errors.invalid_terminal(ctx.nonterminal, next)
     return current
 
-{% for expression_nonterminal in grammar.expression_nonterminals %}
+{% for expression_nonterminal in sorted(grammar.expression_nonterminals, key=str) %}
     {% py name = expression_nonterminal.string %}
 
 # START definitions for expression parser: {{name}}
@@ -498,7 +498,7 @@ def led_{{name}}(left, ctx):
 # END definitions for expression parser: {{name}}
 {% endfor %}
 
-{% for list_nonterminal in grammar.list_nonterminals %}
+{% for list_nonterminal in sorted(grammar.list_nonterminals, key=str) %}
   {% py list_parser = grammar.list_parser(list_nonterminal) %}
   {% py name = list_nonterminal.string %}
 def parse_{{name}}(ctx):
@@ -564,7 +564,7 @@ def parse_{{name}}(ctx):
 
 {% endfor %}
 
-{% for nonterminal in grammar.ll1_nonterminals %}
+{% for nonterminal in sorted(grammar.ll1_nonterminals, key=str) %}
   {% py name = nonterminal.string %}
 def parse_{{name}}(ctx):
     current = ctx.tokens.current()

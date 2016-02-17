@@ -344,7 +344,7 @@ class GrammarFactory:
 
     def macro_ast_to_string(self, ast):
         return '{}({})'.format(ast.attr('name').source_string,
-                               ','.join([self.morpheme_to_string(x) for x in ast.attr('parameters')]))
+                               ', '.join([self.morpheme_to_string(x) for x in ast.attr('parameters')]))
 
     def morpheme_to_string(self, morpheme):
         return ':' + morpheme.source_string if morpheme.str == 'terminal' else '$' + morpheme.source_string

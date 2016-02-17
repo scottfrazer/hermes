@@ -821,15 +821,15 @@ void
 
 /* Section: Parser */
 
-{% for nonterminal in grammar.list_nonterminals %}
+{% for nonterminal in sorted(grammar.list_nonterminals, key=str) %}
 static PARSE_TREE_T * parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T *);
 {% endfor %}
 
-{% for nonterminal in grammar.ll1_nonterminals %}
+{% for nonterminal in sorted(grammar.ll1_nonterminals, key=str) %}
 static PARSE_TREE_T * parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T *);
 {% endfor %}
 
-{% for expression_nonterminal in grammar.expression_nonterminals %}
+{% for expression_nonterminal in sorted(grammar.expression_nonterminals, key=str) %}
 static PARSE_TREE_T * parse_{{expression_nonterminal.string.lower()}}(PARSER_CONTEXT_T *);
 static PARSE_TREE_T * _parse_{{expression_nonterminal.string.lower()}}(int, PARSER_CONTEXT_T *);
 {% endfor %}
@@ -1074,7 +1074,7 @@ get_ast_converter(int rule_id)
   return _get_ast_converter(rule_id, &{{prefix}}ast_types[0], &{{prefix}}ast_objects[0], &{{prefix}}nud_ast_index[0]);
 }
 
-{% for expression_nonterminal in grammar.expression_nonterminals %}
+{% for expression_nonterminal in sorted(grammar.expression_nonterminals, key=str) %}
 {% py name = expression_nonterminal.string.lower() %}
 
 static int infixBp_{{name}}[{{len(grammar.terminals)}}] = {
@@ -1232,7 +1232,7 @@ led_{{name}}(PARSE_TREE_T * left, PARSER_CONTEXT_T * ctx)
 }
 {% endfor %}
 
-{% for list_nonterminal in grammar.list_nonterminals %}
+{% for list_nonterminal in sorted(grammar.list_nonterminals, key=str) %}
   {% py list_parser = grammar.list_parser(list_nonterminal) %}
 
 static PARSE_TREE_T *
@@ -1326,7 +1326,7 @@ parse_{{list_nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 
 {% endfor %}
 
-{% for nonterminal in grammar.ll1_nonterminals %}
+{% for nonterminal in sorted(grammar.ll1_nonterminals, key=str) %}
 
 static PARSE_TREE_T *
 parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
@@ -1404,7 +1404,7 @@ parse_{{nonterminal.string.lower()}}(PARSER_CONTEXT_T * ctx)
 
 #define HAS_MORE_TOKENS(ctx) (ctx->tokens->current != {{prefix.upper()}}TERMINAL_END_OF_STREAM)
 
-{% for expression_nonterminals in grammar.expression_nonterminals %}
+{% for expression_nonterminals in sorted(grammar.expression_nonterminals, key=str) %}
 
 #define {{expression_nonterminal.string.upper()}}_LEFT_BINDING_POWER_LARGER(ctx, rbp) (rbp < getInfixBp_{{expression_nonterminal.string.lower()}}(ctx->tokens->current))
 

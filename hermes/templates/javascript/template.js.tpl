@@ -772,7 +772,7 @@ function expect(ctx, terminal_id) {
     return current;
 }
 
-{% for expression_nonterminal in grammar.expression_nonterminals %}
+{% for expression_nonterminal in sorted(grammar.expression_nonterminals, key=str) %}
     {% py name = expression_nonterminal.string %}
 
 // START definitions for expression parser `{{name}}`
@@ -933,7 +933,7 @@ function led_{{name}}(left, ctx) {
 // END definitions for expression parser `{{name}}`
 {% endfor %}
 
-{% for list_nonterminal in grammar.list_nonterminals %}
+{% for list_nonterminal in sorted(grammar.list_nonterminals, key=str) %}
   {% py list_parser = grammar.list_parser(list_nonterminal) %}
 
 function parse_{{list_nonterminal.string}}(ctx) {
@@ -1009,7 +1009,7 @@ function parse_{{list_nonterminal.string}}(ctx) {
 
 {% endfor %}
 
-{% for nonterminal in grammar.ll1_nonterminals %}
+{% for nonterminal in sorted(grammar.ll1_nonterminals, key=str) %}
   {% py name = nonterminal.string %}
 function parse_{{name}}(ctx) {
     var current = ctx.tokens.current();

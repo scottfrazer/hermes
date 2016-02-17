@@ -650,7 +650,7 @@ public class {{prefix}}Parser {
     }
 
     public enum {{prefix}}TerminalIdentifier implements TerminalIdentifier {
-{% for index, terminal in enumerate(grammar.standard_terminals) %}
+{% for index, terminal in enumerate(sorted(grammar.standard_terminals, key=str)) %}
         TERMINAL_{{terminal.string.upper()}}({{terminal.id}}, "{{terminal.string}}"),
 {% endfor %}
         END_SENTINAL(-3, "END_SENTINAL");
@@ -677,9 +677,9 @@ public class {{prefix}}Parser {
 
     static {
         Map<Integer, List<TerminalIdentifier>> map = new HashMap<Integer, List<TerminalIdentifier>>();
-{% for nonterminal in grammar.nonterminals %}
+{% for nonterminal in sorted(grammar.nonterminals, key=str) %}
         map.put({{nonterminal.id}}, Arrays.asList(new TerminalIdentifier[] {
-  {% for terminal in grammar.first(nonterminal) %}
+  {% for terminal in sorted(grammar.first(nonterminal), key=str) %}
     {% if terminal in grammar.standard_terminals %}
             {{prefix}}TerminalIdentifier.TERMINAL_{{terminal.string.upper()}},
     {% endif %}
@@ -691,9 +691,9 @@ public class {{prefix}}Parser {
 
     static {
         Map<Integer, List<TerminalIdentifier>> map = new HashMap<Integer, List<TerminalIdentifier>>();
-{% for nonterminal in grammar.nonterminals %}
+{% for nonterminal in sorted(grammar.nonterminals, key=str) %}
         map.put({{nonterminal.id}}, Arrays.asList(new TerminalIdentifier[] {
-  {% for terminal in grammar.follow(nonterminal) %}
+  {% for terminal in sorted(grammar.follow(nonterminal), key=str) %}
     {% if terminal in grammar.standard_terminals %}
             {{prefix}}TerminalIdentifier.TERMINAL_{{terminal.string.upper()}},
     {% endif %}
@@ -705,9 +705,9 @@ public class {{prefix}}Parser {
 
     static {
         Map<Integer, List<TerminalIdentifier>> map = new HashMap<Integer, List<TerminalIdentifier>>();
-{% for rule in grammar.get_expanded_rules() %}
+{% for rule in sorted(grammar.get_expanded_rules(), key=str) %}
         map.put({{rule.id}}, Arrays.asList(new TerminalIdentifier[] {
-  {% for terminal in grammar.first(rule.production) %}
+  {% for terminal in sorted(grammar.first(rule.production), key=str) %}
     {% if terminal in grammar.standard_terminals %}
             {{prefix}}TerminalIdentifier.TERMINAL_{{terminal.string.upper()}},
     {% endif %}
@@ -719,10 +719,10 @@ public class {{prefix}}Parser {
 
     static {
         Map<Integer, List<String>> map = new HashMap<Integer, List<String>>();
-{% for nonterminal in grammar.nonterminals %}
+{% for nonterminal in sorted(grammar.nonterminals, key=str) %}
         map.put({{nonterminal.id}}, new ArrayList<String>());
 {% endfor %}
-{% for rule in grammar.get_expanded_rules() %}
+{% for rule in sorted(grammar.get_expanded_rules(), key=str) %}
         map.get({{rule.nonterminal.id}}).add("{{rule}}");
 {% endfor %}
         nonterminal_rules = Collections.unmodifiableMap(map);
@@ -730,7 +730,7 @@ public class {{prefix}}Parser {
 
     static {
         Map<Integer, String> map = new HashMap<Integer, String>();
-{% for rule in grammar.get_expanded_rules() %}
+{% for rule in sorted(grammar.get_expanded_rules(), key=str) %}
         map.put(new Integer({{rule.id}}), "{{rule}}");
 {% endfor %}
         rules = Collections.unmodifiableMap(map);
@@ -779,7 +779,7 @@ public class {{prefix}}Parser {
         return current;
     }
 
-{% for expression_nonterminal in grammar.expression_nonterminals %}
+{% for expression_nonterminal in sorted(grammar.expression_nonterminals, key=str) %}
   {% py name = expression_nonterminal.string %}
     private static Map<Integer, Integer> infix_binding_power_{{name}};
     private static Map<Integer, Integer> prefix_binding_power_{{name}};
@@ -950,7 +950,7 @@ public class {{prefix}}Parser {
     }
 {% endfor %}
 
-{% for list_nonterminal in grammar.list_nonterminals %}
+{% for list_nonterminal in sorted(grammar.list_nonterminals, key=str) %}
   {% py list_parser = grammar.list_parser(list_nonterminal) %}
 
     public ParseTree parse_{{list_nonterminal.string.lower()}}(List<Terminal> tokens, SyntaxErrorFormatter error_formatter) throws SyntaxError {
@@ -1032,7 +1032,7 @@ public class {{prefix}}Parser {
 
 {% endfor %}
 
-{% for nonterminal in grammar.ll1_nonterminals %}
+{% for nonterminal in sorted(grammar.ll1_nonterminals, key=str) %}
 
     public ParseTree parse_{{nonterminal.string.lower()}}(List<Terminal> tokens, SyntaxErrorFormatter error_formatter) throws SyntaxError {
         ParserContext ctx = new ParserContext(new TokenStream(tokens), error_formatter);
