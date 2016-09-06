@@ -67,7 +67,7 @@ def cli():
         '-d', '--directory', required=False, default='.', help='Directory to write generated code to'
     )
     commands['generate'].add_argument(
-        '-l', '--language', required=False, default='python', choices=['c', 'java', 'python', 'javascript'], help = 'Language for generated parser'
+        '-l', '--language', required=False, default='python', choices=['c', 'java', 'python', 'javascript', 'go'], help = 'Language for generated parser'
     )
     commands['generate'].add_argument(
         '--header', action="store_true", required=False, help='Generated code will contain a comment at the top explaining how it was generated'

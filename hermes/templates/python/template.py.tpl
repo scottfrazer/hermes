@@ -503,7 +503,7 @@ def led_{{name}}(left, ctx):
   {% py name = list_nonterminal.string %}
 def parse_{{name}}(ctx):
     tree = ParseTree(NonTerminal({{list_nonterminal.id}}, '{{name}}'))
-    tree.list = True;
+    tree.list = True
   {% if list_parser.separator is not None %}
     tree.list_separator_id = {{list_parser.separator.id}}
   {% endif %}
@@ -511,9 +511,9 @@ def parse_{{name}}(ctx):
 
   {% if not grammar.must_consume_tokens(list_nonterminal) %}
     if ctx.tokens.current() is not None and \
-       ctx.tokens.current().id not in nonterminal_first[{{nonterminal.id}}] and \
+       ctx.tokens.current().id not in nonterminal_first[{{list_nonterminal.id}}] and \
        ctx.tokens.current().id in nonterminal_follow[{{list_nonterminal.id}}]:
-        return tree;
+        return tree
   {% endif %}
 
     if ctx.tokens.current() is None:
@@ -523,7 +523,7 @@ def parse_{{name}}(ctx):
         return tree
   {% endif %}
 
-    minimum = {{list_parser.minimum}};
+    minimum = {{list_parser.minimum}}
     while minimum > 0 or \
            (ctx.tokens.current() is not None and \
             ctx.tokens.current().id in nonterminal_first.get({{list_nonterminal.id}})):

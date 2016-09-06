@@ -1,4 +1,4 @@
-all: c python java js
+all: c python java js go
 java:
 	-mkdir java
 	hermes generate --language=java --add-main --directory=java grammar.hgr
@@ -25,5 +25,12 @@ c:
 	-c/parser tokens source &> c/tokens
 	-c/parser parsetree source &> c/parsetree
 	-c/parser ast source &> c/ast
+go:
+	-mkdir go
+	hermes generate --language=go --add-main --directory=go grammar.hgr
+	go build go/grammar_parser.go
+	-go/parser tokens source &> c/tokens
+	-go/parser parsetree source &> c/parsetree
+	-go/parser ast source &> c/ast
 clean:
-	-rm -rf java c python js
+	-rm -rf java c python js go

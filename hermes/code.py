@@ -54,6 +54,17 @@ class PythonTemplate(GrammarTemplate):
         return os.path.join(self.directory, '{0}_parser.py'.format(self.grammar.name))
 
 
+class GoTemplate(GrammarTemplate):
+    template = 'go/template.go.tpl'
+
+    def get_filename(self):
+        return os.path.join(self.directory, '{0}_parser.go'.format(self.grammar.name))
+
+    def render(self, **kwargs):
+        self.ccPrefix = underscore_to_camelcase(self.grammar.name)
+        return super().render()
+
+
 class JavaTemplate(GrammarTemplate):
     template = 'java/template.java.tpl'
 
@@ -107,7 +118,8 @@ templates = {
     'python': [PythonTemplate],
     'c': [CSource, CHeader],
     'java': [JavaTemplate],
-    'javascript': [JavascriptTemplate]
+    'javascript': [JavascriptTemplate],
+    'go': [GoTemplate]
 }
 
 def generate_internal(grammar):
