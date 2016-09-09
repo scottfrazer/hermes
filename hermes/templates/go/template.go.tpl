@@ -1,10 +1,13 @@
 package main // TODO
+
 {% if len(header)%}
 {{'\n'.join(['// ' + s for s in header.split('\n')])}}
 {% endif %}
+
 import (
   "fmt"
   "regexp"
+  "encoding/base64"
 )
 
 {% import re %}
@@ -64,19 +67,8 @@ type Token struct {
   col int
 }
 
-func (t *Token) String() {
-
-    /////////////////////////////////////////
-      source_string = base64.b64encode(self.source_string.encode('utf-8')).decode('utf-8') if b64_source else self.source_string
-      return '<{resource}:{line}:{col} {terminal} "{source}">'.format(
-          resource=self.resource,
-          line=self.line,
-          col=self.col,
-          terminal=self.str,
-          source=source_string
-      )
-    /////////////////////////////////////////
-
+func (t *Token) String() string {
+  return fmt.Sprintf(`<%s:%d:%d %s "%s">`, t.resource, t.line, t.col, t.terminal.strId, base64.StdEncoding.EncodeToString([]byte(t.sourceString)))
 }
 
 type TokenStream struct {
@@ -106,156 +98,175 @@ func (ts *TokenStream) last() *Terminal {
 type parseTree struct {
   nonterminal *NonTerminal
   children []*TreeNode
-  astTransform ??????
+  astTransform interface{}
   isExpr bool
   isNud bool
   isPrefix bool
   isInfix bool
   nudMorphemeCount int
   isExprNud bool // true for rules like _expr := {_expr} + {...}
-  list_separator_id int ???
+  list_separator_id int
   list bool
 }
 
 func (tree *parseTree) Add(node *TreeNode) {
-/////////////////////////////////
-self.children.append( tree )
-////////////////////////////////
+  tree.children = append(tree.children, node)
 }
 
-func (tree *parseTree) ToAst() *AstNode {
-/////////////////////////////////////
-    if self.list == True:
-        r = AstList()
-        if len(self.children) == 0:
-            return r
-        for child in self.children:
-            if isinstance(child, Terminal) and self.list_separator_id is not None and child.id == self.list_separator_id:
-                continue
-            r.append(child.ast())
-        return r
-    elif self.isExpr:
-        if isinstance(self.astTransform, AstTransformSubstitution):
-            return self.children[self.astTransform.idx].ast()
-        elif isinstance(self.astTransform, AstTransformNodeCreator):
-            parameters = OrderedDict()
-            for name, idx in self.astTransform.parameters.items():
-                if idx == '$':
-                    child = self.children[0]
-                elif isinstance(self.children[0], ParseTree) and \
-                     self.children[0].isNud and \
-                     not self.children[0].isPrefix and \
-                     not self.isExprNud and \
-                     not self.isInfix:
-                    if idx < self.children[0].nudMorphemeCount:
-                        child = self.children[0].children[idx]
-                    else:
-                        index = idx - self.children[0].nudMorphemeCount + 1
-                        child = self.children[index]
-                elif len(self.children) == 1 and not isinstance(self.children[0], ParseTree) and not isinstance(self.children[0], list):
-                    return self.children[0]
-                else:
-                    child = self.children[idx]
-                parameters[name] = child.ast()
-            return Ast(self.astTransform.name, parameters)
-    else:
-        if isinstance(self.astTransform, AstTransformSubstitution):
-            return self.children[self.astTransform.idx].ast()
-        elif isinstance(self.astTransform, AstTransformNodeCreator):
-            parameters = OrderedDict()
-            for name, idx in self.astTransform.parameters.items():
-                parameters[name] = self.children[idx].ast()
-            return Ast(self.astTransform.name, parameters)
-        elif len(self.children):
-            return self.children[0].ast()
-        else:
-            return None
-//////////////////////////////////////////////
+func (tree *parseTree) ToAst() AstNode {
+    if tree.list == True {
+			r := AstList{}
+			if len(tree.children) == 0 {
+				return r
+			}
+			for child := range tree.children {
+				switch t := child.(type) {
+				case *Terminal:
+					if tree.list_separator_id == t.id {
+						continue
+					}
+					fallthrough
+				default:
+					r = append(r, child.ast())
+				}
+			}
+			return r
+    } else if tree.isExpr {
+			switch transform := tree.astTransform.(type) {
+			case *AstTransformSubstitution:
+				return tree.children[transform.idx].Ast()
+			case *AstTransformNodeCreator:
+				attributes = make(map[string]AstNode)
+				var child interface{}
+				_, is_tree := tree.(parseTree)
+				_, is_list := tree.(astList)
+				for s, i := range transform.parameters {
+					if i == '$' {
+							child = tree.children[0]
+					} else if tree.isCompoundNud() {
+							firstChild := tree.children[0]
+
+							if ( i < firstChild.getNudMorphemeCount() ) {
+									child = firstChild.children[i]
+							} else {
+									i = i - firstChild.getNudMorphemeCount() + 1
+									child = tree.children[i]
+							}
+					} else if ( len(tree.children) == 1 && !is_tree && !is_list ) {
+							// TODO: I don't think this should ever be called
+							child = tree.children[0]
+					} else {
+							child = tree.children[i];
+					}
+					attributes[s] = child.Ast();
+				}
+				return Ast{transform.name, atttributes}
+			}
+    } else {
+			switch transform := tree.astTransform.(type) {
+			case *AstTransformSubstitution:
+				return tree.children[transform.idx].Ast()
+			case *AstTransformNodeCreator:
+				attributes = make(map[string]AstNode)
+				for s, i := range transform.parameters {
+					attributes[s] = tree.children[i].Ast()
+				}
+				return Ast{transform.name, attributes}
+			}
+
+			if len(this.children) > 0 {
+				return this.children[0].Ast()
+			}
+
+			return nil
+    }
 }
 
 func (tree *parseTree) String() {
-//////////////////////////////////////////
-    args = locals()
-    del args['self']
-    return parse_tree_string(self, **args)
-/////////////////////////////////////////
+  return parseTreeToString(tree, 0, 1)
 }
 
-func (tree *parseTree) String(indent int, b64Source bool) {
-  return tree._String(indent, b64Source, 0)
+func (tree *parseTree) PrettyString() {
+  return parseTreeToString(tree, 2, 1)
 }
 
-func (tree *parseTree) _String(indent int, b64Source bool, indentLevel int) {
+func parseTreeToString(treenode interface{}, indent int, indentLevel int) string {
+	indentStr = ""
+	if indent > 0 {
+		indentStr = strings.Repeat(" ", indent * indent_level)
+	}
 
-    /////////////////////////////////////
-    indent_str = (' ' * indent * indent_level) if indent else ''
-    if isinstance(parsetree, ParseTree):
-        children = [parse_tree_string(child, indent, b64_source, indent_level+1, debug) for child in parsetree.children]
-        debug_str = parsetree.debug_str() if debug else ''
-        if indent is None or len(children) == 0:
-            return '{0}({1}: {2}{3})'.format(indent_str, parsetree.nonterminal, debug_str, ', '.join(children))
-        else:
-            return '{0}({1}:{2}\n{3}\n{4})'.format(
-                indent_str,
-                parsetree.nonterminal,
-                debug_str,
-                ',\n'.join(children),
-                indent_str
-            )
-    elif isinstance(parsetree, Terminal):
-        return indent_str + parsetree.dumps(b64_source=b64_source)
-    /////////////////////////////////////
+	switch node := treenode.(type) {
+	case *parseTree:
+		childStrings := make([]string, len(node.children))
+		for index, child := range node.children {
+			childStrings[index] = parseTreeToString(child, indent, indentLevel+1)
+		}
+		if indent == 0 || len(node.children) == 0 {
+			return fmt.Sprintf("%s(%s: %s)", indentStr, tree.nonterminal.idStr, strings.Join(", ", childStrings))
+		} else {
+			return fmt.Sprintf("%s(%s:\n%s\n%s)", indentStr, tree.nonterminal.idStr, strings.Join(",\n", childStrings), indentStr)
+		}
+	case *Token:
+		return fmt.Sprintf("%s%s", indentStr, node.String())
+	default:
+		panic(fmt.Sprintf("parseTreeToString() called on %t", node))
+	}
+}
 
+type AstNode interface {
+	String() string
+	PrettyString() string
 }
 
 type Ast struct {
   name string
-  attributes map[string]*AstNode
+  attributes map[string]AstNode
 }
 
-func (ast *Ast) String() {
-//////////////////////////////////////////
-  args = locals()
-  del args['self']
-  return ast_string(self, **args)
-/////////////////////////////////////////
+func (ast *Ast) String(indent int) {
+  return astToString(ast, indent, 0)
 }
 
-func (ast *Ast) String(indent int, b64Source bool) {
-  return ast._String(indent, b64Source, 0)
-}
+func astToString(ast interface{}, indent int, indentLevel int) {
+		indentStr := ""
+		nextIndentStr := ""
+		attrPrefix := ""
 
-func (ast *Ast) _String(indent int, b64Source bool, indentLevel int) {
+		if indent > 0 {
+			indentStr = strings.Repeat(" ", indent * indent_level)
+			nextIndentStr = strings.Repeat(" ", indent * (indent_level+1))
+			attrPrefix = nextIndentStr
+		}
 
-    /////////////////////////////////////
-    indent_str = (' ' * indent * indent_level) if indent else ''
-    next_indent_str = (' ' * indent * (indent_level+1)) if indent else ''
-    if isinstance(ast, Ast):
-        children = OrderedDict([(k, ast_string(v, indent, b64_source, indent_level+1)) for k, v in ast.attributes.items()])
-        if indent is None:
-            return '({0}: {1})'.format(
-                ast.name,
-                ', '.join('{0}={1}'.format(k, v) for k, v in children.items())
-            )
-        else:
-            return '({0}:\n{1}\n{2})'.format(
-                ast.name,
-                ',\n'.join(['{0}{1}={2}'.format(next_indent_str, k, v) for k, v in children.items()]),
-                indent_str
-            )
-    elif isinstance(ast, list):
-        children = [ast_string(element, indent, b64_source, indent_level+1) for element in ast]
-        if indent is None or len(children) == 0:
-            return '[{0}]'.format(', '.join(children))
-        else:
-            return '[\n{1}\n{0}]'.format(
-                indent_str,
-                ',\n'.join(['{0}{1}'.format(next_indent_str, child) for child in children]),
-            )
-    elif isinstance(ast, Terminal):
-        return ast.dumps(b64_source=b64_source)
+		switch node := ast.(type) {
+		case *Ast:
+			childStrings := make([]string, len(node.attributes))
+			for name, subnode := range node.attributes {
+				childString := fmt.Sprintf("%s%s=%s", attrPrefix, name, astToString(subnode, indent, indentLevel+1))
+				childStrings = append(childStrings, childString)
+			}
+			if indent > 0 {
+				return fmt.Sprintf("(%s:\n%s\n%s)", node.name, strings.Join(",\n", childStrings), indentStr)
+			} else {
+				return fmt.Sprintf("(%s: %s)", node.name, strings.Join(", ", childStrings))
+			}
+		case *AstList:
+			childStrings := make([]string, len(node))
+			for subnode := range node {
+				childString := fmt.Sprintf("%s%s", attrPrefix, astToString(subnode, indent, indentLevel+1))
+				childStrings = append(childStrings, childString)
+			}
 
-    /////////////////////////////////////////
+			if indent == 0 || len(node) == 0 {
+					return fmt.Sprintf("[%s]", strings.Join(", ", children))
+			} else {
+					return fmt.Sprintf("[\n%s\n%s]", indentStr, strings.Join(",\n", childStrings))
+			}
+		case *Token:
+			return node.String()
+		default:
+		}
 }
 
 type AstTransformSubstitution int
@@ -270,22 +281,20 @@ type AstTransformNodeCreator struct {
 }
 
 func (t *AstTransformNodeCreator) String() {
-    /////////////////////////////////////////
-    return self.name + '( ' + ', '.join(['%s=$%s' % (k,str(v)) for k,v in self.parameters.items()]) + ' )'
-    /////////////////////////////////////////
+	strings := make([]string, len(t.parameters))
+	for k, v := range t.parameters {
+		strings = append(strings, fmt.Sprintf("%s=$%d", k, v))
+	}
+
+	return fmt.Sprintf("%s(%s)", t.name, strings.Join(", ", strings))
 }
 
 
-class AstList(list):
-  def ast(self):
-      retval = []
-      for ast in self:
-          retval.append(ast.ast())
-      return retval
-  def dumps(self, indent=None, b64_source=True):
-      args = locals()
-      del args['self']
-      return ast_string(self, **args)
+type AstList []AstNode
+
+func (list *AstList) String() string {
+	return astToString(list)
+}
 
 type SyntaxError struct {
   message string
@@ -295,49 +304,51 @@ type DefaultSyntaxErrorHandler struct {
   syntaxErrors []string
 }
 
-func (h *DefaultSyntaxErrorHandler) _error(string string) {
-    error = SyntaxError(string)
+func (h *DefaultSyntaxErrorHandler) _error(string string) *SyntaxError{
+    error = SyntaxError{string}
     self.errors.append(error)
-    return error
+    return &error
 }
-func (h *DefaultSyntaxErrorHandler) unexpected_eof() {
+func (h *DefaultSyntaxErrorHandler) unexpected_eof() *SyntaxError {
     return h._error("Error: unexpected end of file")
 }
-func (h *DefaultSyntaxErrorHandler) excess_tokens() {
+func (h *DefaultSyntaxErrorHandler) excess_tokens() *SyntaxError {
     return h._error("Finished parsing without consuming all tokens.")
 }
-func (h *DefaultSyntaxErrorHandler) unexpected_symbol(nonterminal, actual_terminal, expected_terminals, rule) {
-    return h._error("Unexpected symbol (line {line}, col {col}) when parsing parse_{nt}.  Expected {expected}, got {actual}.".format(
-        line=actual_terminal.line,
-        col=actual_terminal.col,
-        nt=nonterminal,
-        expected=', '.join(expected_terminals),
-        actual=actual_terminal
-    ))
+func (h *DefaultSyntaxErrorHandler) unexpected_symbol(nt *nonTerminal, actual_terminal *terminal, expected_terminals []*terminal, rule *rule) *SyntaxError {
+	strings := make([]string, len(expected_terminals))
+	for _, t := range expected_terminals {
+		strings = append(strings, t.idStr)
+	}
+    return h._error(fmt.Sprintf("Unexpected symbol (line %d, col %d) when parsing parse_%s.  Expected %s, got %s.",
+				actual_terminal.line,
+        actual_terminal.col,
+        nt.idStr,
+        strings.Join(", ", strings),
+        actual_terminal.idStr))
 }
-func (h *DefaultSyntaxErrorHandler) no_more_tokens(nonterminal, expected_terminal, last_terminal) {
-    return h._error("No more tokens.  Expecting " + expected_terminal)
+func (h *DefaultSyntaxErrorHandler) no_more_tokens(nt *nonTerminal, expected_terminal *terminal, last_terminal *terminal) *SyntaxError {
+    return h._error(fmt.Sprintf("No more tokens.  Expecting %s", expected_terminal.idStr))
 }
-func (h *DefaultSyntaxErrorHandler) invalid_terminal(nonterminal, invalid_terminal) {
-    return h._error("Invalid symbol ID: {} ({})".format(invalid_terminal.id, invalid_terminal.string))
+func (h *DefaultSyntaxErrorHandler) invalid_terminal(nt *nonTerminal, invalid_terminal *terminal) *SyntaxError {
+    return h._error(fmt.Sprintf("Invalid symbol ID: %d (%s)", invalid_terminal.id, invalid_terminal.idStr))
 }
-func (h *DefaultSyntaxErrorHandler) unrecognized_token(string, line, col int) {
-    lines = string.split('\n')
-    bad_line = lines[line-1]
-    return h._error('Unrecognized token on line {}, column {}:\n\n{}\n{}'.format(
-       line, col, bad_line, ''.join([' ' for x in range(col-1)]) + '^'
-    ))
+func (h *DefaultSyntaxErrorHandler) unrecognized_token(s string, line, col int) *SyntaxError {
+	lines := strings.Split(s, "\n")
+	bad_line := lines[line-1]
+	return h._error(fmt.Sprintf("Unrecognized token on line %d, column %d:\n\n%s\n%s",
+		 line, col, bad_line, strings.Repeat(" ", col-1) + '^'))
 }
-func (h *DefaultSyntaxErrorHandler) missing_list_items(method, required, found, last) {
-    return h._error("List for {} requires {} items but only {} were found.".format(method, required, found))
+func (h *DefaultSyntaxErrorHandler) missing_list_items(method string , required, found int, last string) *SyntaxError {
+	return h._error("List for %s requires %d items but only %d were found.".format(method, required, found))
 }
-func (h *DefaultSyntaxErrorHandler) missing_terminator(method, required, terminator, last) {
-    return h._error("List for "+method+" is missing a terminator")
+func (h *DefaultSyntaxErrorHandler) missing_terminator(method string, required *terminal, terminator *terminal, last *terminal) *SyntaxError {
+	return h._error(fmt.Sprintf("List for %s is missing a terminator", method))
 }
 
-###############
-# Parser Code #
-###############
+/*
+ * Parser Code
+ */
 
 var table [][]int
 var terminals []*terminal
@@ -823,15 +834,15 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*ParseTree
 {{lexer.code}}
 /* END USER CODE */
 
-func (ctx *ParserContext) emit(terminal, source_string, line, col) {
+func (ctx *ParserContext) emit(terminal, sourceString, line, col) {
   if terminal {
-    ctx.tokens.append(Terminal(terminals[terminal], terminal, source_string, ctx.resource, line, col))
+    ctx.tokens.append(Terminal(terminals[terminal], terminal, sourceString, ctx.resource, line, col))
   }
 }
 
 {% if re.search(r'func\s+default_action', lexer.code) is None %}
-func default_action(ctx *ParserContext, terminal, source_string, line, col) {
-    ctx.emit(terminal, source_string, line, col)
+func default_action(ctx *ParserContext, terminal, sourceString, line, col) {
+    ctx.emit(terminal, sourceString, line, col)
 }
 {% endif %}
 
@@ -845,168 +856,194 @@ func init() interface{} {
 func destroy(context interface{}) {}
 {% endif %}
 
-class LexerStackPush:
-    def __init__(self, mode):
-        self.mode = mode
+type LexerContext struct {
+  source string
+  resource string
+  handler *SyntaxErrorHandler
+  userContext interface{}
+  stack []string
+  line int
+  col int
+  tokens []*Token
+}
 
-class LexerAction:
-    def __init__(self, action):
-        self.action = action
+func (ctx *LexerContext) StackPush(mode string) {
+  ctx.stack = append(ctx.stack, mode)
+}
 
-class LexerContext:
-    def __init__(self, string, resource, errors, user_context):
-        self.__dict__.update(locals())
-        self.stack = ['default']
-        self.line = 1
-        self.col = 1
-        self.tokens = []
-        self.user_context = user_context
-        self.re_match = None # https://docs.python.org/3/library/re.html#match-objects
+func (ctx *LexerContext) StackPop() {
+  ctx.stack = ctx.stack[:len(ctx.stack)-1]
+}
+
+func (ctx *LexerContext) StackPeek() string {
+  return ctx.stack[len(ctx.stack)-1]
+}
 
 type HermesRegex struct {
   regex *Regexp
   outputs []*HermesRegexOutput
 }
 
+type HermesLexerAction interface {
+  HandleMatch(ctx *ParserContext, groups []string, indexes []int)
+}
+
+type LexerRegexOutput struct {
+  terminal *terminal
+  group int
+  function func(*LexerContext, *terminal, sourceString string, line, col int)
+}
+
+func (lro *LexerRegexOutput) HandleMatch(ctx *ParserContext, groups []string, indexes []int) {
+  sourceString := ""
+  startIndex := 0
+  if lro.group > 0 {
+    sourceString = groups[group]
+    startIndex := group*2
+  }
+
+  groupLine, groupCol = _advance_line_col(ctx.string, indexes[startIndex], ctx.line, ctx.col)
+
+  function := lro.function
+  if function == nil {
+    function = default_action
+  }
+
+  function(ctx, lro.terminal, sourceString, groupLine, groupCol)
+}
+
+type LexerStackPush struct {
+  mode string
+}
+
+func (lsp *LexerStackPush) HandleMatch(ctx *ParserContext, groups []string, indexes []int) {
+  ctx.StackPush(output.mode)
+}
+
+type LexerAction struct {
+  action string
+}
+
+func (la *LexerAction) HandleMatch(ctx *ParserContext, groups []string, indexes []int) {
+  if la.action == "pop" {
+    ctx.StackPop()
+  }
+}
+
 var regex map[string][]*HermesRegex
 
-func initRegex() map[string][]*HermesRegex {
+func initRegexes() map[string][]*HermesRegex {
   if regex == nil {
     regex = make(map[string][]*HermesRegex)
+    var matchActions []HermesLexerAction
+    var r *regexp.Regexp
+    var terminals = initTerminals() // TODO: don't require this
+    var t *terminal
+    var findTerminal = func(name string) {
+      if name == nil {
+        return nil
+      }
+      for terminal := range terminals {
+        if terminal.strId == name {
+          t = terminal
+        }
+      }
+    }
+
 {% for mode, regex_list in lexer.items() %}
     regex["{{mode}}"] = make([]*HermesRegex, {{len(regex_list)}})
   {% for index, regex in enumerate(regex_list) %}
-    r := regexp.MustCompile({{regex.regex}})
+    r = regexp.MustCompile({{regex.regex}})
     // TODO: set r.Flags
-    matchActions := make([]*HermesLexerAction, {{len(regex.outputs)}})
-    {% for index, output in enumerate(regex.outputs) %}
+    matchActions = make([]HermesLexerAction, {{len(regex.outputs)}})
+    {% for index2, output in enumerate(regex.outputs) %}
       {% if isinstance(output, RegexOutput) %}
-    matchActions[{{index}}] = &LexerRegexOutput{ {{'"' + output.terminal.string.lower() + '"' if output.terminal else 'nil'}}, {{output.group}}, {{output.function}} }
+    matchActions[{{index2}}] = &LexerRegexOutput{ findTerminal({{'"' + output.terminal.string.lower() + '"' if output.terminal else 'nil'}}), {{output.group}}, {{output.function}} }
       {% elif isinstance(output, LexerStackPush) %}
-    matchActions[{{index}}] = &LexerStackPush{ "{{output.mode}}" }
+    matchActions[{{index2}}] = &LexerStackPush{ "{{output.mode}}" }
       {% elif isinstance(output, LexerAction) %}
-    matchActions[{{index}}] = &LexerAction{ "{{output.action}}" }
+    matchActions[{{index2}}] = &LexerAction{ "{{output.action}}" }
       {% endif %}
     {% endfor %}
-    regex["{{mode}}"][index] = &HermesRegex{r, matchActions}
+    regex["{{mode}}"][{{index}}] = &HermesRegex{r, matchActions}
   {% endfor %}
 {% endfor %}
   }
   return regex
 }
 
-class HermesLexer:
-    regex = {
-      {% for mode, regex_list in lexer.items() %}
-        '{{mode}}': OrderedDict([
-          {% for regex in regex_list %}
-          (re.compile({{regex.regex}}{{", "+' | '.join(['re.'+x for x in regex.options]) if regex.options else ''}}), [
-              # (terminal, group, function)
-            {% for output in regex.outputs %}
-              {% if isinstance(output, RegexOutput) %}
-              ({{"'" + output.terminal.string.lower() + "'" if output.terminal else 'None'}}, {{output.group}}, {{output.function}}),
-              {% elif isinstance(output, LexerStackPush) %}
-              LexerStackPush('{{output.mode}}'),
-              {% elif isinstance(output, LexerAction) %}
-              LexerAction('{{output.action}}'),
-              {% endif %}
-            {% endfor %}
-          ]),
-          {% endfor %}
-        ]),
-      {% endfor %}
+type {{ccPrefix}}Lexer struct {
+  regex map[string][]*HermesRegex
+}
+
+func New{{ccPrefix}}Lexer() *{{ccPrefix}}Lexer {
+  return &{{ccPrefix}}Lexer{initRegexes()}
+}
+
+func (*{{ccPrefix}}Lexer) _advance_line_col(s string, length, line, col int) (int, int) {
+  c := 0
+  for r := range s {
+    c += 1
+    if r == '\n' {
+      line += 1
+      col = 1
+    } else {
+      col += 1
     }
+    if c == length {
+      break
+    }
+  }
+  return line, col
+}
 
-    def _advance_line_col(self, string, length, line, col):
-        for i in range(length):
-            if string[i] == '\n':
-                line += 1
-                col = 1
-            else:
-                col += 1
-        return (line, col)
+func (lexer *{{ccPrefix}}Lexer) _advance_string(ctx *LexerContext, s string) {
+    ctx.line, ctx.col = self._advance_line_col(s, ctx.line, ctx.col)
+    ctx.string = ctx.string[len(string):]
+}
 
-    def _advance_string(self, ctx, string):
-        (ctx.line, ctx.col) = self._advance_line_col(string, len(string), ctx.line, ctx.col)
-        ctx.string = ctx.string[len(string):]
+func (lexer *{{ccPrefix}}Lexer) _next(ctx *LexerContext) bool {
+    for regex := range lexer.regex[ctx.StackPeek()] {
+        groups = regex.regex.FindStringSubmatch(ctx.source)
+        indexes = regex.regex.FindStringSubmatchIndex(ctx.source)
+        if groups != nil && indexes != nil {
+            for output := range regex.outputs {
+              output.HandleMatch(ctx, groups, indexes)
+            }
+            lexer._advance_string(ctx, groups[0])
+            return len(groups[0]) > 0
+        }
+    }
+    return false
+}
 
-    def _next(self, ctx, debug=False):
-        for regex, outputs in self.regex[ctx.stack[-1]].items():
+func (lexer *{{ccPrefix}}Lexer) lex(source, resource  string, handler *SyntaxErrorHandler) ([]*Token, error) {
+  sourceCopy := string // TODO copy string
+  user_context := init()
+  ctx := LexerContext{sourceCopy, resource, errors, user_context}
 
-            if debug:
-                from xtermcolor import colorize
-                token_count = len(ctx.tokens)
-                print('{1} ({2}, {3}) regex: {0}'.format(
-                    colorize(regex.pattern, ansi=40), colorize(ctx.string[:20].replace('\n', '\\n'), ansi=15), ctx.line, ctx.col)
-                )
+  for len(ctx.source) {
+    matched := lexer._next(ctx)
+    if matched == false {
+      return nil, ctx.errors.unrecognized_token(sourceCopy, ctx.line, ctx.col)
+    }
+  }
 
-            match = regex.match(ctx.string)
-            if match:
-                ctx.re_match = match
-                for output in outputs:
-                    if isinstance(output, tuple):
-                        (terminal, group, function) = output
-                        function = function if function else default_action
-                        source_string = match.group(group) if group is not None else ''
-                        (group_line, group_col) = self._advance_line_col(ctx.string, match.start(group) if group else 0, ctx.line, ctx.col)
-                        function(
-                            ctx,
-                            terminal,
-                            source_string,
-                            group_line,
-                            group_col
-                        )
-                        if debug:
-                            print('    matched: {}'.format(colorize(match.group(0).replace('\n', '\\n'), ansi=3)))
-                            for token in ctx.tokens[token_count:]:
-                                print('    emit: [{}] [{}, {}] [{}] stack:{} context:{}'.format(
-                                    colorize(token.str, ansi=9),
-                                    colorize(str(token.line), ansi=5),
-                                    colorize(str(token.col), ansi=5),
-                                    colorize(token.source_string, ansi=3),
-                                    colorize(str(ctx.stack), ansi=4),
-                                    colorize(str(ctx.user_context), ansi=13)
-                                ))
-                            token_count = len(ctx.tokens)
-                    if isinstance(output, LexerStackPush):
-                        ctx.stack.append(output.mode)
-                        if debug:
-                            print('    push on stack: {}'.format(colorize(output.mode, ansi=4)))
-                    if isinstance(output, LexerAction):
-                        if output.action == 'pop':
-                            mode = ctx.stack.pop()
-                            if debug:
-                                print('    pop off stack: {}'.format(colorize(mode, ansi=4)))
+  destroy(user_context)
+  return ctx.tokens
+}
 
-                self._advance_string(ctx, match.group(0))
-                return len(match.group(0)) > 0
-        return False
-
-    def lex(self, string, resource, errors=None, debug=False):
-        if errors is None:
-            errors = DefaultSyntaxErrorHandler()
-        string_copy = string
-        user_context = init()
-        ctx = LexerContext(string, resource, errors, user_context)
-
-        while len(ctx.string):
-            matched = self._next(ctx, debug)
-            if matched == False:
-                raise ctx.errors.unrecognized_token(string_copy, ctx.line, ctx.col)
-
-        destroy(ctx.user_context)
-        return ctx.tokens
-
-def lex(source, resource, errors=None, debug=False):
-    return TokenStream(HermesLexer().lex(source, resource, errors, debug))
+func (lexer *{{ccPrefix}}Lexer) Lex(source, resource string, errors *SyntaxErrorHandler) {
+    return TokenStream(HermesLexer().lex(source, resource, errors))
+}
 
 {% endif %}
 
 {% if add_main %}
 
-########
-# Main #
-########
+/*
+ * Main
+ */
 
 func main() {
     if len(os.Args) != 3 || (os.Args[1] != "parsetree" && os.Args[1] != "ast"{% if lexer %} && os.Args[1] != "tokens"{% endif %}) {
