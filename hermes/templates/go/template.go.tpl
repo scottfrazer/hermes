@@ -10,6 +10,10 @@ import (
   "encoding/base64"
 	"errors"
 	"strings"
+	{% if add_main %}
+	"os"
+	"io/ioutil"
+	{% endif %}
 )
 
 {% import re %}
@@ -377,8 +381,8 @@ type DefaultSyntaxErrorHandler struct {
   syntaxErrors SyntaxErrors
 }
 
-func (h *DefaultSyntaxErrorHandler) Error() error {
-	return h.syntaxErrors
+func (h *DefaultSyntaxErrorHandler) Error() string {
+	return h.syntaxErrors.Error()
 }
 
 func (h *DefaultSyntaxErrorHandler) _error(str string) *SyntaxError{
@@ -525,15 +529,6 @@ func New{{ccPrefix}}Parser() *{{ccPrefix}}Parser {
     initRules()}
 }
 
-func (parser *{{ccPrefix}}Parser) getRule(id int) *rule {
-	for _, rule := range parser.rules {
-		if rule.id == id {
-			return rule
-		}
-	}
-	return nil
-}
-
 func (parser *{{ccPrefix}}Parser) newParseTree(nonterminalId int) *parseTree {
 	var nt *nonTerminal
 	for _, n := range parser.nonterminals {
@@ -661,18 +656,18 @@ func (parser *{{ccPrefix}}Parser) nud_{{name}}(ctx *ParserContext) (*parseTree, 
     {% py first_set = grammar.first(rule.production) %}
     {% if len(first_set) and not first_set.issuperset(grammar.first(expression_nonterminal)) %}
   if parser.Rule({{rule.id}}).CanStartWith(current.terminal.id) {
-      ctx.rule_string = parser.getRule({{rule.id}}).str
+      ctx.rule_string = parser.Rule({{rule.id}}).str
 
       {% py ast = rule.nudAst if not isinstance(rule.operator, PrefixOperator) else rule.ast %}
 
       {% if isinstance(ast, AstSpecification) %}
-      var astParameters = make(map[string]int)
+			astParameters := make(map[string]int)
         {% for k,v in ast.parameters.items() %}
       astParameters["{{k}}"] = {% if v == '$' %}int('{{v}}'){% else %}{{v}}{% endif %}
         {% endfor %}
       tree.astTransform = &AstTransformNodeCreator{"{{ast.name}}", astParameters}
       {% elif isinstance(ast, AstTranslation) %}
-      tree.astTransform = &AstTransformSubstitution{ {{ast.idx}} }
+      tree.astTransform = {{ast.idx}}
       {% endif %}
 
       tree.nudMorphemeCount = {{len(rule.nud_production)}}
@@ -697,44 +692,44 @@ func (parser *{{ccPrefix}}Parser) nud_{{name}}(ctx *ParserContext) (*parseTree, 
       if err != nil {
         return nil, err
       }
-      tree.add(subtree)
+      tree.Add(subtree)
           {% endif %}
         {% elif isinstance(morpheme, NonTerminal) %}
       subtree, err := parser.Parse_{{morpheme.string.lower()}}(ctx)
       if err != nil {
         return nil, err
       }
-      tree.add(subtree)
+      tree.Add(subtree)
         {% endif %}
       {% endfor %}
   }
     {% endif %}
   {% endfor %}
 
-  return tree
+  return tree, nil
 }
 
 func (parser *{{ccPrefix}}Parser) led_{{name}}(left *parseTree, ctx *ParserContext) (*parseTree, error) {
 	tree := parser.newParseTree({{expression_nonterminal.id}})
-  current = ctx.tokens.current()
-  ctx.nonterminal = "{{name}}"
+	current := ctx.tokens.current()
+  ctx.nonterminal_string = "{{name}}"
 
   {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
     {% py led = rule.led_production.morphemes %}
     {% if len(led) %}
 
-  if current.id == {{led[0].id}} {
+  if current.terminal.id == {{led[0].id}} {
       // {{rule}}
-      ctx.rule = parser.Rule({{rule.id}}).string
+      ctx.rule_string = parser.Rule({{rule.id}}).str
 
       {% if isinstance(rule.ast, AstSpecification) %}
-      var astParameters = make(map[string]string)
+      var astParameters = make(map[string]int)
         {% for k,v in rule.ast.parameters.items() %}
-      astParameters["{{k}}"] = {% if v == '$' %}"{{v}}"{% else %}{{v}}{% endif %}
+      astParameters["{{k}}"] = {% if v == '$' %}int('{{v}}'){% else %}{{v}}{% endif %}
         {% endfor %}
       tree.astTransform = &AstTransformNodeCreator{"{{rule.ast.name}}", astParameters}
       {% elif isinstance(rule.ast, AstTranslation) %}
-      tree.astTransform = &AstTransformSubstitution{ {{rule.ast.idx}} }
+      tree.astTransform = {{rule.ast.idx}}
       {% endif %}
 
       {% if len(rule.nud_production) == 1 and isinstance(rule.nud_production.morphemes[0], NonTerminal) %}
@@ -763,13 +758,13 @@ func (parser *{{ccPrefix}}Parser) led_{{name}}(left *parseTree, ctx *ParserConte
       if err != nil {
         return nil, err
       }
-      tree.add(subtree)
+      tree.Add(subtree)
         {% elif isinstance(morpheme, NonTerminal) %}
       subtree, err := parser.parse_{{morpheme.string.lower()}}(ctx)
       if err != nil {
         return nil, err
       }
-      tree.add(subtree)
+      tree.Add(subtree)
         {% endif %}
       {% endfor %}
 	}
@@ -785,18 +780,18 @@ func (parser *{{ccPrefix}}Parser) led_{{name}}(left *parseTree, ctx *ParserConte
   {% py list_parser = grammar.list_parser(list_nonterminal) %}
   {% py name = list_nonterminal.string %}
 func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree, error) {
-    current = ctx.tokens.current()
+		current := ctx.tokens.current()
 		tree := parser.newParseTree({{list_nonterminal.id}})
     tree.list = true
   {% if list_parser.separator is not None %}
     tree.list_separator_id = {{list_parser.separator.id}}
   {% endif %}
-    ctx.nonterminal = "{{name}}"
+    ctx.nonterminal_string = "{{name}}"
 
   {% if not grammar.must_consume_tokens(list_nonterminal) %}
-    list_nonterminal = parser.NonTerminalFromId({{list_nonterminal.id}})
-    if current != nil && list_nonterminal.CanBeFollowedBy(current.id) && list_nonterminal.CanStartWith(current.id) {
-      return tree
+		list_nonterminal := parser.NonTerminalFromId({{list_nonterminal.id}})
+    if current != nil && list_nonterminal.CanBeFollowedBy(current.terminal.id) && list_nonterminal.CanStartWith(current.terminal.id) {
+      return tree, nil
     }
   {% endif %}
 
@@ -804,21 +799,21 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
   {% if grammar.must_consume_tokens(list_nonterminal) %}
       return nil, ctx.error_formatter.unexpected_eof()
   {% else %}
-      return tree
+      return tree, nil
   {% endif %}
     }
 
     minimum := {{list_parser.minimum}}
-    for minimum > 0 || (current != nil && parser.NonTerminalFromId({{list_nonterminal.id}}).CanStartWith(current.id)) {
+    for minimum > 0 || (current != nil && parser.NonTerminalFromId({{list_nonterminal.id}}).CanStartWith(current.terminal.id)) {
   {% if isinstance(list_parser.morpheme, NonTerminal) %}
-      subtree, err := Parse_{{list_parser.morpheme.string.lower()}}(ctx)
+      subtree, err := parser.Parse_{{list_parser.morpheme.string.lower()}}(ctx)
       if err != nil {
         return nil, err
       }
       tree.Add(subtree)
-      ctx.nonterminal = "{{name}}" // Horrible -- because parse_* can reset this
+      ctx.nonterminal_string = "{{name}}" // Horrible -- because parse_* can reset this
   {% else %}
-      token, err := expect(ctx, {{list_parser.morpheme.id}})
+      token, err := ctx.expect({{list_parser.morpheme.id}})
       if err != nil {
         return nil, err
       }
@@ -826,8 +821,8 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
   {% endif %}
 
   {% if list_parser.separator is not None %}
-      if current != nil && current.id == {{list_parser.separator.id}} {
-        token, err := expect(ctx, {{list_parser.separator.id}})
+      if current != nil && current.terminal.id == {{list_parser.separator.id}} {
+        token, err := ctx.expect({{list_parser.separator.id}})
         if err != nil {
           return nil, err
         }
@@ -857,28 +852,32 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
     {% endif %}
   {% endif %}
 
-      minimum = max(minimum - 1, 0)
+			if minimum - 1 > 0 {
+				minimum = minimum - 1
+			} else {
+				minimum = 0
+			}
     }
-    return tree
+    return tree, nil
 }
 {% endfor %}
 
 {% for nonterminal in sorted(grammar.ll1_nonterminals, key=str) %}
   {% py name = nonterminal.string %}
 func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree, error) {
-  current = ctx.tokens.current()
+	current := ctx.tokens.current()
 	rule := -1
 	if current != nil {
-		rule = parser.table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.id]
+		rule = parser.table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.terminal.id]
 	}
 	tree := parser.newParseTree({{nonterminal.id}})
-  ctx.nonterminal = "{{name}}"
-	var token *token
+  ctx.nonterminal_string = "{{name}}"
+	var token *Token
 	var err error
 
     {% if not grammar.must_consume_tokens(nonterminal) %}
   nt := parser.NonTerminalFromId({{nonterminal.id}})
-  if current != nil && nt.CanBeFollwedBy(current.id) && nt.CanStartWith(current.id) {
+  if current != nil && nt.CanBeFollowedBy(current.terminal.id) && nt.CanStartWith(current.terminal.id) {
     return tree, nil
   }
     {% endif %}
@@ -893,18 +892,19 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
 
     {% for index, rule in enumerate([rule for rule in grammar.get_expanded_rules(nonterminal) if not rule.is_empty]) %}
   if rule == {{rule.id}} { // {{rule}}
-    ctx.rule = rules[{{rule.id}}]
+    ctx.rule_string = rules[{{rule.id}}].str
 
       {% if isinstance(rule.ast, AstTranslation) %}
-    tree.astTransform = &AstTransformSubstitution{ {{rule.ast.idx}} }
+
+    tree.astTransform = {{rule.ast.idx}}
       {% elif isinstance(rule.ast, AstSpecification) %}
-    var astParameters = make(map[string]int)
+		astParameters := make(map[string]int)
         {% for k,v in rule.ast.parameters.items() %}
     astParameters["{{k}}"] = {% if v == '$' %}int('{{v}}'){% else %}{{v}}{% endif %}
         {% endfor %}
     tree.astTransform = &AstTransformNodeCreator{ "{{rule.ast.name}}", astParameters }
       {% else %}
-    tree.astTransform = &AstTransformSubstitution(0)
+    tree.astTransform = 0
       {% endif %}
 
       {% for index, morpheme in enumerate(rule.production.morphemes) %}
@@ -931,9 +931,10 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
     {% endfor %}
 
     {% if grammar.must_consume_tokens(nonterminal) %}
-	expected := make([]*terminal, len(ctx.nonterminal.firstSet))
-	for _, terminalId := range ctx.nonterminal.firstSet {
-		for _, terminal := parser.terminals {
+	nt := parser.NonTerminalFromId({{nonterminal.id}})
+	expected := make([]*terminal, len(nt.firstSet))
+	for _, terminalId := range nt.firstSet {
+		for _, terminal := range parser.terminals {
 			if terminal.id == terminalId {
 				expected = append(expected, terminal)
 				break
@@ -962,25 +963,25 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
 {{lexer.code}}
 /* END USER CODE */
 
-func (ctx *ParserContext) emit(terminal *terminal, resource, sourceString string, line, col int) {
+func (ctx *LexerContext) emit(terminal *terminal, sourceString string, line, col int) {
   if terminal != nil {
-    ctx.tokens.append(Token{terminal, resource, sourceString, ctx.resource, line, col})
+    ctx.tokens = append(ctx.tokens, &Token{terminal, sourceString, ctx.resource, line, col})
   }
 }
 
 {% if re.search(r'func\s+default_action', lexer.code) is None %}
-func default_action(ctx *ParserContext, terminal *terminal, sourceString string, line, col int) {
-    ctx.emit(terminal, ctx.resource, sourceString, line, col)
+func default_action(ctx *LexerContext, terminal *terminal, sourceString string, line, col int) {
+    ctx.emit(terminal, sourceString, line, col)
 }
 {% endif %}
 
-{% if re.search(r'def\s+lexerInit', lexer.code) is None %}
+{% if re.search(r'func\s+lexerInit', lexer.code) is None %}
 func lexerInit() interface{} {
     return nil
 }
 {% endif %}
 
-{% if re.search(r'def\s+lexerDestroy', lexer.code) is None %}
+{% if re.search(r'func\s+lexerDestroy', lexer.code) is None %}
 func lexerDestroy(context interface{}) {}
 {% endif %}
 
@@ -1009,50 +1010,45 @@ func (ctx *LexerContext) StackPeek() string {
 
 type HermesRegex struct {
   regex *regexp.Regexp
-  outputs []*LexerRegexOutput
+  outputs []HermesLexerAction
 }
 
 type HermesLexerAction interface {
-  HandleMatch(ctx *ParserContext, groups []string, indexes []int)
+  HandleMatch(ctx *LexerContext, groups []string, indexes []int)
 }
 
 type LexerRegexOutput struct {
   terminal *terminal
   group int
-  function func(*LexerContext, *terminal, sourceString string, line, col int)
+  function func(*LexerContext, *terminal, string, int, int)
 }
 
-func (lro *LexerRegexOutput) HandleMatch(ctx *ParserContext, groups []string, indexes []int) {
+func (lro *LexerRegexOutput) HandleMatch(ctx *LexerContext, groups []string, indexes []int) {
   sourceString := ""
   startIndex := 0
   if lro.group > 0 {
-    sourceString = groups[group]
-    startIndex := group*2
+    sourceString = groups[lro.group]
+    startIndex := lro.group * 2
   }
 
-  groupLine, groupCol = _advance_line_col(ctx.string, indexes[startIndex], ctx.line, ctx.col)
+	groupLine, groupCol := _advance_line_col(ctx.source, indexes[startIndex], ctx.line, ctx.col)
 
-  function := lro.function
-  if function == nil {
-    function = default_action
-  }
-
-  function(ctx, lro.terminal, sourceString, groupLine, groupCol)
+  lro.function(ctx, lro.terminal, sourceString, groupLine, groupCol)
 }
 
 type LexerStackPush struct {
   mode string
 }
 
-func (lsp *LexerStackPush) HandleMatch(ctx *ParserContext, groups []string, indexes []int) {
-  ctx.StackPush(output.mode)
+func (lsp *LexerStackPush) HandleMatch(ctx *LexerContext, groups []string, indexes []int) {
+  ctx.StackPush(lsp.mode)
 }
 
 type LexerAction struct {
   action string
 }
 
-func (la *LexerAction) HandleMatch(ctx *ParserContext, groups []string, indexes []int) {
+func (la *LexerAction) HandleMatch(ctx *LexerContext, groups []string, indexes []int) {
   if la.action == "pop" {
     ctx.StackPop()
   }
@@ -1064,18 +1060,17 @@ func initRegexes() map[string][]*HermesRegex {
   if regex == nil {
     regex = make(map[string][]*HermesRegex)
     var matchActions []HermesLexerAction
+    var matchFunction func(*LexerContext, *terminal, string, int, int)
     var r *regexp.Regexp
     var terminals = initTerminals() // TODO: don't require this
     var t *terminal
-    var findTerminal = func(name string) {
-      if name == nil {
-        return nil
-      }
-      for terminal := range terminals {
+    var findTerminal = func(name string) *terminal {
+      for _, terminal := range terminals {
         if terminal.idStr == name {
-          t = terminal
+         	return terminal
         }
       }
+			return nil
     }
 
 {% for mode, regex_list in lexer.items() %}
@@ -1086,7 +1081,8 @@ func initRegexes() map[string][]*HermesRegex {
     matchActions = make([]HermesLexerAction, {{len(regex.outputs)}})
     {% for index2, output in enumerate(regex.outputs) %}
       {% if isinstance(output, RegexOutput) %}
-    matchActions[{{index2}}] = &LexerRegexOutput{ findTerminal({{'"' + output.terminal.string.lower() + '"' if output.terminal else 'nil'}}), {{output.group}}, {{output.function}} }
+		matchFunction = {{output.function if output.function is not None else 'default_action'}}
+    matchActions[{{index2}}] = &LexerRegexOutput{ findTerminal({{'"' + output.terminal.string.lower() + '"' if output.terminal else '""'}}), {{output.group}}, matchFunction }
       {% elif isinstance(output, LexerStackPush) %}
     matchActions[{{index2}}] = &LexerStackPush{ "{{output.mode}}" }
       {% elif isinstance(output, LexerAction) %}
@@ -1108,7 +1104,7 @@ func New{{ccPrefix}}Lexer() *{{ccPrefix}}Lexer {
   return &{{ccPrefix}}Lexer{initRegexes()}
 }
 
-func (*{{ccPrefix}}Lexer) _advance_line_col(s string, length, line, col int) (int, int) {
+func _advance_line_col(s string, length, line, col int) (int, int) {
   c := 0
   for r := range s {
     c += 1
@@ -1126,16 +1122,16 @@ func (*{{ccPrefix}}Lexer) _advance_line_col(s string, length, line, col int) (in
 }
 
 func (lexer *{{ccPrefix}}Lexer) _advance_string(ctx *LexerContext, s string) {
-    ctx.line, ctx.col = self._advance_line_col(s, ctx.line, ctx.col)
-    ctx.string = ctx.string[len(string):]
+    ctx.line, ctx.col = _advance_line_col(s, len(s), ctx.line, ctx.col)
+    ctx.source = ctx.source[len(s):]
 }
 
 func (lexer *{{ccPrefix}}Lexer) _next(ctx *LexerContext) bool {
-    for regex := range lexer.regex[ctx.StackPeek()] {
-        groups = regex.regex.FindStringSubmatch(ctx.source)
-        indexes = regex.regex.FindStringSubmatchIndex(ctx.source)
+    for _, regex := range lexer.regex[ctx.StackPeek()] {
+				groups := regex.regex.FindStringSubmatch(ctx.source)
+				indexes := regex.regex.FindStringSubmatchIndex(ctx.source)
         if groups != nil && indexes != nil {
-            for output := range regex.outputs {
+            for _, output := range regex.outputs {
               output.HandleMatch(ctx, groups, indexes)
             }
             lexer._advance_string(ctx, groups[0])
@@ -1145,24 +1141,27 @@ func (lexer *{{ccPrefix}}Lexer) _next(ctx *LexerContext) bool {
     return false
 }
 
-func (lexer *{{ccPrefix}}Lexer) lex(source, resource  string, handler SyntaxErrorHandler) ([]*Token, error) {
-  sourceCopy := string // TODO copy string
+func (lexer *{{ccPrefix}}Lexer) lex(source, resource string, handler SyntaxErrorHandler) ([]*Token, error) {
   user_context := lexerInit()
-  ctx := LexerContext{sourceCopy, resource, errors, user_context}
+  ctx := &LexerContext{source, resource, handler, lexerInit(), nil, 1, 1, nil}
 
-  for len(ctx.source) {
+  for len(ctx.source) > 0 {
     matched := lexer._next(ctx)
     if matched == false {
-      return nil, ctx.errors.unrecognized_token(sourceCopy, ctx.line, ctx.col)
+      return nil, ctx.handler.unrecognized_token(source, ctx.line, ctx.col)
     }
   }
 
   lexerDestroy(user_context)
-  return ctx.tokens
+  return ctx.tokens, nil
 }
 
-func (lexer *{{ccPrefix}}Lexer) Lex(source, resource string, errors SyntaxErrorHandler) {
-    return TokenStream(HermesLexer().lex(source, resource, errors))
+func (lexer *{{ccPrefix}}Lexer) Lex(source, resource string, handler SyntaxErrorHandler) (*TokenStream, error) {
+	tokens, err := lexer.lex(source, resource, handler)
+	if err != nil {
+		return nil, err
+	}
+	return &TokenStream{tokens, 0}, nil
 }
 
 {% endif %}
@@ -1175,10 +1174,10 @@ func (lexer *{{ccPrefix}}Lexer) Lex(source, resource string, errors SyntaxErrorH
 
 func main() {
     if len(os.Args) != 3 || (os.Args[1] != "parsetree" && os.Args[1] != "ast"{% if lexer %} && os.Args[1] != "tokens"{% endif %}) {
-        fmt.Printf("Usage: %s parsetree <source>\n".format(os.Args[0]))
-        fmt.Printf("Usage: %s ast <source>\n".format(os.Args[0]))
+        fmt.Printf("Usage: %s parsetree <source>\n", os.Args[0])
+        fmt.Printf("Usage: %s ast <source>\n", os.Args[0])
         {% if lexer %}
-        fmt.Printf("Usage: %s tokens <source>\n".format(os.Args[0]))
+        fmt.Printf("Usage: %s tokens <source>\n", os.Args[0])
         {% endif %}
         os.Exit(-1)
     }
@@ -1190,22 +1189,33 @@ func main() {
     }
 
     parser := New{{ccPrefix}}Parser()
-    tokens := parser.Lex(string(bytes))
+		lexer := New{{ccPrefix}}Lexer()
+		// TODO: clean up interface for DefaultSyntaxErrorHandler
+		handler := &DefaultSyntaxErrorHandler{nil}
+		tokens, err := lexer.Lex(string(bytes), os.Args[2], handler)
+		if err != nil {
+			fmt.Printf("%s\n", err)
+			os.Exit(-1)
+		}
 
     if os.Args[1] == "parsetree" || os.Args[1] == "ast" {
-      tree := parser.ParseTokens(tokens)
+      tree, err := parser.ParseTokens(tokens, handler)
+			if err != nil {
+				fmt.Printf("%s\n", err)
+				os.Exit(-1)
+			}
       if os.Args[1] == "parsetree" {
-        fmt.Println(tree.String(2))
+        fmt.Println(tree.PrettyString())
       } else {
-        ast := tree.toAst()
+        ast := tree.Ast()
         if ast != nil {
-          fmt.Println(ast.String(2))
+          fmt.Println(ast.PrettyString())
         }
       }
     }
     if os.Args[1] == "tokens" {
-      for token := range tokens {
-        fmt.Println(token.String())
+      for _, token := range tokens.tokens {
+        fmt.Println(token.PrettyString())
       }
     }
 }
