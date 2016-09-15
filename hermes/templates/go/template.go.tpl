@@ -132,7 +132,7 @@ type treeNode interface {
 func (tree *parseTree) Add(node interface{}) error {
 	switch t := node.(type) {
 	case *parseTree:
-		fallthrough
+		tree.children = append(tree.children, t)
 	case *Token:
 		tree.children = append(tree.children, t)
 	default:
@@ -163,7 +163,7 @@ func (tree *parseTree) Ast() AstNode {
 					if tree.list_separator_id == t.terminal.id {
 						continue
 					}
-					fallthrough
+					r = append(r, t.Ast())
 				default:
 					r = append(r, t.Ast())
 				}
@@ -875,6 +875,9 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
 	var token *Token
 	var err error
 
+	_ = token
+	_ = err
+
     {% if not grammar.must_consume_tokens(nonterminal) %}
   nt := parser.NonTerminalFromId({{nonterminal.id}})
   if current != nil && nt.CanBeFollowedBy(current.terminal.id) && nt.CanStartWith(current.terminal.id) {
@@ -1028,7 +1031,7 @@ func (lro *LexerRegexOutput) HandleMatch(ctx *LexerContext, groups []string, ind
   startIndex := 0
   if lro.group > 0 {
     sourceString = groups[lro.group]
-    startIndex := lro.group * 2
+    startIndex = lro.group * 2
   }
 
 	groupLine, groupCol := _advance_line_col(ctx.source, indexes[startIndex], ctx.line, ctx.col)
@@ -1063,7 +1066,6 @@ func initRegexes() map[string][]*HermesRegex {
     var matchFunction func(*LexerContext, *terminal, string, int, int)
     var r *regexp.Regexp
     var terminals = initTerminals() // TODO: don't require this
-    var t *terminal
     var findTerminal = func(name string) *terminal {
       for _, terminal := range terminals {
         if terminal.idStr == name {
