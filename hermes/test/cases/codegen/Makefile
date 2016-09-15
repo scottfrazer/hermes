@@ -28,9 +28,9 @@ c:
 go:
 	-mkdir go
 	hermes generate --language=go --add-main --directory=go grammar.hgr
-	go build go/grammar_parser.go
-	-go/parser tokens source &> c/tokens
-	-go/parser parsetree source &> c/parsetree
-	-go/parser ast source &> c/ast
+	go build -o go/parser go/grammar_parser.go
+	-go/parser tokens source &> go/tokens
+	-go/parser parsetree source &> go/parsetree
+	-go/parser ast source &> go/ast
 clean:
 	-rm -rf java c python js go

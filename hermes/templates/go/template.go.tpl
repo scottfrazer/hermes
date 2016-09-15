@@ -1133,6 +1133,7 @@ func (lexer *{{ccPrefix}}Lexer) _next(ctx *LexerContext) bool {
 				groups := regex.regex.FindStringSubmatch(ctx.source)
 				indexes := regex.regex.FindStringSubmatchIndex(ctx.source)
         if groups != nil && indexes != nil {
+						fmt.Printf("MATCH: %v -- %v\n", regex.regex, groups)
             for _, output := range regex.outputs {
               output.HandleMatch(ctx, groups, indexes)
             }
@@ -1146,6 +1147,7 @@ func (lexer *{{ccPrefix}}Lexer) _next(ctx *LexerContext) bool {
 func (lexer *{{ccPrefix}}Lexer) lex(source, resource string, handler SyntaxErrorHandler) ([]*Token, error) {
   user_context := lexerInit()
   ctx := &LexerContext{source, resource, handler, lexerInit(), nil, 1, 1, nil}
+	ctx.StackPush("default")
 
   for len(ctx.source) > 0 {
     matched := lexer._next(ctx)
