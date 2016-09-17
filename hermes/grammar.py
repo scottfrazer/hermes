@@ -356,15 +356,17 @@ class AbstractLexer(OrderedDict):
 
     def convert_regex_str(self, regex_str, language):
         if regex_str[0] == "'" and language in ['c', 'java', 'go']:
-            regex_str = regex_str[1:-1].replace('"', '\\"')
-            return '"{}"'.format(regex_str)
+            regex_str = '"{}"'.format(regex_str[1:-1].replace('"', '\\"'))
 
         if regex_str[:2] in ["r'", 'r"'] and language in ['c', 'java', 'javascript', 'go']:
             # http://en.wikipedia.org/wiki/Escape_sequences_in_C#Table_of_escape_sequences
             regex_str = re.sub(r'\\(?![abfnrtv\'\?"]|u[0-9a-fA-F]{4}|[0-7]{3}|x[0-9a-fA-F]{2})', r'\\\\', regex_str[2:-1])
             regex_str = re.sub(r'"(?<!\\)', r'\"', regex_str)
             regex_str = re.sub(r"'(?<!\\)", r"\'", regex_str)
-            return '"{}"'.format(regex_str)
+            regex_str = '"{}"'.format(regex_str)
+
+        if language == 'go' and not regex_str.startswith('"^'):
+            regex_str = re.sub(r'^"(.*)"$', '"^\\1"', regex_str)
 
         return regex_str
 

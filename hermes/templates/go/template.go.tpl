@@ -6,7 +6,9 @@ package main // TODO
 
 import (
   "fmt"
+  {% if lexer %}
   "regexp"
+  {% endif %}
   "encoding/base64"
 	"errors"
 	"strings"
@@ -1132,8 +1134,7 @@ func (lexer *{{ccPrefix}}Lexer) _next(ctx *LexerContext) bool {
     for _, regex := range lexer.regex[ctx.StackPeek()] {
 				groups := regex.regex.FindStringSubmatch(ctx.source)
 				indexes := regex.regex.FindStringSubmatchIndex(ctx.source)
-        if groups != nil && indexes != nil {
-						fmt.Printf("MATCH: %v -- %v\n", regex.regex, groups)
+        if len(groups) != 0 && indexes != nil {
             for _, output := range regex.outputs {
               output.HandleMatch(ctx, groups, indexes)
             }
