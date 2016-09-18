@@ -1029,14 +1029,15 @@ type LexerRegexOutput struct {
 }
 
 func (lro *LexerRegexOutput) HandleMatch(ctx *LexerContext, groups []string, indexes []int) {
-  sourceString := ""
+  sourceString := groups[0]
   startIndex := 0
   if lro.group > 0 {
     sourceString = groups[lro.group]
     startIndex = lro.group * 2
   }
+  length := indexes[startIndex+1] - indexes[startIndex]
 
-	groupLine, groupCol := _advance_line_col(ctx.source, indexes[startIndex], ctx.line, ctx.col)
+	groupLine, groupCol := _advance_line_col(ctx.source, length, ctx.line, ctx.col)
 
   lro.function(ctx, lro.terminal, sourceString, groupLine, groupCol)
 }
@@ -1147,7 +1148,7 @@ func (lexer *{{ccPrefix}}Lexer) _next(ctx *LexerContext) bool {
 
 func (lexer *{{ccPrefix}}Lexer) lex(source, resource string, handler SyntaxErrorHandler) ([]*Token, error) {
   user_context := lexerInit()
-  ctx := &LexerContext{source, resource, handler, lexerInit(), nil, 1, 1, nil}
+  ctx := &LexerContext{source, resource, handler, lexerInit(), nil, 1, 0, nil}
 	ctx.StackPush("default")
 
   for len(ctx.source) > 0 {
