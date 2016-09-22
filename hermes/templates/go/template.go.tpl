@@ -18,6 +18,10 @@ import (
 	{% endif %}
 )
 
+func p(format string, a ...interface{}) (n int, err error) {
+  return fmt.Printf(format + "\n", a...)
+}
+
 {% import re %}
 {% from hermes.grammar import * %}
 
@@ -35,7 +39,7 @@ type nonTerminal struct {
 }
 
 func (nt *nonTerminal) CanStartWith(terminalId int) bool {
-  for i := range nt.firstSet {
+  for _, i := range nt.firstSet {
     if i == terminalId {
       return true
     }
@@ -44,7 +48,7 @@ func (nt *nonTerminal) CanStartWith(terminalId int) bool {
 }
 
 func (nt *nonTerminal) CanBeFollowedBy(terminalId int) bool {
-  for i := range nt.followSet {
+  for _, i := range nt.followSet {
     if i == terminalId {
       return true
     }
@@ -59,7 +63,7 @@ type rule struct {
 }
 
 func (rule *rule) CanStartWith(terminalId int) bool {
-  for i := range rule.firstSet {
+  for _, i := range rule.firstSet {
     if i == terminalId {
       return true
     }
@@ -76,7 +80,12 @@ type Token struct {
 }
 
 func (t *Token) String() string {
-  return fmt.Sprintf(`<%s:%d:%d %s "%s">`, t.resource, t.line, t.col, t.terminal.idStr, base64.StdEncoding.EncodeToString([]byte(t.sourceString)))
+  return fmt.Sprintf(`<%s:%d:%d %s "%s">`,
+    t.resource,
+    t.line,
+    t.col,
+    t.terminal.idStr,
+    base64.StdEncoding.EncodeToString([]byte(t.sourceString)))
 }
 
 func (t *Token) PrettyString() string {
@@ -230,7 +239,7 @@ func (tree *parseTree) String() string {
 }
 
 func (tree *parseTree) PrettyString() string {
-  return parseTreeToString(tree, 2, 1)
+  return parseTreeToString(tree, 2, 0)
 }
 
 func parseTreeToString(treenode interface{}, indent int, indentLevel int) string {
@@ -240,7 +249,7 @@ func parseTreeToString(treenode interface{}, indent int, indentLevel int) string
 	}
 
 	switch node := treenode.(type) {
-	case *parseTree:
+  case *parseTree:
 		childStrings := make([]string, len(node.children))
 		for index, child := range node.children {
 			childStrings[index] = parseTreeToString(child, indent, indentLevel+1)
@@ -570,7 +579,7 @@ func (parser *{{ccPrefix}}Parser) TerminalFromId(id int) *terminal {
 }
 
 func (parser *{{ccPrefix}}Parser) NonTerminalFromId(id int) *nonTerminal {
-  return parser.nonterminals[{{len(grammar.standard_terminals)}} - id]
+  return parser.nonterminals[id - {{len(grammar.standard_terminals)}}]
 }
 
 func (parser *{{ccPrefix}}Parser) TerminalFromStringId(id string) *terminal {
@@ -823,7 +832,7 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
   {% endif %}
 
   {% if list_parser.separator is not None %}
-      if current != nil && current.terminal.id == {{list_parser.separator.id}} {
+      if ctx.tokens.current() != nil && ctx.tokens.current().terminal.id == {{list_parser.separator.id}} {
         token, err := ctx.expect({{list_parser.separator.id}})
         if err != nil {
           return nil, err
