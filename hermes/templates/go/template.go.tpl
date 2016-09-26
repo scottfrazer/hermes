@@ -183,7 +183,7 @@ func (tree *parseTree) Ast() AstNode {
     } else if tree.isExpr {
 			switch transform := tree.astTransform.(type) {
 			case *AstTransformSubstitution:
-				return tree.children[*transform].Ast()
+				return tree.children[transform.index].Ast()
 			case *AstTransformNodeCreator:
 				attributes := make(map[string]AstNode)
 				var child treeNode
@@ -218,7 +218,7 @@ func (tree *parseTree) Ast() AstNode {
     } else {
 			switch transform := tree.astTransform.(type) {
 			case *AstTransformSubstitution:
-				return tree.children[*transform].Ast()
+				return tree.children[transform.index].Ast()
 			case *AstTransformNodeCreator:
 				attributes := make(map[string]AstNode)
 				for s, i := range transform.parameters {
@@ -288,6 +288,7 @@ func astToString(ast interface{}, indent int, indentLevel int) string {
 		indentStr := ""
 		nextIndentStr := ""
 		attrPrefix := ""
+    i := 0
 
 		if indent > 0 {
 			indentStr = strings.Repeat(" ", indent * indentLevel)
@@ -298,9 +299,10 @@ func astToString(ast interface{}, indent int, indentLevel int) string {
 		switch node := ast.(type) {
 		case *Ast:
 			childStrings := make([]string, len(node.attributes))
+      i = 0
 			for name, subnode := range node.attributes {
-				childString := fmt.Sprintf("%s%s=%s", attrPrefix, name, astToString(subnode, indent, indentLevel+1))
-				childStrings = append(childStrings, childString)
+				childStrings[i] = fmt.Sprintf("%s%s=%s", attrPrefix, name, astToString(subnode, indent, indentLevel+1))
+        i++
 			}
 			if indent > 0 {
 				return fmt.Sprintf("(%s:\n%s\n%s)", node.name, strings.Join(childStrings, ",\n"), indentStr)
@@ -309,28 +311,33 @@ func astToString(ast interface{}, indent int, indentLevel int) string {
 			}
 		case *AstList:
 			childStrings := make([]string, len(*node))
-			for subnode := range *node {
-				childString := fmt.Sprintf("%s%s", attrPrefix, astToString(subnode, indent, indentLevel+1))
-				childStrings = append(childStrings, childString)
+      i = 0
+			for _, subnode := range *node {
+				childStrings[i] = fmt.Sprintf("%s%s", attrPrefix, astToString(subnode, indent, indentLevel+1))
+        i++
 			}
 
 			if indent == 0 || len(*node) == 0 {
 					return fmt.Sprintf("[%s]", strings.Join(childStrings, ", "))
 			} else {
-					return fmt.Sprintf("[\n%s\n%s]", indentStr, strings.Join(childStrings, ",\n"))
+					return fmt.Sprintf("[%s\n%s\n%s]", indentStr, strings.Join(childStrings, ",\n"), indentStr)
 			}
 		case *Token:
 			return node.String()
+    case nil:
+      return ""
 		default:
 			panic(fmt.Sprintf("Wrong type to astToString(): %v (%t)", ast, ast))
 		}
 	return ""
 }
 
-type AstTransformSubstitution int
+type AstTransformSubstitution struct {
+  index int
+}
 
 func (t *AstTransformSubstitution) String() string {
-  return fmt.Sprintf("$%d", *t)
+  return fmt.Sprintf("$%d", t.index)
 }
 
 type AstTransformNodeCreator struct {
@@ -340,8 +347,10 @@ type AstTransformNodeCreator struct {
 
 func (t *AstTransformNodeCreator) String() string {
 	strs := make([]string, len(t.parameters))
+  i := 0
 	for k, v := range t.parameters {
-		strs = append(strs, fmt.Sprintf("%s=$%d", k, v))
+		strs[i] = fmt.Sprintf("%s=$%d", k, v)
+    i++
 	}
 
 	return fmt.Sprintf("%s(%s)", t.name, strings.Join(strs, ", "))
@@ -678,7 +687,7 @@ func (parser *{{ccPrefix}}Parser) nud_{{name}}(ctx *ParserContext) (*parseTree, 
         {% endfor %}
       tree.astTransform = &AstTransformNodeCreator{"{{ast.name}}", astParameters}
       {% elif isinstance(ast, AstTranslation) %}
-      tree.astTransform = {{ast.idx}}
+      tree.astTransform = &AstTransformSubstitution{ {{ast.idx}} }
       {% endif %}
 
       tree.nudMorphemeCount = {{len(rule.nud_production)}}
@@ -740,7 +749,7 @@ func (parser *{{ccPrefix}}Parser) led_{{name}}(left *parseTree, ctx *ParserConte
         {% endfor %}
       tree.astTransform = &AstTransformNodeCreator{"{{rule.ast.name}}", astParameters}
       {% elif isinstance(rule.ast, AstTranslation) %}
-      tree.astTransform = {{rule.ast.idx}}
+      tree.astTransform = &AstTransformSubstitution{ {{rule.ast.idx}} }
       {% endif %}
 
       {% if len(rule.nud_production) == 1 and isinstance(rule.nud_production.morphemes[0], NonTerminal) %}
@@ -910,7 +919,7 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
 
       {% if isinstance(rule.ast, AstTranslation) %}
 
-    tree.astTransform = {{rule.ast.idx}}
+    tree.astTransform = &AstTransformSubstitution{ {{rule.ast.idx}} }
       {% elif isinstance(rule.ast, AstSpecification) %}
 		astParameters := make(map[string]int)
         {% for k,v in rule.ast.parameters.items() %}
@@ -918,7 +927,7 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
         {% endfor %}
     tree.astTransform = &AstTransformNodeCreator{ "{{rule.ast.name}}", astParameters }
       {% else %}
-    tree.astTransform = 0
+    tree.astTransform = &AstTransformSubstitution{ 0 }
       {% endif %}
 
       {% for index, morpheme in enumerate(rule.production.morphemes) %}
