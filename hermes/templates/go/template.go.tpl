@@ -213,7 +213,7 @@ func (tree *parseTree) Ast() AstNode {
 					}
 					attributes[s] = child.Ast();
 				}
-				return &Ast{transform.name, attributes}
+				return &Ast{transform.name, attributes, transform.keys}
 			}
     } else {
 			switch transform := tree.astTransform.(type) {
@@ -224,7 +224,7 @@ func (tree *parseTree) Ast() AstNode {
 				for s, i := range transform.parameters {
 					attributes[s] = tree.children[i].Ast()
 				}
-				return &Ast{transform.name, attributes}
+				return &Ast{transform.name, attributes, transform.keys}
 			}
 
 			if len(tree.children) > 0 {
@@ -274,6 +274,7 @@ type AstNode interface {
 type Ast struct {
   name string
   attributes map[string]AstNode
+  keys []string // sorted keys into 'attributes'
 }
 
 func (ast *Ast) String() string {
@@ -298,10 +299,10 @@ func astToString(ast interface{}, indent int, indentLevel int) string {
 
 		switch node := ast.(type) {
 		case *Ast:
-			childStrings := make([]string, len(node.attributes))
       i = 0
-			for name, subnode := range node.attributes {
-				childStrings[i] = fmt.Sprintf("%s%s=%s", attrPrefix, name, astToString(subnode, indent, indentLevel+1))
+			childStrings := make([]string, len(node.attributes))
+			for _, key := range node.keys {
+				childStrings[i] = fmt.Sprintf("%s%s=%s", attrPrefix, key, astToString(node.attributes[key], indent, indentLevel+1))
         i++
 			}
 			if indent > 0 {
@@ -320,7 +321,7 @@ func astToString(ast interface{}, indent int, indentLevel int) string {
 			if indent == 0 || len(*node) == 0 {
 					return fmt.Sprintf("[%s]", strings.Join(childStrings, ", "))
 			} else {
-					return fmt.Sprintf("[%s\n%s\n%s]", indentStr, strings.Join(childStrings, ",\n"), indentStr)
+					return fmt.Sprintf("[\n%s\n%s]", strings.Join(childStrings, ",\n"), indentStr)
 			}
 		case *Token:
 			return node.String()
@@ -343,13 +344,14 @@ func (t *AstTransformSubstitution) String() string {
 type AstTransformNodeCreator struct {
   name string
   parameters map[string]int // TODO: I think this is the right type?
+  keys []string
 }
 
 func (t *AstTransformNodeCreator) String() string {
 	strs := make([]string, len(t.parameters))
   i := 0
-	for k, v := range t.parameters {
-		strs[i] = fmt.Sprintf("%s=$%d", k, v)
+	for _, k := range t.keys {
+		strs[i] = fmt.Sprintf("%s=$%d", k, t.parameters[k])
     i++
 	}
 
@@ -685,7 +687,7 @@ func (parser *{{ccPrefix}}Parser) nud_{{name}}(ctx *ParserContext) (*parseTree, 
         {% for k,v in ast.parameters.items() %}
       astParameters["{{k}}"] = {% if v == '$' %}int('{{v}}'){% else %}{{v}}{% endif %}
         {% endfor %}
-      tree.astTransform = &AstTransformNodeCreator{"{{ast.name}}", astParameters}
+      tree.astTransform = &AstTransformNodeCreator{ "{{ast.name}}", astParameters, []string{ {{', '.join(['"{}"'.format(k) for k in ast.parameters.keys()])}} } }
       {% elif isinstance(ast, AstTranslation) %}
       tree.astTransform = &AstTransformSubstitution{ {{ast.idx}} }
       {% endif %}
@@ -747,7 +749,7 @@ func (parser *{{ccPrefix}}Parser) led_{{name}}(left *parseTree, ctx *ParserConte
         {% for k,v in rule.ast.parameters.items() %}
       astParameters["{{k}}"] = {% if v == '$' %}int('{{v}}'){% else %}{{v}}{% endif %}
         {% endfor %}
-      tree.astTransform = &AstTransformNodeCreator{"{{rule.ast.name}}", astParameters}
+      tree.astTransform = &AstTransformNodeCreator{"{{rule.ast.name}}", astParameters, []string{ {{', '.join(['"{}"'.format(k) for k in rule.ast.parameters.keys()])}} } }
       {% elif isinstance(rule.ast, AstTranslation) %}
       tree.astTransform = &AstTransformSubstitution{ {{rule.ast.idx}} }
       {% endif %}
@@ -925,7 +927,7 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
         {% for k,v in rule.ast.parameters.items() %}
     astParameters["{{k}}"] = {% if v == '$' %}int('{{v}}'){% else %}{{v}}{% endif %}
         {% endfor %}
-    tree.astTransform = &AstTransformNodeCreator{ "{{rule.ast.name}}", astParameters }
+    tree.astTransform = &AstTransformNodeCreator{ "{{rule.ast.name}}", astParameters, []string{ {{', '.join(['"{}"'.format(k) for k in rule.ast.parameters.keys()])}} } }
       {% else %}
     tree.astTransform = &AstTransformSubstitution{ 0 }
       {% endif %}

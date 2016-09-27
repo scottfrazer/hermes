@@ -15,6 +15,9 @@ def java_ast(test_dir): return _parse_java(test_dir, 'ast')
 def javascript_tokens(test_dir): return _lex_javascript(test_dir)
 def javascript_parsetree(test_dir): return _parse_javascript(test_dir, 'parsetree')
 def javascript_ast(test_dir): return _parse_javascript(test_dir, 'ast')
+def go_tokens(test_dir): return _lex_go(test_dir)
+def go_parsetree(test_dir): return _parse_go(test_dir, 'parsetree')
+def go_ast(test_dir): return _parse_go(test_dir, 'ast')
 
 def _get_grammar(directory, name='grammar.hgr'):
     with open(os.path.join(directory, name)) as fp:
@@ -90,4 +93,15 @@ class javascript_code_context(context):
     def __enter__(self):
         super().__enter__()
         hermes.code.generate(self.grammar, 'javascript', directory=self.tmp_dir, add_main=True)
+        return self
+
+class go_code_context(context):
+    def __init__(self, test_dir):
+        super().__init__(test_dir)
+        self.command = './grammar_parser {action} {input} 2>&1'
+    def __enter__(self):
+        super().__enter__()
+        hermes.code.generate(self.grammar, 'go', directory=self.tmp_dir, add_main=True)
+        compile_command = 'go build grammar_parser.go'
+        subprocess.check_call(compile_command, cwd=self.tmp_dir, shell=True, stderr=None)
         return self

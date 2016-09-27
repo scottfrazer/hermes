@@ -25,6 +25,10 @@ def test_all():
                 yield javascript_tokens, javascript_ctx
                 yield javascript_parse_tree, javascript_ctx
                 yield javascript_ast, javascript_ctx
+            with hermes.test.functions.go_code_context(directory) as go_ctx:
+                yield go_tokens, go_ctx
+                yield go_parse_tree, go_ctx
+                yield go_ast, go_ctx
 
 def python_tokens(python_ctx):
     actual = python_ctx.tokens()
@@ -57,6 +61,13 @@ def javascript_tokens(javascript_ctx):
     actual = javascript_ctx.tokens()
     assert expected == actual
 
+def go_tokens(go_ctx):
+    tokens_file = os.path.join(go_ctx.test_dir, 'tokens')
+    with open(tokens_file) as fp:
+        expected = fp.read()
+    actual = go_ctx.tokens()
+    assert expected == actual
+
 def python_parse_tree(python_ctx):
     actual = python_ctx.parsetree()
     parse_tree_file = os.path.join(python_ctx.test_dir, 'parsetree')
@@ -65,6 +76,34 @@ def python_parse_tree(python_ctx):
             fp.write(actual)
     with open(parse_tree_file) as fp:
         expected = fp.read()
+    assert expected == actual
+
+def c_parse_tree(c_ctx):
+    parse_tree_file = os.path.join(c_ctx.test_dir, 'parsetree')
+    with open(parse_tree_file) as fp:
+        expected = fp.read()
+    actual = c_ctx.parsetree()
+    assert expected == actual
+
+def java_parse_tree(java_ctx):
+    ast_file = os.path.join(java_ctx.test_dir, 'parsetree')
+    with open(ast_file) as fp:
+        expected = fp.read()
+    actual = java_ctx.parsetree()
+    assert expected == actual
+
+def javascript_ast(javascript_ctx):
+    ast_file = os.path.join(javascript_ctx.test_dir, 'ast')
+    with open(ast_file) as fp:
+        expected = fp.read()
+    actual = javascript_ctx.ast()
+    assert expected == actual
+
+def go_parse_tree(go_ctx):
+    ast_file = os.path.join(go_ctx.test_dir, 'parsetree')
+    with open(ast_file) as fp:
+        expected = fp.read()
+    actual = go_ctx.parsetree()
     assert expected == actual
 
 def python_ast(python_ctx):
@@ -77,13 +116,6 @@ def python_ast(python_ctx):
         expected = fp.read()
     assert expected == actual
 
-def c_parse_tree(c_ctx):
-    parse_tree_file = os.path.join(c_ctx.test_dir, 'parsetree')
-    with open(parse_tree_file) as fp:
-        expected = fp.read()
-    actual = c_ctx.parsetree()
-    assert expected == actual
-
 def c_ast(c_ctx):
     ast_file = os.path.join(c_ctx.test_dir, 'ast')
     with open(ast_file) as fp:
@@ -92,13 +124,6 @@ def c_ast(c_ctx):
     if expected != actual:
         print(expected)
         print(actual)
-    assert expected == actual
-
-def java_parse_tree(java_ctx):
-    ast_file = os.path.join(java_ctx.test_dir, 'parsetree')
-    with open(ast_file) as fp:
-        expected = fp.read()
-    actual = java_ctx.parsetree()
     assert expected == actual
 
 def java_ast(java_ctx):
@@ -115,9 +140,9 @@ def javascript_parse_tree(javascript_ctx):
     actual = javascript_ctx.parsetree()
     assert expected == actual
 
-def javascript_ast(javascript_ctx):
-    ast_file = os.path.join(javascript_ctx.test_dir, 'ast')
+def go_ast(go_ctx):
+    ast_file = os.path.join(go_ctx.test_dir, 'ast')
     with open(ast_file) as fp:
         expected = fp.read()
-    actual = javascript_ctx.ast()
+    actual = go_ctx.ast()
     assert expected == actual
