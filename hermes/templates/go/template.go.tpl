@@ -889,6 +889,7 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
 func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree, error) {
 	current := ctx.tokens.current()
 	rule := -1
+  _ = rule
 	if current != nil {
 		rule = parser.table[{{nonterminal.id - len(grammar.standard_terminals)}}][current.terminal.id]
 	}
