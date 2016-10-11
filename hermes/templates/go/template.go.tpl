@@ -152,11 +152,11 @@ func (tree *parseTree) Add(node interface{}) error {
 	return nil
 }
 
-func (tree *parseTree) isCompoundNud() bool{
-	if ( len(tree.children) > 0) {
+func (tree *parseTree) isCompoundNud() bool {
+	if len(tree.children) > 0 {
 		switch firstChild := tree.children[0].(type) {
 		case *parseTree:
-			return firstChild.isNud && !firstChild.isPrefix && !firstChild.isExprNud && !firstChild.isInfix
+			return firstChild.isNud && !firstChild.isPrefix && !tree.isExprNud && !tree.isInfix
 		}
 	}
 	return false
@@ -193,7 +193,8 @@ func (tree *parseTree) Ast() AstNode {
 				}
 				_, is_tree := firstChild.(*parseTree)
 				for s, i := range transform.parameters {
-					if i == '$' {
+					// 36 is a dollar sign: '$'
+					if i == 36 {
 							child = tree.children[0]
 					} else if tree.isCompoundNud() {
 							firstChild := tree.children[0].(*parseTree)
@@ -208,6 +209,7 @@ func (tree *parseTree) Ast() AstNode {
 							// TODO: I don't think this should ever be called
 							fmt.Println("!!!!! THIS CODE ACTUALLY IS CALLED")
 							child = tree.children[0]
+							return child
 					} else {
 							child = tree.children[i];
 					}
@@ -326,7 +328,7 @@ func astToString(ast interface{}, indent int, indentLevel int) string {
 		case *Token:
 			return node.String()
     case nil:
-      return ""
+      return "None"
 		default:
 			panic(fmt.Sprintf("Wrong type to astToString(): %v (%t)", ast, ast))
 		}
@@ -381,10 +383,14 @@ type SyntaxErrors []*SyntaxError
 
 func (errs SyntaxErrors) Error() string {
 	strs := make([]string, len(errs))
-	for _, e := range errs {
-		strs = append(strs, e.Error())
+	for i, e := range errs {
+		strs[i] = e.Error()
 	}
-	return strings.Join(strs, strings.Repeat("=", 50))
+  if len(strs) > 0 {
+    return strs[0]
+  }
+  return ""
+	//return strings.Join(strs, strings.Repeat("=", 50))
 }
 
 type SyntaxErrorHandler interface {
@@ -477,6 +483,15 @@ func initTerminals() []*terminal {
 {% endfor %}
   }
   return terminals
+}
+
+func findTerminal(name string) *terminal {
+	for _, terminal := range initTerminals() {
+		if terminal.idStr == name {
+			return terminal
+		}
+	}
+	return nil
 }
 
 func initNonTerminals() []*nonTerminal {
@@ -669,6 +684,13 @@ func (parser *{{ccPrefix}}Parser) nud_{{name}}(ctx *ParserContext) (*parseTree, 
 	tree := parser.newParseTree({{expression_nonterminal.id}})
 	current := ctx.tokens.current()
   ctx.nonterminal_string = "{{name}}"
+  var token *Token
+  var err error
+	var subtree *parseTree
+
+  _ = token
+  _ = err
+	_ = subtree
 
   if current == nil {
     return tree, nil
@@ -696,34 +718,35 @@ func (parser *{{ccPrefix}}Parser) nud_{{name}}(ctx *ParserContext) (*parseTree, 
 
       {% for morpheme in rule.nud_production.morphemes %}
         {% if isinstance(morpheme, Terminal) %}
-      token, err := ctx.expect({{morpheme.id}})
+      token, err = ctx.expect({{morpheme.id}})
       if err != nil {
         return nil, err
       }
       tree.Add(token)
         {% elif isinstance(morpheme, NonTerminal) and morpheme.string.upper() == rule.nonterminal.string.upper() %}
           {% if isinstance(rule.operator, PrefixOperator) %}
-      subtree, err := parser._parse_{{name}}(ctx, parser.prefixBindingPower_{{name}}({{rule.operator.operator.id}}))
+      subtree, err = parser._parse_{{name}}(ctx, parser.prefixBindingPower_{{name}}({{rule.operator.operator.id}}))
       if err != nil {
         return nil, err
       }
       tree.Add(subtree)
       tree.isPrefix = true
           {% else %}
-      subtree, err := parser.Parse_{{rule.nonterminal.string.lower()}}(ctx)
+      subtree, err = parser.Parse_{{rule.nonterminal.string.lower()}}(ctx)
       if err != nil {
         return nil, err
       }
       tree.Add(subtree)
           {% endif %}
         {% elif isinstance(morpheme, NonTerminal) %}
-      subtree, err := parser.Parse_{{morpheme.string.lower()}}(ctx)
+      subtree, err = parser.Parse_{{morpheme.string.lower()}}(ctx)
       if err != nil {
         return nil, err
       }
       tree.Add(subtree)
         {% endif %}
       {% endfor %}
+			return tree, nil
   }
     {% endif %}
   {% endfor %}
@@ -735,6 +758,13 @@ func (parser *{{ccPrefix}}Parser) led_{{name}}(left *parseTree, ctx *ParserConte
 	tree := parser.newParseTree({{expression_nonterminal.id}})
 	current := ctx.tokens.current()
   ctx.nonterminal_string = "{{name}}"
+  var token *Token
+  var err error
+	var subtree *parseTree
+
+  _ = token
+  _ = err
+	_ = subtree
 
   {% for rule in grammar.get_expanded_rules(expression_nonterminal) %}
     {% py led = rule.led_production.morphemes %}
@@ -766,7 +796,7 @@ func (parser *{{ccPrefix}}Parser) led_{{name}}(left *parseTree, ctx *ParserConte
       {% py associativity = {rule.operator.operator.id: rule.operator.associativity for rule in grammar.get_rules(expression_nonterminal) if rule.operator} %}
       {% for morpheme in led %}
         {% if isinstance(morpheme, Terminal) %}
-      token, err := ctx.expect({{morpheme.id}}) // {{morpheme}}
+      token, err = ctx.expect({{morpheme.id}}) // {{morpheme}}
       if err != nil {
         return nil, err
       }
@@ -776,13 +806,13 @@ func (parser *{{ccPrefix}}Parser) led_{{name}}(left *parseTree, ctx *ParserConte
           {% if isinstance(rule.operator, InfixOperator) %}
       tree.isInfix = true
           {% endif %}
-      subtree, err := parser._parse_{{name}}(ctx, parser.infixBindingPower_{{name}}({{rule.operator.operator.id}}) - modifier)
+      subtree, err = parser._parse_{{name}}(ctx, parser.infixBindingPower_{{name}}({{rule.operator.operator.id}}) - modifier)
       if err != nil {
         return nil, err
       }
       tree.Add(subtree)
         {% elif isinstance(morpheme, NonTerminal) %}
-      subtree, err := parser.parse_{{morpheme.string.lower()}}(ctx)
+      subtree, err = parser.Parse_{{morpheme.string.lower()}}(ctx)
       if err != nil {
         return nil, err
       }
@@ -819,14 +849,14 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
 
     if current == nil {
   {% if grammar.must_consume_tokens(list_nonterminal) %}
-      return nil, ctx.error_formatter.unexpected_eof()
+      return nil, ctx.errors.unexpected_eof()
   {% else %}
       return tree, nil
   {% endif %}
     }
 
     minimum := {{list_parser.minimum}}
-    for minimum > 0 || (current != nil && parser.NonTerminalFromId({{list_nonterminal.id}}).CanStartWith(current.terminal.id)) {
+    for minimum > 0 || (ctx.tokens.current() != nil && parser.NonTerminalFromId({{list_nonterminal.id}}).CanStartWith(ctx.tokens.current().terminal.id)) {
   {% if isinstance(list_parser.morpheme, NonTerminal) %}
       subtree, err := parser.Parse_{{list_parser.morpheme.string.lower()}}(ctx)
       if err != nil {
@@ -895,11 +925,13 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
 	}
 	tree := parser.newParseTree({{nonterminal.id}})
   ctx.nonterminal_string = "{{name}}"
+  var subtree *parseTree
 	var token *Token
 	var err error
 
 	_ = token
 	_ = err
+  _ = subtree
 
     {% if not grammar.must_consume_tokens(nonterminal) %}
   nt := parser.NonTerminalFromId({{nonterminal.id}})
@@ -944,7 +976,7 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
         {% endif %}
 
         {% if isinstance(morpheme, NonTerminal) %}
-    subtree, err := parser.Parse_{{morpheme.string.lower()}}(ctx)
+    subtree, err = parser.Parse_{{morpheme.string.lower()}}(ctx)
     if err != nil {
       return nil, err
     }
@@ -1001,9 +1033,15 @@ func default_action(ctx *LexerContext, terminal *terminal, sourceString string, 
 }
 {% endif %}
 
-{% if re.search(r'func\s+lexerInit', lexer.code) is None %}
-func lexerInit() interface{} {
+{% if re.search(r'func\s+lexer_init', lexer.code) is None %}
+func lexer_init() interface{} {
     return nil
+}
+{% endif %}
+
+{% if re.search(r'func\s+post_filter', lexer.code) is None %}
+func post_filter(tokens []*Token) []*Token {
+    return tokens
 }
 {% endif %}
 
@@ -1056,9 +1094,9 @@ func (lro *LexerRegexOutput) HandleMatch(ctx *LexerContext, groups []string, ind
     sourceString = groups[lro.group]
     startIndex = lro.group * 2
   }
-  length := indexes[startIndex+1] - indexes[startIndex]
+  //length := indexes[startIndex+1] - indexes[startIndex]
 
-	groupLine, groupCol := _advance_line_col(ctx.source, length, ctx.line, ctx.col)
+	groupLine, groupCol := _advance_line_col(ctx.source, startIndex, ctx.line, ctx.col)
 
   lro.function(ctx, lro.terminal, sourceString, groupLine, groupCol)
 }
@@ -1089,15 +1127,6 @@ func initRegexes() map[string][]*HermesRegex {
     var matchActions []HermesLexerAction
     var matchFunction func(*LexerContext, *terminal, string, int, int)
     var r *regexp.Regexp
-    var terminals = initTerminals() // TODO: don't require this
-    var findTerminal = func(name string) *terminal {
-      for _, terminal := range terminals {
-        if terminal.idStr == name {
-         	return terminal
-        }
-      }
-			return nil
-    }
 
 {% for mode, regex_list in lexer.items() %}
     regex["{{mode}}"] = make([]*HermesRegex, {{len(regex_list)}})
@@ -1131,8 +1160,12 @@ func New{{ccPrefix}}Lexer() *{{ccPrefix}}Lexer {
 }
 
 func _advance_line_col(s string, length, line, col int) (int, int) {
+  if length == 0 {
+    return line, col
+  }
+
   c := 0
-  for r := range s {
+  for _, r := range s {
     c += 1
     if r == '\n' {
       line += 1
@@ -1168,8 +1201,8 @@ func (lexer *{{ccPrefix}}Lexer) _next(ctx *LexerContext) bool {
 }
 
 func (lexer *{{ccPrefix}}Lexer) lex(source, resource string, handler SyntaxErrorHandler) ([]*Token, error) {
-  user_context := lexerInit()
-  ctx := &LexerContext{source, resource, handler, lexerInit(), nil, 1, 0, nil}
+  user_context := lexer_init()
+  ctx := &LexerContext{source, resource, handler, lexer_init(), nil, 1, 1, nil}
 	ctx.StackPush("default")
 
   for len(ctx.source) > 0 {
@@ -1180,7 +1213,8 @@ func (lexer *{{ccPrefix}}Lexer) lex(source, resource string, handler SyntaxError
   }
 
   lexerDestroy(user_context)
-  return ctx.tokens, nil
+	filteredTokens := post_filter(ctx.tokens)
+  return filteredTokens, nil
 }
 
 func (lexer *{{ccPrefix}}Lexer) Lex(source, resource string, handler SyntaxErrorHandler) (*TokenStream, error) {

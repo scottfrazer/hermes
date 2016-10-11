@@ -1103,6 +1103,12 @@ function default_action(ctx, terminal, source_string, line, col) {
 
 {% endif %}
 
+{% if re.search(r'function\s+post_filter', lexer.code) is None %}
+function post_filter(tokens) {
+    return tokens
+}
+{% endif %}
+
 {% if re.search(r'function\s+init', lexer.code) is None %}
 function init() {
     return {}
@@ -1240,7 +1246,8 @@ function lex(string, resource) {
         }
     }
     destroy(ctx.user_context)
-    return new TokenStream(ctx.tokens)
+    filtered = post_filter(ctx.tokens)
+    return new TokenStream(filtered)
 }
 
 {% endif %}

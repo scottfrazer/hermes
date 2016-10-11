@@ -144,6 +144,12 @@ class ParseTree():
       return ' [{}]'.format(', '.join(['{}={}'.format(k,h(v)) for k,v in f.items()]))
   def add(self, tree):
       self.children.append( tree )
+  def is_compound_nud(self):
+      return isinstance(self.children[0], ParseTree) and \
+             self.children[0].isNud and \
+             not self.children[0].isPrefix and \
+             not self.isExprNud and \
+             not self.isInfix
   def ast(self):
       if self.list == True:
           r = AstList()
@@ -162,18 +168,15 @@ class ParseTree():
               for name, idx in self.astTransform.parameters.items():
                   if idx == '$':
                       child = self.children[0]
-                  elif isinstance(self.children[0], ParseTree) and \
-                       self.children[0].isNud and \
-                       not self.children[0].isPrefix and \
-                       not self.isExprNud and \
-                       not self.isInfix:
+                  elif self.is_compound_nud():
                       if idx < self.children[0].nudMorphemeCount:
                           child = self.children[0].children[idx]
                       else:
                           index = idx - self.children[0].nudMorphemeCount + 1
                           child = self.children[index]
                   elif len(self.children) == 1 and not isinstance(self.children[0], ParseTree) and not isinstance(self.children[0], list):
-                      return self.children[0]
+                      child = self.children[0]
+                      return child
                   else:
                       child = self.children[idx]
                   parameters[name] = child.ast()
@@ -660,6 +663,12 @@ def init():
     return {}
 {% endif %}
 
+# sfrazer
+{% if re.search(r'def\s+post_filter', lexer.code) is None %}
+def post_filter(tokens):
+    return tokens
+{% endif %}
+
 {% if re.search(r'def\s+destroy', lexer.code) is None %}
 def destroy(context):
     pass
@@ -783,7 +792,8 @@ class HermesLexer:
                 raise ctx.errors.unrecognized_token(string_copy, ctx.line, ctx.col)
 
         destroy(ctx.user_context)
-        return ctx.tokens
+        filtered = post_filter(ctx.tokens)
+        return filtered
 
 def lex(source, resource, errors=None, debug=False):
     return TokenStream(HermesLexer().lex(source, resource, errors, debug))

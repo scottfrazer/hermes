@@ -1538,6 +1538,13 @@ int
   return -1;
 }
 
+// This is needed so user-specific code has a way to
+// get the id without having the prefix in the function name
+static int
+str_to_morpheme(const char * str) {
+  return {{prefix}}str_to_morpheme(str);
+}
+
 ABSTRACT_SYNTAX_TREE_T *
 {{prefix}}ast( PARSE_TREE_T * tree )
 {
@@ -1719,6 +1726,13 @@ default_action(LEXER_CONTEXT_T * ctx, TERMINAL_T * terminal, char * source_strin
 /* START USER CODE */
 {{lexer.code}}
 /* END USER CODE */
+
+{% if re.search(r'TOKEN_LIST_T\s*\*\s*post_filter', lexer.code) is None %}
+static TOKEN_LIST_T *
+post_filter(TOKEN_LIST_T * tokens) {
+    return tokens;
+}
+{% endif %}
 
 {% if re.search(r'void\s*\*\s*init', lexer.code) is None %}
 static void *
@@ -1964,7 +1978,7 @@ TOKEN_LIST_T *
     char * string_current = string;
     TERMINAL_T end_of_stream;
     LEXER_CONTEXT_T * ctx = NULL;
-    TOKEN_LIST_T * token_list;
+    TOKEN_LIST_T * token_list, * filtered_token_list;
 
     ctx = calloc(1, sizeof(LEXER_CONTEXT_T));
     ctx->string = string_current;
@@ -2003,6 +2017,7 @@ TOKEN_LIST_T *
     destroy(ctx->user_context);
     free(ctx->stack);
     free(ctx);
+    filtered_token_list = post_filter(token_list);
     return token_list;
 }
 

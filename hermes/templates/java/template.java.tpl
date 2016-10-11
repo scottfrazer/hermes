@@ -333,12 +333,12 @@ public class {{prefix}}Parser {
 
     public static class Terminal implements AstNode, ParseTreeNode
     {
-        private int id;
-        private String terminal_str;
-        private String source_string;
-        private String resource;
-        private int line;
-        private int col;
+        public int id;
+        public String terminal_str;
+        public String source_string;
+        public String resource;
+        public int line;
+        public int col;
 
         public Terminal(int id, String terminal_str, String source_string, String resource, int line, int col) {
             this.id = id;
@@ -1252,6 +1252,12 @@ public class {{prefix}}Parser {
     }
     {% endif %}
 
+    {% if re.search(r'public\s+List<Terminal>\s+post_filter', lexer.code) is None %}
+    public List<Terminal> post_filter(List<Terminal> terminals) {
+        return terminals;
+    }
+    {% endif %}
+
     {% if re.search(r'public\s+void\s+destroy', lexer.code) is None %}
     public void destroy(Object context) {
         return;
@@ -1395,7 +1401,8 @@ public class {{prefix}}Parser {
             }
         }
         this.destroy(context);
-        return lctx.terminals;
+        List<Terminal> filtered = post_filter(lctx.terminals);
+        return filtered;
     }
     {% endif %}
 
