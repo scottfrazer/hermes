@@ -1098,9 +1098,10 @@ func (lro *LexerRegexOutput) HandleMatch(ctx *LexerContext, groups []string, ind
   if lro.group > 0 {
     sourceString = groups[lro.group]
 		startIndex := lro.group * 2
-		length = indexes[startIndex+1] - indexes[startIndex]
+		length = indexes[startIndex]
   }
 
+	//p("groups=%v, indexes=%v, group=%d, length=%d, line=%d, col=%d", groups, indexes, lro.group, length, ctx.line, ctx.col)
 	groupLine, groupCol := _advance_line_col(ctx.source, length, ctx.line, ctx.col)
 
   lro.function(ctx, lro.terminal, sourceString, groupLine, groupCol)
