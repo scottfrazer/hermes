@@ -881,22 +881,17 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
         tree.Add(token)
     {% if list_parser.sep_terminates %}
 			} else {
-        raise ctx.errors.missing_terminator(
-          "{{nonterminal.string.lower()}}",
-          "{{list_parser.separator.string.upper()}}",
-          None
-        )
+				return nil, ctx.errors.missing_terminator("{{list_nonterminal.string.lower()}}", nil, nil, nil)
       }
     {% else %}
 			} else {
       {% if list_parser.minimum > 0 %}
         if minimum > 1 {
-          raise ctx.errors.missing_list_items(
+          return nil, ctx.errors.missing_list_items(
             "{{list_nonterminal.string.lower()}}",
             {{list_parser.minimum}},
             {{list_parser.minimum}} - minimum + 1,
-            None
-          )
+            "")
         }
       {% endif %}
         break
@@ -1132,12 +1127,12 @@ func initRegexes() map[string][]*HermesRegex {
     regex["{{mode}}"] = make([]*HermesRegex, {{len(regex_list)}})
   {% for index, regex in enumerate(regex_list) %}
     r = regexp.MustCompile({{regex.regex}})
-    // TODO: set r.Flags
+		// NOTE: flags are set on regex.regex inside of grammar.py (convert_regex_str)
     matchActions = make([]HermesLexerAction, {{len(regex.outputs)}})
     {% for index2, output in enumerate(regex.outputs) %}
       {% if isinstance(output, RegexOutput) %}
 		matchFunction = {{output.function if output.function is not None else 'default_action'}}
-    matchActions[{{index2}}] = &LexerRegexOutput{ findTerminal({{'"' + output.terminal.string.lower() + '"' if output.terminal else '""'}}), {{output.group}}, matchFunction }
+    matchActions[{{index2}}] = &LexerRegexOutput{ findTerminal({{'"' + output.terminal.string.lower() + '"' if output.terminal else '""'}}), {{-1 if output.group is None else output.group}}, matchFunction }
       {% elif isinstance(output, LexerStackPush) %}
     matchActions[{{index2}}] = &LexerStackPush{ "{{output.mode}}" }
       {% elif isinstance(output, LexerAction) %}

@@ -354,7 +354,7 @@ class AbstractLexer(OrderedDict):
         self.regex_partials = OrderedDict()
         self.code = OrderedDict()
 
-    def convert_regex_str(self, regex_str, language):
+    def convert_regex_str(self, regex_str, language, inner=False):
         if regex_str[0] == "'" and language in ['c', 'java', 'go']:
             regex_str = '"{}"'.format(regex_str[1:-1].replace('"', '\\"'))
 
@@ -365,7 +365,7 @@ class AbstractLexer(OrderedDict):
             regex_str = re.sub(r"'(?<!\\)", r"\'", regex_str)
             regex_str = '"{}"'.format(regex_str)
 
-        if language == 'go' and not regex_str.startswith('"^'):
+        if not inner and language == 'go' and not regex_str.startswith('"^'):
             regex_str = re.sub(r'^"(.*)"$', '"^\\1"', regex_str)
 
         return regex_str
@@ -378,7 +378,7 @@ class AbstractLexer(OrderedDict):
         regex = deepcopy(regex)
         for partial_name, partial in partials.items():
             regex.regex = regex.regex.replace('{{%{0}%}}'.format(partial_name), partial)
-        regex.regex = self.convert_regex_str(regex.regex, language)
+        regex.regex = self.convert_regex_str(regex.regex, language, inner=False)
         return regex
 
     def strip_quotes(self, regex_str):
@@ -394,7 +394,7 @@ class AbstractLexer(OrderedDict):
         # 1) Build a dictionary of the partials with partials replaced within partials
         partials = OrderedDict()
         for partial_name, partial in self.regex_partials.items():
-            partials[partial_name] = self.strip_quotes(self.convert_regex_str(partial, language))
+            partials[partial_name] = self.strip_quotes(self.convert_regex_str(partial, language, inner=True))
         for partial_name, partial in partials.items():
             for partial_name1, partial1 in partials.items():
                 partials[partial_name] = partials[partial_name].replace('{{%{0}%}}'.format(partial_name1), partial1)

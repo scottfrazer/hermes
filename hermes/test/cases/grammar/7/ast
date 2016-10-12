@@ -50,25 +50,30 @@
               ]
             ),
             (RegexEnum:
-              language=<grammar.hgr:9:7 identifier "Yw==">,
-              regex=<grammar.hgr:9:10 regex "Ii4i">,
+              language=<grammar.hgr:9:7 identifier "Z28=">,
+              regex=<grammar.hgr:9:11 regex "Iig/bWkpLiI=">,
+              options=None
+            ),
+            (RegexEnum:
+              language=<grammar.hgr:10:7 identifier "Yw==">,
+              regex=<grammar.hgr:10:10 regex "Ii4i">,
               options=[
-                <grammar.hgr:9:15 identifier "UENSRV9ET1RBTEw=">,
-                <grammar.hgr:9:28 identifier "UENSRV9DQVNFTEVTUw==">
+                <grammar.hgr:10:15 identifier "UENSRV9ET1RBTEw=">,
+                <grammar.hgr:10:28 identifier "UENSRV9DQVNFTEVTUw==">
               ]
             ),
             (RegexEnum:
-              language=<grammar.hgr:10:7 identifier "amF2YXNjcmlwdA==">,
-              regex=<grammar.hgr:10:19 regex "Ii4i">,
+              language=<grammar.hgr:11:7 identifier "amF2YXNjcmlwdA==">,
+              regex=<grammar.hgr:11:19 regex "Ii4i">,
               options=[
-                <grammar.hgr:10:24 identifier "bQ==">,
-                <grammar.hgr:10:27 identifier "aQ==">
+                <grammar.hgr:11:24 identifier "bQ==">,
+                <grammar.hgr:11:27 identifier "aQ==">
               ]
             )
           ],
           onmatch=[
             (Terminal:
-              name=<grammar.hgr:11:11 terminal "Y2hhcg==">,
+              name=<grammar.hgr:12:11 terminal "Y2hhcg==">,
               group=None
             )
           ]

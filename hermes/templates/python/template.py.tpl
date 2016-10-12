@@ -175,8 +175,7 @@ class ParseTree():
                           index = idx - self.children[0].nudMorphemeCount + 1
                           child = self.children[index]
                   elif len(self.children) == 1 and not isinstance(self.children[0], ParseTree) and not isinstance(self.children[0], list):
-                      child = self.children[0]
-                      return child
+                      return self.children[0]
                   else:
                       child = self.children[idx]
                   parameters[name] = child.ast()
@@ -663,7 +662,6 @@ def init():
     return {}
 {% endif %}
 
-# sfrazer
 {% if re.search(r'def\s+post_filter', lexer.code) is None %}
 def post_filter(tokens):
     return tokens

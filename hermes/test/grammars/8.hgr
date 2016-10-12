@@ -13,6 +13,7 @@ grammar {
     enum {
       java: "char:(.)" (DOTALL, CASE_INSENSITIVE)
       python: r'char:(.)' (DOTALL, IGNORECASE)
+      go: "(?mi)char:(.)"
       c: "char:(.)" (PCRE_DOTALL, PCRE_CASELESS)
       javascript: "char:(.)" (m, i)
     } -> :char

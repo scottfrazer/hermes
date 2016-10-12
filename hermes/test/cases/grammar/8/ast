@@ -100,51 +100,56 @@
               ]
             ),
             (RegexEnum:
-              language=<grammar.hgr:16:7 identifier "Yw==">,
-              regex=<grammar.hgr:16:10 regex "ImNoYXI6KC4pIg==">,
+              language=<grammar.hgr:16:7 identifier "Z28=">,
+              regex=<grammar.hgr:16:11 regex "Iig/bWkpY2hhcjooLiki">,
+              options=None
+            ),
+            (RegexEnum:
+              language=<grammar.hgr:17:7 identifier "Yw==">,
+              regex=<grammar.hgr:17:10 regex "ImNoYXI6KC4pIg==">,
               options=[
-                <grammar.hgr:16:22 identifier "UENSRV9ET1RBTEw=">,
-                <grammar.hgr:16:35 identifier "UENSRV9DQVNFTEVTUw==">
+                <grammar.hgr:17:22 identifier "UENSRV9ET1RBTEw=">,
+                <grammar.hgr:17:35 identifier "UENSRV9DQVNFTEVTUw==">
               ]
             ),
             (RegexEnum:
-              language=<grammar.hgr:17:7 identifier "amF2YXNjcmlwdA==">,
-              regex=<grammar.hgr:17:19 regex "ImNoYXI6KC4pIg==">,
+              language=<grammar.hgr:18:7 identifier "amF2YXNjcmlwdA==">,
+              regex=<grammar.hgr:18:19 regex "ImNoYXI6KC4pIg==">,
               options=[
-                <grammar.hgr:17:31 identifier "bQ==">,
-                <grammar.hgr:17:34 identifier "aQ==">
+                <grammar.hgr:18:31 identifier "bQ==">,
+                <grammar.hgr:18:34 identifier "aQ==">
               ]
             )
           ],
           onmatch=[
             (Terminal:
-              name=<grammar.hgr:18:11 terminal "Y2hhcg==">,
+              name=<grammar.hgr:19:11 terminal "Y2hhcg==">,
               group=None
             )
           ]
         ),
         (Mode:
-          name=<grammar.hgr:19:10 identifier "YmxhaA==">,
+          name=<grammar.hgr:20:10 identifier "YmxhaA==">,
           atoms=[
             (Regex:
-              regex=<grammar.hgr:20:7 regex "cidibGFoJw==">,
+              regex=<grammar.hgr:21:7 regex "cidibGFoJw==">,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<grammar.hgr:20:19 terminal "YmxhaA==">,
+                  name=<grammar.hgr:21:19 terminal "YmxhaA==">,
                   group=None
                 )
               ]
             ),
             (Regex:
-              regex=<grammar.hgr:21:7 regex "cid9Jw==">,
+              regex=<grammar.hgr:22:7 regex "cid9Jw==">,
               options=None,
               onmatch=[
                 (Terminal:
-                  name=<grammar.hgr:21:16 terminal "cmJyYWNl">,
+                  name=<grammar.hgr:22:16 terminal "cmJyYWNl">,
                   group=None
                 ),
-                <grammar.hgr:21:24 action "cG9w">
+                <grammar.hgr:22:24 action "cG9w">
               ]
             )
           ]

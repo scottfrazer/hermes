@@ -37,14 +37,11 @@ grammar {
     code<python> << PYTHON
     def post_filter(tokens):
         for i, token in enumerate(tokens):
-            if token.str == 'lparen':
-                try:
-                    next = tokens[i+1]
-                    if next.str in ['int', 'char']:
-                        token.str == 'lparen_cast'
-                        token.id = terminals['lparen_cast']
-                except IndexError:
-                    pass
+            if token.str == 'lparen' and i < len(tokens)-1:
+                next = tokens[i+1]
+                if next.str in ['int', 'char']:
+                    token.str = 'lparen_cast'
+                    token.id = terminals['lparen_cast']
         return tokens
     PYTHON
 

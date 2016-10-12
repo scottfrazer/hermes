@@ -9,6 +9,12 @@ grammar {
         default_action(ctx, terminal, source_string, line, col)
     PYTHON
 
+    code<go> << GO_CODE
+    func f(ctx *LexerContext, terminal *terminal, sourceString string, line, col int) {
+        default_action(ctx, terminal, sourceString, line, col)
+    }
+    GO_CODE
+
     code<c> << C_CODE
     static void f(LEXER_CONTEXT_T * ctx, TERMINAL_T * terminal, char * source_string, int line, int col) {
         default_action(ctx, terminal, source_string, line, col);

@@ -8,7 +8,7 @@ from hermes.hermes_parser import Ast, AstList
 from hermes.hermes_parser import lex as hermes_lex
 from hermes.hermes_parser import parse as hermes_parse
 
-supported_languages = ['python', 'c', 'java', 'javascript']
+supported_languages = ['python', 'c', 'java', 'javascript', 'go']
 
 class GrammarFactory:
     def create(self, name, ast):
