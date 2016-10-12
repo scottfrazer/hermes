@@ -233,7 +233,7 @@ func (tree *parseTree) Ast() AstNode {
 				return tree.children[0].Ast()
 			}
     }
-	return nil
+	return &EmptyAst{}
 }
 
 func (tree *parseTree) String() string {
@@ -277,6 +277,16 @@ type Ast struct {
   name string
   attributes map[string]AstNode
   keys []string // sorted keys into 'attributes'
+}
+
+type EmptyAst struct {}
+
+func (ast *EmptyAst) String() string {
+	return "None"
+}
+
+func (ast *EmptyAst) PrettyString() string {
+	return "None"
 }
 
 func (ast *Ast) String() string {
