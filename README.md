@@ -1,6 +1,6 @@
 # Hermes Parser Generator
 
-[![Build Status](https://secure.travis-ci.org/scottfrazer/hermes.png)](http://travis-ci.org/scottfrazer/hermes)
+[![Build Status](https://travis-ci.org/scottfrazer/hermes.svg?branch=develop)](https://travis-ci.org/scottfrazer/hermes)
 
 Hermes is a parser generator for LL(1) grammars with extensions to parse expressions.
 
