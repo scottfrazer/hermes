@@ -112,109 +112,119 @@
           ]
         ),
         (Regex:
-          regex=<grammar.hgr:14:5 regex "cidcKCg/PVxzKihpbnR8Y2hhcikpJw==">,
+          regex=<grammar.hgr:14:5 regex "cidcKCc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<grammar.hgr:14:32 terminal "bHBhcmVuX2Nhc3Q=">,
+              name=<grammar.hgr:14:15 terminal "bHBhcmVu">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<grammar.hgr:15:5 regex "cidcKCc=">,
+          regex=<grammar.hgr:15:5 regex "cidcKSc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<grammar.hgr:15:15 terminal "bHBhcmVu">,
+              name=<grammar.hgr:15:15 terminal "cnBhcmVu">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<grammar.hgr:16:5 regex "cidcKSc=">,
+          regex=<grammar.hgr:16:5 regex "cidceyc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<grammar.hgr:16:15 terminal "cnBhcmVu">,
+              name=<grammar.hgr:16:15 terminal "bGJyYWNl">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<grammar.hgr:17:5 regex "cidceyc=">,
+          regex=<grammar.hgr:17:5 regex "cidcfSc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<grammar.hgr:17:15 terminal "bGJyYWNl">,
+              name=<grammar.hgr:17:15 terminal "cmJyYWNl">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<grammar.hgr:18:5 regex "cidcfSc=">,
+          regex=<grammar.hgr:18:5 regex "cidcWyc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<grammar.hgr:18:15 terminal "cmJyYWNl">,
+              name=<grammar.hgr:18:15 terminal "bHNxdWFyZQ==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<grammar.hgr:19:5 regex "cidcWyc=">,
+          regex=<grammar.hgr:19:5 regex "cidcXSc=">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<grammar.hgr:19:15 terminal "bHNxdWFyZQ==">,
+              name=<grammar.hgr:19:15 terminal "cnNxdWFyZQ==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<grammar.hgr:20:5 regex "cidcXSc=">,
+          regex=<grammar.hgr:20:5 regex "cidbYS16QS1aXSsn">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<grammar.hgr:20:15 terminal "cnNxdWFyZQ==">,
+              name=<grammar.hgr:20:22 terminal "aWRlbnRpZmllcg==">,
               group=None
             )
           ]
         ),
         (Regex:
-          regex=<grammar.hgr:21:5 regex "cidbYS16QS1aXSsn">,
+          regex=<grammar.hgr:21:5 regex "cidbMC05XSsn">,
           options=None,
           onmatch=[
             (Terminal:
-              name=<grammar.hgr:21:22 terminal "aWRlbnRpZmllcg==">,
+              name=<grammar.hgr:21:19 terminal "bnVtYmVy">,
               group=None
             )
           ]
         ),
-        (Regex:
-          regex=<grammar.hgr:22:5 regex "cidbMC05XSsn">,
-          options=None,
-          onmatch=[
-            (Terminal:
-              name=<grammar.hgr:22:19 terminal "bnVtYmVy">,
-              group=None
-            )
-          ]
+        (LexerCode:
+          language=<grammar.hgr:23:10 language "Z28=">,
+          code=<grammar.hgr:23:24 code "CiAgICBmdW5jIHBvc3RfZmlsdGVyKHRva2VucyBbXSpUb2tlbikgW10qVG9rZW4gewogICAgICAgIGZvciBpLCB0b2tlbiA6PSByYW5nZSB0b2tlbnMgewogICAgICAgICAgICBpZiB0b2tlbi50ZXJtaW5hbC5pZFN0ciA9PSAibHBhcmVuIiAmJiBpIDwgbGVuKHRva2VucyktMSB7CiAgICAgICAgICAgICAgICBuZXh0IDo9IHRva2Vuc1tpKzFdCiAgICAgICAgICAgICAgICBpZiBuZXh0LnRlcm1pbmFsLmlkU3RyID09ICJpbnQiIHx8IG5leHQudGVybWluYWwuaWRTdHIgPT0gImNoYXIiIHsKICAgICAgICAgICAgICAgICAgICB0b2tlbi50ZXJtaW5hbCA9IGZpbmRUZXJtaW5hbCgibHBhcmVuX2Nhc3QiKQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICB9CiAgICAgICAgfQogICAgICAgIHJldHVybiB0b2tlbnMKICAgIH0KICAgIA==">
+        ),
+        (LexerCode:
+          language=<grammar.hgr:37:10 language "cHl0aG9u">,
+          code=<grammar.hgr:37:27 code "CiAgICBkZWYgcG9zdF9maWx0ZXIodG9rZW5zKToKICAgICAgICBmb3IgaSwgdG9rZW4gaW4gZW51bWVyYXRlKHRva2Vucyk6CiAgICAgICAgICAgIGlmIHRva2VuLnN0ciA9PSAnbHBhcmVuJyBhbmQgaSA8IGxlbih0b2tlbnMpLTE6CiAgICAgICAgICAgICAgICBuZXh0ID0gdG9rZW5zW2krMV0KICAgICAgICAgICAgICAgIGlmIG5leHQuc3RyIGluIFsnaW50JywgJ2NoYXInXToKICAgICAgICAgICAgICAgICAgICB0b2tlbi5zdHIgPSAnbHBhcmVuX2Nhc3QnCiAgICAgICAgICAgICAgICAgICAgdG9rZW4uaWQgPSB0ZXJtaW5hbHNbJ2xwYXJlbl9jYXN0J10KICAgICAgICByZXR1cm4gdG9rZW5zCiAgICA=">
+        ),
+        (LexerCode:
+          language=<grammar.hgr:48:10 language "Yw==">,
+          code=<grammar.hgr:48:22 code "CiAgICBzdGF0aWMgVE9LRU5fTElTVF9UICogcG9zdF9maWx0ZXIoVE9LRU5fTElTVF9UICp0b2tlbnMpIHsKICAgICAgICBmb3IgKGludCBpID0gMDsgaSA8IHRva2Vucy0+bnRva2VuczsgaSsrKSB7CiAgICAgICAgICAgIFRPS0VOX1QgKiBjdXJyZW50ID0gdG9rZW5zLT50b2tlbnNbaV07CiAgICAgICAgICAgIGlmICghc3RyY21wKGN1cnJlbnQtPnRlcm1pbmFsLT5zdHJpbmcsICJscGFyZW4iKSAmJiBpIDwgdG9rZW5zLT5udG9rZW5zIC0gMSkgewogICAgICAgICAgICAgICAgVE9LRU5fVCAqIG5leHQgPSB0b2tlbnMtPnRva2Vuc1tpKzFdOwogICAgICAgICAgICAgICAgaWYgKCFzdHJjbXAobmV4dC0+dGVybWluYWwtPnN0cmluZywgImludCIpIHx8ICFzdHJjbXAobmV4dC0+dGVybWluYWwtPnN0cmluZywgImNoYXIiKSkgewogICAgICAgICAgICAgICAgICAgIGN1cnJlbnQtPnRlcm1pbmFsLT5zdHJpbmcgPSAibHBhcmVuX2Nhc3QiOwogICAgICAgICAgICAgICAgICAgIGN1cnJlbnQtPnRlcm1pbmFsLT5pZCA9IHN0cl90b19tb3JwaGVtZSgibHBhcmVuX2Nhc3QiKTsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgIH0KICAgICAgICByZXR1cm4gdG9rZW5zOwogICAgfQogICAg">
+        ),
+        (LexerCode:
+          language=<grammar.hgr:64:10 language "amF2YQ==">,
+          code=<grammar.hgr:64:23 code "CiAgICBwdWJsaWMgTGlzdDxUZXJtaW5hbD4gcG9zdF9maWx0ZXIoTGlzdDxUZXJtaW5hbD4gdG9rZW5zKSB7CiAgICAgICAgZm9yIChpbnQgaSA9IDA7IGkgPCB0b2tlbnMuc2l6ZSgpOyBpKyspIHsKICAgICAgICAgICAgaWYgKHRva2Vucy5nZXQoaSkudGVybWluYWxfc3RyID09ICJscGFyZW4iICYmIGkgPCB0b2tlbnMuc2l6ZSgpIC0gMSkgewogICAgICAgICAgICAgICAgVGVybWluYWwgbmV4dCA9IHRva2Vucy5nZXQoaSsxKTsKICAgICAgICAgICAgICAgIFRlcm1pbmFsIGN1cnJlbnQgPSB0b2tlbnMuZ2V0KGkpOwogICAgICAgICAgICAgICAgaWYgKG5leHQudGVybWluYWxfc3RyLmVxdWFscygiaW50IikgfHwgbmV4dC50ZXJtaW5hbF9zdHIuZXF1YWxzKCJjaGFyIikpIHsKICAgICAgICAgICAgICAgICAgICBjdXJyZW50LnRlcm1pbmFsX3N0ciA9ICJscGFyZW5fY2FzdCI7CiAgICAgICAgICAgICAgICAgICAgY3VycmVudC5pZCA9IHRlcm1pbmFsX21hcC5nZXQoImxwYXJlbl9jYXN0IikuaWQoKTsKICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgfQogICAgICAgIH0KICAgICAgICByZXR1cm4gdG9rZW5zOwogICAgfQogICAg">
+        ),
+        (LexerCode:
+          language=<grammar.hgr:80:10 language "amF2YXNjcmlwdA==">,
+          code=<grammar.hgr:80:35 code "CiAgICBmdW5jdGlvbiBwb3N0X2ZpbHRlcih0b2tlbnMpIHsKICAgICAgICBmb3IgKGkgPSAwOyBpIDwgdG9rZW5zLmxlbmd0aDsgaSsrKSB7CiAgICAgICAgICAgIGlmICh0b2tlbnNbaV0uc3RyID09ICdscGFyZW4nICYmIGkgPCB0b2tlbnMubGVuZ3RoIC0gMSkgewogICAgICAgICAgICAgICAgdmFyIG5leHQgPSB0b2tlbnNbaSsxXQogICAgICAgICAgICAgICAgaWYgKG5leHQuc3RyID09ICdpbnQnIHx8IG5leHQuc3RyID09ICdjaGFyJykgewogICAgICAgICAgICAgICAgICAgIHRva2Vuc1tpXS5zdHIgPSAnbHBhcmVuX2Nhc3QnCiAgICAgICAgICAgICAgICAgICAgdG9rZW5zW2ldLmlkID0gdGVybWluYWxzWydscGFyZW5fY2FzdCddCiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgIH0KICAgICAgICB9CiAgICAgICAgcmV0dXJuIHRva2VucwogICAgfQogICAg">
         )
       ]
     ),
     (Parser:
       rules=[
         (Rule:
-          nonterminal=<grammar.hgr:25:6 nonterminal "c3RhcnQ=">,
+          nonterminal=<grammar.hgr:96:6 nonterminal "c3RhcnQ=">,
           production=[
             (Production:
               morphemes=[
                 (Macro:
-                  name=<grammar.hgr:25:14 identifier "bGlzdA==">,
+                  name=<grammar.hgr:96:14 identifier "bGlzdA==">,
                   parameters=[
-                    <grammar.hgr:25:20 nonterminal "c3Vi">,
-                    <grammar.hgr:25:26 terminal "Y29tbWE=">
+                    <grammar.hgr:96:20 nonterminal "c3Vi">,
+                    <grammar.hgr:96:26 terminal "Y29tbWE=">
                   ]
                 )
               ],
@@ -223,180 +233,180 @@
           ]
         ),
         (Rule:
-          nonterminal=<grammar.hgr:26:6 nonterminal "c3Vi">,
+          nonterminal=<grammar.hgr:97:6 nonterminal "c3Vi">,
           production=[
             (Production:
               morphemes=[
-                <grammar.hgr:26:13 nonterminal "aXRlbQ==">
+                <grammar.hgr:97:13 nonterminal "aXRlbQ==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<grammar.hgr:27:6 nonterminal "c3Vi">,
+          nonterminal=<grammar.hgr:98:6 nonterminal "c3Vi">,
           production=[
             (Production:
               morphemes=[
-                <grammar.hgr:27:13 nonterminal "ZQ==">
+                <grammar.hgr:98:13 nonterminal "ZQ==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<grammar.hgr:28:6 nonterminal "aXRlbQ==">,
+          nonterminal=<grammar.hgr:99:6 nonterminal "aXRlbQ==">,
           production=[
             (Production:
               morphemes=[
-                <grammar.hgr:28:14 terminal "Yg==">
+                <grammar.hgr:99:14 terminal "Yg==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<grammar.hgr:29:6 nonterminal "aXRlbQ==">,
+          nonterminal=<grammar.hgr:100:6 nonterminal "aXRlbQ==">,
           production=[
             (Production:
               morphemes=[
-                <grammar.hgr:29:14 terminal "YQ==">
+                <grammar.hgr:100:14 terminal "YQ==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<grammar.hgr:30:6 nonterminal "dHlwZV9uYW1l">,
+          nonterminal=<grammar.hgr:101:6 nonterminal "dHlwZV9uYW1l">,
           production=[
             (Production:
               morphemes=[
-                <grammar.hgr:30:19 terminal "aW50">
+                <grammar.hgr:101:19 terminal "aW50">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<grammar.hgr:31:6 nonterminal "dHlwZV9uYW1l">,
+          nonterminal=<grammar.hgr:102:6 nonterminal "dHlwZV9uYW1l">,
           production=[
             (Production:
               morphemes=[
-                <grammar.hgr:31:19 terminal "Y2hhcg==">
+                <grammar.hgr:102:19 terminal "Y2hhcg==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<grammar.hgr:32:6 nonterminal "aW5pdGlhbGl6ZXJfbGlzdF9pdGVt">,
+          nonterminal=<grammar.hgr:103:6 nonterminal "aW5pdGlhbGl6ZXJfbGlzdF9pdGVt">,
           production=[
             (Production:
               morphemes=[
-                <grammar.hgr:32:31 terminal "aXRlbQ==">
+                <grammar.hgr:103:31 terminal "aXRlbQ==">
               ],
               ast=None
             )
           ]
         ),
         (Rule:
-          nonterminal=<grammar.hgr:33:6 nonterminal "ZQ==">,
+          nonterminal=<grammar.hgr:104:6 nonterminal "ZQ==">,
           production=(ExpressionParser:
             rules=[
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<grammar.hgr:34:8 asterisk "Kg==">,
-                  associativity=<grammar.hgr:34:10 left "bGVmdA==">
+                  marker=<grammar.hgr:105:8 asterisk "Kg==">,
+                  associativity=<grammar.hgr:105:10 left "bGVmdA==">
                 ),
-                nonterminal=<grammar.hgr:34:17 nonterminal "ZQ==">,
+                nonterminal=<grammar.hgr:105:17 nonterminal "ZQ==">,
                 production=(InfixProduction:
                   morphemes=[
-                    <grammar.hgr:34:17 nonterminal "ZQ==">,
-                    <grammar.hgr:34:25 terminal "YWRk">,
-                    <grammar.hgr:34:17 nonterminal "ZQ==">
+                    <grammar.hgr:105:17 nonterminal "ZQ==">,
+                    <grammar.hgr:105:25 terminal "YWRk">,
+                    <grammar.hgr:105:17 nonterminal "ZQ==">
                   ],
                   ast=None
                 )
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<grammar.hgr:35:8 dash "LQ==">,
-                  associativity=<grammar.hgr:35:10 left "bGVmdA==">
+                  marker=<grammar.hgr:106:8 dash "LQ==">,
+                  associativity=<grammar.hgr:106:10 left "bGVmdA==">
                 ),
-                nonterminal=<grammar.hgr:35:17 nonterminal "ZQ==">,
+                nonterminal=<grammar.hgr:106:17 nonterminal "ZQ==">,
                 production=(InfixProduction:
                   morphemes=[
-                    <grammar.hgr:35:17 nonterminal "ZQ==">,
-                    <grammar.hgr:35:25 terminal "c3VidHJhY3Q=">,
-                    <grammar.hgr:35:17 nonterminal "ZQ==">
+                    <grammar.hgr:106:17 nonterminal "ZQ==">,
+                    <grammar.hgr:106:25 terminal "c3VidHJhY3Q=">,
+                    <grammar.hgr:106:17 nonterminal "ZQ==">
                   ],
                   ast=None
                 )
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<grammar.hgr:36:8 asterisk "Kg==">,
-                  associativity=<grammar.hgr:36:10 left "bGVmdA==">
+                  marker=<grammar.hgr:107:8 asterisk "Kg==">,
+                  associativity=<grammar.hgr:107:10 left "bGVmdA==">
                 ),
-                nonterminal=<grammar.hgr:36:17 nonterminal "ZQ==">,
+                nonterminal=<grammar.hgr:107:17 nonterminal "ZQ==">,
                 production=(InfixProduction:
                   morphemes=[
-                    <grammar.hgr:36:17 nonterminal "ZQ==">,
-                    <grammar.hgr:36:25 terminal "bXVsdGlwbHk=">,
-                    <grammar.hgr:36:17 nonterminal "ZQ==">
+                    <grammar.hgr:107:17 nonterminal "ZQ==">,
+                    <grammar.hgr:107:25 terminal "bXVsdGlwbHk=">,
+                    <grammar.hgr:107:17 nonterminal "ZQ==">
                   ],
                   ast=None
                 )
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<grammar.hgr:37:8 dash "LQ==">,
-                  associativity=<grammar.hgr:37:10 left "bGVmdA==">
+                  marker=<grammar.hgr:108:8 dash "LQ==">,
+                  associativity=<grammar.hgr:108:10 left "bGVmdA==">
                 ),
-                nonterminal=<grammar.hgr:37:17 nonterminal "ZQ==">,
+                nonterminal=<grammar.hgr:108:17 nonterminal "ZQ==">,
                 production=(InfixProduction:
                   morphemes=[
-                    <grammar.hgr:37:17 nonterminal "ZQ==">,
-                    <grammar.hgr:37:25 terminal "ZGl2aWRl">,
-                    <grammar.hgr:37:17 nonterminal "ZQ==">
+                    <grammar.hgr:108:17 nonterminal "ZQ==">,
+                    <grammar.hgr:108:25 terminal "ZGl2aWRl">,
+                    <grammar.hgr:108:17 nonterminal "ZQ==">
                   ],
                   ast=None
                 )
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<grammar.hgr:38:8 asterisk "Kg==">,
-                  associativity=<grammar.hgr:38:10 left "bGVmdA==">
+                  marker=<grammar.hgr:109:8 asterisk "Kg==">,
+                  associativity=<grammar.hgr:109:10 left "bGVmdA==">
                 ),
-                nonterminal=<grammar.hgr:38:17 nonterminal "ZQ==">,
+                nonterminal=<grammar.hgr:109:17 nonterminal "ZQ==">,
                 production=(MixfixProduction:
                   nud=[
-                    <grammar.hgr:38:22 terminal "bHBhcmVuX2Nhc3Q=">,
-                    <grammar.hgr:38:35 nonterminal "dHlwZV9uYW1l">,
-                    <grammar.hgr:38:46 terminal "cnBhcmVu">
+                    <grammar.hgr:109:22 terminal "bHBhcmVuX2Nhc3Q=">,
+                    <grammar.hgr:109:35 nonterminal "dHlwZV9uYW1l">,
+                    <grammar.hgr:109:46 terminal "cnBhcmVu">
                   ],
                   nud_ast=None,
                   led=[
-                    <grammar.hgr:38:58 terminal "bGJyYWNl">,
+                    <grammar.hgr:109:58 terminal "bGJyYWNl">,
                     (Macro:
-                      name=<grammar.hgr:38:65 identifier "bGlzdA==">,
+                      name=<grammar.hgr:109:65 identifier "bGlzdA==">,
                       parameters=[
-                        <grammar.hgr:38:71 nonterminal "aW5pdGlhbGl6ZXJfbGlzdF9pdGVt">,
-                        <grammar.hgr:38:95 terminal "Y29tbWE=">
+                        <grammar.hgr:109:71 nonterminal "aW5pdGlhbGl6ZXJfbGlzdF9pdGVt">,
+                        <grammar.hgr:109:95 terminal "Y29tbWE=">
                       ]
                     ),
-                    <grammar.hgr:38:103 terminal "cmJyYWNl">
+                    <grammar.hgr:109:103 terminal "cmJyYWNl">
                   ],
                   ast=(AstTransformation:
-                    name=<grammar.hgr:38:113 identifier "VHlwZUluaXRpYWxpemlvbg==">,
+                    name=<grammar.hgr:109:113 identifier "VHlwZUluaXRpYWxpemlvbg==">,
                     parameters=[
                       (AstParameter:
-                        name=<grammar.hgr:38:131 identifier "dHlwZQ==">,
-                        index=<grammar.hgr:38:137 nonterminal_reference "MQ==">
+                        name=<grammar.hgr:109:131 identifier "dHlwZQ==">,
+                        index=<grammar.hgr:109:137 nonterminal_reference "MQ==">
                       ),
                       (AstParameter:
-                        name=<grammar.hgr:38:140 identifier "aW5pdGlhbGl6ZXI=">,
-                        index=<grammar.hgr:38:153 nonterminal_reference "NA==">
+                        name=<grammar.hgr:109:140 identifier "aW5pdGlhbGl6ZXI=">,
+                        index=<grammar.hgr:109:153 nonterminal_reference "NA==">
                       )
                     ]
                   )
@@ -404,36 +414,36 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<grammar.hgr:39:8 dash "LQ==">,
-                  associativity=<grammar.hgr:39:10 left "bGVmdA==">
+                  marker=<grammar.hgr:110:8 dash "LQ==">,
+                  associativity=<grammar.hgr:110:10 left "bGVmdA==">
                 ),
-                nonterminal=<grammar.hgr:39:17 nonterminal "ZQ==">,
+                nonterminal=<grammar.hgr:110:17 nonterminal "ZQ==">,
                 production=(MixfixProduction:
                   nud=[
-                    <grammar.hgr:39:22 terminal "aWRlbnRpZmllcg==">
+                    <grammar.hgr:110:22 terminal "aWRlbnRpZmllcg==">
                   ],
                   nud_ast=None,
                   led=[
-                    <grammar.hgr:39:38 terminal "bHBhcmVu">,
+                    <grammar.hgr:110:38 terminal "bHBhcmVu">,
                     (Macro:
-                      name=<grammar.hgr:39:45 identifier "bGlzdA==">,
+                      name=<grammar.hgr:110:45 identifier "bGlzdA==">,
                       parameters=[
-                        <grammar.hgr:39:51 nonterminal "ZQ==">,
-                        <grammar.hgr:39:55 terminal "Y29tbWE=">
+                        <grammar.hgr:110:51 nonterminal "ZQ==">,
+                        <grammar.hgr:110:55 terminal "Y29tbWE=">
                       ]
                     ),
-                    <grammar.hgr:39:63 terminal "cnBhcmVu">
+                    <grammar.hgr:110:63 terminal "cnBhcmVu">
                   ],
                   ast=(AstTransformation:
-                    name=<grammar.hgr:39:73 identifier "RnVuY3Rpb25DYWxs">,
+                    name=<grammar.hgr:110:73 identifier "RnVuY3Rpb25DYWxs">,
                     parameters=[
                       (AstParameter:
-                        name=<grammar.hgr:39:87 identifier "bmFtZQ==">,
-                        index=<grammar.hgr:39:93 nonterminal_reference "JA==">
+                        name=<grammar.hgr:110:87 identifier "bmFtZQ==">,
+                        index=<grammar.hgr:110:93 nonterminal_reference "JA==">
                       ),
                       (AstParameter:
-                        name=<grammar.hgr:39:96 identifier "cGFyYW1z">,
-                        index=<grammar.hgr:39:104 nonterminal_reference "Mg==">
+                        name=<grammar.hgr:110:96 identifier "cGFyYW1z">,
+                        index=<grammar.hgr:110:104 nonterminal_reference "Mg==">
                       )
                     ]
                   )
@@ -441,32 +451,32 @@
               ),
               (ExpressionRule:
                 precedence=(Precedence:
-                  marker=<grammar.hgr:40:8 asterisk "Kg==">,
-                  associativity=<grammar.hgr:40:10 unary "dW5hcnk=">
+                  marker=<grammar.hgr:111:8 asterisk "Kg==">,
+                  associativity=<grammar.hgr:111:10 unary "dW5hcnk=">
                 ),
-                nonterminal=<grammar.hgr:40:18 nonterminal "ZQ==">,
+                nonterminal=<grammar.hgr:111:18 nonterminal "ZQ==">,
                 production=(PrefixProduction:
                   morphemes=[
-                    <grammar.hgr:40:23 terminal "c3VidHJhY3Q=">,
-                    <grammar.hgr:40:18 nonterminal "ZQ==">
+                    <grammar.hgr:111:23 terminal "c3VidHJhY3Q=">,
+                    <grammar.hgr:111:18 nonterminal "ZQ==">
                   ],
                   ast=None
                 )
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<grammar.hgr:41:8 nonterminal "ZQ==">,
+                nonterminal=<grammar.hgr:112:8 nonterminal "ZQ==">,
                 production=(MixfixProduction:
                   nud=[
-                    <grammar.hgr:41:13 terminal "bHNxdWFyZQ==">,
+                    <grammar.hgr:112:13 terminal "bHNxdWFyZQ==">,
                     (Macro:
-                      name=<grammar.hgr:41:21 identifier "bGlzdA==">,
+                      name=<grammar.hgr:112:21 identifier "bGlzdA==">,
                       parameters=[
-                        <grammar.hgr:41:27 nonterminal "ZQ==">,
-                        <grammar.hgr:41:31 terminal "Y29tbWE=">
+                        <grammar.hgr:112:27 nonterminal "ZQ==">,
+                        <grammar.hgr:112:31 terminal "Y29tbWE=">
                       ]
                     ),
-                    <grammar.hgr:41:39 terminal "cnNxdWFyZQ==">
+                    <grammar.hgr:112:39 terminal "cnNxdWFyZQ==">
                   ],
                   nud_ast=None,
                   led=None,
@@ -475,18 +485,18 @@
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<grammar.hgr:42:8 nonterminal "ZQ==">,
+                nonterminal=<grammar.hgr:113:8 nonterminal "ZQ==">,
                 production=(MixfixProduction:
                   nud=[
-                    <grammar.hgr:42:13 terminal "bGJyYWNl">,
+                    <grammar.hgr:113:13 terminal "bGJyYWNl">,
                     (Macro:
-                      name=<grammar.hgr:42:20 identifier "bGlzdA==">,
+                      name=<grammar.hgr:113:20 identifier "bGlzdA==">,
                       parameters=[
-                        <grammar.hgr:42:26 nonterminal "ZQ==">,
-                        <grammar.hgr:42:30 terminal "Y29tbWE=">
+                        <grammar.hgr:113:26 nonterminal "ZQ==">,
+                        <grammar.hgr:113:30 terminal "Y29tbWE=">
                       ]
                     ),
-                    <grammar.hgr:42:38 terminal "cmJyYWNl">
+                    <grammar.hgr:113:38 terminal "cmJyYWNl">
                   ],
                   nud_ast=None,
                   led=None,
@@ -495,12 +505,12 @@
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<grammar.hgr:43:8 nonterminal "ZQ==">,
+                nonterminal=<grammar.hgr:114:8 nonterminal "ZQ==">,
                 production=(MixfixProduction:
                   nud=[
-                    <grammar.hgr:43:13 terminal "bHBhcmVu">,
-                    <grammar.hgr:43:21 nonterminal "ZQ==">,
-                    <grammar.hgr:43:24 terminal "cnBhcmVu">
+                    <grammar.hgr:114:13 terminal "bHBhcmVu">,
+                    <grammar.hgr:114:21 nonterminal "ZQ==">,
+                    <grammar.hgr:114:24 terminal "cnBhcmVu">
                   ],
                   nud_ast=None,
                   led=None,
@@ -509,10 +519,10 @@
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<grammar.hgr:44:8 nonterminal "ZQ==">,
+                nonterminal=<grammar.hgr:115:8 nonterminal "ZQ==">,
                 production=(MixfixProduction:
                   nud=[
-                    <grammar.hgr:44:13 terminal "aWRlbnRpZmllcg==">
+                    <grammar.hgr:115:13 terminal "aWRlbnRpZmllcg==">
                   ],
                   nud_ast=None,
                   led=None,
@@ -521,10 +531,10 @@
               ),
               (ExpressionRule:
                 precedence=None,
-                nonterminal=<grammar.hgr:45:8 nonterminal "ZQ==">,
+                nonterminal=<grammar.hgr:116:8 nonterminal "ZQ==">,
                 production=(MixfixProduction:
                   nud=[
-                    <grammar.hgr:45:13 terminal "bnVtYmVy">
+                    <grammar.hgr:116:13 terminal "bnVtYmVy">
                   ],
                   nud_ast=None,
                   led=None,

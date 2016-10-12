@@ -11,7 +11,6 @@ grammar {
     r'-' -> :subtract
     r'\*' -> :multiply
     r'/' -> :divide
-    r'\((?=int|char)' -> :lparen_cast
     r'\(' -> :lparen
     r'\)' -> :rparen
     r'\{' -> :lbrace
@@ -20,6 +19,78 @@ grammar {
     r'\]' -> :rsquare
     r'[0-9]+' -> :number
     r'[a-zA-Z]+' -> :identifier
+
+    code<go> << GO_CODE
+    func post_filter(tokens []*Token) []*Token {
+        for i, token := range tokens {
+            if token.terminal.idStr == "lparen" && i < len(tokens)-1 {
+                next := tokens[i+1]
+                if next.terminal.idStr == "int" || next.terminal.idStr == "char" {
+                    token.terminal = findTerminal("lparen_cast")
+                }
+            }
+        }
+        return tokens
+    }
+    GO_CODE
+
+    code<python> << PYTHON
+    def post_filter(tokens):
+        for i, token in enumerate(tokens):
+            if token.str == 'lparen' and i < len(tokens)-1:
+                next = tokens[i+1]
+                if next.str in ['int', 'char']:
+                    token.str = 'lparen_cast'
+                    token.id = terminals['lparen_cast']
+        return tokens
+    PYTHON
+
+    code<c> << C_CODE
+    static TOKEN_LIST_T * post_filter(TOKEN_LIST_T *tokens) {
+        for (int i = 0; i < tokens->ntokens; i++) {
+            TOKEN_T * current = tokens->tokens[i];
+            if (!strcmp(current->terminal->string, "lparen") && i < tokens->ntokens - 1) {
+                TOKEN_T * next = tokens->tokens[i+1];
+                if (!strcmp(next->terminal->string, "int") || !strcmp(next->terminal->string, "char")) {
+                    current->terminal->string = "lparen_cast";
+                    current->terminal->id = str_to_morpheme("lparen_cast");
+                }
+            }
+        }
+        return tokens;
+    }
+    C_CODE
+
+    code<java> << JAVA
+    public List<Terminal> post_filter(List<Terminal> tokens) {
+        for (int i = 0; i < tokens.size(); i++) {
+            if (tokens.get(i).terminal_str == "lparen" && i < tokens.size() - 1) {
+                Terminal next = tokens.get(i+1);
+                Terminal current = tokens.get(i);
+                if (next.terminal_str.equals("int") || next.terminal_str.equals("char")) {
+                    current.terminal_str = "lparen_cast";
+                    current.id = terminal_map.get("lparen_cast").id();
+                }
+            }
+        }
+        return tokens;
+    }
+    JAVA
+
+    code<javascript> << JAVASCRIPT
+    function post_filter(tokens) {
+        for (i = 0; i < tokens.length; i++) {
+            if (tokens[i].str == 'lparen' && i < tokens.length - 1) {
+                var next = tokens[i+1]
+                if (next.str == 'int' || next.str == 'char') {
+                    tokens[i].str = 'lparen_cast'
+                    tokens[i].id = terminals['lparen_cast']
+                }
+            }
+        }
+        return tokens
+    }
+    JAVASCRIPT
   }
   parser {
     $start = list($sub, :comma)
