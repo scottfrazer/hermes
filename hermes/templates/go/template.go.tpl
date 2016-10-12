@@ -337,7 +337,7 @@ func astToString(ast interface{}, indent int, indentLevel int) string {
 			}
 		case *Token:
 			return node.String()
-    case nil:
+    case *EmptyAst:
       return "None"
 		default:
 			panic(fmt.Sprintf("Wrong type to astToString(): %v (%t)", ast, ast))
