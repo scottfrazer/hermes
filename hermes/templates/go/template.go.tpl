@@ -436,15 +436,15 @@ func (h *DefaultSyntaxErrorHandler) excess_tokens() *SyntaxError {
 }
 func (h *DefaultSyntaxErrorHandler) unexpected_symbol(nt string, actual_token *Token, expected_terminals []*terminal, rule string) *SyntaxError {
 	strs := make([]string, len(expected_terminals))
-	for _, t := range expected_terminals {
-		strs = append(strs, t.idStr)
+	for i, t := range expected_terminals {
+		strs[i] = t.idStr
 	}
 	return h._error(fmt.Sprintf("Unexpected symbol (line %d, col %d) when parsing parse_%s.  Expected %s, got %s.",
 			actual_token.line,
 			actual_token.col,
 			nt,
 			strings.Join(strs, ", "),
-			actual_token.terminal.idStr))
+			actual_token.String()))
 }
 func (h *DefaultSyntaxErrorHandler) no_more_tokens(nt string, expected_terminal *terminal, last_token *Token) *SyntaxError {
     return h._error(fmt.Sprintf("No more tokens.  Expecting %s", expected_terminal.idStr))
