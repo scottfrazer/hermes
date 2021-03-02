@@ -1028,13 +1028,15 @@ func (parser *{{ccPrefix}}Parser) Parse_{{name}}(ctx *ParserContext) (*parseTree
 
 func (ctx *LexerContext) emit(terminal *terminal, sourceString string, line, col int) {
   if terminal != nil {
-    ctx.tokens = append(ctx.tokens, &Token{terminal, sourceString, ctx.resource, line, col})
+    token := &Token{terminal, sourceString, ctx.resource, line, col}
+    ctx.tokens = append(ctx.tokens, token)
   }
 }
 
 {% if re.search(r'func\s+default_action', lexer.code) is None %}
-func default_action(ctx *LexerContext, terminal *terminal, sourceString string, line, col int) {
+func default_action(ctx *LexerContext, terminal *terminal, sourceString string, line, col int) int {
     ctx.emit(terminal, sourceString, line, col)
+    return -1
 }
 {% endif %}
 
@@ -1083,16 +1085,16 @@ type HermesRegex struct {
 }
 
 type HermesLexerAction interface {
-  HandleMatch(ctx *LexerContext, groups []string, indexes []int)
+  HandleMatch(ctx *LexerContext, groups []string, indexes []int) int
 }
 
 type LexerRegexOutput struct {
   terminal *terminal
   group int
-  function func(*LexerContext, *terminal, string, int, int)
+  function func(*LexerContext, *terminal, string, int, int) int
 }
 
-func (lro *LexerRegexOutput) HandleMatch(ctx *LexerContext, groups []string, indexes []int) {
+func (lro *LexerRegexOutput) HandleMatch(ctx *LexerContext, groups []string, indexes []int) int {
   sourceString := groups[0]
 	if lro.group == -1 {
 		sourceString = ""
@@ -1107,25 +1109,27 @@ func (lro *LexerRegexOutput) HandleMatch(ctx *LexerContext, groups []string, ind
 
 	groupLine, groupCol := _advance_line_col(ctx.source, length, ctx.line, ctx.col)
 
-  lro.function(ctx, lro.terminal, sourceString, groupLine, groupCol)
+  return lro.function(ctx, lro.terminal, sourceString, groupLine, groupCol)
 }
 
 type LexerStackPush struct {
   mode string
 }
 
-func (lsp *LexerStackPush) HandleMatch(ctx *LexerContext, groups []string, indexes []int) {
+func (lsp *LexerStackPush) HandleMatch(ctx *LexerContext, groups []string, indexes []int) int {
   ctx.StackPush(lsp.mode)
+  return -1
 }
 
 type LexerAction struct {
   action string
 }
 
-func (la *LexerAction) HandleMatch(ctx *LexerContext, groups []string, indexes []int) {
+func (la *LexerAction) HandleMatch(ctx *LexerContext, groups []string, indexes []int) int {
   if la.action == "pop" {
     ctx.StackPop()
   }
+  return -1
 }
 
 var regex map[string][]*HermesRegex
@@ -1134,7 +1138,7 @@ func initRegexes() map[string][]*HermesRegex {
   if regex == nil {
     regex = make(map[string][]*HermesRegex)
     var matchActions []HermesLexerAction
-    var matchFunction func(*LexerContext, *terminal, string, int, int)
+    var matchFunction func(*LexerContext, *terminal, string, int, int) int
     var r *regexp.Regexp
 
 {% for mode, regex_list in lexer.items() %}
@@ -1189,9 +1193,20 @@ func _advance_line_col(s string, length, line, col int) (int, int) {
   return line, col
 }
 
-func (lexer *{{ccPrefix}}Lexer) _advance_string(ctx *LexerContext, s string) {
-    ctx.line, ctx.col = _advance_line_col(s, len(s), ctx.line, ctx.col)
-    ctx.source = ctx.source[len(s):]
+func trimLeftChars(s string, n int) string {
+    m := 0
+    for i := range s {
+        if m >= n {
+            return s[i:]
+        }
+        m++
+    }
+    return s[:0]
+}
+
+func (lexer *{{ccPrefix}}Lexer) _advance_string(ctx *LexerContext, s string, chars int) {
+    ctx.line, ctx.col = _advance_line_col(s, chars, ctx.line, ctx.col)
+    ctx.source = trimLeftChars(ctx.source, chars)
 }
 
 func (lexer *{{ccPrefix}}Lexer) _next(ctx *LexerContext) bool {
@@ -1199,10 +1214,14 @@ func (lexer *{{ccPrefix}}Lexer) _next(ctx *LexerContext) bool {
 				groups := regex.regex.FindStringSubmatch(ctx.source)
 				indexes := regex.regex.FindStringSubmatchIndex(ctx.source)
         if len(groups) != 0 && indexes != nil {
+            adv := len([]rune(groups[0]))
             for _, output := range regex.outputs {
-              output.HandleMatch(ctx, groups, indexes)
+              r := output.HandleMatch(ctx, groups, indexes)
+              if r > 0 {
+                adv = r
+              }
             }
-            lexer._advance_string(ctx, groups[0])
+            lexer._advance_string(ctx, ctx.source, adv)
             return len(groups[0]) > 0
         }
     }
