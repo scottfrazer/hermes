@@ -25,9 +25,9 @@
                 nonterminal=<grammar.hgr:5:17 nonterminal "ZQ==">,
                 production=(InfixProduction:
                   morphemes=[
-                    <grammar.hgr:5:17 nonterminal "ZQ==">,
+                    <grammar.hgr:5:22 nonterminal "ZQ==">,
                     <grammar.hgr:5:25 terminal "YWRk">,
-                    <grammar.hgr:5:17 nonterminal "ZQ==">
+                    <grammar.hgr:5:30 nonterminal "ZQ==">
                   ],
                   ast=(AstTransformation:
                     name=<grammar.hgr:5:35 identifier "QWRk">,
@@ -52,9 +52,9 @@
                 nonterminal=<grammar.hgr:6:17 nonterminal "ZQ==">,
                 production=(InfixProduction:
                   morphemes=[
-                    <grammar.hgr:6:17 nonterminal "ZQ==">,
+                    <grammar.hgr:6:22 nonterminal "ZQ==">,
                     <grammar.hgr:6:25 terminal "c3Vi">,
-                    <grammar.hgr:6:17 nonterminal "ZQ==">
+                    <grammar.hgr:6:30 nonterminal "ZQ==">
                   ],
                   ast=(AstTransformation:
                     name=<grammar.hgr:6:35 identifier "U3VidHJhY3Q=">,
@@ -79,9 +79,9 @@
                 nonterminal=<grammar.hgr:7:17 nonterminal "ZQ==">,
                 production=(InfixProduction:
                   morphemes=[
-                    <grammar.hgr:7:17 nonterminal "ZQ==">,
+                    <grammar.hgr:7:22 nonterminal "ZQ==">,
                     <grammar.hgr:7:25 terminal "bXVs">,
-                    <grammar.hgr:7:17 nonterminal "ZQ==">
+                    <grammar.hgr:7:30 nonterminal "ZQ==">
                   ],
                   ast=(AstTransformation:
                     name=<grammar.hgr:7:35 identifier "TXVsdGlwbHk=">,
@@ -106,9 +106,9 @@
                 nonterminal=<grammar.hgr:8:17 nonterminal "ZQ==">,
                 production=(InfixProduction:
                   morphemes=[
-                    <grammar.hgr:8:17 nonterminal "ZQ==">,
+                    <grammar.hgr:8:22 nonterminal "ZQ==">,
                     <grammar.hgr:8:25 terminal "ZGl2">,
-                    <grammar.hgr:8:17 nonterminal "ZQ==">
+                    <grammar.hgr:8:30 nonterminal "ZQ==">
                   ],
                   ast=(AstTransformation:
                     name=<grammar.hgr:8:35 identifier "RGl2aWRl">,
@@ -134,7 +134,7 @@
                 production=(PrefixProduction:
                   morphemes=[
                     <grammar.hgr:9:23 terminal "c3Vi">,
-                    <grammar.hgr:9:18 nonterminal "ZQ==">
+                    <grammar.hgr:9:28 nonterminal "ZQ==">
                   ],
                   ast=(AstTransformation:
                     name=<grammar.hgr:9:33 identifier "VU1pbnVz">,
