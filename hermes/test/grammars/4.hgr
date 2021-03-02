@@ -10,8 +10,9 @@ grammar {
     PYTHON
 
     code<go> << GO_CODE
-    func f(ctx *LexerContext, terminal *terminal, sourceString string, line, col int) {
+    func f(ctx *LexerContext, terminal *terminal, sourceString string, line, col int) int {
         default_action(ctx, terminal, sourceString, line, col)
+        return -1
     }
     GO_CODE
 

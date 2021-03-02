@@ -16,6 +16,7 @@ setup(
           'templates/java/*.tpl',
           'templates/javascript/*.tpl',
           'templates/c/*.tpl'
+          'templates/go/*.tpl'
       ]
   },
   install_requires=[
