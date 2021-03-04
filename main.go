@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -17,7 +18,15 @@ type AnalyzeCmd struct {
 }
 
 func (cmd *AnalyzeCmd) Run(ctx *Context) error {
-	fmt.Println("analyze", cmd.Grammar)
+	fp, err := os.Open(cmd.Grammar)
+	if err != nil {
+		return err
+	}
+	defer fp.Close()
+
+	grammar, err := LoadGrammarFromSource(bufio.NewReader(fp), cmd.Grammar)
+
+	_ = grammar
 	return nil
 }
 
