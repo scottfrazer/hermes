@@ -6,7 +6,7 @@ grammar {
       r'[a-zA-Z][a-zA-Z0-9_]*' -> _identifier
       r':({%_identifier%}|_empty)' -> _terminal
       r'\$({%_identifier%})' -> _nonterminal
-      r'(r\'(\\\'|[^\'])*\'|"(\\\"|[^\"])*")' -> _regex
+      r'(r\'.*\'|".*")' -> _regex
     }
 
     r'(grammar)\s*({)' -> :grammar[1] :lbrace[2] @grammar
@@ -24,9 +24,7 @@ grammar {
     mode<lexer> {
       r'{%_ws%}' -> null
       r'{%_comment%}' -> null
-      enum {
-        python: r'(code)<([a-z]+)>\s*<<\s*([a-zA-Z_]+)(?=\s)(.*?)(\3)' (DOTALL)
-      } -> :code_start[1] :language[2] :code[4]
+      r'code<([a-z]+)>' -> code_block()
       r'}' -> :rbrace %pop
       r'{' -> :lbrace
       r'<' -> :langle
@@ -50,6 +48,76 @@ grammar {
       r'enum' -> :regex_enum @regex_enum
       r'{%_identifier%}' -> :identifier
     }
+
+    code<go> << GO_CODE
+      func code_block(ctx *LexerContext, terminal *terminal, sourceString string, line, col int) int {
+        codeRegex := regexp.MustCompile("code<([a-z]+)>\\s+<<\\s+([a-zA-Z0-9_-]+)")
+        groups := codeRegex.FindStringSubmatch(ctx.source)
+				_ = codeRegex.FindStringSubmatchIndex(ctx.source)
+
+        ctx.emit(findTerminal("code_start"), "code", line, col)
+
+        language := groups[1]
+        line2, col2 := _advance_line_col(ctx.source, len("code<"), line, col)
+        ctx.emit(findTerminal("language"), language, line2, col2)
+
+        delimiter := groups[2]
+        index := strings.Index(ctx.source[len(groups[0]):], delimiter)
+        code := ctx.source[len(groups[0]):index+len(groups[0])]
+        line3, col3 := _advance_line_col(ctx.source, len(groups[0]), line, col)
+        ctx.emit(findTerminal("code"), code, line3, col3)
+
+        return index + len(groups[0]) + len(delimiter)
+      }
+
+      func expr_rule_rhs(ctx *LexerContext, terminal *terminal, sourceString string, line, col int) int {
+        // :infix_rule_hint[] :nonterminal[2] :terminal[4] :nonterminal[2] (!:terminal | :nonterminal)
+        // :prefix_rule_hint[] :terminal[4] :nonterminal[2] (!:terminal | :nonterminal)
+        // :mixfix_rule_hint[] (!:terminal | :nonterminal)
+
+        ctx.StackPush("expr_rule_rhs")
+        peek := ctx._peek(6)
+        ctx.StackPop()
+
+        var tokens []*Token
+        for _, token := range peek {
+          if token.line == peek[0].line {
+            tokens = append(tokens, token)
+          }
+        }
+
+        lhs := tokens[0].sourceString
+
+        hint := findTerminal("mixfix_rule_hint")
+
+        if len(tokens) >= 5 {
+          rhs1 := tokens[2].sourceString
+          rhs2 := tokens[4].sourceString
+          morphemeNext := false
+          if len(tokens) > 5 && (tokens[5].terminal.id == findTerminal("nonterminal").id || tokens[5].terminal.id == findTerminal("terminal").id) {
+            morphemeNext = true
+          }
+
+          if rhs1 == lhs && rhs2 == lhs && !morphemeNext {
+            hint = findTerminal("infix_rule_hint")
+          }
+        }
+
+        if len(tokens) >= 4 {
+          rhs1 := tokens[3].sourceString
+          morphemeNext := false
+          if len(tokens) > 4 && (tokens[4].terminal.id == findTerminal("nonterminal").id || tokens[4].terminal.id == findTerminal("terminal").id) {
+            morphemeNext = true
+          }
+          if rhs1 == lhs && !morphemeNext {
+            hint = findTerminal("prefix_rule_hint")
+          }
+        }
+
+        ctx.emit(hint, "", line, col)
+        return -1
+      }
+    GO_CODE
 
     mode<regex_enum> {
       r'{%_ws%}' -> null
@@ -89,7 +157,7 @@ grammar {
       r'null' -> :null
       r'parser\s*<\s*expression\s*>\s*({)' -> :parser_expression[] :lbrace[1] @parser_expr
       r'{%_terminal%}' -> :terminal[1]
-      r'{%_nonterminal%}(?=\s*\=)' -> :ll1_rule_hint[] :nonterminal[1]
+      r'{%_nonterminal%}\s*(\=)' -> :ll1_rule_hint[] :nonterminal[1] :equals[2]
       r'{%_nonterminal%}' -> :nonterminal[1]
       r'\$([0-9]+|\$)' -> :nonterminal_reference[1]
       r'{%_identifier%}' -> :identifier
@@ -100,7 +168,8 @@ grammar {
     mode<parser_expr> {
       r'{%_ws%}' -> null
       r'{%_comment%}' -> null
-      r'(\()(?=\s*[\*-])' -> :lparen[1] @binding_power
+      r'(\()\s*(\*)' -> :lparen[1] :asterisk[2] @binding_power
+      r'(\()\s*(\-)' -> :lparen[1] :dash[2] @binding_power
       r'->' -> :arrow
       r'<=>' -> :expression_divider
       r'\|' -> :pipe
@@ -111,17 +180,30 @@ grammar {
       r'\)' -> :rparen
       r',' -> :comma
       r'{%_terminal%}' -> :terminal[1]
-      r'({%_nonterminal%})[ \t]*(=)[ \t]*\$(\2)[ \t]+:({%_identifier%})[ \t]+\$(\2)(?![ \t]+(:|\$))'
-          -> :expr_rule_hint[] :nonterminal[2] :equals[3] :infix_rule_hint[] :nonterminal[4] :terminal[5] :nonterminal[6]
-      r'({%_nonterminal%})[ \t]*(=)[ \t]*:({%_identifier%})[ \t]+\$(\2)(?![ \t](:|\$))'
-          -> :expr_rule_hint[] :nonterminal[2] :equals[3] :prefix_rule_hint[] :terminal[4] :nonterminal[5]
-      r'{%_nonterminal%}\s*(=)'
-          -> :expr_rule_hint[] :nonterminal[1] :equals[2] :mixfix_rule_hint[]
+
+      #r'({%_nonterminal%})[ \t]*(=)[ \t]*\1[ \t]+:({%_identifier%})[ \t]+\1(?![ \t]+(:|\$))'
+      #    -> :expr_rule_hint[] :nonterminal[2] :equals[3] :infix_rule_hint[] :nonterminal[2] :terminal[4] :nonterminal[2]
+      #r'({%_nonterminal%})[ \t]*(=)[ \t]*:({%_identifier%})[ \t]+\1(?![ \t](:|\$))'
+      #    -> :expr_rule_hint[] :nonterminal[2] :equals[3] :prefix_rule_hint[] :terminal[4] :nonterminal[2]
+      #r'{%_nonterminal%}\s*(=)'
+      #    -> :expr_rule_hint[] :nonterminal[1] :equals[2] :mixfix_rule_hint[]
+
+      r'({%_nonterminal%})\s*(=)\s*'
+          -> :expr_rule_hint[] :nonterminal[2] :equals[3] expr_rule_rhs()
+
       r'{%_nonterminal%}' -> :nonterminal[1]
       r'\$([0-9]+|\$)' -> :nonterminal_reference[1]
       r'{%_identifier%}' -> :identifier
       r'"[^"]+"' -> :string
       r'[0-9]+' -> :integer
+    }
+
+    mode<expr_rule_rhs> {
+      r'{%_ws%}' -> null
+      r'=' -> :equals
+      r'->' -> :arrow
+      r'{%_terminal%}' -> :terminal[1]
+      r'{%_nonterminal%}' -> :nonterminal[1]
     }
 
     mode<binding_power> {

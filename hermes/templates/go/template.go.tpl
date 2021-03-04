@@ -1065,6 +1065,7 @@ type LexerContext struct {
   line int
   col int
   tokens []*Token
+  lexer *{{ccPrefix}}Lexer
 }
 
 func (ctx *LexerContext) StackPush(mode string) {
@@ -1209,6 +1210,61 @@ func (lexer *{{ccPrefix}}Lexer) _advance_string(ctx *LexerContext, s string, cha
     ctx.source = trimLeftChars(ctx.source, chars)
 }
 
+
+func (ctx *LexerContext) _peek(n int) []*Token {
+
+    // TODO: copied from HandleMatch()
+    get_token := func(lro *LexerRegexOutput, groups []string, indexes []int, source string, line, col int) *Token {
+      sourceString := groups[0]
+      if lro.group == -1 {
+        sourceString = ""
+      }
+
+      length := 0
+      if lro.group > 0 {
+        sourceString = groups[lro.group]
+        startIndex := lro.group * 2
+        length = indexes[startIndex]
+      }
+
+      groupLine, groupCol := _advance_line_col(source, length, line, col)
+      return &Token{lro.terminal, sourceString, ctx.resource, groupLine, groupCol}
+    }
+
+    source := ctx.source
+    line := ctx.line
+    col := ctx.col
+    var tokens []*Token
+
+outer:
+    for i:=0; i<n; i++ {
+        for _, regex := range ctx.lexer.regex[ctx.StackPeek()] {
+            groups := regex.regex.FindStringSubmatch(source)
+            indexes := regex.regex.FindStringSubmatchIndex(source)
+            if len(groups) != 0 && indexes != nil {
+                for _, output := range regex.outputs {
+                  switch lro := output.(type) {
+                  case *LexerRegexOutput:
+                    token := get_token(lro, groups, indexes, source, line, col)
+                    if token != nil {
+                      tokens = append(tokens, token)
+                      if len(tokens) == n {
+                        break outer
+                      }
+                    }
+                  }
+                }
+                adv := len([]rune(groups[0]))
+                line, col = _advance_line_col(source, adv, line, col)
+                source = trimLeftChars(source, adv)
+            }
+        }
+    }
+
+    return tokens
+
+}
+
 func (lexer *{{ccPrefix}}Lexer) _next(ctx *LexerContext) bool {
     for _, regex := range lexer.regex[ctx.StackPeek()] {
 				groups := regex.regex.FindStringSubmatch(ctx.source)
@@ -1230,7 +1286,7 @@ func (lexer *{{ccPrefix}}Lexer) _next(ctx *LexerContext) bool {
 
 func (lexer *{{ccPrefix}}Lexer) lex(source, resource string, handler SyntaxErrorHandler) ([]*Token, error) {
   user_context := lexer_init()
-  ctx := &LexerContext{source, resource, handler, lexer_init(), nil, 1, 1, nil}
+  ctx := &LexerContext{source, resource, handler, lexer_init(), nil, 1, 1, nil, lexer}
 	ctx.StackPush("default")
 
   for len(ctx.source) > 0 {
