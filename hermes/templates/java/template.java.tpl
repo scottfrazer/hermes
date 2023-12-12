@@ -631,7 +631,7 @@ public class {{prefix}}Parser {
             id_to_term = new HashMap<Integer, TerminalIdentifier>();
             str_to_term = new HashMap<String, TerminalIdentifier>();
             for( {{prefix}}TerminalIdentifier terminal : terminals ) {
-                Integer id = new Integer(terminal.id());
+                Integer id = Integer.valueOf(terminal.id());
                 String str = terminal.string();
                 id_to_term.put(id, terminal);
                 str_to_term.put(str, terminal);
@@ -731,7 +731,7 @@ public class {{prefix}}Parser {
     static {
         Map<Integer, String> map = new HashMap<Integer, String>();
 {% for rule in sorted(grammar.get_expanded_rules(), key=str) %}
-        map.put(new Integer({{rule.id}}), "{{rule}}");
+        map.put(Integer.valueOf({{rule.id}}), "{{rule}}");
 {% endfor %}
         rules = Collections.unmodifiableMap(map);
     }
